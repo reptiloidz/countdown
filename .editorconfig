@@ -1,16 +1,15 @@
-# Editor configuration, see https://editorconfig.org
+; Top-most EditorConfig file
 root = true
 
+; Unix-style newlines
 [*]
+end_of_line = LF
 charset = utf-8
-indent_style = space
-indent_size = 2
 insert_final_newline = true
-trim_trailing_whitespace = true
+
+; 1-tab indentation
+[*.{html,js,jsx,ts,tsx,css,scss,mdx,cs}]
+indent_style = tab
 
 [*.ts]
 quote_type = single
-
-[*.md]
-max_line_length = off
-trim_trailing_whitespace = false
