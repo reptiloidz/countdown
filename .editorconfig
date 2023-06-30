@@ -10,6 +10,7 @@ insert_final_newline = true
 ; 1-tab indentation
 [*.{html,js,jsx,ts,tsx,css,scss,mdx,cs}]
 indent_style = tab
+indent_size = 4
 
 [*.ts]
 quote_type = single
