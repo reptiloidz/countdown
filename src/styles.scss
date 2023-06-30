@@ -12,6 +12,17 @@ body {
 	padding: 20px;
 }
 
-main {
+.main {
+	display: flex;
 	flex-grow: 1;
+	align-items: center;
+	justify-content: center;
+	margin: 20px 0;
+	overflow: auto;
+}
+
+.header,
+.footer {
+	display: flex;
+	justify-content: space-between;
 }
