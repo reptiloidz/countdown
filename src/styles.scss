@@ -1,14 +1,15 @@
 @import './styles/reboot';
 
-html, body {
+html,
+body {
 	height: 100%;
 }
 
 .root {
-	padding: 20px;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	padding: 20px;
 }
 
 main {
