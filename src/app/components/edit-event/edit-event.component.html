@@ -1,3 +1,14 @@
-<form>
-	<input type="text" placeholder="Создаем событие" />
+<form class="form">
+	<h1>{{ isCreation ? 'Создание' : 'Редактирование' }}</h1>
+	<input type="text" placeholder="Название" />
+	<textarea type="text" placeholder="Описание"></textarea>
+	<input type="text" placeholder="Срок" />
+	<label>
+		<input type="radio" name="direction" id="down" />
+		Обратный отсчёт
+	</label>
+	<label>
+		<input type="radio" name="direction" id="up" />
+		Прямой отсчёт
+	</label>
 </form>
