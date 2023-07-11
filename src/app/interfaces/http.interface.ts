@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { Event } from './event.interface';
+import { Point } from './point.interface';
 
 export interface HttpServiceInterface {
-	getEvents(): Observable<Event[]>;
+	getPoints(): Observable<Point[]>;
 }

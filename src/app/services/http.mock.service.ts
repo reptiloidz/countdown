@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Event } from '../interfaces/event.interface';
+import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class MockHttpService implements HttpServiceInterface {
+	// https://angular.io/guide/build
 	// https://levelup.gitconnected.com/use-angular-mock-services-to-develop-without-a-backend-9eb8c5eef523
-	private mockEvents: Event[] = [
+	private mockPoints: Point[] = [
 		{
 			title: 'Дней без аварии',
 			description: 'Время с последней аварии',
@@ -21,7 +22,7 @@ export class MockHttpService implements HttpServiceInterface {
 		},
 	];
 
-	getEvents(): Observable<Event[]> {
-		return of(this.mockEvents);
+	getPoints(): Observable<Point[]> {
+		return of(this.mockPoints);
 	}
 }

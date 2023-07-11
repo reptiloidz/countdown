@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Event } from '../interfaces/event.interface';
+import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { HttpServiceInterface } from '../interfaces/http.interface';
 export class HttpService implements HttpServiceInterface {
 	constructor(private http: HttpClient) {}
 
-	getEvents(): Observable<Event[]> {
-		return this.http.get<Event[]>('');
+	getPoints(): Observable<Point[]> {
+		return this.http.get<Point[]>('');
 	}
 }

@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Event } from 'src/app/interfaces/event.interface';
+import { Point } from 'src/app/interfaces/point.interface';
 
 @Component({
 	selector: '[app-main-item]',
 	templateUrl: './main-item.component.html',
 })
 export class MainItemComponent {
-	@Input() event!: Event;
+	@Input() point!: Point;
 }

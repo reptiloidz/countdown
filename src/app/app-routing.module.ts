@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainListComponent } from './components/main-list/main-list.component';
-import { EventComponent } from './components/event/event.component';
-import { EditEventComponent } from './components/edit-event/edit-event.component';
-import { CreateEventComponent } from './components/create-event/create-event.component';
+import { PointComponent } from './components/point/point.component';
+import { EditPointComponent } from './components/edit-point/edit-point.component';
+import { CreatePointComponent } from './components/create-point/create-point.component';
 
 const routes: Routes = [
 	{
@@ -11,16 +11,16 @@ const routes: Routes = [
 		component: MainListComponent,
 	},
 	{
-		path: 'event/:id',
-		component: EventComponent,
+		path: 'point/:id',
+		component: PointComponent,
 	},
 	{
 		path: 'edit/:id',
-		component: EditEventComponent,
+		component: EditPointComponent,
 	},
 	{
 		path: 'create',
-		component: CreateEventComponent,
+		component: CreatePointComponent,
 	},
 ];
 

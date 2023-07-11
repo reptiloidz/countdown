@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Event } from 'src/app/interfaces/event.interface';
+import { Point } from 'src/app/interfaces/point.interface';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
@@ -8,13 +8,13 @@ import { HttpService } from 'src/app/services/http.service';
 	templateUrl: './main-list.component.html',
 })
 export class MainListComponent implements OnInit {
-	result: Event[] = [];
+	result: Point[] = [];
 
 	constructor(private http: HttpService) {}
 
 	ngOnInit(): void {
-		this.http.getEvents().subscribe({
-			next: (result: Event[]) => {
+		this.http.getPoints().subscribe({
+			next: (result: Point[]) => {
 				this.result = result;
 				console.log(result);
 			},

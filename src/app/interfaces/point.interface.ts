@@ -1,4 +1,4 @@
-export interface Event {
+export interface Point {
 	title: string;
 	description: string;
 	time: number;

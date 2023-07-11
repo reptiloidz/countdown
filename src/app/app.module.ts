@@ -5,11 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainListComponent } from './components/main-list/main-list.component';
 import { MainItemComponent } from './components/main-item/main-item.component';
-import { EventComponent } from './components/event/event.component';
+import { PointComponent } from './components/point/point.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { EditEventComponent } from './components/edit-event/edit-event.component';
-import { CreateEventComponent } from './components/create-event/create-event.component';
+import { EditPointComponent } from './components/edit-point/edit-point.component';
+import { CreatePointComponent } from './components/create-point/create-point.component';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
@@ -17,11 +17,11 @@ import { environment } from 'src/environments/environment';
 		AppComponent,
 		MainListComponent,
 		MainItemComponent,
-		EventComponent,
+		PointComponent,
 		HeaderComponent,
 		FooterComponent,
-		EditEventComponent,
-		CreateEventComponent,
+		EditPointComponent,
+		CreatePointComponent,
 	],
 	imports: [BrowserModule, AppRoutingModule],
 	providers: [...environment.providers],
