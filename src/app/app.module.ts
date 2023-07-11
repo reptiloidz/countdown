@@ -10,6 +10,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { EditEventComponent } from './components/edit-event/edit-event.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
 	declarations: [
@@ -23,7 +24,7 @@ import { CreateEventComponent } from './components/create-event/create-event.com
 		CreateEventComponent,
 	],
 	imports: [BrowserModule, AppRoutingModule],
-	providers: [],
+	providers: [...environment.providers],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

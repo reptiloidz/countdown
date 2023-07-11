@@ -50,6 +50,20 @@
 							"extractLicenses": false,
 							"sourceMap": true,
 							"namedChunks": true
+						},
+						"mock": {
+							"buildOptimizer": false,
+							"optimization": false,
+							"vendorChunk": true,
+							"extractLicenses": false,
+							"sourceMap": true,
+							"namedChunks": true,
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.mock.ts"
+								}
+							]
 						}
 					},
 					"defaultConfiguration": "production"
@@ -62,6 +76,9 @@
 						},
 						"development": {
 							"browserTarget": "cd:build:development"
+						},
+						"mock": {
+							"browserTarget": "cd:build:mock"
 						}
 					},
 					"defaultConfiguration": "development"

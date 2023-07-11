@@ -1,7 +1,7 @@
 <ul>
 	<li
 		app-main-item
-		*ngFor="let _ of [].constructor(4); let i = index"
-		[count]="i + 1"
+		*ngFor="let event of result; let i = index"
+		[event]="event"
 	></li>
 </ul>
