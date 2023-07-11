@@ -14,11 +14,13 @@ export class MockHttpService implements HttpServiceInterface {
 			title: 'Дней без аварии',
 			description: 'Время с последней аварии',
 			time: 1000000,
+			id: '12',
 		},
 		{
 			title: 'Релиз ASAP-PDF через',
 			description: 'До релиза Колиного фреймворка осталось всего ничего',
 			time: 4,
+			id: '13',
 		},
 	];
 
