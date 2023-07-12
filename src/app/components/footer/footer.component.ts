@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivationEnd, Router, Event } from '@angular/router';
+import { Router, Event, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
 @Component({
@@ -15,9 +15,10 @@ export class FooterComponent implements OnInit {
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.router.events
-				.pipe(filter((event: Event) => event instanceof ActivationEnd))
+				.pipe(filter((event: Event) => event instanceof NavigationEnd))
 				.subscribe(() => {
 					this.pointId =
+						// Не удалось получить snapshot прямо из события, проблема с типами (либо any, либо никак)
 						this.router.routerState.snapshot.root.firstChild?.params[
 							'id'
 						];
