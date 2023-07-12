@@ -27,4 +27,10 @@ export class MockHttpService implements HttpServiceInterface {
 	getPoints(): Observable<Point[]> {
 		return of(this.mockPoints);
 	}
+
+	getPoint(id: string): Observable<Point> {
+		return of(
+			this.mockPoints.find((item) => item.id === id) ?? ({} as Point)
+		);
+	}
 }

@@ -13,4 +13,8 @@ export class HttpService implements HttpServiceInterface {
 	getPoints(): Observable<Point[]> {
 		return this.http.get<Point[]>('');
 	}
+
+	getPoint(id: string): Observable<Point> {
+		return this.http.get<Point>('');
+	}
 }
