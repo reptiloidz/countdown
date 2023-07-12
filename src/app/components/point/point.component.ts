@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, Subscription, switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
-import { HttpService } from 'src/app/services/http.service';
 
 @Component({
 	selector: 'app-point',
@@ -13,18 +12,14 @@ export class PointComponent implements OnInit, OnDestroy {
 	point!: Point | undefined;
 	private subscriptions: Subscription = new Subscription();
 
-	constructor(
-		private data: DataService,
-		private route: ActivatedRoute,
-		private http: HttpService
-	) {}
+	constructor(private data: DataService, private route: ActivatedRoute) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.route.params
 				.pipe(
 					switchMap((data) => {
-						return this.fetchPoint(data['id']);
+						return this.data.fetchPoint(data['id']);
 					})
 				)
 				.subscribe({
@@ -38,12 +33,5 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
-	}
-
-	fetchPoint(id: string): Observable<Point | undefined> {
-		if (!this.data.points.find((item) => item.id === id)) {
-			return this.http.getPoint(id);
-		}
-		return of(this.data.points.find((item) => item.id === id));
 	}
 }

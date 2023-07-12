@@ -3,6 +3,8 @@
 </div>
 
 <div>
-	<a routerLink="/edit/123">Редактировать</a> |
+	<ng-container *ngIf="pointId"><a routerLink="/edit/{{pointId}}">
+		Редактировать</a> |
+	</ng-container>
 	<a routerLink="/create">Создать</a>
 </div>
