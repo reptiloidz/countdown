@@ -11,16 +11,19 @@ export class MockHttpService implements HttpServiceInterface {
 	// https://levelup.gitconnected.com/use-angular-mock-services-to-develop-without-a-backend-9eb8c5eef523
 	private mockPoints: Point[] = [
 		{
-			title: 'Дней без аварии',
-			description: 'Время с последней аварии',
-			time: 1000000,
+			title: 'День без аварии',
+			description: 'Время с последней аварии или до нее',
+			date: '12.25.1991 15:44',
 			id: '12',
+			direction: 'forward',
 		},
 		{
-			title: 'Релиз ASAP-PDF через',
-			description: 'До релиза Колиного фреймворка осталось всего ничего',
-			time: 4,
+			title: 'Релиз ASAP-PDF',
+			description:
+				'До релиза Колиного фреймворка осталось всего ничего. А может он уже прошел',
+			date: '08.05.2023 13:00',
 			id: '13',
+			direction: 'backward',
 		},
 	];
 

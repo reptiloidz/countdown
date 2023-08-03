@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
+import { formatDistanceToNow } from 'date-fns';
+import { DateText } from 'src/app/enums/date-text.enum';
 
 @Component({
 	selector: 'app-point',
@@ -10,6 +12,8 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class PointComponent implements OnInit, OnDestroy {
 	point!: Point | undefined;
+	resultText = '';
+
 	private subscriptions: Subscription = new Subscription();
 
 	constructor(private data: DataService, private route: ActivatedRoute) {}
@@ -18,14 +22,18 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.route.params
 				.pipe(
-					switchMap((data) => {
+					switchMap((data: any) => {
 						return this.data.fetchPoint(data['id']);
 					})
 				)
 				.subscribe({
-					next: (point) => {
+					next: (point: Point | undefined) => {
 						this.data.addPoint(point);
 						this.point = point;
+						this.resultText =
+							this.getResultText() +
+							' ' +
+							formatDistanceToNow(new Date(point?.date || ''));
 					},
 				})
 		);
@@ -33,5 +41,18 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	getResultText() {
+		const isPast = new Date(this.point?.date || '') < new Date();
+		const isForward = this.point?.direction === 'forward';
+
+		return isPast
+			? isForward
+				? DateText.forwardPast
+				: DateText.backwardPast
+			: isForward
+			? DateText.forwardFuture
+			: DateText.backwardFuture;
 	}
 }

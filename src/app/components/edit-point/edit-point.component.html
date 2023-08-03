@@ -2,13 +2,25 @@
 	<h1>{{ isCreation ? "Создание" : "Редактирование" }}</h1>
 	<input type="text" placeholder="Название" formControlName="title">
 	<textarea type="text" placeholder="Описание" formControlName="description"></textarea>
-	<input type="text" placeholder="Срок" formControlName="time">
+	<input
+		type="text"
+		placeholder="Срок в минутах"
+		formControlName="difference"
+	>
+	<input
+		type="date"
+		formControlName="date"
+	>
+	<input
+		type="time"
+		formControlName="time"
+	>
 	<label>
-		<input type="radio" name="direction" id="down">
+		<input type="radio" formControlName="direction" value="backward">
 		Обратный отсчёт
 	</label>
 	<label>
-		<input type="radio" name="direction" id="up">
+		<input type="radio" formControlName="direction" value="forward">
 		Прямой отсчёт
 	</label>
 	<button>{{ isCreation ? "Создать" : "Сохранить" }}</button>

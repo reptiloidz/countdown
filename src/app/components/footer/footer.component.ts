@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
@@ -6,7 +6,7 @@ import { filter, Subscription } from 'rxjs';
 	selector: '[app-footer]',
 	templateUrl: './footer.component.html',
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent implements OnInit, OnDestroy {
 	pointId!: string;
 	private subscriptions: Subscription = new Subscription();
 
@@ -24,5 +24,9 @@ export class FooterComponent implements OnInit {
 						];
 				})
 		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 }

@@ -1,6 +1,9 @@
+import { Direction } from './direction.type';
+
 export interface Point {
 	title: string;
 	description: string;
-	time: number;
+	date: string;
 	id: string;
+	direction: Direction;
 }
