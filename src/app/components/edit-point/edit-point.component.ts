@@ -96,7 +96,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			interval(1000).subscribe({
+			interval(this._minute).subscribe({
 				next: () => {
 					this.dateChanged();
 				},
