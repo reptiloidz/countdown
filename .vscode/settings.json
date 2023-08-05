@@ -1,0 +1,8 @@
+{
+	"[html]": {
+		"editor.defaultFormatter": "vscode.html-language-features",
+		"editor.formatOnSave": true
+	},
+	"html.format.wrapAttributes": "force-expand-multiline",
+	"files.insertFinalNewline": true
+}
