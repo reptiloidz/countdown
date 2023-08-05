@@ -8,10 +8,11 @@
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
-		"lint": "npx prettier --write ./**/*.{js,ts,json} --use-tabs --single-quote"
+		"lint": "npx prettier --write ./**/*.{js,ts,json} --use-tabs --single-quote && eslint --fix \"**/*.html\""
 	},
 	"lint-staged": {
 		"*.{js,ts,json}": "npx prettier --write --use-tabs --single-quote",
+		"*.html": "eslint --fix \"**/*.html\"",
 		"*.scss": "stylelint --fix --customSyntax postcss-scss"
 	},
 	"husky": {
@@ -39,7 +40,11 @@
 		"@angular-devkit/build-angular": "^16.1.0",
 		"@angular/cli": "~16.1.0",
 		"@angular/compiler-cli": "^16.1.0",
+		"@html-eslint/eslint-plugin": "^0.19.1",
+		"@html-eslint/parser": "^0.19.1",
 		"@types/jasmine": "~4.3.0",
+		"eslint": "^8.46.0",
+		"eslint-plugin-html": "^7.1.0",
 		"husky": "4.3.0",
 		"jasmine-core": "~4.6.0",
 		"karma": "~6.4.0",

@@ -1,7 +1,20 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+<!DOCTYPE html>
+<form
+	[formGroup]="form"
+	(ngSubmit)="submit()"
+	class="form"
+>
 	<h1>{{ isCreation ? "Создание" : "Редактирование" }}</h1>
-	<input type="text" placeholder="Название" formControlName="title">
-	<textarea type="text" placeholder="Описание" formControlName="description"></textarea>
+	<input
+		type="text"
+		placeholder="Название"
+		formControlName="title"
+	>
+	<textarea
+		type="text"
+		placeholder="Описание"
+		formControlName="description"
+	></textarea>
 	<input
 		type="text"
 		placeholder="Срок в минутах"
@@ -16,11 +29,19 @@
 		formControlName="time"
 	>
 	<label>
-		<input type="radio" formControlName="direction" value="backward">
+		<input
+			type="radio"
+			formControlName="direction"
+			value="backward"
+		>
 		Обратный отсчёт
 	</label>
 	<label>
-		<input type="radio" formControlName="direction" value="forward">
+		<input
+			type="radio"
+			formControlName="direction"
+			value="forward"
+		>
 		Прямой отсчёт
 	</label>
 	<button>{{ isCreation ? "Создать" : "Сохранить" }}</button>
