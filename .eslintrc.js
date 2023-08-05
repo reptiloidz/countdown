@@ -13,5 +13,6 @@ module.exports = {
 	],
 	rules: {
 		'@html-eslint/indent': ['error', 'tab'],
+		'@html-eslint/require-doctype': 'off',
 	},
 };
