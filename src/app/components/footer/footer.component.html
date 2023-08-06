@@ -3,8 +3,16 @@
 </div>
 
 <div>
-	<ng-container *ngIf="pointId"><a routerLink="/edit/{{pointId}}">
-		Редактировать</a> |
+	<ng-container *ngIf="pointId">
+		<a routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}">
+			{{isEdit ? 'Перейти к событию' : 'Редактировать'}}</a> |
+		<ng-container *ngIf="!isEdit">
+			<button
+				(click)="setDateNow()"
+				class="link"
+			>
+				Сейчас!</button> |
+		</ng-container>
 	</ng-container>
 	<a routerLink="/create">Создать</a>
 </div>

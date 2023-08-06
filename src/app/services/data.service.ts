@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpService } from './http.service';
 
@@ -7,7 +7,10 @@ import { HttpService } from './http.service';
 	providedIn: 'root',
 })
 export class DataService {
-	_points: Point[] = [];
+	private _points: Point[] = [];
+	private _eventChangePointSubject = new Subject<Point>();
+
+	eventChangePoint$ = this._eventChangePointSubject.asObservable();
 
 	constructor(private http: HttpService) {}
 
@@ -38,5 +41,7 @@ export class DataService {
 			...point,
 			id,
 		};
+
+		this._eventChangePointSubject.next(point);
 	}
 }

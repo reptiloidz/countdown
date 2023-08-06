@@ -37,3 +37,13 @@ body {
 	font-family: monospace;
 	font-size: 48px;
 }
+
+a,
+.link {
+	padding: 0;
+	border: none;
+	background-color: transparent;
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+}

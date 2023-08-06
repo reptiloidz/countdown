@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, switchMap, interval } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 
 export enum EditPointType {
 	Create = 'create',
@@ -168,15 +168,36 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	submit() {
+		const date = parse(
+			this.form.controls['date'].value,
+			'yyyy-MM-dd',
+			new Date()
+		);
+		const dateTime = format(
+			parse(this.form.controls['time'].value, 'HH:mm', date),
+			'MM.dd.yyyy HH:mm'
+		);
+		const result = {
+			title: this.form.controls['title'].value,
+			description: this.form.controls['description'].value,
+			direction: this.form.controls['direction'].value,
+			difference: this.form.controls['difference'].value,
+			date: dateTime,
+		};
+
 		if (this.isCreation) {
 			this.point = {
-				...this.form.value,
+				...result,
 				id: new Date().getTime().toString(),
 			};
 			this.data.addPoint(this.point);
-			this.router.navigate(['/edit/' + this.point?.id.toString()]);
+			this.router.navigate(['/point/' + this.point?.id.toString()]);
 		} else {
-			this.data.editPoint(this.point?.id, this.form.value as Point);
+			this.data.editPoint(this.point?.id, {
+				...result,
+				id: this.point?.id,
+			} as Point);
+			this.router.navigate(['/point/' + this.point?.id.toString()]);
 		}
 		alert('Успешно');
 	}

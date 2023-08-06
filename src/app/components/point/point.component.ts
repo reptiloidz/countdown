@@ -4,7 +4,6 @@ import { interval, Subscription, switchMap } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import {
-	format,
 	formatDistanceToNow,
 	formatDuration,
 	intervalToDuration,
@@ -38,12 +37,7 @@ export class PointComponent implements OnInit, OnDestroy {
 					next: (point: Point | undefined) => {
 						this.data.addPoint(point);
 						this.point = point;
-						this.remainText =
-							this.getRemainText() +
-							' ' +
-							formatDistanceToNow(new Date(point?.date || ''), {
-								locale: ru,
-							});
+						this.setRemainText(point);
 					},
 				})
 		);
@@ -53,9 +47,17 @@ export class PointComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.setTimer();
 					this.setDateTimer();
+					this.setRemainText(this.point);
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.data.eventChangePoint$.subscribe((point) => {
+				this.point = point;
+			})
+		);
+
 		this.setTimer();
 		this.setDateTimer();
 	}
@@ -71,11 +73,17 @@ export class PointComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	zeroPad(num?: number) {
+		return String(num).padStart(2, '0');
+	}
+
 	setTimer() {
 		const currentInterval = this.getInterval(
 			new Date(this.point?.date || '')
 		);
-		this.timer = `${currentInterval.hours}:${currentInterval.minutes}:${currentInterval.seconds}`;
+		this.timer = `${currentInterval.hours}:${this.zeroPad(
+			currentInterval.minutes
+		)}:${this.zeroPad(currentInterval.seconds)}`;
 	}
 
 	setDateTimer() {
@@ -97,7 +105,18 @@ export class PointComponent implements OnInit, OnDestroy {
 					locale: ru,
 				}
 			);
+		} else {
+			this.dateTimer = '';
 		}
+	}
+
+	setRemainText(point: Point | undefined) {
+		this.remainText =
+			this.getRemainText() +
+			' ' +
+			formatDistanceToNow(new Date(point?.date || ''), {
+				locale: ru,
+			});
 	}
 
 	getRemainText() {

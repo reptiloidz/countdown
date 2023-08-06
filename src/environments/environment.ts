@@ -1,8 +1,6 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-import { MockHttpService } from 'src/app/services/http.mock.service';
-import { HttpService } from 'src/app/services/http.service';
 import { Environment } from './interface';
 
 export const environment: Environment = {
