@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpService } from './http.service';
 
@@ -9,10 +9,31 @@ import { HttpService } from './http.service';
 export class DataService {
 	private _points: Point[] = [];
 	private _eventChangePointSubject = new Subject<Point>();
+	private subscriptions: Subscription = new Subscription();
 
 	eventChangePoint$ = this._eventChangePointSubject.asObservable();
 
-	constructor(private http: HttpService) {}
+	constructor(private http: HttpService) {
+		this.subscriptions.add(
+			this.http.eventAddPoint$.subscribe({
+				next: (point) => {
+					this._points.push(point);
+				},
+			})
+		);
+
+		this.subscriptions.add(
+			this.http.eventEditPoint$.subscribe((updatedPoint) => {
+				const index = this._points.findIndex(
+					(item) => item.id === updatedPoint.id
+				);
+				if (index !== -1) {
+					this._points[index] = updatedPoint;
+					this._eventChangePointSubject.next(updatedPoint);
+				}
+			})
+		);
+	}
 
 	set points(points: Point[]) {
 		this._points = points;
@@ -31,17 +52,13 @@ export class DataService {
 
 	addPoint(point: Point | undefined) {
 		if (point && !this._points.find((item) => item.id === point?.id)) {
-			this._points.push(point);
+			this.http.addPoint(point);
 		}
 	}
 
 	editPoint(id: string | undefined, point: Point) {
-		if (!id) return;
-		this._points[this._points.findIndex((item) => item.id === id)] = {
-			...point,
-			id,
-		};
-
-		this._eventChangePointSubject.next(point);
+		if (id) {
+			this.http.editPoint(point);
+		}
 	}
 }

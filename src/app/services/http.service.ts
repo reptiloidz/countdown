@@ -10,11 +10,22 @@ import { HttpServiceInterface } from '../interfaces/http.interface';
 export class HttpService implements HttpServiceInterface {
 	constructor(private http: HttpClient) {}
 
+	eventAddPoint$!: Observable<Point>;
+	eventEditPoint$!: Observable<Point>;
+
 	getPoints(): Observable<Point[]> {
 		return this.http.get<Point[]>('');
 	}
 
 	getPoint(id: string): Observable<Point> {
 		return this.http.get<Point>('');
+	}
+
+	addPoint(point: Point) {
+		// return this.http.get<Point>('');
+	}
+
+	editPoint(point: Point) {
+		// return this.http.get<Point>('');
 	}
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 
@@ -27,6 +27,12 @@ export class MockHttpService implements HttpServiceInterface {
 		},
 	];
 
+	private _eventAddPointSubject = new Subject<Point>();
+	private _eventEditPointSubject = new Subject<Point>();
+
+	eventAddPoint$ = this._eventAddPointSubject.asObservable();
+	eventEditPoint$ = this._eventEditPointSubject.asObservable();
+
 	getPoints(): Observable<Point[]> {
 		return of(this.mockPoints);
 	}
@@ -35,5 +41,13 @@ export class MockHttpService implements HttpServiceInterface {
 		return of(
 			this.mockPoints.find((item) => item.id === id) ?? ({} as Point)
 		);
+	}
+
+	addPoint(point: Point) {
+		this._eventAddPointSubject.next(point);
+	}
+
+	editPoint(point: Point) {
+		this._eventEditPointSubject.next(point);
 	}
 }
