@@ -4,6 +4,6 @@ export interface Point {
 	title: string;
 	description: string;
 	date: string;
-	id: string;
+	id?: string;
 	direction: Direction;
 }

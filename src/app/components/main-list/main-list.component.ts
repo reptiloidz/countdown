@@ -9,18 +9,24 @@ import { HttpService } from 'src/app/services/http.service';
 	templateUrl: './main-list.component.html',
 })
 export class MainListComponent implements OnInit, OnDestroy {
-	result: Point[] = [];
+	points: Point[] = [];
 	private subscriptions: Subscription = new Subscription();
 
 	constructor(private data: DataService, private http: HttpService) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.data.getPointsData().subscribe({
-				next: (result: Point[]) => {
-					this.result = result;
-					this.data.points = result;
+			this.data.fetchAllPoints().subscribe({
+				next: (points: Point[]) => {
+					this.points = points;
+					this.data.points = points;
 				},
+			})
+		);
+
+		this.subscriptions.add(
+			this.data.eventRemovePoint$.subscribe((id) => {
+				this.points = this.points.filter((point) => point.id !== id);
 			})
 		);
 	}

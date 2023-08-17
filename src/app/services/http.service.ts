@@ -45,10 +45,16 @@ export class HttpService implements HttpServiceInterface {
 		);
 	}
 
-	editPoint(point: Point): Observable<Point> {
+	patchPoint(point: Point): Observable<Point> {
 		return this.http.patch<Point>(
 			`${environment.fbDbUrl}/points/${point.id}.json`,
 			point
+		);
+	}
+
+	deletePoint(id: string | undefined): Observable<void> {
+		return this.http.delete<void>(
+			`${environment.fbDbUrl}/points/${id}.json`
 		);
 	}
 }

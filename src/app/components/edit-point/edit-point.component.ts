@@ -51,7 +51,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				.pipe(
 					switchMap((data: any) => {
 						return data['id']
-							? this.data.getPointData(data['id'])
+							? this.data.fetchPoint(data['id'])
 							: EMPTY;
 					})
 				)
@@ -193,33 +193,33 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		if (this.isCreation) {
 			this.point = {
 				...result,
-				id: new Date().getTime().toString(),
 			};
-			this.data.addPointData(this.point);
+			this.data.addPoint(this.point);
 			this.subscriptions.add(
 				this.data.eventAddPoint$.subscribe({
-					next: (point) => {
-						this.success(point);
+					next: () => {
+						this.success();
 					},
 				})
 			);
 		} else {
-			this.data.editPointData(this.point?.id, {
+			this.data.editPoint(this.point?.id, {
 				...result,
 				id: this.point?.id,
 			} as Point);
 			this.subscriptions.add(
 				this.data.eventEditPoint$.subscribe({
-					next: (point) => {
-						this.success(point);
+					next: () => {
+						this.success();
 					},
 				})
 			);
 		}
 	}
 
-	success(point: Point) {
-		this.router.navigate(['/point/' + this.point?.id.toString()]);
+	success() {
+		this.point?.id &&
+			this.router.navigate(['/point/' + this.point?.id.toString()]);
 		alert('Успешно');
 	}
 }

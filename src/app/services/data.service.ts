@@ -12,9 +12,11 @@ export class DataService {
 
 	private _eventEditPointSubject = new Subject<Point>();
 	private _eventAddPointSubject = new Subject<Point>();
+	private _eventRemovePointSubject = new Subject<string | undefined>();
 
 	eventAddPoint$ = this._eventAddPointSubject.asObservable();
 	eventEditPoint$ = this._eventEditPointSubject.asObservable();
+	eventRemovePoint$ = this._eventRemovePointSubject.asObservable();
 
 	constructor(private http: HttpService) {
 		this.subscriptions.add(
@@ -37,6 +39,16 @@ export class DataService {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.eventRemovePoint$.subscribe({
+				next: (id) => {
+					this._points = this._points.filter(
+						(point) => point.id !== id
+					);
+				},
+			})
+		);
 	}
 
 	set points(points: Point[]) {
@@ -47,38 +59,45 @@ export class DataService {
 		return this._points;
 	}
 
-	getPointsData(): Observable<Point[]> {
+	fetchAllPoints(): Observable<Point[]> {
 		if (!this.points.length) {
 			return this.http.getPoints();
 		}
 		return of(this.points);
 	}
 
-	getPointData(id: string): Observable<Point | undefined> {
+	fetchPoint(id: string): Observable<Point | undefined> {
 		if (!this.points.find((item) => item.id === id)) {
 			return this.http.getPoint(id);
 		}
 		return of(this.points.find((item) => item.id === id));
 	}
 
-	addPointData(point: Point | undefined) {
+	addPoint(point: Point | undefined) {
 		if (point && !this._points.find((item) => item.id === point?.id)) {
 			this.http.postPoint(point).subscribe({
 				next: () => {
-					this._points.push(point);
 					this._eventAddPointSubject.next(point);
 				},
 			});
 		}
 	}
 
-	editPointData(id: string | undefined, point: Point) {
-		if (id) {
-			this.http.editPoint(point).subscribe({
+	editPoint(id: string | undefined, point: Point) {
+		id &&
+			this.http.patchPoint(point).subscribe({
 				next: () => {
 					this._eventEditPointSubject.next(point);
 				},
 			});
-		}
+	}
+
+	removePoint(id: string | undefined) {
+		id &&
+			this.http.deletePoint(id).subscribe({
+				next: () => {
+					this._eventRemovePointSubject.next(id);
+				},
+			});
 	}
 }

@@ -1,3 +1,7 @@
 <h2>
-	<a routerLink="/point/{{ point.id }}">{{ point.title }}</a>
+	<a routerLink="/point/{{ point.id }}">{{ point.title }}</a> | <button
+		type="button"
+		class="link"
+		(click)="delete(point.id)"
+	>x</button>
 </h2>

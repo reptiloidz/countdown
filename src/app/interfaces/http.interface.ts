@@ -5,5 +5,6 @@ export interface HttpServiceInterface {
 	getPoints(): Observable<Point[]>;
 	getPoint(id: string): Observable<Point>;
 	postPoint(point: Point): Observable<Point>;
-	editPoint(point: Point): any;
+	patchPoint(point: Point): Observable<Point>;
+	deletePoint(id: string): Observable<void>;
 }

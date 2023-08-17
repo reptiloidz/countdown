@@ -29,7 +29,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 						this.pointId = snapshot?.params['id'];
 						this.isEdit = snapshot?.url[0]?.path === 'edit';
 						return this.pointId
-							? this.data.getPointData(this.pointId)
+							? this.data.fetchPoint(this.pointId)
 							: EMPTY;
 					})
 				)
@@ -50,7 +50,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	setDateNow() {
 		confirm('Обновить время события?') &&
-			this.data.editPointData(this.point?.id, {
+			this.data.editPoint(this.point?.id, {
 				...this.point,
 				date: format(new Date(), 'MM.dd.yyyy HH:mm'),
 			} as Point);

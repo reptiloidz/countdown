@@ -10,7 +10,6 @@ import {
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { DateText } from 'src/app/enums/date-text.enum';
-import { HttpService } from 'src/app/services/http.service';
 
 @Component({
 	selector: 'app-point',
@@ -20,41 +19,32 @@ export class PointComponent implements OnInit, OnDestroy {
 	point!: Point | undefined;
 	remainText = '';
 	dateTimer = '';
-	timer = '';
+	timer = '0:00:00';
 
 	private subscriptions: Subscription = new Subscription();
 
-	constructor(
-		private data: DataService,
-		private http: HttpService,
-		private route: ActivatedRoute
-	) {}
+	constructor(private data: DataService, private route: ActivatedRoute) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.route.params
 				.pipe(
 					switchMap((data: any) => {
-						return this.data.getPointData(data['id']);
+						return this.data.fetchPoint(data['id']);
+					})
+				)
+				.pipe(
+					switchMap((point: Point | undefined) => {
+						this.point = point;
+						this.setAllTimers();
+						return interval(1000);
 					})
 				)
 				.subscribe({
-					next: (point: Point | undefined) => {
-						// this.http.addPoint(point);
-						this.point = point;
-						this.setRemainText(point);
+					next: () => {
+						this.setAllTimers();
 					},
 				})
-		);
-
-		this.subscriptions.add(
-			interval(1000).subscribe({
-				next: () => {
-					this.setTimer();
-					this.setDateTimer();
-					this.setRemainText(this.point);
-				},
-			})
 		);
 
 		this.subscriptions.add(
@@ -62,9 +52,6 @@ export class PointComponent implements OnInit, OnDestroy {
 				this.point = point;
 			})
 		);
-
-		this.setTimer();
-		this.setDateTimer();
 	}
 
 	ngOnDestroy(): void {
@@ -80,6 +67,12 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	zeroPad(num?: number) {
 		return String(num).padStart(2, '0');
+	}
+
+	setAllTimers() {
+		this.setTimer();
+		this.setDateTimer();
+		this.setRemainText(this.point);
 	}
 
 	setTimer() {

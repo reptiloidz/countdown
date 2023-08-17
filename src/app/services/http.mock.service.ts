@@ -1,12 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-	BehaviorSubject,
-	Observable,
-	of,
-	Subject,
-	switchMap,
-	timer,
-} from 'rxjs';
+import { EMPTY, Observable, of, switchMap, timer } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 
@@ -34,10 +27,6 @@ export class HttpService implements HttpServiceInterface {
 		},
 	];
 
-	private _eventEditPointSubject = new Subject<Point>();
-
-	eventEditPoint$ = this._eventEditPointSubject.asObservable();
-
 	getPoints(): Observable<Point[]> {
 		return of(this.mockPoints);
 	}
@@ -51,12 +40,24 @@ export class HttpService implements HttpServiceInterface {
 	postPoint(point: Point): Observable<Point> {
 		return timer(1000).pipe(
 			switchMap(() => {
+				return of({ ...point, id: new Date().getTime().toString() });
+			})
+		);
+	}
+
+	patchPoint(point: Point): Observable<Point> {
+		return timer(1000).pipe(
+			switchMap(() => {
 				return of(point);
 			})
 		);
 	}
 
-	editPoint(point: Point) {
-		this._eventEditPointSubject.next(point);
+	deletePoint(id: string): Observable<void> {
+		return timer(1000).pipe(
+			switchMap(() => {
+				return EMPTY;
+			})
+		);
 	}
 }
