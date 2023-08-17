@@ -12,11 +12,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 	result: Point[] = [];
 	private subscriptions: Subscription = new Subscription();
 
-	constructor(private http: HttpService, private data: DataService) {}
+	constructor(private data: DataService, private http: HttpService) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.http.getPoints().subscribe({
+			this.data.getPointsData().subscribe({
 				next: (result: Point[]) => {
 					this.result = result;
 					this.data.points = result;

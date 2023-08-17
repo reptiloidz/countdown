@@ -1,16 +1,15 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-import { MockHttpService } from 'src/app/services/http.mock.service';
-import { HttpService } from 'src/app/services/http.service';
+import { HttpService } from 'src/app/services/http.mock.service';
+import { HttpService as MockHttpService } from 'src/app/services/http.service';
 import { Environment } from './interface';
 
 export const environment: Environment = {
 	production: false,
 	mock: true,
 	providers: [{ provide: HttpService, useClass: MockHttpService }],
-	apiKey: 'AIzaSyAYGrljEcCkNKupDjzRrOSb_nwdbuvf_nY',
-	fbDbUrl: 'https://angular-blog-cf522-default-rtdb.firebaseio.com',
+	apiKey: 'AIzaSyAqSOHSqWdyzx2GKWK33AqIIRgimEjVFak',
 };
 /*
  * For easier debugging in development mode, you can import the following file

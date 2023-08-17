@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, switchMap, interval } from 'rxjs';
+import { Subscription, switchMap, interval, EMPTY } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import { format, parse } from 'date-fns';
@@ -50,7 +50,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.route.params
 				.pipe(
 					switchMap((data: any) => {
-						return this.data.fetchPoint(data['id']);
+						return data['id']
+							? this.data.getPointData(data['id'])
+							: EMPTY;
 					})
 				)
 				.subscribe({
@@ -59,6 +61,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.point = point;
 							this.setValues();
 						}
+					},
+					error(err) {
+						console.log('Ошибка при редактировании:', err);
 					},
 				})
 		);
@@ -190,15 +195,31 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				...result,
 				id: new Date().getTime().toString(),
 			};
-			this.data.addPoint(this.point);
-			this.router.navigate(['/point/' + this.point?.id.toString()]);
+			this.data.addPointData(this.point);
+			this.subscriptions.add(
+				this.data.eventAddPoint$.subscribe({
+					next: (point) => {
+						this.success(point);
+					},
+				})
+			);
 		} else {
-			this.data.editPoint(this.point?.id, {
+			this.data.editPointData(this.point?.id, {
 				...result,
 				id: this.point?.id,
 			} as Point);
-			this.router.navigate(['/point/' + this.point?.id.toString()]);
+			this.subscriptions.add(
+				this.data.eventEditPoint$.subscribe({
+					next: (point) => {
+						this.success(point);
+					},
+				})
+			);
 		}
+	}
+
+	success(point: Point) {
+		this.router.navigate(['/point/' + this.point?.id.toString()]);
 		alert('Успешно');
 	}
 }

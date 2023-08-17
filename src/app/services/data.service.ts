@@ -8,14 +8,17 @@ import { HttpService } from './http.service';
 })
 export class DataService {
 	private _points: Point[] = [];
-	private _eventChangePointSubject = new Subject<Point>();
 	private subscriptions: Subscription = new Subscription();
 
-	eventChangePoint$ = this._eventChangePointSubject.asObservable();
+	private _eventEditPointSubject = new Subject<Point>();
+	private _eventAddPointSubject = new Subject<Point>();
+
+	eventAddPoint$ = this._eventAddPointSubject.asObservable();
+	eventEditPoint$ = this._eventEditPointSubject.asObservable();
 
 	constructor(private http: HttpService) {
 		this.subscriptions.add(
-			this.http.eventAddPoint$.subscribe({
+			this.eventAddPoint$.subscribe({
 				next: (point) => {
 					this._points.push(point);
 				},
@@ -23,14 +26,15 @@ export class DataService {
 		);
 
 		this.subscriptions.add(
-			this.http.eventEditPoint$.subscribe((updatedPoint) => {
-				const index = this._points.findIndex(
-					(item) => item.id === updatedPoint.id
-				);
-				if (index !== -1) {
-					this._points[index] = updatedPoint;
-					this._eventChangePointSubject.next(updatedPoint);
-				}
+			this.eventEditPoint$.subscribe({
+				next: (updatedPoint) => {
+					const index = this._points.findIndex(
+						(item) => item.id === updatedPoint.id
+					);
+					if (index !== -1) {
+						this._points[index] = updatedPoint;
+					}
+				},
 			})
 		);
 	}
@@ -43,22 +47,38 @@ export class DataService {
 		return this._points;
 	}
 
-	fetchPoint(id: string): Observable<Point | undefined> {
+	getPointsData(): Observable<Point[]> {
+		if (!this.points.length) {
+			return this.http.getPoints();
+		}
+		return of(this.points);
+	}
+
+	getPointData(id: string): Observable<Point | undefined> {
 		if (!this.points.find((item) => item.id === id)) {
 			return this.http.getPoint(id);
 		}
 		return of(this.points.find((item) => item.id === id));
 	}
 
-	addPoint(point: Point | undefined) {
+	addPointData(point: Point | undefined) {
 		if (point && !this._points.find((item) => item.id === point?.id)) {
-			this.http.addPoint(point);
+			this.http.postPoint(point).subscribe({
+				next: () => {
+					this._points.push(point);
+					this._eventAddPointSubject.next(point);
+				},
+			});
 		}
 	}
 
-	editPoint(id: string | undefined, point: Point) {
+	editPointData(id: string | undefined, point: Point) {
 		if (id) {
-			this.http.editPoint(point);
+			this.http.editPoint(point).subscribe({
+				next: () => {
+					this._eventEditPointSubject.next(point);
+				},
+			});
 		}
 	}
 }

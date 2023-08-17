@@ -10,7 +10,9 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { CreatePointComponent } from './components/create-point/create-point.component';
-import { environment } from 'src/environments/environment';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpService } from './services/http.service';
+import { HttpService as MockHttpService } from './services/http.mock.service';
 
 @NgModule({
 	declarations: [
@@ -28,8 +30,11 @@ import { environment } from 'src/environments/environment';
 		AppRoutingModule,
 		FormsModule,
 		ReactiveFormsModule,
+		HttpClientModule,
 	],
-	providers: [...environment.providers],
+	providers: [
+		// { provide: HttpService, useClass: MockHttpService }
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

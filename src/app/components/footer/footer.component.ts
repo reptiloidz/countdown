@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { format } from 'date-fns';
-import { filter, Subscription, switchMap } from 'rxjs';
+import { filter, Subscription, switchMap, EMPTY } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 
@@ -28,12 +28,17 @@ export class FooterComponent implements OnInit, OnDestroy {
 							this.router.routerState.snapshot.root.firstChild;
 						this.pointId = snapshot?.params['id'];
 						this.isEdit = snapshot?.url[0]?.path === 'edit';
-						return this.data.fetchPoint(this.pointId);
+						return this.pointId
+							? this.data.getPointData(this.pointId)
+							: EMPTY;
 					})
 				)
 				.subscribe({
 					next: (point: Point | undefined) => {
 						this.point = point;
+					},
+					error(err) {
+						console.log('Ошибка в Футере:', err);
 					},
 				})
 		);
@@ -45,7 +50,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	setDateNow() {
 		confirm('Обновить время события?') &&
-			this.data.editPoint(this.point?.id, {
+			this.data.editPointData(this.point?.id, {
 				...this.point,
 				date: format(new Date(), 'MM.dd.yyyy HH:mm'),
 			} as Point);

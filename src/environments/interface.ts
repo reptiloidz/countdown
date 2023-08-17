@@ -4,6 +4,6 @@ export interface Environment {
 	production: boolean;
 	mock: boolean;
 	apiKey: string;
-	fbDbUrl: string;
+	fbDbUrl?: string;
 	providers: (Provider | EnvironmentProviders)[];
 }

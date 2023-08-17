@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import {
+	BehaviorSubject,
+	Observable,
+	of,
+	Subject,
+	switchMap,
+	timer,
+} from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class MockHttpService implements HttpServiceInterface {
+export class HttpService implements HttpServiceInterface {
 	// https://angular.io/guide/build
 	// https://levelup.gitconnected.com/use-angular-mock-services-to-develop-without-a-backend-9eb8c5eef523
 	private mockPoints: Point[] = [
@@ -27,10 +34,8 @@ export class MockHttpService implements HttpServiceInterface {
 		},
 	];
 
-	private _eventAddPointSubject = new Subject<Point>();
 	private _eventEditPointSubject = new Subject<Point>();
 
-	eventAddPoint$ = this._eventAddPointSubject.asObservable();
 	eventEditPoint$ = this._eventEditPointSubject.asObservable();
 
 	getPoints(): Observable<Point[]> {
@@ -43,8 +48,12 @@ export class MockHttpService implements HttpServiceInterface {
 		);
 	}
 
-	addPoint(point: Point) {
-		this._eventAddPointSubject.next(point);
+	postPoint(point: Point): Observable<Point> {
+		return timer(1000).pipe(
+			switchMap(() => {
+				return of(point);
+			})
+		);
 	}
 
 	editPoint(point: Point) {

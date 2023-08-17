@@ -10,6 +10,7 @@ import {
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { DateText } from 'src/app/enums/date-text.enum';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
 	selector: 'app-point',
@@ -23,19 +24,23 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	private subscriptions: Subscription = new Subscription();
 
-	constructor(private data: DataService, private route: ActivatedRoute) {}
+	constructor(
+		private data: DataService,
+		private http: HttpService,
+		private route: ActivatedRoute
+	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.route.params
 				.pipe(
 					switchMap((data: any) => {
-						return this.data.fetchPoint(data['id']);
+						return this.data.getPointData(data['id']);
 					})
 				)
 				.subscribe({
 					next: (point: Point | undefined) => {
-						this.data.addPoint(point);
+						// this.http.addPoint(point);
 						this.point = point;
 						this.setRemainText(point);
 					},
@@ -53,7 +58,7 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.data.eventChangePoint$.subscribe((point) => {
+			this.data.eventEditPoint$.subscribe((point) => {
 				this.point = point;
 			})
 		);
