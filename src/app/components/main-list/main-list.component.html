@@ -1,7 +1,11 @@
-<ul>
+<ul *ngIf="!loading; else loader">
 	<li
 		app-main-item
 		*ngFor="let point of points; let i = index"
 		[point]="point"
 	></li>
 </ul>
+
+<ng-template #loader>
+	<h2 *ngIf="loading">Загрузка...</h2>
+</ng-template>

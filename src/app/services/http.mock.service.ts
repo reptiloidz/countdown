@@ -37,10 +37,10 @@ export class HttpService implements HttpServiceInterface {
 		);
 	}
 
-	postPoint(point: Point): Observable<Point> {
+	postPoint(point: Point): Observable<string> {
 		return timer(1000).pipe(
 			switchMap(() => {
-				return of({ ...point, id: new Date().getTime().toString() });
+				return of(new Date().getTime().toString());
 			})
 		);
 	}
@@ -53,10 +53,10 @@ export class HttpService implements HttpServiceInterface {
 		);
 	}
 
-	deletePoint(id: string): Observable<void> {
+	deletePoint(): Observable<void> {
 		return timer(1000).pipe(
 			switchMap(() => {
-				return EMPTY;
+				return of(undefined);
 			})
 		);
 	}

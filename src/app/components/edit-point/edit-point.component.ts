@@ -107,6 +107,23 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.data.eventAddPoint$.subscribe({
+				next: (point) => {
+					this.point = point;
+					this.success();
+				},
+			})
+		);
+
+		this.subscriptions.add(
+			this.data.eventEditPoint$.subscribe({
+				next: () => {
+					this.success();
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -195,25 +212,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				...result,
 			};
 			this.data.addPoint(this.point);
-			this.subscriptions.add(
-				this.data.eventAddPoint$.subscribe({
-					next: () => {
-						this.success();
-					},
-				})
-			);
 		} else {
 			this.data.editPoint(this.point?.id, {
 				...result,
 				id: this.point?.id,
 			} as Point);
-			this.subscriptions.add(
-				this.data.eventEditPoint$.subscribe({
-					next: () => {
-						this.success();
-					},
-				})
-			);
 		}
 	}
 

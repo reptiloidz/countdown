@@ -38,11 +38,14 @@ export class HttpService implements HttpServiceInterface {
 			);
 	}
 
-	postPoint(point: Point | undefined): Observable<Point> {
-		return this.http.post<Point>(
-			`${environment.fbDbUrl}/points.json`,
-			point
-		);
+	postPoint(point: Point | undefined): Observable<string> {
+		return this.http
+			.post<{ name: string }>(`${environment.fbDbUrl}/points.json`, point)
+			.pipe(
+				map((data) => {
+					return data.name;
+				})
+			);
 	}
 
 	patchPoint(point: Point): Observable<Point> {

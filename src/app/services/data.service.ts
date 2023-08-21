@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpService } from './http.service';
 
@@ -10,15 +10,27 @@ export class DataService {
 	private _points: Point[] = [];
 	private subscriptions: Subscription = new Subscription();
 
+	private _eventFetchAllPointsSubject = new BehaviorSubject<Point[]>(
+		this._points
+	);
 	private _eventEditPointSubject = new Subject<Point>();
 	private _eventAddPointSubject = new Subject<Point>();
 	private _eventRemovePointSubject = new Subject<string | undefined>();
 
+	eventFetchAllPoints$ = this._eventFetchAllPointsSubject.asObservable();
 	eventAddPoint$ = this._eventAddPointSubject.asObservable();
 	eventEditPoint$ = this._eventEditPointSubject.asObservable();
 	eventRemovePoint$ = this._eventRemovePointSubject.asObservable();
 
 	constructor(private http: HttpService) {
+		this.subscriptions.add(
+			this.eventFetchAllPoints$.subscribe({
+				next: (points) => {
+					this.points = points;
+				},
+			})
+		);
+
 		this.subscriptions.add(
 			this.eventAddPoint$.subscribe({
 				next: (point) => {
@@ -43,7 +55,7 @@ export class DataService {
 		this.subscriptions.add(
 			this.eventRemovePoint$.subscribe({
 				next: (id) => {
-					this._points = this._points.filter(
+					this.points = this.points.filter(
 						(point) => point.id !== id
 					);
 				},
@@ -59,11 +71,15 @@ export class DataService {
 		return this._points;
 	}
 
-	fetchAllPoints(): Observable<Point[]> {
-		if (!this.points.length) {
-			return this.http.getPoints();
-		}
-		return of(this.points);
+	fetchAllPoints() {
+		this.http.getPoints().subscribe({
+			next: (points) => {
+				this._eventFetchAllPointsSubject.next(points);
+			},
+			error: (err) => {
+				console.log('Ошибка при загрузке событий', err);
+			},
+		});
 	}
 
 	fetchPoint(id: string): Observable<Point | undefined> {
@@ -76,8 +92,8 @@ export class DataService {
 	addPoint(point: Point | undefined) {
 		if (point && !this._points.find((item) => item.id === point?.id)) {
 			this.http.postPoint(point).subscribe({
-				next: () => {
-					this._eventAddPointSubject.next(point);
+				next: (id) => {
+					this._eventAddPointSubject.next({ ...point, id });
 				},
 			});
 		}
