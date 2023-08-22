@@ -28,7 +28,11 @@ export class HttpService implements HttpServiceInterface {
 	];
 
 	getPoints(): Observable<Point[]> {
-		return of(this.mockPoints);
+		return timer(1000).pipe(
+			switchMap(() => {
+				return of(this.mockPoints);
+			})
+		);
 	}
 
 	getPoint(id: string): Observable<Point> {

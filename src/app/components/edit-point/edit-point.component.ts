@@ -27,6 +27,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	form!: FormGroup;
 	point: Point | undefined;
 	difference = 0;
+	loading = false;
 	private _minute = 60000;
 	private subscriptions: Subscription = new Subscription();
 
@@ -62,8 +63,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.setValues();
 						}
 					},
-					error(err) {
-						console.log('Ошибка при редактировании:', err);
+					error: (err) => {
+						console.error(
+							'Ошибка при создании/редактировании:\n',
+							err.message
+						);
 					},
 				})
 		);
@@ -73,6 +77,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.dateChanged();
 				},
+				error: (err) => {
+					console.error('Ошибка при изменении даты:\n', err.message);
+				},
 			})
 		);
 
@@ -80,6 +87,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.form.controls['time'].valueChanges.subscribe({
 				next: () => {
 					this.dateChanged();
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при изменении времени:\n',
+						err.message
+					);
 				},
 			})
 		);
@@ -89,6 +102,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.differenceChanged();
 				},
+				error: (err) => {
+					console.error(
+						'Ошибка при изменении таймера:\n',
+						err.message
+					);
+				},
 			})
 		);
 
@@ -97,6 +116,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.differenceChanged();
 				},
+				error: (err) => {
+					console.error(
+						'Ошибка при изменении направления:\n',
+						err.message
+					);
+				},
 			})
 		);
 
@@ -104,6 +129,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			interval(this._minute).subscribe({
 				next: () => {
 					this.dateChanged();
+				},
+				error: (err) => {
+					console.error('Ошибка при работе таймера:\n', err.message);
 				},
 			})
 		);
@@ -114,6 +142,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					this.point = point;
 					this.success();
 				},
+				error: (err) => {
+					console.error(
+						'Ошибка при создании события:\n',
+						err.message
+					);
+				},
 			})
 		);
 
@@ -121,6 +155,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$.subscribe({
 				next: () => {
 					this.success();
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при редактировании события:\n',
+						err.message
+					);
 				},
 			})
 		);
@@ -190,6 +230,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	submit() {
+		this.loading = true;
+
 		const date = parse(
 			this.form.controls['date'].value,
 			'yyyy-MM-dd',
@@ -221,6 +263,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	success() {
+		this.loading = false;
 		this.point?.id &&
 			this.router.navigate(['/point/' + this.point?.id.toString()]);
 		alert('Успешно');

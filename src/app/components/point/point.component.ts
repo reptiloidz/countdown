@@ -20,6 +20,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	remainText = '';
 	dateTimer = '';
 	timer = '0:00:00';
+	loading = false;
 
 	private subscriptions: Subscription = new Subscription();
 
@@ -44,12 +45,38 @@ export class PointComponent implements OnInit, OnDestroy {
 					next: () => {
 						this.setAllTimers();
 					},
+					error: (err) => {
+						console.error(
+							'Ошибка при обновлении таймеров:\n',
+							err.message
+						);
+					},
 				})
 		);
 
 		this.subscriptions.add(
-			this.data.eventEditPoint$.subscribe((point) => {
-				this.point = point;
+			this.data.eventStartEditPoint$.subscribe({
+				next: () => {
+					this.loading = true;
+				},
+				error: (err) => {
+					console.error('Ошибка при сбросе таймера:\n', err.message);
+				},
+			})
+		);
+
+		this.subscriptions.add(
+			this.data.eventEditPoint$.subscribe({
+				next: (point) => {
+					this.loading = this.data.loading = false;
+					this.point = point;
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при обновлении события после сброса таймера:\n',
+						err.message
+					);
+				},
 			})
 		);
 	}

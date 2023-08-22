@@ -7,26 +7,38 @@ import { HttpService } from './http.service';
 	providedIn: 'root',
 })
 export class DataService {
+	private _loading = false;
+
 	private _points: Point[] = [];
 	private subscriptions: Subscription = new Subscription();
 
 	private _eventFetchAllPointsSubject = new BehaviorSubject<Point[]>(
 		this._points
 	);
-	private _eventEditPointSubject = new Subject<Point>();
 	private _eventAddPointSubject = new Subject<Point>();
+	private _eventEditPointSubject = new Subject<Point>();
+	private _eventStartEditPointSubject = new Subject<void>();
 	private _eventRemovePointSubject = new Subject<string | undefined>();
+	private _eventStartRemovePointSubject = new Subject<string>();
 
 	eventFetchAllPoints$ = this._eventFetchAllPointsSubject.asObservable();
 	eventAddPoint$ = this._eventAddPointSubject.asObservable();
 	eventEditPoint$ = this._eventEditPointSubject.asObservable();
+	eventStartEditPoint$ = this._eventStartEditPointSubject.asObservable();
 	eventRemovePoint$ = this._eventRemovePointSubject.asObservable();
+	eventStartRemovePoint$ = this._eventStartRemovePointSubject.asObservable();
 
 	constructor(private http: HttpService) {
 		this.subscriptions.add(
 			this.eventFetchAllPoints$.subscribe({
 				next: (points) => {
 					this.points = points;
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при сохранении списка событий:\n',
+						err.message
+					);
 				},
 			})
 		);
@@ -35,6 +47,12 @@ export class DataService {
 			this.eventAddPoint$.subscribe({
 				next: (point) => {
 					this._points.push(point);
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при сохранении события в список:\n',
+						err.message
+					);
 				},
 			})
 		);
@@ -49,6 +67,12 @@ export class DataService {
 						this._points[index] = updatedPoint;
 					}
 				},
+				error: (err) => {
+					console.error(
+						'Ошибка при редактировании события в списке:\n',
+						err.message
+					);
+				},
 			})
 		);
 
@@ -57,6 +81,12 @@ export class DataService {
 				next: (id) => {
 					this.points = this.points.filter(
 						(point) => point.id !== id
+					);
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при удалении события из списка:\n',
+						err.message
 					);
 				},
 			})
@@ -71,13 +101,21 @@ export class DataService {
 		return this._points;
 	}
 
+	set loading(isLoading: boolean) {
+		this._loading = isLoading;
+	}
+
+	get loading() {
+		return this._loading;
+	}
+
 	fetchAllPoints() {
 		this.http.getPoints().subscribe({
 			next: (points) => {
 				this._eventFetchAllPointsSubject.next(points);
 			},
 			error: (err) => {
-				console.log('Ошибка при загрузке событий', err);
+				console.error('Ошибка при загрузке событий:\n', err.message);
 			},
 		});
 	}
@@ -100,20 +138,38 @@ export class DataService {
 	}
 
 	editPoint(id: string | undefined, point: Point) {
-		id &&
+		if (id) {
+			this.loading = true;
+			this._eventStartEditPointSubject.next();
 			this.http.patchPoint(point).subscribe({
 				next: () => {
 					this._eventEditPointSubject.next(point);
 				},
+				error: (err) => {
+					console.error(
+						'Ошибка при редактировании события:\n',
+						err.message
+					);
+				},
 			});
+		}
 	}
 
 	removePoint(id: string | undefined) {
-		id &&
+		if (id) {
+			this.loading = true;
+			this._eventStartRemovePointSubject.next(id);
 			this.http.deletePoint(id).subscribe({
 				next: () => {
 					this._eventRemovePointSubject.next(id);
 				},
+				error: (err) => {
+					console.error(
+						'Ошибка при удалении события:\n',
+						err.message
+					);
+				},
 			});
+		}
 	}
 }

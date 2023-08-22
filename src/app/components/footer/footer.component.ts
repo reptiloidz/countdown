@@ -37,8 +37,11 @@ export class FooterComponent implements OnInit, OnDestroy {
 					next: (point: Point | undefined) => {
 						this.point = point;
 					},
-					error(err) {
-						console.log('Ошибка в Футере:', err);
+					error: (err) => {
+						console.error(
+							'Ошибка в футере при получении события:\n',
+							err.message
+						);
 					},
 				})
 		);

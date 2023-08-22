@@ -3,7 +3,10 @@
 	(ngSubmit)="submit()"
 	class="form"
 >
-	<h1>{{ isCreation ? "Создание" : "Редактирование" }}</h1>
+	<h1>{{ isCreation ? "Создание" : "Редактирование" }}<span
+			*ngIf="loading"
+			class="loader rotating"
+		></span></h1>
 	<input
 		type="text"
 		placeholder="Название"
@@ -43,5 +46,5 @@
 		>
 		Прямой отсчёт
 	</label>
-	<button>{{ isCreation ? "Создать" : "Сохранить" }}</button>
+	<button [disabled]="loading">{{ isCreation ? "Создать" : "Сохранить" }}</button>
 </form>

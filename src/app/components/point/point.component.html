@@ -1,5 +1,8 @@
 <div>
-	<h1>{{ point?.title }}</h1>
+	<h1>{{ point?.title }}<span
+			*ngIf="loading"
+			class="loader rotating"
+		></span></h1>
 	<h2>{{ remainText }}</h2>
 	<p class="timer">{{ dateTimer }} {{ timer }}</p>
 </div>
