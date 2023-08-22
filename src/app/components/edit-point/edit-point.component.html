@@ -21,6 +21,9 @@
 		type="text"
 		placeholder="Срок в минутах"
 		formControlName="difference"
+		mask="0*"
+		[validation]="false"
+		[maxlength]="validatorDifferenceMaxLength"
 	>
 	<input
 		type="date"
@@ -46,5 +49,5 @@
 		>
 		Прямой отсчёт
 	</label>
-	<button [disabled]="loading">{{ isCreation ? "Создать" : "Сохранить" }}</button>
+	<button [disabled]="loading || form.invalid">{{ isCreation ? "Создать" : "Сохранить" }}</button>
 </form>

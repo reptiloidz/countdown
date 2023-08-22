@@ -7,7 +7,15 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, switchMap, interval, EMPTY } from 'rxjs';
+import {
+	Subscription,
+	switchMap,
+	interval,
+	EMPTY,
+	debounce,
+	timer,
+	filter,
+} from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import { format, parse } from 'date-fns';
@@ -28,6 +36,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	point: Point | undefined;
 	difference = 0;
 	loading = false;
+	validatorDifferenceMaxLength = 8;
+
+	private _debounceTime = 500;
 	private _minute = 60000;
 	private subscriptions: Subscription = new Subscription();
 
@@ -40,9 +51,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.form = new FormGroup({
 			title: new FormControl(null, [Validators.required]),
-			description: new FormControl(null, [Validators.required]),
-			difference: new FormControl(this.difference, [Validators.required]),
-			direction: new FormControl(null, [Validators.required]),
+			description: new FormControl(),
+			difference: new FormControl(this.difference, [
+				Validators.required,
+				Validators.pattern(
+					`^[0-9]{1,${this.validatorDifferenceMaxLength}}$`
+				),
+			]),
+			direction: new FormControl('backward', [Validators.required]),
 			date: new FormControl(null, [Validators.required]),
 			time: new FormControl('00:00', [Validators.required]),
 		});
@@ -73,42 +89,51 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.form.controls['date'].valueChanges.subscribe({
-				next: () => {
-					this.dateChanged();
-				},
-				error: (err) => {
-					console.error('Ошибка при изменении даты:\n', err.message);
-				},
-			})
+			this.form.controls['date'].valueChanges
+				.pipe(debounce(() => timer(this._debounceTime)))
+				.subscribe({
+					next: () => {
+						this.dateChanged();
+					},
+					error: (err) => {
+						console.error(
+							'Ошибка при изменении даты:\n',
+							err.message
+						);
+					},
+				})
 		);
 
 		this.subscriptions.add(
-			this.form.controls['time'].valueChanges.subscribe({
-				next: () => {
-					this.dateChanged();
-				},
-				error: (err) => {
-					console.error(
-						'Ошибка при изменении времени:\n',
-						err.message
-					);
-				},
-			})
+			this.form.controls['time'].valueChanges
+				.pipe(debounce(() => timer(this._debounceTime)))
+				.subscribe({
+					next: () => {
+						this.dateChanged();
+					},
+					error: (err) => {
+						console.error(
+							'Ошибка при изменении времени:\n',
+							err.message
+						);
+					},
+				})
 		);
 
 		this.subscriptions.add(
-			this.form.controls['difference'].valueChanges.subscribe({
-				next: () => {
-					this.differenceChanged();
-				},
-				error: (err) => {
-					console.error(
-						'Ошибка при изменении таймера:\n',
-						err.message
-					);
-				},
-			})
+			this.form.controls['difference'].valueChanges
+				.pipe(debounce(() => timer(this._debounceTime)))
+				.subscribe({
+					next: () => {
+						this.differenceChanged();
+					},
+					error: (err) => {
+						console.error(
+							'Ошибка при изменении таймера:\n',
+							err.message
+						);
+					},
+				})
 		);
 
 		this.subscriptions.add(
@@ -126,14 +151,23 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			interval(this._minute).subscribe({
-				next: () => {
-					this.dateChanged();
-				},
-				error: (err) => {
-					console.error('Ошибка при работе таймера:\n', err.message);
-				},
-			})
+			interval(this._minute)
+				.pipe(
+					filter(() => {
+						return this.form.controls['date'].valid;
+					})
+				)
+				.subscribe({
+					next: () => {
+						this.dateChanged();
+					},
+					error: (err) => {
+						console.error(
+							'Ошибка при работе таймера:\n',
+							err.message
+						);
+					},
+				})
 		);
 
 		this.subscriptions.add(
@@ -212,8 +246,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		const diff = +this.form.controls['difference'].value;
 		const currentDate = new Date();
 		const targetDate = this.isForward
-			? new Date(currentDate.getTime() + diff * this._minute)
-			: new Date(currentDate.getTime() - diff * this._minute);
+			? new Date(currentDate.getTime() - diff * this._minute)
+			: new Date(currentDate.getTime() + diff * this._minute);
 
 		this.form.patchValue({
 			date: format(targetDate, 'yyyy-MM-dd'),
@@ -222,7 +256,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	convertToMinutes(ms: number): number {
-		return Math.round(Math.abs(ms) / this._minute);
+		return Math[this.isForward ? 'trunc' : 'ceil'](
+			Math.abs(ms) / this._minute
+		);
 	}
 
 	get isForward() {
@@ -230,6 +266,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	submit() {
+		if (this.form.invalid) {
+			return;
+		}
+
+		this.differenceChanged();
 		this.loading = true;
 
 		const date = parse(

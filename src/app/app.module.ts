@@ -11,8 +11,9 @@ import { FooterComponent } from './components/footer/footer.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { CreatePointComponent } from './components/create-point/create-point.component';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpService } from './services/http.service';
-import { HttpService as MockHttpService } from './services/http.mock.service';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+// import { HttpService } from './services/http.service';
+// import { HttpService as MockHttpService } from './services/http.mock.service';
 
 @NgModule({
 	declarations: [
@@ -31,9 +32,11 @@ import { HttpService as MockHttpService } from './services/http.mock.service';
 		FormsModule,
 		ReactiveFormsModule,
 		HttpClientModule,
+		NgxMaskDirective,
 	],
 	providers: [
-		// { provide: HttpService, useClass: MockHttpService }
+		// { provide: HttpService, useClass: MockHttpService },
+		[provideNgxMask()],
 	],
 	bootstrap: [AppComponent],
 })
