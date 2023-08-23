@@ -55,7 +55,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 		confirm('Обновить время события?') &&
 			this.data.editPoint(this.point?.id, {
 				...this.point,
-				date: format(new Date(), 'MM.dd.yyyy HH:mm'),
+				date: format(new Date(), 'MM/dd/yyyy HH:mm'),
 			} as Point);
 	}
 }

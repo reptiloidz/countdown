@@ -231,9 +231,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			+(
 				date ||
 				new Date(
-					this.form.controls['date'].value +
-						' ' +
-						this.form.controls['time'].value
+					format(
+						parse(
+							this.form.controls['time'].value,
+							'HH:mm',
+							parse(
+								this.form.controls['date'].value,
+								'yyyy-MM-dd',
+								new Date()
+							)
+						),
+						'MM/dd/yyyy HH:mm'
+					)
 				)
 			) - +new Date()
 		);
@@ -280,7 +289,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 		const dateTime = format(
 			parse(this.form.controls['time'].value, 'HH:mm', date),
-			'MM.dd.yyyy HH:mm'
+			'MM/dd/yyyy HH:mm'
 		);
 		const result = {
 			title: this.form.controls['title'].value,
