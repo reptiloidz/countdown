@@ -13,7 +13,7 @@ export class HttpService implements HttpServiceInterface {
 		{
 			title: 'День без аварии',
 			description: 'Время с последней аварии или до нее',
-			date: '12.25.1991 15:44',
+			date: '12/25/1991 15:44',
 			id: '12',
 			direction: 'forward',
 		},
@@ -21,7 +21,7 @@ export class HttpService implements HttpServiceInterface {
 			title: 'Релиз ASAP-PDF',
 			description:
 				'До релиза Колиного фреймворка осталось всего ничего. А может он уже прошел',
-			date: '08.05.2023 13:00',
+			date: '08/05/2023 13:00',
 			id: '13',
 			direction: 'backward',
 		},
