@@ -59,6 +59,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				),
 			]),
 			direction: new FormControl('backward', [Validators.required]),
+			correction: new FormControl(false),
 			date: new FormControl(null, [Validators.required]),
 			time: new FormControl('00:00', [Validators.required]),
 		});
@@ -295,6 +296,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			title: this.form.controls['title'].value,
 			description: this.form.controls['description'].value,
 			direction: this.form.controls['direction'].value,
+			correction: this.form.controls['correction'].value ? 5 : 0,
 			difference: this.form.controls['difference'].value,
 			date: dateTime,
 		};

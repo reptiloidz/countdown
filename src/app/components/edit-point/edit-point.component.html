@@ -8,46 +8,70 @@
 			class="loader rotating"
 		></span></h1>
 	<input
+		class="control"
 		type="text"
 		placeholder="Название"
 		formControlName="title"
 	>
 	<textarea
+		class="control"
 		type="text"
 		placeholder="Описание события"
 		formControlName="description"
 	></textarea>
-	<input
-		type="text"
-		placeholder="Срок в минутах"
-		formControlName="difference"
-		mask="0*"
-		[validation]="false"
-		[maxlength]="validatorDifferenceMaxLength"
-	>
-	<input
-		type="date"
-		formControlName="date"
-	>
-	<input
-		type="time"
-		formControlName="time"
-	>
-	<label>
+
+	<div class="control">
 		<input
-			type="radio"
-			formControlName="direction"
-			value="backward"
+			type="text"
+			placeholder="Срок в минутах"
+			formControlName="difference"
+			mask="0*"
+			[validation]="false"
+			[maxlength]="validatorDifferenceMaxLength"
 		>
-		Обратный отсчёт
-	</label>
-	<label>
-		<input
-			type="radio"
-			formControlName="direction"
-			value="forward"
-		>
-		Прямой отсчёт
-	</label>
+	</div>
+
+	<div class="control">
+		<div>
+			<input
+				type="date"
+				formControlName="date"
+			>
+			<input
+				type="time"
+				formControlName="time"
+			>
+		</div>
+	</div>
+
+	<div class="control">
+		<label>
+			<input
+				type="radio"
+				formControlName="direction"
+				value="backward"
+			>
+			Обратный отсчёт
+		</label>
+		<label>
+			<input
+				type="radio"
+				formControlName="direction"
+				value="forward"
+			>
+			Прямой отсчёт
+		</label>
+	</div>
+
+	<div class="control">
+		<label>
+			<input
+				type="checkbox"
+				formControlName="correction"
+			>
+			Время по Гринвичу (убрать, если время должно быть местным)
+		</label>
+	</div>
+
 	<button [disabled]="loading || form.invalid">{{ isCreation ? "Создать" : "Сохранить" }}</button>
 </form>

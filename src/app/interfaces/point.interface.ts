@@ -6,4 +6,5 @@ export interface Point {
 	date: string;
 	id?: string;
 	direction: Direction;
+	correction: number;
 }

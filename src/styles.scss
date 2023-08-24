@@ -48,6 +48,13 @@ a,
 	cursor: pointer;
 }
 
+.control {
+	display: flex;
+	flex-direction: column;
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
 .loader {
 	display: inline-flex;
 	justify-content: center;
