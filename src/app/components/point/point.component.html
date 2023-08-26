@@ -4,6 +4,7 @@
 			class="loader rotating"
 		></span></h1>
 	<h2>{{ remainText }}</h2>
+	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
 	<p class="timer">{{ dateTimer }} {{ timer }}</p>
 </div>
 <br>

@@ -4,9 +4,11 @@ import { interval, Subscription, switchMap } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import {
+	addMinutes,
 	formatDistanceToNow,
 	formatDuration,
 	intervalToDuration,
+	subMinutes,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { DateText } from 'src/app/enums/date-text.enum';
@@ -21,6 +23,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	dateTimer = '';
 	timer = '0:00:00';
 	loading = false;
+	tzOffset = new Date().getTimezoneOffset();
 
 	private subscriptions: Subscription = new Subscription();
 
@@ -85,6 +88,37 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
+	getPointDate(
+		pointDate = new Date(this.point?.date || ''),
+		isInvert = false
+	) {
+		if (
+			this.point?.greenwich &&
+			(this.tzOffset > 0 || (this.tzOffset < 0 && isInvert))
+		) {
+			pointDate = addMinutes(pointDate, this.tzOffset);
+		} else if (
+			this.point?.greenwich &&
+			(this.tzOffset < 0 || (this.tzOffset > 0 && isInvert))
+		) {
+			pointDate = subMinutes(pointDate, this.tzOffset);
+		}
+		return pointDate;
+	}
+
+	get pointDate_() {
+		let pointDate = new Date(this.point?.date || '');
+		const tzOffset = new Date().getTimezoneOffset();
+
+		if (this.point?.greenwich && tzOffset > 0) {
+			pointDate = addMinutes(pointDate, tzOffset);
+		} else if (this.point?.greenwich && tzOffset < 0) {
+			pointDate = subMinutes(pointDate, tzOffset);
+		}
+
+		return pointDate;
+	}
+
 	getInterval(date: Date) {
 		return intervalToDuration({
 			start: date,
@@ -99,22 +133,18 @@ export class PointComponent implements OnInit, OnDestroy {
 	setAllTimers() {
 		this.setTimer();
 		this.setDateTimer();
-		this.setRemainText(this.point);
+		this.setRemainText();
 	}
 
 	setTimer() {
-		const currentInterval = this.getInterval(
-			new Date(this.point?.date || '')
-		);
+		const currentInterval = this.getInterval(this.getPointDate());
 		this.timer = `${currentInterval.hours}:${this.zeroPad(
 			currentInterval.minutes
 		)}:${this.zeroPad(currentInterval.seconds)}`;
 	}
 
 	setDateTimer() {
-		const currentInterval = this.getInterval(
-			new Date(this.point?.date || '')
-		);
+		const currentInterval = this.getInterval(this.getPointDate());
 		if (
 			currentInterval.years ||
 			currentInterval.months ||
@@ -135,17 +165,17 @@ export class PointComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setRemainText(point: Point | undefined) {
+	setRemainText() {
 		this.remainText =
 			this.getRemainText() +
 			' ' +
-			formatDistanceToNow(new Date(point?.date || ''), {
+			formatDistanceToNow(this.getPointDate(), {
 				locale: ru,
 			});
 	}
 
 	getRemainText() {
-		const isPast = new Date(this.point?.date || '') < new Date();
+		const isPast = this.getPointDate() < new Date();
 		const isForward = this.point?.direction === 'forward';
 
 		return isPast

@@ -16,7 +16,7 @@ export class HttpService implements HttpServiceInterface {
 			date: '12/25/1991 15:44',
 			id: '12',
 			direction: 'forward',
-			correction: 0,
+			greenwich: false,
 		},
 		{
 			title: 'Релиз ASAP-PDF',
@@ -25,7 +25,7 @@ export class HttpService implements HttpServiceInterface {
 			date: '08/05/2023 13:00',
 			id: '13',
 			direction: 'backward',
-			correction: 5,
+			greenwich: true,
 		},
 	];
 

@@ -55,6 +55,15 @@ a,
 	margin-bottom: 8px;
 }
 
+.item {
+	display: flex;
+
+	&__addon {
+		margin-top: 6px;
+		margin-left: 10px;
+	}
+}
+
 .loader {
 	display: inline-flex;
 	justify-content: center;

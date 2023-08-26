@@ -18,7 +18,7 @@ import {
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
-import { format, parse } from 'date-fns';
+import { addMinutes, format, parse, subMinutes } from 'date-fns';
 
 export enum EditPointType {
 	Create = 'create',
@@ -37,6 +37,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	difference = 0;
 	loading = false;
 	validatorDifferenceMaxLength = 8;
+	tzOffset = new Date().getTimezoneOffset();
 
 	private _debounceTime = 500;
 	private _minute = 60000;
@@ -59,7 +60,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				),
 			]),
 			direction: new FormControl('backward', [Validators.required]),
-			correction: new FormControl(false),
+			greenwich: new FormControl(false),
 			date: new FormControl(null, [Validators.required]),
 			time: new FormControl('00:00', [Validators.required]),
 		});
@@ -152,6 +153,22 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
+			this.form.controls['greenwich'].valueChanges.subscribe({
+				next: () => {
+					if (this.point) {
+						this.point.greenwich = !this.point.greenwich;
+					}
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при переключении часового пояса:\n',
+						err.message
+					);
+				},
+			})
+		);
+
+		this.subscriptions.add(
 			interval(this._minute)
 				.pipe(
 					filter(() => {
@@ -209,16 +226,33 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.type === EditPointType.Create;
 	}
 
+	getPointDate(
+		pointDate = new Date(this.point?.date || ''),
+		isInvert = false
+	) {
+		if (
+			this.form.controls['greenwich'].value &&
+			(this.tzOffset > 0 || (this.tzOffset < 0 && isInvert))
+		) {
+			pointDate = addMinutes(pointDate, this.tzOffset);
+		} else if (
+			this.form.controls['greenwich'].value &&
+			(this.tzOffset < 0 || (this.tzOffset > 0 && isInvert))
+		) {
+			pointDate = subMinutes(pointDate, this.tzOffset);
+		}
+		return pointDate;
+	}
+
 	setValues() {
 		this.form.patchValue({
 			title: this.point?.title,
 			description: this.point?.description,
 			direction: this.point?.direction,
+			greenwich: this.point?.greenwich,
 		});
 
-		const pointDate = this.point?.date
-			? new Date(this.point.date)
-			: new Date();
+		const pointDate = this.getPointDate();
 		this.form.patchValue({
 			date: format(pointDate, 'yyyy-MM-dd'),
 			time: format(pointDate, 'HH:mm'),
@@ -286,17 +320,20 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		const date = parse(
 			this.form.controls['date'].value,
 			'yyyy-MM-dd',
-			new Date()
+			this.getPointDate(new Date(), true)
 		);
 		const dateTime = format(
-			parse(this.form.controls['time'].value, 'HH:mm', date),
+			this.getPointDate(
+				parse(this.form.controls['time'].value, 'HH:mm', date),
+				true
+			),
 			'MM/dd/yyyy HH:mm'
 		);
 		const result = {
 			title: this.form.controls['title'].value,
 			description: this.form.controls['description'].value,
 			direction: this.form.controls['direction'].value,
-			correction: this.form.controls['correction'].value ? 5 : 0,
+			greenwich: this.form.controls['greenwich'].value,
 			difference: this.form.controls['difference'].value,
 			date: dateTime,
 		};
