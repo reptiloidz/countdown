@@ -31,6 +31,6 @@ jobs:
         # Artifact name
         name: github-pages
         # Path of the directory containing the static assets.
-        path: /dist/cd/
+        path: ./dist/cd/
         # Duration after which artifact will expire in days.
-        retention-days: 1
+        retention-days: 10
