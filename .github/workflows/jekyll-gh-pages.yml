@@ -25,10 +25,12 @@ jobs:
     - run: npm install
     - run: npm run build
     #- run: npm test
-    - name: Deploy
-      if: success()
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Upload GitHub Pages artifact
+      uses: actions/upload-pages-artifact@v2.0.0
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: dist/angular-github-actions
-        enable_jekyll: true
+        # Artifact name
+        name: github-pages
+        # Path of the directory containing the static assets.
+        path: /dist/cd/
+        # Duration after which artifact will expire in days.
+        retention-days: 1
