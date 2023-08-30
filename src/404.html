@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>My Angular App</title>
+		<base href="/countdown/">
+		<script>
+		// Redirect all 404 requests to the index.html
+		// This enables deep linking for client-side routes
+		var path = window.location.pathname;
+		if (path !== '/' && path !== '/index.html' && !path.startsWith('/_')) {
+			window.location.replace('/index.html');
+		}
+	</script>
+	</head>
+
+	<body>
+		<app-root></app-root>
+	</body>
+
+</html>

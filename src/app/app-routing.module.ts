@@ -8,6 +8,11 @@ import { CreatePointComponent } from './components/create-point/create-point.com
 const routes: Routes = [
 	{
 		path: '',
+		redirectTo: '/',
+		pathMatch: 'full',
+	},
+	{
+		path: '',
 		component: MainListComponent,
 	},
 	{
