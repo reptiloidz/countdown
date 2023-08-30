@@ -5,7 +5,7 @@
 		"ng": "ng",
 		"start": "ng serve -o --host 0.0.0.0",
 		"start-mock": "ng serve -o --host 0.0.0.0 --configuration mock",
-		"build": "ng build --base-href /dist/cd/",
+		"build": "ng build --base-href /countdown/",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
 		"lint": "npx prettier --write ./**/*.{js,ts,json} --use-tabs --single-quote && eslint --fix \"**/*.html\""
