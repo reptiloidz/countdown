@@ -1,17 +1,15 @@
-<div class="item">
-	<h2>
-		<a routerLink="/point/{{ point.id }}">{{ point.title }}</a> | <button
-			*ngIf="!loading; else loader"
-			type="button"
-			class="link"
-			(click)="delete(point.id)"
-		>x</button>
-	</h2>
-	<small
-		*ngIf="point?.greenwich"
-		class="item__addon"
-	>Гринвич</small>
-</div>
+<h2>
+	<a routerLink="/point/{{ point.id }}">{{ point.title }}</a>&nbsp;|&nbsp;<button
+		*ngIf="!loading; else loader"
+		type="button"
+		class="link"
+		(click)="delete(point.id)"
+	>x</button>
+</h2>
+<small
+	*ngIf="point?.greenwich"
+	class="item__addon"
+>Гринвич</small>
 
 <ng-template #loader>
 	<span

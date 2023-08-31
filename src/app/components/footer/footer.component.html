@@ -2,17 +2,23 @@
 	<a>Настройки</a>
 </div>
 
-<div>
+<div class="footer__aside">
 	<ng-container *ngIf="pointId">
-		<a routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}">
-			{{isEdit ? 'Перейти к событию' : 'Редактировать'}}</a> |
+		<a
+			class="footer__item"
+			routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}"
+		>
+			{{isEdit ? 'Перейти к событию' : 'Редактировать'}}</a><span class="footer__divider"> | </span>
 		<ng-container *ngIf="!isEdit">
 			<button
 				(click)="setDateNow()"
-				class="link"
+				class="footer__item link"
 			>
-				Сейчас!</button> |
+				Сейчас!</button><span class="footer__divider"> | </span>
 		</ng-container>
 	</ng-container>
-	<a routerLink="/create">Создать</a>
+	<a
+		class="footer__item"
+		routerLink="/create"
+	>Создать</a>
 </div>

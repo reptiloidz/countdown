@@ -3,6 +3,7 @@
 html,
 body {
 	height: 100%;
+	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 
 .root {
@@ -24,13 +25,40 @@ body {
 .header,
 .footer {
 	display: flex;
+	align-items: flex-end;
 	justify-content: space-between;
+}
+
+.footer {
+	@media (max-width: 1024px) {
+		&__aside {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+		}
+
+		&__divider {
+			display: none;
+		}
+
+		&__item {
+			margin-top: 12px;
+		}
+	}
+}
+
+.description {
+	margin: 12px 0;
 }
 
 .form {
 	display: flex;
 	flex-direction: column;
 	width: 400px;
+
+	@media (max-width: 1024px) {
+		width: 100%;
+	}
 }
 
 .timer {
@@ -55,12 +83,21 @@ a,
 	margin-bottom: 8px;
 }
 
+.list {
+	padding: 0;
+}
+
 .item {
 	display: flex;
+	padding: 20px 0;
 
 	&__addon {
 		margin-top: 6px;
 		margin-left: 10px;
+	}
+
+	& + & {
+		border-top: 1px solid #CCCCCC;
 	}
 }
 
