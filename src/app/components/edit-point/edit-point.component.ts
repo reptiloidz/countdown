@@ -18,7 +18,8 @@ import {
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
-import { addMinutes, format, parse, subMinutes } from 'date-fns';
+import { format, parse } from 'date-fns';
+import { getPointDate } from 'src/app/helpers';
 
 export enum EditPointType {
 	Create = 'create',
@@ -226,24 +227,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.type === EditPointType.Create;
 	}
 
-	getPointDate(
-		pointDate = new Date(this.point?.date || ''),
-		isInvert = false
-	) {
-		if (
-			this.form.controls['greenwich'].value &&
-			(this.tzOffset > 0 || (this.tzOffset < 0 && isInvert))
-		) {
-			pointDate = addMinutes(pointDate, this.tzOffset);
-		} else if (
-			this.form.controls['greenwich'].value &&
-			(this.tzOffset < 0 || (this.tzOffset > 0 && isInvert))
-		) {
-			pointDate = subMinutes(pointDate, this.tzOffset);
-		}
-		return pointDate;
-	}
-
 	setValues() {
 		this.form.patchValue({
 			title: this.point?.title,
@@ -252,7 +235,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			greenwich: this.point?.greenwich,
 		});
 
-		const pointDate = this.getPointDate();
+		const pointDate = getPointDate(
+			new Date(this.point?.date || ''),
+			this.tzOffset,
+			this.form.controls['greenwich'].value
+		);
 		this.form.patchValue({
 			date: format(pointDate, 'yyyy-MM-dd'),
 			time: format(pointDate, 'HH:mm'),
@@ -320,11 +307,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		const date = parse(
 			this.form.controls['date'].value,
 			'yyyy-MM-dd',
-			this.getPointDate(new Date(), true)
+			getPointDate(
+				new Date(),
+				this.tzOffset,
+				this.form.controls['greenwich'].value,
+				true
+			)
 		);
 		const dateTime = format(
-			this.getPointDate(
+			getPointDate(
 				parse(this.form.controls['time'].value, 'HH:mm', date),
+				this.tzOffset,
+				this.form.controls['greenwich'].value,
 				true
 			),
 			'MM/dd/yyyy HH:mm'
@@ -334,7 +328,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			description: this.form.controls['description'].value,
 			direction: this.form.controls['direction'].value,
 			greenwich: this.form.controls['greenwich'].value,
-			difference: this.form.controls['difference'].value,
 			date: dateTime,
 		};
 

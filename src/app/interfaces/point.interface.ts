@@ -5,6 +5,7 @@ export interface Point {
 	description: string;
 	date: string;
 	id?: string;
+	difference?: number;
 	direction: Direction;
 	greenwich: boolean;
 }

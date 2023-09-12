@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
-import { addMinutes, format, subMinutes } from 'date-fns';
+import { format } from 'date-fns';
 import { filter, Subscription, switchMap, EMPTY } from 'rxjs';
+import { getPointDate } from 'src/app/helpers';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 
@@ -52,30 +53,17 @@ export class FooterComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	getPointDate(
-		pointDate = new Date(this.point?.date || ''),
-		isInvert = false
-	) {
-		if (
-			this.point?.greenwich &&
-			(this.tzOffset > 0 || (this.tzOffset < 0 && isInvert))
-		) {
-			pointDate = addMinutes(pointDate, this.tzOffset);
-		} else if (
-			this.point?.greenwich &&
-			(this.tzOffset < 0 || (this.tzOffset > 0 && isInvert))
-		) {
-			pointDate = subMinutes(pointDate, this.tzOffset);
-		}
-		return pointDate;
-	}
-
 	setDateNow() {
 		confirm('Обновить время события?') &&
 			this.data.editPoint(this.point?.id, {
 				...this.point,
 				date: format(
-					this.getPointDate(new Date(), true),
+					getPointDate(
+						new Date(),
+						this.tzOffset,
+						this.point?.greenwich,
+						true
+					),
 					'MM/dd/yyyy HH:mm'
 				),
 			} as Point);

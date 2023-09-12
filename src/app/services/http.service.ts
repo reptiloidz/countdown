@@ -51,7 +51,10 @@ export class HttpService implements HttpServiceInterface {
 	patchPoint(point: Point): Observable<Point> {
 		return this.http.patch<Point>(
 			`${environment.fbDbUrl}/points/${point.id}.json`,
-			point
+			{
+				...point,
+				id: null, // Не храним id в БД
+			}
 		);
 	}
 
