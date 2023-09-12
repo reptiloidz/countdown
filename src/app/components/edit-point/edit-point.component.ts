@@ -20,6 +20,7 @@ import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import { format, parse } from 'date-fns';
 import { getPointDate } from 'src/app/helpers';
+import { Constants } from 'src/app/enums';
 
 export enum EditPointType {
 	Create = 'create',
@@ -41,7 +42,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	tzOffset = new Date().getTimezoneOffset();
 
 	private _debounceTime = 500;
-	private _minute = 60000;
 	private subscriptions: Subscription = new Subscription();
 
 	constructor(
@@ -170,7 +170,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			interval(this._minute)
+			interval(Constants.msInMinute)
 				.pipe(
 					filter(() => {
 						return this.form.controls['date'].valid;
@@ -241,8 +241,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.form.controls['greenwich'].value
 		);
 		this.form.patchValue({
-			date: format(pointDate, 'yyyy-MM-dd'),
-			time: format(pointDate, 'HH:mm'),
+			date: format(pointDate, Constants.shortDateFormat),
+			time: format(pointDate, Constants.timeFormat),
 		});
 
 		this.dateChanged(pointDate);
@@ -256,14 +256,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					format(
 						parse(
 							this.form.controls['time'].value,
-							'HH:mm',
+							Constants.timeFormat,
 							parse(
 								this.form.controls['date'].value,
-								'yyyy-MM-dd',
+								Constants.shortDateFormat,
 								new Date()
 							)
 						),
-						'MM/dd/yyyy HH:mm'
+						Constants.fullDateFormat
 					)
 				)
 			) - +new Date()
@@ -277,18 +277,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		const diff = +this.form.controls['difference'].value;
 		const currentDate = new Date();
 		const targetDate = this.isForward
-			? new Date(currentDate.getTime() - diff * this._minute)
-			: new Date(currentDate.getTime() + diff * this._minute);
+			? new Date(currentDate.getTime() - diff * Constants.msInMinute)
+			: new Date(currentDate.getTime() + diff * Constants.msInMinute);
 
 		this.form.patchValue({
-			date: format(targetDate, 'yyyy-MM-dd'),
-			time: format(targetDate, 'HH:mm'),
+			date: format(targetDate, Constants.shortDateFormat),
+			time: format(targetDate, Constants.timeFormat),
 		});
 	}
 
 	convertToMinutes(ms: number): number {
 		return Math[this.isForward ? 'trunc' : 'ceil'](
-			Math.abs(ms) / this._minute
+			Math.abs(ms) / Constants.msInMinute
 		);
 	}
 
@@ -306,7 +306,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		const date = parse(
 			this.form.controls['date'].value,
-			'yyyy-MM-dd',
+			Constants.shortDateFormat,
 			getPointDate(
 				new Date(),
 				this.tzOffset,
@@ -316,12 +316,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 		const dateTime = format(
 			getPointDate(
-				parse(this.form.controls['time'].value, 'HH:mm', date),
+				parse(
+					this.form.controls['time'].value,
+					Constants.timeFormat,
+					date
+				),
 				this.tzOffset,
 				this.form.controls['greenwich'].value,
 				true
 			),
-			'MM/dd/yyyy HH:mm'
+			Constants.fullDateFormat
 		);
 		const result = {
 			title: this.form.controls['title'].value,
