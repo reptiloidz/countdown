@@ -101,7 +101,7 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	setAllTimers() {
 		this.pointDate = getPointDate(
-			new Date(this.point?.date || ''),
+			new Date(this.point?.dates?.slice(-1)[0].date || ''),
 			this.tzOffset,
 			this.point?.greenwich
 		);

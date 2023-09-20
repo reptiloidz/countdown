@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, of, switchMap, timer } from 'rxjs';
+import { Observable, of, switchMap, timer } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 
@@ -11,21 +11,55 @@ export class HttpService implements HttpServiceInterface {
 	// https://levelup.gitconnected.com/use-angular-mock-services-to-develop-without-a-backend-9eb8c5eef523
 	private mockPoints: Point[] = [
 		{
+			title: 'Рептилоиды',
+			description: 'Собрание рептилоидов',
+			dates: [
+				{
+					date: '9/19/2023 10:00',
+					reason: 'frequency',
+				},
+				{
+					date: '9/26/2023 10:00',
+					reason: 'frequency',
+				},
+				{
+					date: '10/3/2023 10:00',
+					reason: 'frequency',
+				},
+			],
+			id: '666',
+			direction: 'backward',
+			greenwich: true,
+			repeatable: true,
+		},
+		{
 			title: 'День без аварии',
 			description: 'Время с последней аварии или до нее',
-			date: '12/25/1991 15:44',
+			dates: [
+				{
+					date: '12/25/1991 15:44',
+					reason: 'byHand',
+				},
+			],
 			id: '12',
 			direction: 'forward',
 			greenwich: false,
+			repeatable: true,
 		},
 		{
 			title: 'Релиз ASAP-PDF',
 			description:
 				'До релиза Колиного фреймворка осталось всего ничего. А может он уже прошел',
-			date: '08/05/2023 13:00',
+			dates: [
+				{
+					date: '08/05/2023 13:00',
+					reason: 'byHand',
+				},
+			],
 			id: '13',
 			direction: 'backward',
 			greenwich: true,
+			repeatable: false,
 		},
 	];
 

@@ -54,9 +54,9 @@ export class FooterComponent implements OnInit, OnDestroy {
 	}
 
 	setDateNow() {
-		confirm('Обновить время события?') &&
-			this.data.editPoint(this.point?.id, {
-				...this.point,
+		let newDatesArray = this.point?.dates;
+		newDatesArray &&
+			newDatesArray.push({
 				date: format(
 					getPointDate(
 						new Date(),
@@ -66,6 +66,13 @@ export class FooterComponent implements OnInit, OnDestroy {
 					),
 					'MM/dd/yyyy HH:mm'
 				),
+				reason: 'byHand',
+			});
+
+		confirm('Обновить время события?') &&
+			this.data.editPoint(this.point?.id, {
+				...this.point,
+				dates: newDatesArray,
 			} as Point);
 	}
 }

@@ -5,11 +5,14 @@
 		class="link"
 		(click)="delete(point.id)"
 	>x</button>
-</h2>
-<small
+</h2><small
 	*ngIf="point?.greenwich"
 	class="item__addon"
 >Гринвич</small>
+<small
+	*ngIf="point?.repeatable"
+	class="item__addon"
+>Повторяемое</small>
 
 <ng-template #loader>
 	<span

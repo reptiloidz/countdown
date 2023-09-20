@@ -21,6 +21,7 @@ import { DataService } from 'src/app/services/data.service';
 import { format, parse } from 'date-fns';
 import { getPointDate } from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
+import { Iteration } from 'src/app/interfaces/iteration.interface';
 
 export enum EditPointType {
 	Create = 'create',
@@ -62,6 +63,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			]),
 			direction: new FormControl('backward', [Validators.required]),
 			greenwich: new FormControl(false),
+			repeatable: new FormControl(false),
 			date: new FormControl(null, [Validators.required]),
 			time: new FormControl('00:00', [Validators.required]),
 		});
@@ -170,6 +172,22 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
+			this.form.controls['repeatable'].valueChanges.subscribe({
+				next: () => {
+					if (this.point) {
+						this.point.repeatable = !this.point.repeatable;
+					}
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при переключении повторяемости:\n',
+						err.message
+					);
+				},
+			})
+		);
+
+		this.subscriptions.add(
 			interval(Constants.msInMinute)
 				.pipe(
 					filter(() => {
@@ -233,10 +251,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			description: this.point?.description,
 			direction: this.point?.direction,
 			greenwich: this.point?.greenwich,
+			repeatable: this.point?.repeatable,
 		});
 
 		const pointDate = getPointDate(
-			new Date(this.point?.date || ''),
+			new Date(this.point?.dates?.slice(-1)[0].date || ''),
 			this.tzOffset,
 			this.form.controls['greenwich'].value
 		);
@@ -332,7 +351,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			description: this.form.controls['description'].value,
 			direction: this.form.controls['direction'].value,
 			greenwich: this.form.controls['greenwich'].value,
-			date: dateTime,
+			repeatable: this.form.controls['repeatable'].value,
+			dates: [
+				{
+					date: dateTime,
+					reason: 'byHand',
+				},
+			] as Iteration[],
 		};
 
 		if (this.isCreation) {

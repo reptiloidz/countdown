@@ -12,8 +12,8 @@ import { EditPointComponent } from './components/edit-point/edit-point.component
 import { CreatePointComponent } from './components/create-point/create-point.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-// import { HttpService } from './services/http.service';
-// import { HttpService as MockHttpService } from './services/http.mock.service';
+import { HttpService } from './services/http.service';
+import { HttpService as MockHttpService } from './services/http.mock.service';
 
 @NgModule({
 	declarations: [
