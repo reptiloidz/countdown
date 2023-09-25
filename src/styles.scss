@@ -101,6 +101,30 @@ a,
 	}
 }
 
+.tabs {
+	display: flex;
+	gap: 12px;
+	padding: 0;
+	list-style-type: none;
+
+	&__item {
+		display: flex;
+		flex-direction: column;
+
+		&--active {
+			.tabs__btn {
+				background-color: lightgrey;
+			}
+		}
+	}
+
+	&__btn {
+		display: block;
+		padding: 12px;
+		border: 1px solid gray;
+	}
+}
+
 .loader {
 	display: inline-flex;
 	justify-content: center;

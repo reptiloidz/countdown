@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { interval, Subscription, switchMap } from 'rxjs';
+import { interval, Subscription, switchMap, BehaviorSubject } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import {
@@ -24,6 +24,8 @@ export class PointComponent implements OnInit, OnDestroy {
 	timer = '0:00:00';
 	loading = false;
 	tzOffset = this.pointDate.getTimezoneOffset();
+	currentIterationIndex = new BehaviorSubject<number>(0);
+	removedIterationIndex = 0;
 
 	private subscriptions: Subscription = new Subscription();
 
@@ -40,6 +42,11 @@ export class PointComponent implements OnInit, OnDestroy {
 				.pipe(
 					switchMap((point: Point | undefined) => {
 						this.point = point;
+						this.switchIteration(
+							this.point?.dates.length
+								? this.point.dates.length - 1
+								: 0
+						);
 						this.setAllTimers();
 						return interval(1000);
 					})
@@ -73,6 +80,13 @@ export class PointComponent implements OnInit, OnDestroy {
 				next: (point) => {
 					this.loading = this.data.loading = false;
 					this.point = point;
+					if (
+						this.currentIterationIndex.getValue() >=
+						this.removedIterationIndex
+					) {
+						this.currentIterationIndex.next(point.dates.length - 1);
+					}
+					this.setAllTimers();
 				},
 				error: (err) => {
 					console.error(
@@ -100,14 +114,19 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setAllTimers() {
-		this.pointDate = getPointDate(
-			new Date(this.point?.dates?.slice(-1)[0].date || ''),
-			this.tzOffset,
-			this.point?.greenwich
-		);
-		this.setTimer();
-		this.setDateTimer();
-		this.setRemainText();
+		if (this.point?.dates[this.currentIterationIndex.getValue()]) {
+			this.pointDate = getPointDate(
+				new Date(
+					this.point?.dates[this.currentIterationIndex.getValue()]
+						.date || ''
+				),
+				this.tzOffset,
+				this.point?.greenwich
+			);
+			this.setTimer();
+			this.setDateTimer();
+			this.setRemainText();
+		}
 	}
 
 	setTimer() {
@@ -159,5 +178,24 @@ export class PointComponent implements OnInit, OnDestroy {
 			: isForward
 			? DateText.forwardFuture
 			: DateText.backwardFuture;
+	}
+
+	switchIteration(i: number) {
+		this.currentIterationIndex.next(i);
+		this.setAllTimers();
+	}
+
+	removeIteration(i: number) {
+		let newDatesArray = this.point?.dates;
+		newDatesArray && newDatesArray.splice(i, 1);
+
+		confirm('Удалить итерацию?') &&
+			(() => {
+				this.removedIterationIndex = i;
+				this.data.editPoint(this.point?.id, {
+					...this.point,
+					dates: newDatesArray,
+				} as Point);
+			})();
 	}
 }

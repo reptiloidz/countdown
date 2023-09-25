@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
 import { format } from 'date-fns';
 import { filter, Subscription, switchMap, EMPTY } from 'rxjs';
+import { Constants } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
 import { Point } from 'src/app/interfaces/point.interface';
@@ -64,14 +65,14 @@ export class FooterComponent implements OnInit, OnDestroy {
 					this.point?.greenwich,
 					true
 				),
-				'MM/dd/yyyy HH:mm'
+				Constants.fullDateFormat
 			),
 			reason: 'byHand',
 		} as Iteration;
 		if (this.point?.repeatable) {
-			this.point?.dates.push(lastDate);
+			newDatesArray && newDatesArray.push(lastDate);
 		} else {
-			this.point && (this.point.dates = [lastDate]);
+			newDatesArray && (newDatesArray = [lastDate]);
 		}
 
 		confirm('Обновить время события?') &&

@@ -4,6 +4,27 @@
 			class="loader rotating"
 		></span></h1>
 	<h2 class="description">{{ remainText }}</h2>
+	<ul
+		*ngIf="this.point?.dates?.length && (this.point?.dates?.length != 1)"
+		class="tabs"
+	>
+		<li
+			*ngFor="let date of this.point?.dates; let i = index"
+			class="tabs__item"
+			[ngClass]="{
+				'tabs__item--active': i == (currentIterationIndex | async)
+			}"
+		>
+			<button
+				class="link tabs__btn"
+				(click)="switchIteration(i)"
+			>{{ i + 1 }}</button>
+			<button
+				class="link"
+				(click)="removeIteration(i)"
+			>x</button>
+		</li>
+	</ul>
 	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
 	<small *ngIf="point?.greenwich && point?.repeatable"> | </small>
 	<small *ngIf="point?.repeatable">Повторяемое</small>
