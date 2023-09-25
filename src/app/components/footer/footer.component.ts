@@ -3,6 +3,7 @@ import { Router, Event, NavigationEnd } from '@angular/router';
 import { format } from 'date-fns';
 import { filter, Subscription, switchMap, EMPTY } from 'rxjs';
 import { getPointDate } from 'src/app/helpers';
+import { Iteration } from 'src/app/interfaces/iteration.interface';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 
@@ -55,19 +56,23 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	setDateNow() {
 		let newDatesArray = this.point?.dates;
-		newDatesArray &&
-			newDatesArray.push({
-				date: format(
-					getPointDate(
-						new Date(),
-						this.tzOffset,
-						this.point?.greenwich,
-						true
-					),
-					'MM/dd/yyyy HH:mm'
+		const lastDate = {
+			date: format(
+				getPointDate(
+					new Date(),
+					this.tzOffset,
+					this.point?.greenwich,
+					true
 				),
-				reason: 'byHand',
-			});
+				'MM/dd/yyyy HH:mm'
+			),
+			reason: 'byHand',
+		} as Iteration;
+		if (this.point?.repeatable) {
+			this.point?.dates.push(lastDate);
+		} else {
+			this.point && (this.point.dates = [lastDate]);
+		}
 
 		confirm('Обновить время события?') &&
 			this.data.editPoint(this.point?.id, {
