@@ -15,6 +15,7 @@ import {
 	debounce,
 	timer,
 	filter,
+	BehaviorSubject,
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -41,6 +42,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	loading = false;
 	validatorDifferenceMaxLength = 8;
 	tzOffset = new Date().getTimezoneOffset();
+	currentIterationIndex = new BehaviorSubject<number>(0);
+	removedIterationIndex = 0;
+	isIterationAdded = false;
 
 	private _debounceTime = 500;
 	private subscriptions: Subscription = new Subscription();
@@ -64,7 +68,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			direction: new FormControl('backward', [Validators.required]),
 			greenwich: new FormControl(false),
 			repeatable: new FormControl(false),
-			date: new FormControl(null, [Validators.required]),
+			date: new FormControl(
+				format(new Date(), Constants.shortDateFormat),
+				[Validators.required]
+			),
 			time: new FormControl('00:00', [Validators.required]),
 		});
 
@@ -79,9 +86,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: (point: Point | undefined) => {
-						if (!this.isCreation) {
+						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
-							this.setValues();
+							this.switchIteration(
+								this.point?.dates.length
+									? this.point.dates.length - 1
+									: 0
+							);
 						}
 					},
 					error: (err) => {
@@ -159,7 +170,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.form.controls['greenwich'].valueChanges.subscribe({
 				next: () => {
 					if (this.point) {
-						this.point.greenwich = !this.point.greenwich;
+						this.point.greenwich =
+							this.form.controls['greenwich'].value;
 					}
 				},
 				error: (err) => {
@@ -176,6 +188,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				next: () => {
 					if (this.point) {
 						this.point.repeatable = !this.point.repeatable;
+						this.switchIteration();
 					}
 				},
 				error: (err) => {
@@ -224,8 +237,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
-				next: () => {
-					this.success();
+				next: (point) => {
+					this.success(point);
 				},
 				error: (err) => {
 					console.error(
@@ -245,17 +258,39 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.type === EditPointType.Create;
 	}
 
-	setValues() {
-		this.form.patchValue({
-			title: this.point?.title,
-			description: this.point?.description,
-			direction: this.point?.direction,
-			greenwich: this.point?.greenwich,
-			repeatable: this.point?.repeatable,
-		});
+	get isRepeatable() {
+		return this.form.controls['repeatable'].value;
+	}
+
+	get hasManyIterations() {
+		return this.point?.dates.length && this.point?.dates.length > 1;
+	}
+
+	get isForward() {
+		return this.form.controls['direction'].value === 'forward';
+	}
+
+	setValues(isReset = false) {
+		this.form.patchValue(
+			{
+				title: this.point?.title,
+				description: this.point?.description,
+				direction: this.point?.direction,
+				greenwich: this.point?.greenwich,
+				repeatable: this.point?.repeatable,
+			},
+			{
+				emitEvent: false,
+			}
+		);
 
 		const pointDate = getPointDate(
-			new Date(this.point?.dates?.slice(-1)[0].date || ''),
+			isReset
+				? new Date()
+				: new Date(
+						this.point?.dates[this.currentIterationIndex.getValue()]
+							?.date || ''
+				  ),
 			this.tzOffset,
 			this.form.controls['greenwich'].value
 		);
@@ -305,17 +340,38 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	switchIteration(i = (this.point?.dates.length || 1) - 1) {
+		this.currentIterationIndex.next(i);
+		this.isIterationAdded = false;
+		this.setValues();
+	}
+
+	addIteration() {
+		this.isIterationAdded = true;
+		this.setValues(true);
+	}
+
+	removeIteration(i: number) {
+		let newDatesArray = this.point?.dates;
+		newDatesArray && newDatesArray.splice(i, 1);
+
+		confirm('Удалить итерацию?') &&
+			(() => {
+				this.removedIterationIndex = i;
+				this.data.editPoint(this.point?.id, {
+					...this.point,
+					dates: newDatesArray,
+				} as Point);
+			})();
+	}
+
 	convertToMinutes(ms: number): number {
 		return Math[this.isForward ? 'trunc' : 'ceil'](
 			Math.abs(ms) / Constants.msInMinute
 		);
 	}
 
-	get isForward() {
-		return this.form.controls['direction'].value === 'forward';
-	}
-
-	submit() {
+	submit(saveIteration = false) {
 		if (this.form.invalid) {
 			return;
 		}
@@ -346,25 +402,39 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			),
 			Constants.fullDateFormat
 		);
+
+		let datesArray = this.point?.dates;
+		const dateNew = {
+			date: dateTime,
+			reason: 'byHand',
+		} as Iteration;
+
+		if (!this.isRepeatable || this.isCreation) {
+			datesArray = [dateNew];
+		} else if (this.isIterationAdded) {
+			datesArray?.push(dateNew);
+		} else if (datesArray) {
+			datesArray[this.currentIterationIndex.getValue()] = dateNew;
+		}
+
 		const result = {
 			title: this.form.controls['title'].value,
 			description: this.form.controls['description'].value,
 			direction: this.form.controls['direction'].value,
 			greenwich: this.form.controls['greenwich'].value,
 			repeatable: this.form.controls['repeatable'].value,
-			dates: [
-				{
-					date: dateTime,
-					reason: 'byHand',
-				},
-			] as Iteration[],
+			dates: datesArray as Iteration[],
 		};
 
 		if (this.isCreation) {
-			this.point = {
-				...result,
-			};
-			this.data.addPoint(this.point);
+			this.data.addPoint(result);
+		} else if (saveIteration) {
+			if (datesArray) {
+				this.data.editPoint(this.point?.id, {
+					dates: datesArray,
+					id: this.point?.id,
+				} as Point);
+			}
 		} else {
 			this.data.editPoint(this.point?.id, {
 				...result,
@@ -373,10 +443,15 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	success() {
+	success(point?: Point) {
 		this.loading = false;
+		point &&
+			(this.point = {
+				...this.point,
+				...point,
+			});
 		this.point?.id &&
-			this.router.navigate(['/point/' + this.point?.id.toString()]);
+			this.router.navigate(['/edit/' + this.point?.id.toString()]);
 		alert('Успешно');
 	}
 }

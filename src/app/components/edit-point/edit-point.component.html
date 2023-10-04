@@ -1,6 +1,6 @@
 <form
 	[formGroup]="form"
-	(ngSubmit)="submit()"
+	(ngSubmit)="submit(isRepeatable && !isCreation)"
 	class="form"
 >
 	<h1>{{ isCreation ? "Создание" : "Редактирование" }}<span
@@ -19,30 +19,6 @@
 		placeholder="Описание события"
 		formControlName="description"
 	></textarea>
-
-	<div class="control">
-		<input
-			type="text"
-			placeholder="Срок в минутах"
-			formControlName="difference"
-			mask="0*"
-			[validation]="false"
-			[maxlength]="validatorDifferenceMaxLength"
-		>
-	</div>
-
-	<div class="control">
-		<div>
-			<input
-				type="date"
-				formControlName="date"
-			>
-			<input
-				type="time"
-				formControlName="time"
-			>
-		</div>
-	</div>
 
 	<div class="control">
 		<label>
@@ -80,6 +56,88 @@
 			Повторяемое событие
 		</label>
 	</div>
+	<p
+		class="info"
+		*ngIf="isCreation && isRepeatable"
+	>
+		Изменение итераций будет доступно после создания события
+	</p>
+	<p
+		class="info"
+		*ngIf="!isCreation && !isRepeatable && hasManyIterations"
+	>
+		Отключены повторы события. Все итерации кроме последней будут удалены
+	</p>
 
-	<button [disabled]="loading || form.invalid">{{ isCreation ? "Создать" : "Сохранить" }}</button>
+	<button
+		*ngIf="isRepeatable && !isCreation"
+		[disabled]="loading || form.invalid"
+		type="button"
+		(click)="submit()"
+	>Сохранить параметры события</button>
+
+	<ul
+		*ngIf="this.point?.dates?.length && (this.point?.dates?.length != 1) && isRepeatable"
+		class="tabs"
+	>
+		<li
+			*ngFor="let date of this.point?.dates; let i = index"
+			class="tabs__item"
+			[ngClass]="{
+					'tabs__item--active': i == (currentIterationIndex | async) && !isIterationAdded
+				}"
+		>
+			<button
+				class="link tabs__btn"
+				(click)="switchIteration(i)"
+				type="button"
+			>{{ i + 1 }}</button>
+			<button
+				class="link"
+				(click)="removeIteration(i)"
+				type="button"
+			>x</button>
+		</li>
+		<li
+			class="tabs__item"
+			[ngClass]="{
+					'tabs__item--active': isIterationAdded
+				}"
+		>
+			<button
+				class="link tabs__btn"
+				(click)="addIteration()"
+				type="button"
+			>+</button>
+		</li>
+	</ul>
+
+	<div class="control">
+		<input
+			type="text"
+			placeholder="Срок в минутах"
+			formControlName="difference"
+			mask="0*"
+			[validation]="false"
+			[maxlength]="validatorDifferenceMaxLength"
+		>
+	</div>
+
+	<div class="control">
+		<div>
+			<input
+				type="date"
+				formControlName="date"
+			>
+			<input
+				type="time"
+				formControlName="time"
+			>
+		</div>
+	</div>
+
+	<button [disabled]="loading || form.invalid">{{ isRepeatable && !isCreation ? "Сохранить параметры итерации" :
+		"Сохранить событие"
+		}}</button>
+
 </form>
