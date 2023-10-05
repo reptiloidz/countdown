@@ -403,18 +403,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			Constants.fullDateFormat
 		);
 
-		let datesArray = this.point?.dates;
-		const dateNew = {
+		let newDatesArray = this.point?.dates;
+		const lastDate = {
 			date: dateTime,
 			reason: 'byHand',
 		} as Iteration;
 
 		if (!this.isRepeatable || this.isCreation) {
-			datesArray = [dateNew];
+			newDatesArray = [lastDate];
 		} else if (this.isIterationAdded) {
-			datesArray?.push(dateNew);
-		} else if (datesArray) {
-			datesArray[this.currentIterationIndex.getValue()] = dateNew;
+			saveIteration && newDatesArray?.push(lastDate);
+		} else if (newDatesArray) {
+			newDatesArray[this.currentIterationIndex.getValue()] = lastDate;
 		}
 
 		const result = {
@@ -423,15 +423,15 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			direction: this.form.controls['direction'].value,
 			greenwich: this.form.controls['greenwich'].value,
 			repeatable: this.form.controls['repeatable'].value,
-			dates: datesArray as Iteration[],
+			dates: newDatesArray as Iteration[],
 		};
 
 		if (this.isCreation) {
 			this.data.addPoint(result);
 		} else if (saveIteration) {
-			if (datesArray) {
+			if (newDatesArray) {
 				this.data.editPoint(this.point?.id, {
-					dates: datesArray,
+					dates: newDatesArray,
 					id: this.point?.id,
 				} as Point);
 			}

@@ -1,0 +1,73 @@
+<h3 class="subtitle">Генерация периодичных итераций</h3>
+
+<p>Начало диапазона</p>
+<div class="control">
+	<div>
+		<input
+			type="date"
+			formControlName="date"
+		>
+		<input
+			type="time"
+			formControlName="time"
+		>
+	</div>
+</div>
+
+<p>Повторять каждые</p>
+<input
+	class="control"
+	type="number"
+>
+<select>
+	<option value="perMinutes">Минут</option>
+	<option value="perHours">Часов</option>
+	<option value="perDays">Дней</option>
+	<option value="perWeeks">Недель</option>
+	<option value="perMonths">Месяцев</option>
+	<option value="perYears">Лет</option>
+</select>
+
+<div class="control">
+	<label>
+		<input
+			type="radio"
+			value="setRepeatsAmount"
+			name="repeatsMode"
+		>
+		Задать число повторов
+	</label>
+	<label>
+		<input
+			type="radio"
+			value="setRangeEnd"
+			name="repeatsMode"
+		>
+		Задать конец диапазона
+	</label>
+</div>
+
+<input
+	class="control"
+	type="number"
+	placeholder="Число повторов"
+>
+
+<p>Конец диапазона</p>
+<div class="control">
+	<div>
+		<input
+			type="date"
+			formControlName="date"
+		>
+		<input
+			type="time"
+			formControlName="time"
+		>
+	</div>
+</div>
+
+<button
+	type="button"
+	(click)="genRepeats()"
+>Генерировать</button>

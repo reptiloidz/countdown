@@ -1,80 +1,86 @@
 <form
 	[formGroup]="form"
 	(ngSubmit)="submit(isRepeatable && !isCreation)"
-	class="form"
 >
 	<h1>{{ isCreation ? "Создание" : "Редактирование" }}<span
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
-	<input
-		class="control"
-		type="text"
-		placeholder="Название"
-		formControlName="title"
-	>
-	<textarea
-		class="control"
-		type="text"
-		placeholder="Описание события"
-		formControlName="description"
-	></textarea>
+	<div class="form-row">
+		<div class="form">
+			<h3 class="subtitle">Параметры события</h3>
+			<input
+				class="control"
+				type="text"
+				placeholder="Название"
+				formControlName="title"
+			>
+			<textarea
+				class="control"
+				type="text"
+				placeholder="Описание события"
+				formControlName="description"
+			></textarea>
 
-	<div class="control">
-		<label>
-			<input
-				type="radio"
-				formControlName="direction"
-				value="backward"
+			<div class="control">
+				<label>
+					<input
+						type="radio"
+						formControlName="direction"
+						value="backward"
+					>
+					Обратный отсчёт
+				</label>
+				<label>
+					<input
+						type="radio"
+						formControlName="direction"
+						value="forward"
+					>
+					Прямой отсчёт
+				</label>
+			</div>
+			<div class="control">
+				<label>
+					<input
+						type="checkbox"
+						formControlName="greenwich"
+					>
+					Время по Гринвичу (убрать, если время должно быть местным)
+				</label>
+			</div>
+			<div class="control">
+				<label>
+					<input
+						type="checkbox"
+						formControlName="repeatable"
+					>
+					Повторяемое событие
+				</label>
+			</div>
+			<p
+				class="info"
+				*ngIf="isCreation && isRepeatable"
 			>
-			Обратный отсчёт
-		</label>
-		<label>
-			<input
-				type="radio"
-				formControlName="direction"
-				value="forward"
+				Изменение итераций будет доступно после создания события
+			</p>
+			<p
+				class="info"
+				*ngIf="!isCreation && !isRepeatable && hasManyIterations"
 			>
-			Прямой отсчёт
-		</label>
-	</div>
-	<div class="control">
-		<label>
-			<input
-				type="checkbox"
-				formControlName="greenwich"
-			>
-			Время по Гринвичу (убрать, если время должно быть местным)
-		</label>
-	</div>
-	<div class="control">
-		<label>
-			<input
-				type="checkbox"
-				formControlName="repeatable"
-			>
-			Повторяемое событие
-		</label>
-	</div>
-	<p
-		class="info"
-		*ngIf="isCreation && isRepeatable"
-	>
-		Изменение итераций будет доступно после создания события
-	</p>
-	<p
-		class="info"
-		*ngIf="!isCreation && !isRepeatable && hasManyIterations"
-	>
-		Отключены повторы события. Все итерации кроме последней будут удалены
-	</p>
+				Отключены повторы события. Все итерации кроме последней будут удалены
+			</p>
 
-	<button
-		*ngIf="isRepeatable && !isCreation"
-		[disabled]="loading || form.invalid"
-		type="button"
-		(click)="submit()"
-	>Сохранить параметры события</button>
+			<button
+				*ngIf="isRepeatable && !isCreation"
+				[disabled]="loading || form.invalid"
+				type="button"
+				(click)="submit()"
+			>Сохранить параметры события</button>
+		</div>
+
+		<app-generate-iterations class="form"></app-generate-iterations>
+	</div>
 
 	<ul
 		*ngIf="this.point?.dates?.length && (this.point?.dates?.length != 1) && isRepeatable"
@@ -112,27 +118,29 @@
 		</li>
 	</ul>
 
-	<div class="control">
-		<input
-			type="text"
-			placeholder="Срок в минутах"
-			formControlName="difference"
-			mask="0*"
-			[validation]="false"
-			[maxlength]="validatorDifferenceMaxLength"
-		>
-	</div>
+	<div class="form">
+		<div class="control">
+			<input
+				type="text"
+				placeholder="Срок в минутах"
+				formControlName="difference"
+				mask="0*"
+				[validation]="false"
+				[maxlength]="validatorDifferenceMaxLength"
+			>
+		</div>
 
-	<div class="control">
-		<div>
-			<input
-				type="date"
-				formControlName="date"
-			>
-			<input
-				type="time"
-				formControlName="time"
-			>
+		<div class="control">
+			<div>
+				<input
+					type="date"
+					formControlName="date"
+				>
+				<input
+					type="time"
+					formControlName="time"
+				>
+			</div>
 		</div>
 	</div>
 

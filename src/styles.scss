@@ -11,11 +11,16 @@ body {
 	flex-direction: column;
 	height: 100%;
 	padding: 20px;
+
+	@media (max-width: 1024px) {
+		height: auto;
+	}
 }
 
 .main {
 	display: flex;
 	flex-grow: 1;
+	flex-shrink: 0;
 	align-items: center;
 	justify-content: center;
 	margin: 20px 0;
@@ -101,10 +106,26 @@ a,
 	}
 }
 
+.form-row {
+	display: flex;
+	gap: 20px;
+
+	@media (max-width: 1024px) {
+		flex-direction: column;
+	}
+}
+
+.subtitle {
+	margin: 10px 0 20px;
+}
+
 .tabs {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 12px;
-	padding: 0;
+	margin-top: 40px;
+	padding: 20px 0 0;
+	border-top: 1px solid gray;
 	list-style-type: none;
 
 	&__item {

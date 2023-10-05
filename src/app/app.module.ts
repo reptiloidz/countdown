@@ -14,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { HttpService } from './services/http.service';
 import { HttpService as MockHttpService } from './services/http.mock.service';
+import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
 
 @NgModule({
 	declarations: [
@@ -25,6 +26,7 @@ import { HttpService as MockHttpService } from './services/http.mock.service';
 		FooterComponent,
 		EditPointComponent,
 		CreatePointComponent,
+		GenerateIterationsComponent,
 	],
 	imports: [
 		BrowserModule,
