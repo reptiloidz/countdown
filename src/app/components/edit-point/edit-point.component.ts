@@ -45,6 +45,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	currentIterationIndex = new BehaviorSubject<number>(0);
 	removedIterationIndex = 0;
 	isIterationAdded = false;
+	iterationControls = {};
 
 	private _debounceTime = 500;
 	private subscriptions: Subscription = new Subscription();
@@ -73,6 +74,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				[Validators.required]
 			),
 			time: new FormControl('00:00', [Validators.required]),
+			iterationsForm: new FormGroup({
+				rangeStartDate: new FormControl(
+					format(new Date(), Constants.shortDateFormat),
+					[Validators.required]
+				),
+				rangeStartTime: new FormControl('00:00', [Validators.required]),
+				rangeEndDate: new FormControl(
+					format(new Date(), Constants.shortDateFormat),
+					[Validators.required]
+				),
+				rangeEndTime: new FormControl('00:00', [Validators.required]),
+			}),
 		});
 
 		this.subscriptions.add(
@@ -254,6 +267,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
+	get iterationsFormGroup(): any {
+		return this.form.get('iterationsForm');
+	}
+
 	get isCreation() {
 		return this.type === EditPointType.Create;
 	}
@@ -369,6 +386,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return Math[this.isForward ? 'trunc' : 'ceil'](
 			Math.abs(ms) / Constants.msInMinute
 		);
+	}
+
+	setIterationsControls(controls: any) {
+		this.iterationControls = controls;
 	}
 
 	submit(saveIteration = false) {
