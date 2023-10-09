@@ -9,7 +9,7 @@
 		class="tabs"
 	>
 		<li
-			*ngFor="let date of this.point?.dates; let i = index"
+			*ngFor="let date of this.point?.dates | sort; let i = index"
 			class="tabs__item"
 			[ngClass]="{
 				'tabs__item--active': i == (currentIterationIndex | async)
@@ -30,7 +30,15 @@
 	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
 	<small *ngIf="point?.greenwich && point?.repeatable"> | </small>
 	<small *ngIf="point?.repeatable">Повторяемое</small>
-	<p class="timer">{{ dateTimer }} {{ timer }}</p>
+	<p
+		*ngIf="!dateLoading; else dateLoader"
+		class="timer"
+	>{{ dateTimer }} {{ timer }}</p>
+	<ng-template #dateLoader>
+		<h2>
+			<div class="loader rotating"></div>
+		</h2>
+	</ng-template>
 </div>
 <br>
 <p>{{ point?.description }}</p>

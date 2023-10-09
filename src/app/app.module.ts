@@ -15,6 +15,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { HttpService } from './services/http.service';
 import { HttpService as MockHttpService } from './services/http.mock.service';
 import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
+import { SortPipe } from './pipes/sort.pipe';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { GenerateIterationsComponent } from './components/generate-iterations/ge
 		EditPointComponent,
 		CreatePointComponent,
 		GenerateIterationsComponent,
+		SortPipe,
 	],
 	imports: [
 		BrowserModule,

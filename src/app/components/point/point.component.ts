@@ -23,6 +23,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	dateTimer = '';
 	timer = '0:00:00';
 	loading = false;
+	dateLoading = true;
 	tzOffset = this.pointDate.getTimezoneOffset();
 	currentIterationIndex = new BehaviorSubject<number>(0);
 	removedIterationIndex = 0;
@@ -47,13 +48,13 @@ export class PointComponent implements OnInit, OnDestroy {
 								? this.point.dates.length - 1
 								: 0
 						);
-						this.setAllTimers();
 						return interval(1000);
 					})
 				)
 				.subscribe({
 					next: () => {
 						this.setAllTimers();
+						this.dateLoading = false;
 					},
 					error: (err) => {
 						console.error(
