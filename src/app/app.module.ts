@@ -41,6 +41,7 @@ import { SortPipe } from './pipes/sort.pipe';
 	providers: [
 		// { provide: HttpService, useClass: MockHttpService },
 		[provideNgxMask()],
+		SortPipe,
 	],
 	bootstrap: [AppComponent],
 })

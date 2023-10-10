@@ -23,6 +23,7 @@ import { format, parse } from 'date-fns';
 import { getPointDate } from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
+import { SortPipe } from 'src/app/pipes/sort.pipe';
 
 export enum EditPointType {
 	Create = 'create',
@@ -53,7 +54,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	constructor(
 		private data: DataService,
 		private route: ActivatedRoute,
-		private router: Router
+		private router: Router,
+		private sortPipe: SortPipe
 	) {}
 
 	ngOnInit(): void {
@@ -101,6 +103,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					next: (point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
+							this.sortDates();
 							this.switchIteration(
 								this.point?.dates.length
 									? this.point.dates.length - 1
@@ -251,6 +254,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
 				next: (point) => {
+					this.sortDates();
+					this.switchIteration();
 					this.success(point);
 				},
 				error: (err) => {
@@ -285,6 +290,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	get isForward() {
 		return this.form.controls['direction'].value === 'forward';
+	}
+
+	sortDates() {
+		const sortedDates = this.sortPipe.transform(this.point?.dates);
+		if (this.point && sortedDates) {
+			this.point.dates = sortedDates;
+		}
 	}
 
 	setValues(isReset = false) {
