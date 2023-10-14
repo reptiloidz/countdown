@@ -19,7 +19,9 @@
 				class="link tabs__btn"
 				(click)="switchIteration(i)"
 				type="button"
-			>{{ i + 1 }}</button>
+			>{{ i + 1 }}
+				<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
+			</button>
 			<button
 				class="link"
 				(click)="removeIteration(i)"

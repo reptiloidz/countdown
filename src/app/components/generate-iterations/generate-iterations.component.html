@@ -19,8 +19,9 @@
 	<input
 		class="control"
 		type="number"
+		formControlName="rangePeriod"
 	>
-	<select>
+	<select formControlName="periodicity">
 		<option value="perMinutes">Минут</option>
 		<option value="perHours">Часов</option>
 		<option value="perDays">Дней</option>
@@ -34,7 +35,7 @@
 			<input
 				type="radio"
 				value="setRepeatsAmount"
-				name="repeatsMode"
+				formControlName="repeatsMode"
 			>
 			Задать число повторов
 		</label>
@@ -42,31 +43,36 @@
 			<input
 				type="radio"
 				value="setRangeEnd"
-				name="repeatsMode"
+				formControlName="repeatsMode"
 			>
 			Задать конец диапазона
 		</label>
 	</div>
 
 	<input
+		*ngIf="isRepeatsAmountSet"
 		class="control"
 		type="number"
 		placeholder="Число повторов"
+		formControlName="rangeAmount"
+		min="2"
 	>
 
-	<p>Конец диапазона</p>
-	<div class="control">
-		<div>
-			<input
-				type="date"
-				formControlName="rangeEndDate"
-			>
-			<input
-				type="time"
-				formControlName="rangeEndTime"
-			>
+	<ng-container *ngIf="!isRepeatsAmountSet">
+		<p>Конец диапазона</p>
+		<div class="control">
+			<div>
+				<input
+					type="date"
+					formControlName="rangeEndDate"
+				>
+				<input
+					type="time"
+					formControlName="rangeEndTime"
+				>
+			</div>
 		</div>
-	</div>
+	</ng-container>
 
 	<button
 		type="button"

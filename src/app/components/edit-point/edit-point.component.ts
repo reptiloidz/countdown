@@ -81,12 +81,26 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					format(new Date(), Constants.shortDateFormat),
 					[Validators.required]
 				),
-				rangeStartTime: new FormControl('00:00', [Validators.required]),
+				rangeStartTime: new FormControl(
+					format(new Date(), Constants.timeFormat),
+					[Validators.required]
+				),
+				rangePeriod: new FormControl(1, [Validators.required]),
+				repeatsMode: new FormControl('setRepeatsAmount', [
+					Validators.required,
+				]),
+				rangeAmount: new FormControl(2, [Validators.required]),
+				periodicity: new FormControl('perMinutes', [
+					Validators.required,
+				]),
 				rangeEndDate: new FormControl(
 					format(new Date(), Constants.shortDateFormat),
 					[Validators.required]
 				),
-				rangeEndTime: new FormControl('00:00', [Validators.required]),
+				rangeEndTime: new FormControl(
+					format(new Date(), Constants.timeFormat),
+					[Validators.required]
+				),
 			}),
 		});
 
@@ -272,8 +286,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	get iterationsFormGroup(): any {
-		return this.form.get('iterationsForm');
+	get formGroup(): any {
+		return this.form;
 	}
 
 	get isCreation() {
@@ -400,54 +414,62 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	getRepeats(repeats: Iteration[]) {
+		this.submit(false, repeats);
+	}
+
 	setIterationsControls(controls: any) {
 		this.iterationControls = controls;
 	}
 
-	submit(saveIteration = false) {
+	submit(saveIteration = false, repeats: Iteration[] = []) {
 		if (this.form.invalid) {
 			return;
 		}
 
 		this.differenceChanged();
 		this.loading = true;
-
-		const date = parse(
-			this.form.controls['date'].value,
-			Constants.shortDateFormat,
-			getPointDate(
-				new Date(),
-				this.tzOffset,
-				this.form.controls['greenwich'].value,
-				true
-			)
-		);
-		const dateTime = format(
-			getPointDate(
-				parse(
-					this.form.controls['time'].value,
-					Constants.timeFormat,
-					date
-				),
-				this.tzOffset,
-				this.form.controls['greenwich'].value,
-				true
-			),
-			Constants.fullDateFormat
-		);
-
 		let newDatesArray = this.point?.dates;
-		const lastDate = {
-			date: dateTime,
-			reason: 'byHand',
-		} as Iteration;
 
-		if (!this.isRepeatable || this.isCreation) {
-			newDatesArray = [lastDate];
-		} else if (this.isIterationAdded) {
-			saveIteration && newDatesArray?.push(lastDate);
-		} else if (newDatesArray) {
-			newDatesArray[this.currentIterationIndex.getValue()] = lastDate;
+		if (repeats.length) {
+			newDatesArray?.push(...repeats);
+		} else {
+			const date = parse(
+				this.form.controls['date'].value,
+				Constants.shortDateFormat,
+				getPointDate(
+					new Date(),
+					this.tzOffset,
+					this.form.controls['greenwich'].value,
+					true
+				)
+			);
+			const dateTime = format(
+				getPointDate(
+					parse(
+						this.form.controls['time'].value,
+						Constants.timeFormat,
+						date
+					),
+					this.tzOffset,
+					this.form.controls['greenwich'].value,
+					true
+				),
+				Constants.fullDateFormat
+			);
+
+			const lastDate = {
+				date: dateTime,
+				reason: 'byHand',
+			} as Iteration;
+
+			if (!this.isRepeatable || this.isCreation) {
+				newDatesArray = [lastDate];
+			} else if (this.isIterationAdded) {
+				saveIteration && newDatesArray?.push(lastDate);
+			} else if (newDatesArray) {
+				newDatesArray[this.currentIterationIndex.getValue()] = lastDate;
+			}
 		}
 
 		const result = {
@@ -461,7 +483,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		if (this.isCreation) {
 			this.data.addPoint(result);
-		} else if (saveIteration) {
+		} else if (saveIteration || repeats.length) {
 			if (newDatesArray) {
 				this.data.editPoint(this.point?.id, {
 					dates: newDatesArray,
