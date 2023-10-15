@@ -16,6 +16,7 @@ import { HttpService } from './services/http.service';
 import { HttpService as MockHttpService } from './services/http.mock.service';
 import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
 import { SortPipe } from './pipes/sort.pipe';
+import { AuthComponent } from './components/personal/auth/auth.component';
 
 @NgModule({
 	declarations: [
@@ -29,6 +30,7 @@ import { SortPipe } from './pipes/sort.pipe';
 		CreatePointComponent,
 		GenerateIterationsComponent,
 		SortPipe,
+		AuthComponent,
 	],
 	imports: [
 		BrowserModule,
