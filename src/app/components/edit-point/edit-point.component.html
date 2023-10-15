@@ -82,6 +82,7 @@
 		<app-generate-iterations
 			*ngIf="isRepeatable"
 			class="form"
+			[loading]="loading"
 			[form]="formGroup"
 			(repeatsIsGenerated)="getRepeats($event)"
 		></app-generate-iterations>
@@ -151,8 +152,10 @@
 		</div>
 	</div>
 
-	<button [disabled]="loading || form.invalid">{{ isRepeatable && !isCreation ? "Сохранить параметры итерации" :
+	<button [disabled]="loading || form.invalid">
+		{{ isRepeatable && !isCreation ? "Сохранить параметры итерации" :
 		"Сохранить событие"
-		}}</button>
+		}}
+	</button>
 
 </form>

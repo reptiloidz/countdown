@@ -75,6 +75,7 @@
 	</ng-container>
 
 	<button
+		[disabled]="loading || iterationsForm.invalid"
 		type="button"
 		(click)="genRepeats()"
 	>Генерировать</button>

@@ -11,6 +11,7 @@ import { Iteration } from 'src/app/interfaces/iteration.interface';
 })
 export class GenerateIterationsComponent implements OnInit {
 	@Input() form!: FormGroup;
+	@Input() loading = false;
 	@Output() repeatsIsGenerated = new EventEmitter<Iteration[]>();
 
 	tzOffset = new Date().getTimezoneOffset();

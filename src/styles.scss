@@ -96,9 +96,17 @@ a,
 	display: flex;
 	padding: 20px 0;
 
+	@media (max-width: 1024px) {
+		flex-direction: column;
+	}
+
 	&__addon {
 		margin-top: 6px;
 		margin-left: 10px;
+
+		@media (max-width: 1024px) {
+			margin-left: 0;
+		}
 	}
 
 	& + & {
