@@ -72,45 +72,84 @@ export class GenerateIterationsComponent implements OnInit {
 				i < this.iterationsForm.controls['rangeAmount'].value;
 				i++
 			) {
-				const date =
-					+parse(
-						this.iterationsForm.controls['rangeStartDate'].value,
-						Constants.shortDateFormat,
-						getPointDate(
-							new Date(),
-							this.tzOffset,
-							this.form.controls['greenwich'].value,
-							true
-						)
-					) +
-					this.periodicity * i;
-				const dateTime = format(
-					getPointDate(
-						new Date(
-							+parse(
-								this.iterationsForm.controls['rangeStartTime']
-									.value,
-								Constants.timeFormat,
-								new Date(date)
-							) +
-								this.periodicity * i
-						),
-						this.tzOffset,
-						this.form.controls['greenwich'].value,
-						true
-					),
-					Constants.fullDateFormat
-				);
-
 				this.repeats.push({
-					date: dateTime,
+					date: this.getDateTime(i),
 					reason: 'frequency',
 				});
 			}
 		} else {
-			// TODO
+			this.addIterationRecursively(0);
 		}
 
 		this.repeatsIsGenerated.emit(this.repeats);
+	}
+
+	getDateTime(k: number) {
+		const date =
+			+parse(
+				this.iterationsForm.controls['rangeStartDate'].value,
+				Constants.shortDateFormat,
+				getPointDate(
+					new Date(),
+					this.tzOffset,
+					this.form.controls['greenwich'].value,
+					true
+				)
+			) +
+			this.periodicity * k;
+
+		return format(
+			getPointDate(
+				new Date(
+					+parse(
+						this.iterationsForm.controls['rangeStartTime'].value,
+						Constants.timeFormat,
+						new Date(date)
+					) +
+						this.periodicity * k
+				),
+				this.tzOffset,
+				this.form.controls['greenwich'].value,
+				true
+			),
+			Constants.fullDateFormat
+		);
+	}
+
+	addIterationRecursively(k: number) {
+		const currentDateTime = this.getDateTime(k);
+
+		const date = parse(
+			this.iterationsForm.controls['rangeEndDate'].value,
+			Constants.shortDateFormat,
+			getPointDate(
+				new Date(),
+				this.tzOffset,
+				this.form.controls['greenwich'].value,
+				true
+			)
+		);
+		const dateTime = getPointDate(
+			parse(
+				this.iterationsForm.controls['rangeEndTime'].value,
+				Constants.timeFormat,
+				date
+			),
+			this.tzOffset,
+			this.form.controls['greenwich'].value,
+			true
+		);
+
+		this.repeats.push({
+			date: currentDateTime,
+			reason: 'frequency',
+		});
+
+		if (
+			parse(currentDateTime, Constants.fullDateFormat, new Date()) <
+			dateTime
+		) {
+			this.addIterationRecursively(k + 1);
+		}
 	}
 }

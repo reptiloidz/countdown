@@ -80,6 +80,7 @@
 		</div>
 
 		<app-generate-iterations
+			*ngIf="isRepeatable"
 			class="form"
 			[form]="formGroup"
 			(repeatsIsGenerated)="getRepeats($event)"

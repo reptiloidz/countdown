@@ -94,11 +94,17 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					Validators.required,
 				]),
 				rangeEndDate: new FormControl(
-					format(new Date(), Constants.shortDateFormat),
+					format(
+						new Date(+new Date() + Constants.msInMinute * 10),
+						Constants.shortDateFormat
+					),
 					[Validators.required]
 				),
 				rangeEndTime: new FormControl(
-					format(new Date(), Constants.timeFormat),
+					format(
+						new Date(+new Date() + Constants.msInMinute * 10),
+						Constants.timeFormat
+					),
 					[Validators.required]
 				),
 			}),
@@ -486,6 +492,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		} else if (saveIteration || repeats.length) {
 			if (newDatesArray) {
 				this.data.editPoint(this.point?.id, {
+					repeatable: true,
 					dates: newDatesArray,
 					id: this.point?.id,
 				} as Point);
