@@ -29,7 +29,7 @@ export class GenerateIterationsComponent implements OnInit {
 		);
 	}
 
-	get periodicity() {
+	get periodicityValue() {
 		let periodicity = 0;
 
 		switch (this.iterationsForm.controls['periodicity'].value) {
@@ -82,21 +82,21 @@ export class GenerateIterationsComponent implements OnInit {
 		}
 
 		this.repeatsIsGenerated.emit(this.repeats);
+
+		this.repeats = [];
 	}
 
 	getDateTime(k: number) {
-		const date =
-			+parse(
-				this.iterationsForm.controls['rangeStartDate'].value,
-				Constants.shortDateFormat,
-				getPointDate(
-					new Date(),
-					this.tzOffset,
-					this.form.controls['greenwich'].value,
-					true
-				)
-			) +
-			this.periodicity * k;
+		const date = +parse(
+			this.iterationsForm.controls['rangeStartDate'].value,
+			Constants.shortDateFormat,
+			getPointDate(
+				new Date(),
+				this.tzOffset,
+				this.form.controls['greenwich'].value,
+				true
+			)
+		);
 
 		return format(
 			getPointDate(
@@ -106,7 +106,7 @@ export class GenerateIterationsComponent implements OnInit {
 						Constants.timeFormat,
 						new Date(date)
 					) +
-						this.periodicity * k
+						this.periodicityValue * k
 				),
 				this.tzOffset,
 				this.form.controls['greenwich'].value,
@@ -140,15 +140,14 @@ export class GenerateIterationsComponent implements OnInit {
 			true
 		);
 
-		this.repeats.push({
-			date: currentDateTime,
-			reason: 'frequency',
-		});
-
 		if (
-			parse(currentDateTime, Constants.fullDateFormat, new Date()) <
+			parse(currentDateTime, Constants.fullDateFormat, new Date()) <=
 			dateTime
 		) {
+			this.repeats.push({
+				date: currentDateTime,
+				reason: 'frequency',
+			});
 			this.addIterationRecursively(k + 1);
 		}
 	}
