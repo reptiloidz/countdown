@@ -341,7 +341,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							?.date || ''
 				  ),
 			this.tzOffset,
-			this.form.controls['greenwich'].value
+			this.isIterationAdded
+				? false
+				: this.form.controls['greenwich'].value
 		);
 		this.form.patchValue({
 			date: format(pointDate, Constants.shortDateFormat),

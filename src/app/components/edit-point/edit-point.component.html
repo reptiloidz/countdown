@@ -89,7 +89,7 @@
 	</div>
 
 	<ul
-		*ngIf="this.point?.dates?.length && (this.point?.dates?.length != 1) && isRepeatable"
+		*ngIf="isRepeatable"
 		class="tabs"
 	>
 		<li
@@ -107,6 +107,7 @@
 				<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
 			</button>
 			<button
+				*ngIf="this.point?.dates?.length && (this.point?.dates?.length != 1)"
 				class="link"
 				(click)="removeIteration(i)"
 				type="button"
