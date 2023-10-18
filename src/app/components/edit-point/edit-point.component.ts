@@ -494,6 +494,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		} else if (saveIteration || repeats.length) {
 			if (newDatesArray) {
 				this.data.editPoint(this.point?.id, {
+					...result,
 					repeatable: true,
 					dates: newDatesArray,
 					id: this.point?.id,
