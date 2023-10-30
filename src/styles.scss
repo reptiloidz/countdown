@@ -1,14 +1,21 @@
 @import './styles/reboot';
 
-html,
-body {
+html {
+	display: flex;
+	flex-direction: column;
 	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-grow: 1;
 	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 
 .root {
 	display: flex;
 	flex-direction: column;
+	width: 100%;
 	height: 100%;
 	padding: 20px;
 
@@ -27,19 +34,15 @@ body {
 	overflow: auto;
 }
 
-.header,
-.footer {
+.nav {
 	display: flex;
 	align-items: flex-end;
 	justify-content: space-between;
-}
 
-.footer {
 	@media (max-width: 1024px) {
 		&__aside {
 			display: flex;
 			flex-direction: column;
-			align-items: flex-end;
 		}
 
 		&__divider {
@@ -48,6 +51,16 @@ body {
 
 		&__item {
 			margin-top: 12px;
+		}
+	}
+
+	&__aside {
+		align-items: flex-start;
+	}
+
+	&--right {
+		.nav__aside {
+			align-items: flex-end;
 		}
 	}
 }

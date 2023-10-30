@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class AuthComponent implements OnInit {
 	form!: FormGroup;
+	isLoading = false;
 
 	constructor(private auth: AuthService, private router: Router) {}
 
@@ -28,10 +29,16 @@ export class AuthComponent implements OnInit {
 
 	submit() {
 		if (this.form.valid) {
+			this.isLoading = true;
 			this.auth.login(this.form.value).subscribe({
-				next: (value) => {
-					console.log(value);
+				next: () => {
+					this.isLoading = false;
 					this.router.navigate(['']);
+				},
+				error: (err) => {
+					this.isLoading = false;
+
+					console.error('Ошибка при авторизации:\n', err.message);
 				},
 			});
 		}

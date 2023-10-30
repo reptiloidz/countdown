@@ -1,5 +1,12 @@
-<div>
-	<a>Профиль</a>
+<div class="nav__aside">
+	<a class="nav__item">Профиль</a>
+	<ng-container *ngIf="isAuthenticated">
+		<span class="nav__divider"> | </span>
+		<button
+			class="nav__item link"
+			(click)="logout()"
+		>Выйти</button>
+	</ng-container>
 </div>
 
 <div>

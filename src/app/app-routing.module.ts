@@ -5,6 +5,7 @@ import { PointComponent } from './components/point/point.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { CreatePointComponent } from './components/create-point/create-point.component';
 import { AuthComponent } from './personal/components/auth/auth.component';
+import { authGuard } from './services/auth.guard';
 
 const routes: Routes = [
 	{
@@ -15,10 +16,12 @@ const routes: Routes = [
 	{
 		path: '',
 		component: MainListComponent,
+		canActivate: [authGuard],
 	},
 	{
 		path: 'point/:id',
 		component: PointComponent,
+		canActivate: [authGuard],
 	},
 	{
 		path: 'auth',
@@ -27,10 +30,12 @@ const routes: Routes = [
 	{
 		path: 'edit/:id',
 		component: EditPointComponent,
+		canActivate: [authGuard],
 	},
 	{
 		path: 'create',
 		component: CreatePointComponent,
+		canActivate: [authGuard],
 	},
 	{
 		path: 'auth',

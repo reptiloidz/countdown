@@ -3,4 +3,5 @@ export enum Constants {
 	timeFormat = 'HH:mm',
 	fullDateFormat = 'MM/dd/yyyy HH:mm',
 	msInMinute = 60000,
+	msInSecond = 1000,
 }

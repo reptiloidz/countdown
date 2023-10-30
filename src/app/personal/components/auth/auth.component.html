@@ -17,7 +17,7 @@
 			formControlName="password"
 		>
 	</div>
-	<button [disabled]="form.invalid">
+	<button [disabled]="form.invalid || isLoading">
 		Войти
 	</button>
 </form>
