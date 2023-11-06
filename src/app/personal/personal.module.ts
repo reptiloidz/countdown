@@ -4,24 +4,22 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideNgxMask } from 'ngx-mask';
 import { AuthComponent } from './components/auth/auth.component';
+import { RegComponent } from './components/reg/reg.component';
 
 @NgModule({
-	declarations: [AuthComponent],
+	declarations: [AuthComponent, RegComponent],
 	imports: [
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
 		RouterModule.forChild([
 			{
-				path: '',
+				path: 'auth',
 				component: AuthComponent,
-				children: [
-					{
-						path: '',
-						redirectTo: 'auth',
-						pathMatch: 'full',
-					},
-				],
+			},
+			{
+				path: 'reg',
+				component: RegComponent,
 			},
 		]),
 	],
@@ -30,6 +28,5 @@ import { AuthComponent } from './components/auth/auth.component';
 		// { provide: HttpService, useClass: MockHttpService },
 		[provideNgxMask()],
 	],
-	bootstrap: [AuthComponent],
 })
 export class PersonalModule {}

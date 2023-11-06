@@ -45,6 +45,16 @@ export class AuthService {
 			);
 	}
 
+	register(user: User): Observable<any> {
+		return this.http.post(
+			`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.apiKey}`,
+			{
+				...user,
+				returnSecureToken: true,
+			}
+		);
+	}
+
 	logout() {
 		this.setToken(null);
 		this.router.navigate(['/auth/']);

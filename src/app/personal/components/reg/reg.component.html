@@ -17,7 +17,14 @@
 			formControlName="password"
 		>
 	</div>
+	<div class="control">
+		<input
+			type="password"
+			placeholder="Повторите пароль"
+			formControlName="passwordRepeat"
+		>
+	</div>
 	<button [disabled]="form.invalid || isLoading">
-		Войти
+		Зарегистрироваться
 	</button>
 </form>
