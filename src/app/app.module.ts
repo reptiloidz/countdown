@@ -16,6 +16,10 @@ import { HttpService } from './services/http.service';
 import { HttpService as MockHttpService } from './services/http.mock.service';
 import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
 import { SortPipe } from './pipes/sort.pipe';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
 
 @NgModule({
 	declarations: [
@@ -37,6 +41,22 @@ import { SortPipe } from './pipes/sort.pipe';
 		ReactiveFormsModule,
 		HttpClientModule,
 		NgxMaskDirective,
+		provideFirebaseApp(() =>
+			initializeApp({
+				projectId: 'countdown-2971d',
+				appId: '1:711051586210:web:f9be0c6579bbb2608d85fb',
+				databaseURL:
+					'https://countdown-2971d-default-rtdb.firebaseio.com',
+				storageBucket: 'countdown-2971d.appspot.com',
+				apiKey: 'AIzaSyAqSOHSqWdyzx2GKWK33AqIIRgimEjVFak',
+				authDomain: 'countdown-2971d.firebaseapp.com',
+				messagingSenderId: '711051586210',
+				measurementId: 'G-XRDWYMHR2Y',
+			})
+		),
+		provideAuth(() => getAuth()),
+		provideFirestore(() => getFirestore()),
+		provideDatabase(() => getDatabase()),
 	],
 	providers: [
 		// { provide: HttpService, useClass: MockHttpService },

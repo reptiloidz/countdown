@@ -1,66 +1,79 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
-import { environment } from 'src/environments/environment';
+import {
+	ref,
+	getDatabase,
+	objectVal,
+	child,
+	query,
+	equalTo,
+	orderByChild,
+	set,
+	push,
+} from '@angular/fire/database';
+import { Auth, user } from '@angular/fire/auth';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class HttpService implements HttpServiceInterface {
-	constructor(private http: HttpClient) {}
+	constructor(private authFB: Auth) {}
 
 	getPoints(): Observable<Point[]> {
-		return this.http
-			.get<Point[]>(`${environment.fbDbUrl}/points.json`)
-			.pipe(
-				map((response: { [key: string]: any }) => {
-					return Object.keys(response).map((key) => ({
-						...response[key],
-						id: key,
-						date: new Date(response[key].date),
-					}));
-				})
-			);
+		return user(this.authFB).pipe(
+			switchMap((data) => {
+				return objectVal<{ [key: string]: any }>(
+					query(
+						child(ref(getDatabase()), 'points'),
+						orderByChild('user'),
+						equalTo(data?.uid || null)
+					)
+				).pipe(
+					map((response: { [key: string]: any }) => {
+						return Object.keys(response).map((key) => ({
+							...response[key],
+							id: key,
+							date: new Date(response[key].date),
+						}));
+					})
+				);
+			})
+		);
 	}
 
 	getPoint(id: string): Observable<Point> {
-		return this.http
-			.get<Point>(`${environment.fbDbUrl}/points/${id}.json`)
-			.pipe(
-				map((point: Point) => {
-					return {
-						...point,
-						id,
-					};
-				})
-			);
-	}
-
-	postPoint(point: Point | undefined): Observable<string> {
-		return this.http
-			.post<{ name: string }>(`${environment.fbDbUrl}/points.json`, point)
-			.pipe(
-				map((data) => {
-					return data.name;
-				})
-			);
-	}
-
-	patchPoint(point: Point): Observable<Point> {
-		return this.http.patch<Point>(
-			`${environment.fbDbUrl}/points/${point.id}.json`,
-			{
-				...point,
-				id: null, // Не храним id в БД
-			}
+		return objectVal<Point>(
+			query(child(ref(getDatabase()), `points/${id}`))
+		).pipe(
+			map((point: Point) => {
+				return {
+					...point,
+					id,
+				};
+			})
 		);
 	}
 
-	deletePoint(id: string | undefined): Observable<void> {
-		return this.http.delete<void>(
-			`${environment.fbDbUrl}/points/${id}.json`
-		);
+	async postPoint(point: Point | undefined): Promise<string> {
+		const value: any = await push(ref(getDatabase(), 'points'), point);
+		return await new Promise((resolve) => {
+			resolve(value.key as string);
+		});
+	}
+
+	async patchPoint(point: Point): Promise<Point> {
+		await set(ref(getDatabase(), `points/${point.id}`), point);
+		return await new Promise((resolve) => {
+			resolve(point);
+		});
+	}
+
+	async deletePoint(id: string | undefined): Promise<void> {
+		await set(ref(getDatabase(), `points/${id}`), null);
+		return await new Promise((resolve) => {
+			resolve();
+		});
 	}
 }

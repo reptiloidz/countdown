@@ -31,6 +31,7 @@ export class HttpService implements HttpServiceInterface {
 			direction: 'backward',
 			greenwich: true,
 			repeatable: true,
+			user: 'aPstQaNqFDfLjCCaRu4iVMTzror2',
 		},
 		{
 			title: 'День без аварии',
@@ -45,6 +46,7 @@ export class HttpService implements HttpServiceInterface {
 			direction: 'forward',
 			greenwich: false,
 			repeatable: true,
+			user: 'aPstQaNqFDfLjCCaRu4iVMTzror2',
 		},
 		{
 			title: 'Релиз ASAP-PDF',
@@ -60,6 +62,7 @@ export class HttpService implements HttpServiceInterface {
 			direction: 'backward',
 			greenwich: true,
 			repeatable: false,
+			user: 'aPstQaNqFDfLjCCaRu4iVMTzror2',
 		},
 	];
 
@@ -77,27 +80,37 @@ export class HttpService implements HttpServiceInterface {
 		);
 	}
 
-	postPoint(point: Point): Observable<string> {
-		return timer(1000).pipe(
-			switchMap(() => {
-				return of(new Date().getTime().toString());
-			})
-		);
+	postPoint(point: Point): Promise<string> {
+		return new Promise((resolve) => {
+			resolve(new Date().getTime().toString());
+		});
+		// return timer(1000).pipe(
+		// 	switchMap(() => {
+		// 		return of(new Date().getTime().toString());
+		// 	})
+		// );
 	}
 
-	patchPoint(point: Point): Observable<Point> {
-		return timer(1000).pipe(
-			switchMap(() => {
-				return of(point);
-			})
-		);
+	patchPoint(point: Point): Promise<Point> {
+		return new Promise((resolve) => {
+			resolve(point);
+		});
+		// return timer(1000).pipe(
+		// 	switchMap(() => {
+		// 		return of(point);
+		// 	})
+		// );
 	}
 
-	deletePoint(): Observable<void> {
-		return timer(1000).pipe(
-			switchMap(() => {
-				return of(undefined);
-			})
-		);
+	deletePoint(): Promise<void> {
+		return new Promise((resolve) => {
+			resolve();
+		});
+
+		// return timer(1000).pipe(
+		// 	switchMap(() => {
+		// 		return of(undefined);
+		// 	})
+		// );
 	}
 }

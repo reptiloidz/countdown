@@ -4,7 +4,7 @@ export interface FbAuthResponse {
 	expiresIn: number;
 	idToken: string;
 	kind?: string;
-	localId?: string;
+	localId: string;
 	refreshToken?: string;
 	registered: boolean;
 }

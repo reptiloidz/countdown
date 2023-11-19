@@ -24,6 +24,7 @@ import { getPointDate } from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
 import { SortPipe } from 'src/app/pipes/sort.pipe';
+import { AuthService } from 'src/app/services/auth.service';
 
 export enum EditPointType {
 	Create = 'create',
@@ -55,7 +56,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private sortPipe: SortPipe
+		private sortPipe: SortPipe,
+		private auth: AuthService
 	) {}
 
 	ngOnInit(): void {
@@ -487,6 +489,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			greenwich: this.form.controls['greenwich'].value,
 			repeatable: this.form.controls['repeatable'].value,
 			dates: newDatesArray as Iteration[],
+			user: this.auth.uid || '',
 		};
 
 		if (this.isCreation) {

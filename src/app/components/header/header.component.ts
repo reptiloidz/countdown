@@ -17,6 +17,10 @@ export class HeaderComponent {
 		return this.router.url === '/auth';
 	}
 
+	check() {
+		this.auth.checkIsAuth();
+	}
+
 	logout() {
 		this.auth.logout();
 	}

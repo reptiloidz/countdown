@@ -129,10 +129,8 @@ export class DataService {
 
 	addPoint(point: Point | undefined) {
 		if (point && !this._points.find((item) => item.id === point?.id)) {
-			this.http.postPoint(point).subscribe({
-				next: (id) => {
-					this._eventAddPointSubject.next({ ...point, id });
-				},
+			this.http.postPoint(point).then((id) => {
+				this._eventAddPointSubject.next({ ...point, id });
 			});
 		}
 	}
@@ -141,17 +139,17 @@ export class DataService {
 		if (id) {
 			this.loading = true;
 			this._eventStartEditPointSubject.next();
-			this.http.patchPoint(point).subscribe({
-				next: () => {
+			this.http
+				.patchPoint(point)
+				.then((point) => {
 					this._eventEditPointSubject.next(point);
-				},
-				error: (err) => {
+				})
+				.catch((err) => {
 					console.error(
 						'Ошибка при редактировании события:\n',
 						err.message
 					);
-				},
-			});
+				});
 		}
 	}
 
@@ -159,17 +157,18 @@ export class DataService {
 		if (id) {
 			this.loading = true;
 			this._eventStartRemovePointSubject.next(id);
-			this.http.deletePoint(id).subscribe({
-				next: () => {
+
+			this.http
+				.deletePoint(id)
+				.then(() => {
 					this._eventRemovePointSubject.next(id);
-				},
-				error: (err) => {
+				})
+				.catch((err) => {
 					console.error(
 						'Ошибка при удалении события:\n',
 						err.message
 					);
-				},
-			});
+				});
 		}
 	}
 }

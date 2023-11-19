@@ -1,17 +1,59 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Constants } from '../enums';
 import { FbAuthResponse } from '../interfaces/fbAuthResponse.interface';
-import { User } from '../interfaces/user.interface';
+import { UserPoint } from '../interfaces/user.interface';
+import {
+	Auth,
+	signInWithEmailAndPassword,
+	signOut,
+	getAuth,
+	user,
+	authState,
+	User,
+} from '@angular/fire/auth';
+import { goOffline, getDatabase, goOnline } from '@angular/fire/database';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class AuthService {
-	constructor(private http: HttpClient, private router: Router) {}
+export class AuthService implements OnInit, OnDestroy {
+	constructor(
+		private httpClient: HttpClient,
+		private router: Router,
+		private authFB: Auth
+	) {}
+
+	private subscriptions: Subscription = new Subscription();
+
+	ngOnInit(): void {
+		this.subscriptions.add(
+			authState(this.authFB).subscribe({
+				next: (data: any) => {
+					switch (data?.operationType) {
+						case 'signIn':
+							this.setToken(data._tokenResponse);
+							goOnline(getDatabase());
+							break;
+
+						default:
+							break;
+					}
+				},
+			})
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
+	}
+
+	get uid() {
+		return localStorage.getItem('fb-uid');
+	}
 
 	get token(): string | null {
 		if (localStorage.getItem('fb-token')) {
@@ -29,24 +71,33 @@ export class AuthService {
 		}
 	}
 
-	login(user: User): Observable<any> {
-		return this.http
-			.post(
-				`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.apiKey}`,
-				{
-					...user,
-					returnSecureToken: true,
-				}
-			)
-			.pipe(
-				tap((value) => {
-					this.setToken(value as FbAuthResponse);
-				})
-			);
+	async login(user: UserPoint): Promise<any> {
+		const value: any = await signInWithEmailAndPassword(
+			getAuth(),
+			user.email,
+			user.password
+		);
+		this.setToken(value._tokenResponse);
+		goOnline(getDatabase());
+		return await new Promise((resolve) => {
+			resolve(value);
+		});
 	}
 
-	register(user: User): Observable<any> {
-		return this.http.post(
+	logout() {
+		signOut(this.authFB).then(() => {
+			this.setToken(null);
+			goOffline(getDatabase());
+			this.router.navigate(['/auth/']);
+		});
+	}
+
+	checkIsAuth() {
+		console.log(this.authFB);
+	}
+
+	register(user: UserPoint): Observable<any> {
+		return this.httpClient.post(
 			`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.apiKey}`,
 			{
 				...user,
@@ -55,16 +106,11 @@ export class AuthService {
 		);
 	}
 
-	logout() {
-		this.setToken(null);
-		this.router.navigate(['/auth/']);
-	}
-
 	isAuthenticated(): boolean {
 		return !!this.token;
 	}
 
-	private setToken(response: FbAuthResponse | null) {
+	setToken(response: FbAuthResponse | null) {
 		if (!response) {
 			localStorage.clear();
 		} else {
@@ -73,6 +119,7 @@ export class AuthService {
 			);
 
 			localStorage.setItem('fb-token', response.idToken);
+			localStorage.setItem('fb-uid', response.localId);
 			localStorage.setItem('fb-token-exp', expDate.toString());
 		}
 	}

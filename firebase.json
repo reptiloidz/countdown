@@ -1,0 +1,9 @@
+{
+	"hosting": [
+		{
+			"target": "cd",
+			"source": ".",
+			"frameworksBackend": {}
+		}
+	]
+}

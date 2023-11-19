@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'src/app/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -30,17 +29,18 @@ export class AuthComponent implements OnInit {
 	submit() {
 		if (this.form.valid) {
 			this.isLoading = true;
-			this.auth.login(this.form.value).subscribe({
-				next: () => {
+
+			this.auth
+				.login(this.form.value)
+				.then(() => {
 					this.isLoading = false;
 					this.router.navigate(['']);
-				},
-				error: (err) => {
+				})
+				.catch((err) => {
 					this.isLoading = false;
 
 					console.error('Ошибка при авторизации:\n', err.message);
-				},
-			});
+				});
 		}
 	}
 }

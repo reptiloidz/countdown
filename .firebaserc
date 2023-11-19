@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "countdown-2971d": {
+      "hosting": {
+        "cd": [
+          "countdown-2971d"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "countdown-2971d"
+  }
+}
