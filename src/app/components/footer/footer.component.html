@@ -3,7 +3,7 @@
 </div>
 
 <div class="nav__aside">
-	<ng-container *ngIf="pointId">
+	<ng-container *ngIf="pointId && hasAccess">
 		<a
 			class="nav__item"
 			routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}"

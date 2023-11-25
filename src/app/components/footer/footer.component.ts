@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, Event, NavigationEnd } from '@angular/router';
+import { Router, Event, ActivationEnd } from '@angular/router';
 import { format } from 'date-fns';
 import { filter, Subscription, switchMap, EMPTY } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
 import { Point } from 'src/app/interfaces/point.interface';
+import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -16,22 +17,24 @@ export class FooterComponent implements OnInit, OnDestroy {
 	pointId!: string;
 	point!: Point | undefined;
 	isEdit = false;
+	hasAccess: boolean | undefined = false;
 	tzOffset = new Date().getTimezoneOffset();
 	private subscriptions: Subscription = new Subscription();
 
-	constructor(private router: Router, private data: DataService) {}
+	constructor(
+		private router: Router,
+		private data: DataService,
+		private auth: AuthService
+	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.router.events
-				.pipe(filter((event: Event) => event instanceof NavigationEnd))
+				.pipe(filter((event: Event) => event instanceof ActivationEnd))
 				.pipe(
-					switchMap(() => {
-						// Не удалось получить snapshot прямо из события, проблема с типами (либо any, либо никак)
-						const snapshot =
-							this.router.routerState.snapshot.root.firstChild;
-						this.pointId = snapshot?.params['id'];
-						this.isEdit = snapshot?.url[0]?.path === 'edit';
+					switchMap((data: any) => {
+						this.pointId = data.snapshot.params['id'];
+						this.isEdit = data.snapshot.url[0]?.path === 'edit';
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
 							: EMPTY;
@@ -40,6 +43,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (point: Point | undefined) => {
 						this.point = point;
+						this.hasAccess =
+							point && this.auth.checkAccessEdit(point);
 					},
 					error: (err) => {
 						console.error(

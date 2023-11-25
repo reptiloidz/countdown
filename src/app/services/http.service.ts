@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, Observable, switchMap, combineLatest } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 import {
@@ -24,13 +24,19 @@ export class HttpService implements HttpServiceInterface {
 	getPoints(): Observable<Point[]> {
 		return user(this.authFB).pipe(
 			switchMap((data) => {
-				return objectVal<{ [key: string]: any }>(
-					query(
-						child(ref(getDatabase()), 'points'),
-						orderByChild('user'),
-						equalTo(data?.uid || null)
-					)
-				).pipe(
+				const userPointsQuery = query(
+					ref(getDatabase(), 'points'),
+					orderByChild('user'),
+					equalTo(data?.uid || null)
+				);
+
+				const publicPointsQuery = query(
+					ref(getDatabase(), 'points'),
+					orderByChild('public'),
+					equalTo(true)
+				);
+
+				const userPoints$ = objectVal<any>(userPointsQuery).pipe(
 					map((response: { [key: string]: any }) => {
 						return Object.keys(response).map((key) => ({
 							...response[key],
@@ -38,6 +44,28 @@ export class HttpService implements HttpServiceInterface {
 							date: new Date(response[key].date),
 						}));
 					})
+				);
+
+				const publicPoints$ = objectVal<any>(publicPointsQuery).pipe(
+					map((response: { [key: string]: any }) => {
+						return Object.keys(response).map((key) => ({
+							...response[key],
+							id: key,
+							date: new Date(response[key].date),
+						}));
+					})
+				);
+
+				// Из-за ограничений Firebase фильтрация данных осуществляется на клиенте, при этом выполняется 2 запроса данных
+				return combineLatest([userPoints$, publicPoints$]).pipe(
+					map((results) => results.flat()),
+					map((points) =>
+						Array.from(
+							new Map(
+								points.map((point) => [point.id, point])
+							).values()
+						)
+					)
 				);
 			})
 		);

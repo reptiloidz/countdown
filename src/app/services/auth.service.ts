@@ -16,6 +16,7 @@ import {
 	User,
 } from '@angular/fire/auth';
 import { goOffline, getDatabase, goOnline } from '@angular/fire/database';
+import { Point } from '../interfaces/point.interface';
 
 @Injectable({
 	providedIn: 'root',
@@ -49,6 +50,10 @@ export class AuthService implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	checkAccessEdit(point: Point) {
+		return point.user === this.uid;
 	}
 
 	get uid() {

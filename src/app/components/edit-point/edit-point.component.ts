@@ -73,6 +73,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			direction: new FormControl('backward', [Validators.required]),
 			greenwich: new FormControl(false),
 			repeatable: new FormControl(false),
+			public: new FormControl(false),
 			date: new FormControl(
 				format(new Date(), Constants.shortDateFormat),
 				[Validators.required]
@@ -328,7 +329,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				description: this.point?.description,
 				direction: this.point?.direction,
 				greenwich: this.point?.greenwich,
-				repeatable: this.point?.repeatable,
+				repeatable: this.point?.repeatable || false,
+				public: this.point?.public || false,
 			},
 			{
 				emitEvent: false,
@@ -488,6 +490,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			direction: this.form.controls['direction'].value,
 			greenwich: this.form.controls['greenwich'].value,
 			repeatable: this.form.controls['repeatable'].value,
+			public: this.form.controls['public'].value,
 			dates: newDatesArray as Iteration[],
 			user: this.auth.uid || '',
 		};

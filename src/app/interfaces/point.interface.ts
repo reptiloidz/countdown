@@ -10,5 +10,6 @@ export interface Point {
 	direction: Direction;
 	greenwich: boolean;
 	repeatable: boolean;
-	user: string;
+	user?: string;
+	public?: boolean;
 }

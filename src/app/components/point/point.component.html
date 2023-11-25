@@ -30,8 +30,8 @@
 		</li>
 	</ul>
 	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
-	<small *ngIf="point?.greenwich && point?.repeatable"> | </small>
-	<small *ngIf="point?.repeatable">Повторяемое</small>
+	<small *ngIf="point?.repeatable">&nbsp;Повторяемое</small>
+	<small *ngIf="point?.public">&nbsp;Публичное</small>
 	<p
 		*ngIf="!dateLoading; else dateLoader"
 		class="timer"
