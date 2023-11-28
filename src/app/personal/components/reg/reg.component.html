@@ -8,22 +8,28 @@
 			type="text"
 			placeholder="E-mail"
 			formControlName="email"
+			(focus)="fieldFocus($event)"
+			(blur)="fieldBlur($event)"
 		>
 	</div>
-	<div class="control">
-		<input
-			type="password"
-			placeholder="Пароль"
-			formControlName="password"
-		>
-	</div>
-	<div class="control">
-		<input
-			type="password"
-			placeholder="Повторите пароль"
-			formControlName="passwordRepeat"
-		>
-	</div>
+	<ng-container [formGroup]="passwordsForm">
+		<div class="control">
+			<input
+				type="password"
+				placeholder="Пароль"
+				formControlName="password"
+				(focus)="fieldFocus($event)"
+				(blur)="fieldBlur($event)"
+			>
+		</div>
+		<div class="control">
+			<input
+				type="password"
+				placeholder="Повторите пароль"
+				formControlName="passwordRepeat"
+			>
+		</div>
+	</ng-container>
 	<button [disabled]="form.invalid || isLoading">
 		Зарегистрироваться
 	</button>
