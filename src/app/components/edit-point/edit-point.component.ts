@@ -240,6 +240,22 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
+			this.form.controls['public'].valueChanges.subscribe({
+				next: () => {
+					if (this.point) {
+						this.point.public = this.form.controls['public'].value;
+					}
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при переключении публичности:\n',
+						err.message
+					);
+				},
+			})
+		);
+
+		this.subscriptions.add(
 			interval(Constants.msInMinute)
 				.pipe(
 					filter(() => {
@@ -328,7 +344,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				title: this.point?.title,
 				description: this.point?.description,
 				direction: this.point?.direction,
-				greenwich: this.point?.greenwich,
+				greenwich: this.point?.greenwich || false,
 				repeatable: this.point?.repeatable || false,
 				public: this.point?.public || false,
 			},
@@ -486,7 +502,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		const result = {
 			title: this.form.controls['title'].value,
-			description: this.form.controls['description'].value,
+			description: this.form.controls['description'].value || null,
 			direction: this.form.controls['direction'].value,
 			greenwich: this.form.controls['greenwich'].value,
 			repeatable: this.form.controls['repeatable'].value,

@@ -188,6 +188,15 @@ a,
 	padding: 12px;
 	background-color: #DBDBDB;
 	font-size: 14px;
+
+	&__item {
+		list-style-position: inside;
+	}
+
+	&--error {
+		background-color: #FFCACA;
+		color: red;
+	}
 }
 
 .rotating {

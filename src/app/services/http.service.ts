@@ -92,7 +92,7 @@ export class HttpService implements HttpServiceInterface {
 	}
 
 	async patchPoint(point: Point): Promise<Point> {
-		await set(ref(getDatabase(), `points/${point.id}`), point);
+		await set(ref(getDatabase(), `points/${point?.id}`), point);
 		return await new Promise((resolve) => {
 			resolve(point);
 		});
