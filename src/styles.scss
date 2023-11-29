@@ -56,6 +56,10 @@ body {
 
 	&__aside {
 		align-items: flex-start;
+
+		&--right {
+			margin-left: auto;
+		}
 	}
 
 	&--right {

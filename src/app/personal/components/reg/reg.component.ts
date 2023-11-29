@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,6 +9,10 @@ import { passwordRepeat } from 'src/app/services/password-repeat.validator';
 	templateUrl: './reg.component.html',
 })
 export class RegComponent {
+	@ViewChild('passwordControl') private passwordControl!: ElementRef;
+	@ViewChild('passwordRepeatControl')
+	private passwordRepeatControl!: ElementRef;
+
 	form!: FormGroup;
 	isLoading = false;
 
@@ -40,14 +44,13 @@ export class RegComponent {
 		return this.form.get('passwords') as FormGroup;
 	}
 
-	fieldFocus(event: Event) {
-		const el: HTMLElement | null = event.target as HTMLElement;
-		el.removeAttribute('readonly');
-	}
-
-	fieldBlur(event: Event) {
-		const el: HTMLElement | null = event.target as HTMLElement;
-		el.setAttribute('readonly', 'true');
+	switchPasswordVisibility(event: Event) {
+		const el: HTMLInputElement | null = event.target as HTMLInputElement;
+		(<HTMLInputElement>this.passwordControl.nativeElement).type = el.checked
+			? 'text'
+			: 'password';
+		(<HTMLInputElement>this.passwordRepeatControl.nativeElement).type =
+			el.checked ? 'text' : 'password';
 	}
 
 	submit() {

@@ -10,7 +10,7 @@ export class DataService {
 	private _loading = false;
 
 	private _points: Point[] = [];
-	private subscriptions: Subscription = new Subscription();
+	private subscriptions = new Subscription();
 
 	private _eventFetchAllPointsSubject = new BehaviorSubject<Point[]>(
 		this._points

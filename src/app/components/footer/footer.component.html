@@ -1,8 +1,8 @@
-<div>
+<!-- <div>
 	<a>Настройки</a>
-</div>
+	</div> -->
 
-<div class="nav__aside">
+<div class="nav__aside nav__aside--right">
 	<ng-container *ngIf="pointId && hasAccess">
 		<a
 			class="nav__item"
@@ -18,6 +18,7 @@
 		</ng-container>
 	</ng-container>
 	<a
+		*ngIf="isAuthenticated"
 		class="nav__item"
 		routerLink="/create"
 	>Создать</a>

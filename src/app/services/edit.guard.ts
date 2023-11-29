@@ -20,8 +20,8 @@ export const editGuard = () => {
 		.subscribe({
 			next: (point) => {
 				hasAccess = !!(point && auth.checkAccessEdit(point));
-				if (!hasAccess) {
-					router.navigate(['/point/', point?.id]);
+				if (!hasAccess && point?.id) {
+					router.navigate(['/point/', point.id]);
 				}
 				return hasAccess;
 			},

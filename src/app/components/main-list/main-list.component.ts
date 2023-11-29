@@ -10,7 +10,7 @@ import { DataService } from 'src/app/services/data.service';
 export class MainListComponent implements OnInit, OnDestroy {
 	points: Point[] = [];
 	loading = true;
-	private subscriptions: Subscription = new Subscription();
+	private subscriptions = new Subscription();
 
 	constructor(private data: DataService) {}
 

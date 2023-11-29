@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
+import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -8,9 +9,9 @@ import { DataService } from 'src/app/services/data.service';
 	templateUrl: './main-item.component.html',
 })
 export class MainItemComponent implements OnInit, OnDestroy {
-	constructor(private data: DataService) {}
+	constructor(private data: DataService, private auth: AuthService) {}
 
-	private subscriptions: Subscription = new Subscription();
+	private subscriptions = new Subscription();
 	@Input() point!: Point;
 	loading = false;
 
@@ -48,6 +49,10 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	checkAccessEdit(point: Point) {
+		return this.auth.checkAccessEdit(point);
 	}
 
 	delete(id: string | undefined) {

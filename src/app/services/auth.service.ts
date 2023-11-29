@@ -28,7 +28,7 @@ export class AuthService implements OnInit, OnDestroy {
 		private authFB: Auth
 	) {}
 
-	private subscriptions: Subscription = new Subscription();
+	private subscriptions = new Subscription();
 
 	ngOnInit(): void {
 		this.subscriptions.add(

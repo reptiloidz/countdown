@@ -1,7 +1,7 @@
 <div class="nav__aside">
 	<ng-container *ngIf="isAuthenticated; else unAuth">
-		<a class="nav__item">Профиль</a>
-		<span class="nav__divider"> | </span>
+		<!-- <a class="nav__item">Профиль</a>
+			<span class="nav__divider"> | </span> -->
 		<button
 			class="nav__item link"
 			(click)="logout()"
@@ -19,6 +19,6 @@
 		>Проверка</button> -->
 </div>
 
-<div>
+<div *ngIf="isAuthenticated && !isMain">
 	<a routerLink="/">На главную</a>
 </div>

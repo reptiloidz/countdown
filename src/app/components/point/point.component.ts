@@ -28,7 +28,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	currentIterationIndex = new BehaviorSubject<number>(0);
 	removedIterationIndex = 0;
 
-	private subscriptions: Subscription = new Subscription();
+	private subscriptions = new Subscription();
 
 	constructor(private data: DataService, private route: ActivatedRoute) {}
 

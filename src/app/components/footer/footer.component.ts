@@ -19,13 +19,17 @@ export class FooterComponent implements OnInit, OnDestroy {
 	isEdit = false;
 	hasAccess: boolean | undefined = false;
 	tzOffset = new Date().getTimezoneOffset();
-	private subscriptions: Subscription = new Subscription();
+	private subscriptions = new Subscription();
 
 	constructor(
 		private router: Router,
 		private data: DataService,
 		private auth: AuthService
 	) {}
+
+	get isAuthenticated() {
+		return this.auth.isAuthenticated();
+	}
 
 	ngOnInit(): void {
 		this.subscriptions.add(

@@ -50,7 +50,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	iterationControls = {};
 
 	private _debounceTime = 500;
-	private subscriptions: Subscription = new Subscription();
+	private subscriptions = new Subscription();
 
 	constructor(
 		private data: DataService,

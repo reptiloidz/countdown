@@ -1,10 +1,11 @@
 <h2>
-	<a routerLink="/point/{{ point.id }}">{{ point.title }}</a>&nbsp;|&nbsp;<button
-		*ngIf="!loading; else loader"
-		type="button"
-		class="link"
-		(click)="delete(point.id)"
-	>x</button>
+	<a routerLink="/point/{{ point.id }}">{{ point.title }}</a><ng-container
+		*ngIf="!loading && checkAccessEdit(point); else loader"
+	>&nbsp;|&nbsp;<button
+			type="button"
+			class="link"
+			(click)="delete(point.id)"
+		>x</button></ng-container>
 </h2><small
 	*ngIf="point?.greenwich"
 	class="item__addon"

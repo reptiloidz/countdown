@@ -8,28 +8,38 @@
 			type="text"
 			placeholder="E-mail"
 			formControlName="email"
-			(focus)="fieldFocus($event)"
-			(blur)="fieldBlur($event)"
 		>
 	</div>
 	<ng-container [formGroup]="passwordsForm">
 		<div class="control">
 			<input
+				#passwordControl
 				type="password"
 				placeholder="Пароль"
 				formControlName="password"
-				(focus)="fieldFocus($event)"
-				(blur)="fieldBlur($event)"
+				autocomplete="new-password"
 			>
 		</div>
 		<div class="control">
 			<input
+				#passwordRepeatControl
 				type="password"
 				placeholder="Повторите пароль"
 				formControlName="passwordRepeat"
+				autocomplete="new-password"
 			>
 		</div>
 	</ng-container>
+	<div class="control">
+		<label>
+			<input
+				type="checkbox"
+				name="showPassword"
+				(change)="switchPasswordVisibility($event)"
+			>
+			Показать пароль
+		</label>
+	</div>
 	<button [disabled]="form.invalid || isLoading">
 		Зарегистрироваться
 	</button>
