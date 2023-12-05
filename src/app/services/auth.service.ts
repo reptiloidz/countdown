@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Constants } from '../enums';
 import { FbAuthResponse } from '../interfaces/fbAuthResponse.interface';
@@ -11,9 +11,7 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 	getAuth,
-	user,
 	authState,
-	User,
 } from '@angular/fire/auth';
 import { goOffline, getDatabase, goOnline } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
@@ -29,6 +27,11 @@ export class AuthService implements OnInit, OnDestroy {
 	) {}
 
 	private subscriptions = new Subscription();
+	private _eventEditAccessCheckSubject = new ReplaySubject<{
+		pointId: string;
+		access: boolean;
+	}>();
+	eventEditAccessCheck$ = this._eventEditAccessCheckSubject.asObservable();
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -99,6 +102,13 @@ export class AuthService implements OnInit, OnDestroy {
 
 	checkIsAuth() {
 		console.log(this.authFB);
+	}
+
+	getEditPointAccess(pointId: string, access: boolean) {
+		this._eventEditAccessCheckSubject.next({
+			pointId,
+			access,
+		});
 	}
 
 	register(user: UserPoint): Observable<any> {

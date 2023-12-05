@@ -1,4 +1,5 @@
 <form
+	*ngIf="!(checking | async); else loader"
 	[formGroup]="form"
 	(ngSubmit)="submit(isRepeatable && !isCreation)"
 >
@@ -169,3 +170,9 @@
 	</button>
 
 </form>
+
+<ng-template #loader>
+	<h2>
+		<div class="loader rotating"></div>
+	</h2>
+</ng-template>

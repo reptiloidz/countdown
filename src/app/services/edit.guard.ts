@@ -23,6 +23,7 @@ export const editGuard = () => {
 				if (!hasAccess && point?.id) {
 					router.navigate(['/point/', point.id]);
 				}
+				point?.id && auth.getEditPointAccess(point.id, hasAccess);
 				return hasAccess;
 			},
 			error: (err) => {

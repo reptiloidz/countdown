@@ -51,6 +51,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
+	checking = new BehaviorSubject<boolean>(true);
 
 	constructor(
 		private data: DataService,
@@ -120,10 +121,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						return data['id']
 							? this.data.fetchPoint(data['id'])
 							: EMPTY;
-					})
-				)
-				.subscribe({
-					next: (point: Point | undefined) => {
+					}),
+					switchMap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
 							this.sortDates();
@@ -132,6 +131,15 @@ export class EditPointComponent implements OnInit, OnDestroy {
 									? this.point.dates.length - 1
 									: 0
 							);
+						}
+
+						return this.auth.eventEditAccessCheck$;
+					})
+				)
+				.subscribe({
+					next: ({ pointId, access }) => {
+						if (access && pointId === this.point?.id) {
+							this.checking.next(false);
 						}
 					},
 					error: (err) => {
