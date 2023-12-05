@@ -3,7 +3,12 @@
 	(ngSubmit)="submit()"
 	class="form"
 >
-	<div class="control">
+	<div
+		class="control"
+		[ngClass]="{
+				'control--error': hasEmailErrors
+			}"
+	>
 		<input
 			type="text"
 			placeholder="E-mail"
@@ -11,7 +16,12 @@
 		>
 	</div>
 	<ng-container [formGroup]="passwordsForm">
-		<div class="control">
+		<div
+			class="control"
+			[ngClass]="{
+						'control--error': hasPasswordErrors
+					}"
+		>
 			<input
 				#passwordControl
 				type="password"
@@ -20,7 +30,12 @@
 				autocomplete="new-password"
 			>
 		</div>
-		<div class="control">
+		<div
+			class="control"
+			[ngClass]="{
+						'control--error': hasPasswordRepeatErrors
+					}"
+		>
 			<input
 				#passwordRepeatControl
 				type="password"
@@ -40,6 +55,15 @@
 			Показать пароль
 		</label>
 	</div>
+	<ul
+		*ngIf="errorMessages.length"
+		class="info info--error"
+	>
+		<li
+			*ngFor="let errMessage of errorMessages"
+			class="info__item"
+		>{{ errMessage }}</li>
+	</ul>
 	<button [disabled]="form.invalid || isLoading">
 		Зарегистрироваться
 	</button>

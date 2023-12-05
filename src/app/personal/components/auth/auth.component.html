@@ -3,20 +3,39 @@
 	(ngSubmit)="submit()"
 	class="form"
 >
-	<div class="control">
+	<div
+		class="control"
+		[ngClass]="{
+			'control--error': hasEmailErrors
+		}"
+	>
 		<input
 			type="text"
 			placeholder="E-mail"
 			formControlName="email"
 		>
 	</div>
-	<div class="control">
+	<div
+		class="control"
+		[ngClass]="{
+				'control--error': hasPasswordErrors
+			}"
+	>
 		<input
 			type="password"
 			placeholder="Пароль"
 			formControlName="password"
 		>
 	</div>
+	<ul
+		*ngIf="errorMessages.length"
+		class="info info--error"
+	>
+		<li
+			*ngFor="let errMessage of errorMessages"
+			class="info__item"
+		>{{ errMessage }}</li>
+	</ul>
 	<button [disabled]="form.invalid || isLoading">
 		Войти
 	</button>
