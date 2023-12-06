@@ -1,4 +1,10 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import {
+	Component,
+	ViewChild,
+	ElementRef,
+	OnInit,
+	OnDestroy,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -16,7 +22,7 @@ import { passwordRepeat } from 'src/app/services/password-repeat.validator';
 	selector: 'app-reg',
 	templateUrl: './reg.component.html',
 })
-export class RegComponent {
+export class RegComponent implements OnInit, OnDestroy {
 	@ViewChild('passwordControl') private passwordControl!: ElementRef;
 	@ViewChild('passwordRepeatControl')
 	private passwordRepeatControl!: ElementRef;
@@ -153,6 +159,10 @@ export class RegComponent {
 				},
 			})
 		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	get passwordsForm() {

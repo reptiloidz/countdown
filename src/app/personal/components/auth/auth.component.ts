@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/services/auth.service';
 	selector: 'app-auth',
 	templateUrl: './auth.component.html',
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
 	form!: FormGroup;
 	isLoading = false;
 	controlsValidated: ValidationObject = {
@@ -101,6 +101,10 @@ export class AuthComponent implements OnInit {
 				},
 			})
 		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	get hasEmailErrors() {
