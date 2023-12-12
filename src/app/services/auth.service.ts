@@ -135,7 +135,10 @@ export class AuthService implements OnInit, OnDestroy {
 
 			sendEmailVerification(this.authFB.currentUser).then(() => {
 				this.notify.add({
-					title: `Сообщение для подтверждения почты отправлено на ${this.authFB.currentUser?.email}`,
+					title: `
+						Сообщение для подтверждения почты отправлено на ${this.authFB.currentUser?.email}.
+						Без подтверждения доступ открыт только к публичным событиям и только для чтения.
+					`,
 				});
 			});
 		}
@@ -150,7 +153,10 @@ export class AuthService implements OnInit, OnDestroy {
 			localStorage.clear();
 		} else {
 			const expDate = new Date(
-				new Date().getTime() + response.expiresIn * Constants.msInSecond
+				new Date().getTime() +
+					// response.expiresIn * Constants.msInSecond
+					// Вместо дефолтного expiresIn используем кастомный период (неделю)
+					7 * 24 * 60 * Constants.msInMinute
 			);
 
 			localStorage.setItem('fb-token', response.idToken);
