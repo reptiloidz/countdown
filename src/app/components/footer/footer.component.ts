@@ -31,6 +31,10 @@ export class FooterComponent implements OnInit, OnDestroy {
 		return this.auth.isAuthenticated();
 	}
 
+	get isVerified() {
+		return this.auth.checkEmailVerified;
+	}
+
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.router.events

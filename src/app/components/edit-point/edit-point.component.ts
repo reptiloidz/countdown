@@ -11,11 +11,11 @@ import {
 	Subscription,
 	switchMap,
 	interval,
-	EMPTY,
 	debounce,
 	timer,
 	filter,
 	BehaviorSubject,
+	of,
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -62,6 +62,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
+		// this.checking.next(this.type === EditPointType.Edit);
+
 		this.form = new FormGroup({
 			title: new FormControl(null, [Validators.required]),
 			description: new FormControl(),
@@ -120,7 +122,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					switchMap((data: any) => {
 						return data['id']
 							? this.data.fetchPoint(data['id'])
-							: EMPTY;
+							: of(undefined);
 					}),
 					switchMap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
@@ -138,7 +140,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: ({ pointId, access }) => {
-						if (access && pointId === this.point?.id) {
+						if (
+							access &&
+							(pointId === this.point?.id || !pointId)
+						) {
 							this.checking.next(false);
 						}
 					},

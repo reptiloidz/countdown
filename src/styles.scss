@@ -62,6 +62,12 @@ body {
 		}
 	}
 
+	&__item {
+		&--disabled {
+			color: lightgrey;
+		}
+	}
+
 	&--right {
 		.nav__aside {
 			align-items: flex-end;

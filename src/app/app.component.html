@@ -3,6 +3,13 @@
 	class="nav"
 ></header>
 
+<ul class="notify-list">
+	<li
+		*ngFor="let notify of notifyList"
+		class="notify-list__item info"
+	>{{ notify.title }}</li>
+</ul>
+
 <main class="main">
 	<router-outlet></router-outlet>
 </main>

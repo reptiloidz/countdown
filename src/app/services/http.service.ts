@@ -38,21 +38,25 @@ export class HttpService implements HttpServiceInterface {
 
 				const userPoints$ = objectVal<any>(userPointsQuery).pipe(
 					map((response: { [key: string]: any }) => {
-						return Object.keys(response).map((key) => ({
-							...response[key],
-							id: key,
-							date: new Date(response[key].date),
-						}));
+						return response
+							? Object.keys(response).map((key) => ({
+									...response[key],
+									id: key,
+									date: new Date(response[key].date),
+							  }))
+							: [];
 					})
 				);
 
 				const publicPoints$ = objectVal<any>(publicPointsQuery).pipe(
 					map((response: { [key: string]: any }) => {
-						return Object.keys(response).map((key) => ({
-							...response[key],
-							id: key,
-							date: new Date(response[key].date),
-						}));
+						return response
+							? Object.keys(response).map((key) => ({
+									...response[key],
+									id: key,
+									date: new Date(response[key].date),
+							  }))
+							: [];
 					})
 				);
 

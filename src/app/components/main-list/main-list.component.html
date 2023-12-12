@@ -1,14 +1,23 @@
-<ul
-	*ngIf="!loading; else loader"
-	class="list"
->
-	<li
-		app-main-item
-		class="item"
-		*ngFor="let point of points; let i = index"
-		[point]="point"
-	></li>
-</ul>
+<ng-container *ngIf="!loading; else loader">
+	<ul
+		*ngIf="points.length; else empty"
+		class="list"
+	>
+		<li
+			app-main-item
+			class="item"
+			*ngFor="let point of points; let i = index"
+			[point]="point"
+		></li>
+	</ul>
+</ng-container>
+
+<ng-template #empty>
+	<h2>
+		Нет событий для отображения
+	</h2>
+</ng-template>
+
 
 <ng-template #loader>
 	<h2

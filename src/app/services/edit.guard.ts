@@ -19,11 +19,13 @@ export const editGuard = () => {
 		)
 		.subscribe({
 			next: (point) => {
-				hasAccess = !!(point && auth.checkAccessEdit(point));
-				if (!hasAccess && point?.id) {
-					router.navigate(['/point/', point.id]);
+				hasAccess =
+					!!(point && auth.checkAccessEdit(point)) ||
+					!!(point && !point.id && auth.checkEmailVerified);
+				if (!hasAccess) {
+					router.navigate(point?.id ? ['/point/', point.id] : ['/']);
 				}
-				point?.id && auth.getEditPointAccess(point.id, hasAccess);
+				auth.setEditPointAccess(point?.id, hasAccess);
 				return hasAccess;
 			},
 			error: (err) => {

@@ -36,7 +36,7 @@ const routes: Routes = [
 	{
 		path: 'create',
 		component: CreatePointComponent,
-		canActivate: [authGuard],
+		canActivate: [authGuard, editGuard],
 	},
 	{
 		path: '',

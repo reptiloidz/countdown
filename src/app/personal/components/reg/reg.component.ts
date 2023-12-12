@@ -199,17 +199,23 @@ export class RegComponent implements OnInit, OnDestroy {
 	submit() {
 		if (this.form.valid) {
 			this.isLoading = true;
-			this.auth.register(this.form.value).subscribe({
-				next: () => {
-					this.isLoading = false;
-					this.router.navigate(['/auth/']);
-				},
-				error: (err) => {
-					this.isLoading = false;
+			this.auth
+				.register({
+					email: this.form.get('email')?.value,
+					password: this.passwordsForm.get('password')?.value,
+					returnSecureToken: true,
+				})
+				.subscribe({
+					next: () => {
+						this.isLoading = false;
+						this.router.navigate(['/auth/']);
+					},
+					error: (err) => {
+						this.isLoading = false;
 
-					console.error('Ошибка при регистрации:\n', err.message);
-				},
-			});
+						console.error('Ошибка при регистрации:\n', err.message);
+					},
+				});
 		}
 	}
 }

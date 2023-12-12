@@ -20,6 +20,10 @@
 	<a
 		*ngIf="isAuthenticated"
 		class="nav__item"
+		[ngClass]="{
+			'nav__item--disabled': !isVerified
+		}"
 		routerLink="/create"
+		[title]="!isVerified && 'Подтвердите почту, чтобы иметь доступ к созданию и редактированию'"
 	>Создать</a>
 </div>
