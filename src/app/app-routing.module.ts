@@ -7,6 +7,7 @@ import { CreatePointComponent } from './components/create-point/create-point.com
 import { AuthComponent } from './personal/components/auth/auth.component';
 import { authGuard } from './services/auth.guard';
 import { editGuard } from './services/edit.guard';
+import { PrivacyComponent } from './components/privacy/privacy.component';
 
 const routes: Routes = [
 	{
@@ -27,6 +28,10 @@ const routes: Routes = [
 	{
 		path: 'auth',
 		component: AuthComponent,
+	},
+	{
+		path: 'privacy',
+		component: PrivacyComponent,
 	},
 	{
 		path: 'edit/:id',

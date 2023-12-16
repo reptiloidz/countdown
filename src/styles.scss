@@ -12,6 +12,10 @@ body {
 	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 
+.text-page {
+	width: 100%;
+}
+
 .root {
 	display: flex;
 	flex-direction: column;
@@ -101,6 +105,7 @@ a,
 	background-color: transparent;
 	color: blue;
 	text-decoration: underline;
+	overflow-wrap: break-word;
 	cursor: pointer;
 }
 
@@ -214,6 +219,62 @@ a,
 	animation-duration: 2s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;
+}
+
+.ol-nested {
+	counter-reset: item;
+	padding: 0;
+	font-size: 16px;
+
+	li {
+		counter-increment: item;
+		margin: 10px 0;
+		list-style-position: inside;
+
+		h2 {
+			margin-bottom: 10px;
+			font-size: 20px;
+		}
+
+		h2,
+		p {
+			display: inline-block;
+		}
+
+		&::marker {
+			content: counters(item, '.') '. ';
+			font-size: 20px;
+		}
+	}
+
+	ol {
+		counter-reset: item 0;
+		padding: 0;
+
+		li {
+			font-size: inherit;
+
+			&::marker {
+				content: counters(item, '.') '. ';
+				font-size: inherit;
+			}
+		}
+	}
+}
+
+table {
+	border-collapse: collapse;
+	table-layout: fixed;
+
+	td {
+		padding: 10px;
+		border: 1px solid black;
+	}
+}
+
+.table-wrapper {
+	width: 100%;
+	overflow: auto;
 }
 
 @keyframes rotating {

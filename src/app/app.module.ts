@@ -20,6 +20,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
+import { PrivacyComponent } from './components/privacy/privacy.component';
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,7 @@ import { getDatabase, provideDatabase } from '@angular/fire/database';
 		CreatePointComponent,
 		GenerateIterationsComponent,
 		SortPipe,
+		PrivacyComponent,
 	],
 	imports: [
 		BrowserModule,
