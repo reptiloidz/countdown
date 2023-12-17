@@ -41,6 +41,14 @@ export class RegComponent implements OnInit, OnDestroy {
 			},
 			dirty: false,
 		},
+		privacyAgree: {
+			requiredTrue: {
+				value: false,
+				message:
+					'Вы не приняли условия политики обработки персональных данных',
+			},
+			dirty: false,
+		},
 		password: {
 			required: {
 				value: false,
@@ -77,8 +85,11 @@ export class RegComponent implements OnInit, OnDestroy {
 		this.form = new FormGroup({
 			email: new FormControl(null, [
 				Validators.required,
-				Validators.email,
+				Validators.pattern(
+					'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
+				),
 			]),
+			privacyAgree: new FormControl(null, [Validators.requiredTrue]),
 			passwords: new FormGroup(
 				{
 					password: new FormControl(null, [
@@ -102,13 +113,20 @@ export class RegComponent implements OnInit, OnDestroy {
 							email: {
 								correct: {
 									value: !this.form.controls['email']
-										.errors?.['email'],
+										.errors?.['pattern'],
 								},
 								required: {
 									value: !this.form.controls['email']
 										.errors?.['required'],
 								},
 								dirty: this.form.controls['email'].dirty,
+							},
+							privacyAgree: {
+								requiredTrue: {
+									value: !this.form.controls['privacyAgree']
+										.errors?.['required'],
+								},
+								dirty: this.form.controls['privacyAgree'].dirty,
 							},
 							password: {
 								enough: {

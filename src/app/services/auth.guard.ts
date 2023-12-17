@@ -1,13 +1,17 @@
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
 export const authGuard = () => {
 	const auth = inject(AuthService);
-	let isAuth = false;
-	if (auth.isAuthenticated()) {
-		isAuth = true;
-	} else {
-		auth.logout();
+	const router = inject(Router);
+	let hasAccess = false;
+
+	hasAccess = !auth.isAuthenticated;
+
+	if (!hasAccess) {
+		router.navigate(['/']);
 	}
-	return isAuth;
+
+	return hasAccess;
 };

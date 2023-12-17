@@ -55,6 +55,19 @@
 			Показать пароль
 		</label>
 	</div>
+	<div class="control">
+		<label>
+			<input
+				type="checkbox"
+				formControlName="privacyAgree"
+			>
+			Принять условия <a
+				class="nav__item"
+				[routerLink]="'/privacy'"
+				target="_blank"
+			>политики обработки персональных данных</a>
+		</label>
+	</div>
 	<ul
 		*ngIf="errorMessages.length"
 		class="info info--error"

@@ -144,7 +144,7 @@ export class AuthService implements OnInit, OnDestroy {
 		}
 	}
 
-	isAuthenticated(): boolean {
+	get isAuthenticated(): boolean {
 		return !!this.token;
 	}
 

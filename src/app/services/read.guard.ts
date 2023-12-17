@@ -4,7 +4,7 @@ import { filter, switchMap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { DataService } from './data.service';
 
-export const editGuard = () => {
+export const readGuard = () => {
 	const auth = inject(AuthService);
 	const dataService = inject(DataService);
 	const router = inject(Router);
@@ -19,19 +19,20 @@ export const editGuard = () => {
 		)
 		.subscribe({
 			next: (point) => {
-				hasAccess =
-					!!(point && auth.checkAccessEdit(point)) ||
-					!!(point && !point.id && auth.checkEmailVerified);
+				hasAccess = !!(
+					point &&
+					(auth.checkAccessEdit(point) || point.public)
+				);
 				if (!hasAccess) {
-					router.navigate(point?.id ? ['/point/', point.id] : ['/']);
+					router.navigate(['/']);
 				}
-				auth.setEditPointAccess(point?.id, hasAccess);
 				guardSubscribe.unsubscribe();
 				return hasAccess;
 			},
 			error: (err) => {
+				router.navigate(['/']);
 				console.error(
-					'Ошибка при проверке доступа к редактированию события:\n',
+					'Ошибка доступа к просмотру события:\n',
 					err.message
 				);
 			},

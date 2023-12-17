@@ -28,7 +28,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	) {}
 
 	get isAuthenticated() {
-		return this.auth.isAuthenticated();
+		return this.auth.isAuthenticated;
 	}
 
 	get isVerified() {

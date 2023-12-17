@@ -5,9 +5,10 @@ import { PointComponent } from './components/point/point.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { CreatePointComponent } from './components/create-point/create-point.component';
 import { AuthComponent } from './personal/components/auth/auth.component';
-import { authGuard } from './services/auth.guard';
-import { editGuard } from './services/edit.guard';
 import { PrivacyComponent } from './components/privacy/privacy.component';
+import { readGuard } from './services/read.guard';
+import { editGuard } from './services/edit.guard';
+import { authGuard } from './services/auth.guard';
 
 const routes: Routes = [
 	{
@@ -18,16 +19,16 @@ const routes: Routes = [
 	{
 		path: '',
 		component: MainListComponent,
-		canActivate: [authGuard],
 	},
 	{
 		path: 'point/:id',
 		component: PointComponent,
-		canActivate: [authGuard],
+		canActivate: [readGuard],
 	},
 	{
 		path: 'auth',
 		component: AuthComponent,
+		canActivate: [authGuard],
 	},
 	{
 		path: 'privacy',
@@ -36,12 +37,12 @@ const routes: Routes = [
 	{
 		path: 'edit/:id',
 		component: EditPointComponent,
-		canActivate: [authGuard, editGuard],
+		canActivate: [readGuard, editGuard],
 	},
 	{
 		path: 'create',
 		component: CreatePointComponent,
-		canActivate: [authGuard, editGuard],
+		canActivate: [readGuard, editGuard],
 	},
 	{
 		path: '',

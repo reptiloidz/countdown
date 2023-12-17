@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivationEnd, Event, Router } from '@angular/router';
+import { ActivationStart, Event, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -13,14 +13,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 
 	isMain = false;
+	isPrivacy = false;
 
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.router.events
-				.pipe(filter((event: Event) => event instanceof ActivationEnd))
+				.pipe(
+					filter((event: Event) => event instanceof ActivationStart)
+				)
 				.subscribe({
 					next: (data: any) => {
 						this.isMain = !data.snapshot.url.length;
+						this.isPrivacy =
+							data.snapshot.url[0]?.path !== 'privacy';
 					},
 				})
 		);
@@ -31,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	get isAuthenticated() {
-		return this.auth.isAuthenticated();
+		return this.auth.isAuthenticated;
 	}
 
 	get isAuthorization() {

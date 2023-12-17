@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideNgxMask } from 'ngx-mask';
 import { AuthComponent } from './components/auth/auth.component';
 import { RegComponent } from './components/reg/reg.component';
+import { authGuard } from '../services/auth.guard';
 
 @NgModule({
 	declarations: [AuthComponent, RegComponent],
@@ -20,6 +21,7 @@ import { RegComponent } from './components/reg/reg.component';
 			{
 				path: 'reg',
 				component: RegComponent,
+				canActivate: [authGuard],
 			},
 		]),
 	],

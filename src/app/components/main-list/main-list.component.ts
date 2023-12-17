@@ -28,7 +28,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 						this.points = points;
 					},
 					error(err) {
-						console.log('Ошибка при загрузке списка:', err.message);
+						console.error(
+							'Ошибка при загрузке списка:',
+							err.message
+						);
 					},
 				})
 		);
