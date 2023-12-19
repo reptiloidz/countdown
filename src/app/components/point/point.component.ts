@@ -114,14 +114,14 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	setAllTimers() {
 		if (this.dates?.[this.currentIterationIndex.getValue()]) {
-			this.pointDate = getPointDate(
-				new Date(
+			this.pointDate = getPointDate({
+				pointDate: new Date(
 					this.dates?.[this.currentIterationIndex.getValue()].date ||
 						''
 				),
-				this.tzOffset,
-				this.point?.greenwich
-			);
+				tzOffset: this.tzOffset,
+				isGreenwich: this.point?.greenwich,
+			});
 			this.setTimer();
 			this.setDateTimer();
 			this.setRemainText();

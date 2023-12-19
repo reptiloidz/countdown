@@ -91,17 +91,16 @@ export class GenerateIterationsComponent implements OnInit {
 		const date = +parse(
 			this.iterationsForm.controls['rangeStartDate'].value,
 			Constants.shortDateFormat,
-			getPointDate(
-				new Date(),
-				this.tzOffset,
-				this.form.controls['greenwich'].value,
-				true
-			)
+			getPointDate({
+				tzOffset: this.tzOffset,
+				isGreenwich: this.form.controls['greenwich'].value,
+				isInvert: true,
+			})
 		);
 
 		return format(
-			getPointDate(
-				new Date(
+			getPointDate({
+				pointDate: new Date(
 					+parse(
 						this.iterationsForm.controls['rangeStartTime'].value,
 						Constants.timeFormat,
@@ -109,10 +108,10 @@ export class GenerateIterationsComponent implements OnInit {
 					) +
 						this.periodicityValue * k
 				),
-				this.tzOffset,
-				this.form.controls['greenwich'].value,
-				true
-			),
+				tzOffset: this.tzOffset,
+				isGreenwich: this.form.controls['greenwich'].value,
+				isInvert: true,
+			}),
 			Constants.fullDateFormat
 		);
 	}
@@ -120,16 +119,13 @@ export class GenerateIterationsComponent implements OnInit {
 	addIterationRecursively(k: number) {
 		const currentDateTime = this.getDateTime(k);
 
-		const dateTime = getPointDate(
-			undefined,
-			this.tzOffset,
-			this.form.controls['greenwich'].value,
-			true,
-			[
-				this.iterationsForm.controls['rangeEndTime'].value,
-				this.iterationsForm.controls['rangeEndDate'].value,
-			]
-		);
+		const dateTime = getPointDate({
+			tzOffset: this.tzOffset,
+			isGreenwich: this.form.controls['greenwich'].value,
+			isInvert: true,
+			datePart: this.iterationsForm.controls['rangeEndDate'].value,
+			timePart: this.iterationsForm.controls['rangeEndTime'].value,
+		});
 
 		if (
 			parse(currentDateTime, Constants.fullDateFormat, new Date()) <=

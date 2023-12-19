@@ -9,6 +9,7 @@ html {
 body {
 	display: flex;
 	flex-grow: 1;
+	height: 100%;
 	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 
@@ -31,11 +32,16 @@ body {
 .main {
 	display: flex;
 	flex-grow: 1;
-	flex-shrink: 0;
+	flex-shrink: 1;
 	align-items: center;
 	justify-content: center;
 	margin: 20px 0;
 	overflow: auto;
+
+	&__inner {
+		min-width: 0;
+		max-height: 100%;
+	}
 }
 
 .nav {
@@ -64,6 +70,15 @@ body {
 
 		&--right {
 			margin-left: auto;
+		}
+
+		@media (max-width: 1024px) {
+			&--top {
+				.nav__item {
+					margin-top: 0;
+					margin-bottom: 12px;
+				}
+			}
 		}
 	}
 

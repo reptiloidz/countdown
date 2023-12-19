@@ -72,12 +72,11 @@ export class FooterComponent implements OnInit, OnDestroy {
 		let newDatesArray = this.point?.dates;
 		const lastDate = {
 			date: format(
-				getPointDate(
-					new Date(),
-					this.tzOffset,
-					this.point?.greenwich,
-					true
-				),
+				getPointDate({
+					tzOffset: this.tzOffset,
+					isGreenwich: this.point?.greenwich,
+					isInvert: true,
+				}),
 				Constants.fullDateFormat
 			),
 			reason: 'byHand',

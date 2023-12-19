@@ -3,7 +3,10 @@
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
-	<h2 class="description">{{ remainText }}</h2>
+	<h2
+		*ngIf="point?.title"
+		class="description"
+	>{{ remainText }}</h2>
 	<ul
 		*ngIf="this.dates?.length && (this.dates?.length != 1)"
 		class="tabs"

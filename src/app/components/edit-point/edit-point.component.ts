@@ -366,18 +366,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		const pointDate = getPointDate(
-			isReset
+		const pointDate = getPointDate({
+			pointDate: isReset
 				? new Date()
 				: new Date(
 						this.dates?.[this.currentIterationIndex.getValue()]
 							?.date || ''
 				  ),
-			this.tzOffset,
-			this.isIterationAdded
+			tzOffset: this.tzOffset,
+			isGreenwich: this.isIterationAdded
 				? false
-				: this.form.controls['greenwich'].value
-		);
+				: this.form.controls['greenwich'].value,
+		});
 		this.form.patchValue({
 			date: format(pointDate, Constants.shortDateFormat),
 			time: format(pointDate, Constants.timeFormat),
@@ -476,16 +476,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			newDatesArray?.push(...repeats);
 		} else {
 			const dateTime = format(
-				getPointDate(
-					undefined,
-					this.tzOffset,
-					this.form.controls['greenwich'].value,
-					true,
-					[
-						this.form.controls['time'].value,
-						this.form.controls['date'].value,
-					]
-				),
+				getPointDate({
+					tzOffset: this.tzOffset,
+					isGreenwich: this.form.controls['greenwich'].value,
+					isInvert: true,
+					datePart: this.form.controls['date'].value,
+					timePart: this.form.controls['time'].value,
+				}),
 				Constants.fullDateFormat
 			);
 

@@ -1,18 +1,30 @@
 import { addMinutes, parse, subMinutes } from 'date-fns';
 import { Constants } from '../enums';
 
-export const getPointDate = (
+export const getPointDate = ({
 	pointDate = new Date(),
 	tzOffset = 0,
 	isGreenwich = false,
 	isInvert = false,
-	valueArray?: string[]
-): Date => {
-	if (valueArray) {
+	datePart,
+	timePart,
+}: {
+	pointDate?: Date;
+	tzOffset?: number;
+	isGreenwich?: boolean;
+	isInvert?: boolean;
+	datePart?: string;
+	timePart?: string;
+}): Date => {
+	if (datePart) {
 		pointDate = parse(
-			valueArray[1],
+			datePart,
 			Constants.shortDateFormat,
-			getPointDate(new Date(), tzOffset, isGreenwich, isInvert)
+			getPointDate({
+				tzOffset,
+				isGreenwich,
+				isInvert,
+			})
 		);
 	} else {
 		if (isGreenwich && (tzOffset > 0 || (tzOffset < 0 && isInvert))) {
@@ -25,12 +37,12 @@ export const getPointDate = (
 		}
 	}
 
-	return valueArray
-		? getPointDate(
-				parse(valueArray[0], Constants.timeFormat, pointDate),
+	return timePart
+		? getPointDate({
+				pointDate: parse(timePart, Constants.timeFormat, pointDate),
 				tzOffset,
 				isGreenwich,
-				isInvert
-		  )
+				isInvert,
+		  })
 		: pointDate;
 };
