@@ -19,7 +19,7 @@ import { getPointDate } from 'src/app/helpers';
 export class PointComponent implements OnInit, OnDestroy {
 	point!: Point | undefined;
 	pointDate = new Date();
-	remainText = '';
+	remainTextValue = '';
 	dateTimer = '';
 	timer = '0:00:00';
 	loading = false;
@@ -44,9 +44,7 @@ export class PointComponent implements OnInit, OnDestroy {
 					switchMap((point: Point | undefined) => {
 						this.point = point;
 						this.switchIteration(
-							this.point?.dates.length
-								? this.point.dates.length - 1
-								: 0
+							this.dates?.length ? this.dates.length - 1 : 0
 						);
 						return interval(1000);
 					})
@@ -103,7 +101,7 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	getInterval() {
+	get interval() {
 		return intervalToDuration({
 			start: this.pointDate,
 			end: new Date(),
@@ -115,11 +113,11 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setAllTimers() {
-		if (this.point?.dates[this.currentIterationIndex.getValue()]) {
+		if (this.dates?.[this.currentIterationIndex.getValue()]) {
 			this.pointDate = getPointDate(
 				new Date(
-					this.point?.dates[this.currentIterationIndex.getValue()]
-						.date || ''
+					this.dates?.[this.currentIterationIndex.getValue()].date ||
+						''
 				),
 				this.tzOffset,
 				this.point?.greenwich
@@ -131,14 +129,14 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setTimer() {
-		const currentInterval = this.getInterval();
+		const currentInterval = this.interval;
 		this.timer = `${currentInterval.hours}:${this.zeroPad(
 			currentInterval.minutes
 		)}:${this.zeroPad(currentInterval.seconds)}`;
 	}
 
 	setDateTimer() {
-		const currentInterval = this.getInterval();
+		const currentInterval = this.interval;
 		if (
 			currentInterval.years ||
 			currentInterval.months ||
@@ -160,15 +158,15 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setRemainText() {
-		this.remainText =
-			this.getRemainText() +
+		this.remainTextValue =
+			this.remainText +
 			' ' +
 			formatDistanceToNow(this.pointDate, {
 				locale: ru,
 			});
 	}
 
-	getRemainText() {
+	get remainText() {
 		const isPast = this.pointDate < new Date();
 		const isForward = this.point?.direction === 'forward';
 
@@ -181,13 +179,17 @@ export class PointComponent implements OnInit, OnDestroy {
 			: DateText.backwardFuture;
 	}
 
+	get dates() {
+		return this.point?.dates;
+	}
+
 	switchIteration(i: number) {
 		this.currentIterationIndex.next(i);
 		this.setAllTimers();
 	}
 
 	removeIteration(i: number) {
-		let newDatesArray = this.point?.dates;
+		let newDatesArray = this.dates;
 		newDatesArray && newDatesArray.splice(i, 1);
 
 		confirm('Удалить итерацию?') &&

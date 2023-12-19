@@ -5,11 +5,11 @@
 		></span></h1>
 	<h2 class="description">{{ remainText }}</h2>
 	<ul
-		*ngIf="this.point?.dates?.length && (this.point?.dates?.length != 1)"
+		*ngIf="this.dates?.length && (this.dates?.length != 1)"
 		class="tabs"
 	>
 		<li
-			*ngFor="let date of this.point?.dates | sort; let i = index"
+			*ngFor="let date of this.dates | sort; let i = index"
 			class="tabs__item"
 			[ngClass]="{
 				'tabs__item--active': i == (currentIterationIndex | async)

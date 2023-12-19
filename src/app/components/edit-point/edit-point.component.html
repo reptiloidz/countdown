@@ -103,7 +103,7 @@
 		class="tabs"
 	>
 		<li
-			*ngFor="let date of this.point?.dates | sort; let i = index"
+			*ngFor="let date of dates | sort; let i = index"
 			class="tabs__item"
 			[ngClass]="{
 					'tabs__item--active': i == (currentIterationIndex | async) && !isIterationAdded
@@ -117,7 +117,7 @@
 				<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
 			</button>
 			<button
-				*ngIf="this.point?.dates?.length && (this.point?.dates?.length != 1)"
+				*ngIf="dates?.length && (dates?.length != 1)"
 				class="link"
 				(click)="removeIteration(i)"
 				type="button"

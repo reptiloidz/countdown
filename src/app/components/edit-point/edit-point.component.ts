@@ -62,8 +62,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		// this.checking.next(this.type === EditPointType.Edit);
-
 		this.form = new FormGroup({
 			title: new FormControl(null, [Validators.required]),
 			description: new FormControl(),
@@ -129,9 +127,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.point = point;
 							this.sortDates();
 							this.switchIteration(
-								this.point?.dates.length
-									? this.point.dates.length - 1
-									: 0
+								this.dates?.length ? this.dates.length - 1 : 0
 							);
 						}
 
@@ -337,15 +333,19 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get hasManyIterations() {
-		return this.point?.dates.length && this.point?.dates.length > 1;
+		return this.dates?.length && this.dates?.length > 1;
 	}
 
 	get isForward() {
 		return this.form.controls['direction'].value === 'forward';
 	}
 
+	get dates() {
+		return this.point?.dates;
+	}
+
 	sortDates() {
-		const sortedDates = this.sortPipe.transform(this.point?.dates);
+		const sortedDates = this.sortPipe.transform(this.dates);
 		if (this.point && sortedDates) {
 			this.point.dates = sortedDates;
 		}
@@ -370,7 +370,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			isReset
 				? new Date()
 				: new Date(
-						this.point?.dates[this.currentIterationIndex.getValue()]
+						this.dates?.[this.currentIterationIndex.getValue()]
 							?.date || ''
 				  ),
 			this.tzOffset,
@@ -424,7 +424,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	switchIteration(i = (this.point?.dates.length || 1) - 1) {
+	switchIteration(i = (this.dates?.length || 1) - 1) {
 		this.currentIterationIndex.next(i);
 		this.isIterationAdded = false;
 		this.setValues();
@@ -436,7 +436,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	removeIteration(i: number) {
-		let newDatesArray = this.point?.dates;
+		let newDatesArray = this.dates;
 		newDatesArray && newDatesArray.splice(i, 1);
 
 		confirm('Удалить итерацию?') &&
@@ -470,31 +470,21 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		this.differenceChanged();
 		this.loading = true;
-		let newDatesArray = this.point?.dates;
+		let newDatesArray = this.dates;
 
 		if (repeats.length) {
 			newDatesArray?.push(...repeats);
 		} else {
-			const date = parse(
-				this.form.controls['date'].value,
-				Constants.shortDateFormat,
-				getPointDate(
-					new Date(),
-					this.tzOffset,
-					this.form.controls['greenwich'].value,
-					true
-				)
-			);
 			const dateTime = format(
 				getPointDate(
-					parse(
-						this.form.controls['time'].value,
-						Constants.timeFormat,
-						date
-					),
+					undefined,
 					this.tzOffset,
 					this.form.controls['greenwich'].value,
-					true
+					true,
+					[
+						this.form.controls['time'].value,
+						this.form.controls['date'].value,
+					]
 				),
 				Constants.fullDateFormat
 			);

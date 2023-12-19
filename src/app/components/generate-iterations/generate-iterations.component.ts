@@ -120,25 +120,15 @@ export class GenerateIterationsComponent implements OnInit {
 	addIterationRecursively(k: number) {
 		const currentDateTime = this.getDateTime(k);
 
-		const date = parse(
-			this.iterationsForm.controls['rangeEndDate'].value,
-			Constants.shortDateFormat,
-			getPointDate(
-				new Date(),
-				this.tzOffset,
-				this.form.controls['greenwich'].value,
-				true
-			)
-		);
 		const dateTime = getPointDate(
-			parse(
-				this.iterationsForm.controls['rangeEndTime'].value,
-				Constants.timeFormat,
-				date
-			),
+			undefined,
 			this.tzOffset,
 			this.form.controls['greenwich'].value,
-			true
+			true,
+			[
+				this.iterationsForm.controls['rangeEndTime'].value,
+				this.iterationsForm.controls['rangeEndDate'].value,
+			]
 		);
 
 		if (

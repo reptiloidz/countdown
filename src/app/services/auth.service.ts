@@ -14,9 +14,10 @@ import {
 	authState,
 	sendEmailVerification,
 } from '@angular/fire/auth';
-import { goOffline, getDatabase, goOnline } from '@angular/fire/database';
+import { goOffline, goOnline } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
 import { NotifyService } from './notify.service';
+import { HttpService } from './http.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -24,6 +25,7 @@ import { NotifyService } from './notify.service';
 export class AuthService implements OnInit, OnDestroy {
 	constructor(
 		private httpClient: HttpClient,
+		private http: HttpService,
 		private router: Router,
 		private authFB: Auth,
 		private notify: NotifyService
@@ -43,7 +45,7 @@ export class AuthService implements OnInit, OnDestroy {
 					switch (data?.operationType) {
 						case 'signIn':
 							this.setToken(data._tokenResponse);
-							goOnline(getDatabase());
+							goOnline(this.http.db);
 							break;
 
 						default:
@@ -93,7 +95,7 @@ export class AuthService implements OnInit, OnDestroy {
 			user.password
 		);
 		this.setToken(value._tokenResponse);
-		goOnline(getDatabase());
+		goOnline(this.http.db);
 		this.verifyEmail();
 		return await new Promise((resolve) => {
 			resolve(value);
@@ -103,7 +105,7 @@ export class AuthService implements OnInit, OnDestroy {
 	logout() {
 		signOut(this.authFB).then(() => {
 			this.setToken(null);
-			goOffline(getDatabase());
+			goOffline(this.http.db);
 			this.router.navigate(['/auth/']);
 		});
 	}

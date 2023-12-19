@@ -25,13 +25,13 @@ export class HttpService implements HttpServiceInterface {
 		return user(this.authFB).pipe(
 			switchMap((data) => {
 				const userPointsQuery = query(
-					ref(getDatabase(), 'points'),
+					ref(this.db, 'points'),
 					orderByChild('user'),
 					equalTo(data?.uid || null)
 				);
 
 				const publicPointsQuery = query(
-					ref(getDatabase(), 'points'),
+					ref(this.db, 'points'),
 					orderByChild('public'),
 					equalTo(true)
 				);
@@ -77,7 +77,7 @@ export class HttpService implements HttpServiceInterface {
 
 	getPoint(id: string): Observable<Point> {
 		return objectVal<Point>(
-			query(child(ref(getDatabase()), `points/${id}`))
+			query(child(ref(this.db), `points/${id}`))
 		).pipe(
 			map((point: Point) => {
 				return {
@@ -89,23 +89,27 @@ export class HttpService implements HttpServiceInterface {
 	}
 
 	async postPoint(point: Point | undefined): Promise<string> {
-		const value: any = await push(ref(getDatabase(), 'points'), point);
+		const value: any = await push(ref(this.db, 'points'), point);
 		return await new Promise((resolve) => {
 			resolve(value.key as string);
 		});
 	}
 
 	async patchPoint(point: Point): Promise<Point> {
-		await set(ref(getDatabase(), `points/${point?.id}`), point);
+		await set(ref(this.db, `points/${point?.id}`), point);
 		return await new Promise((resolve) => {
 			resolve(point);
 		});
 	}
 
 	async deletePoint(id: string | undefined): Promise<void> {
-		await set(ref(getDatabase(), `points/${id}`), null);
+		await set(ref(this.db, `points/${id}`), null);
 		return await new Promise((resolve) => {
 			resolve();
 		});
+	}
+
+	get db() {
+		return getDatabase();
 	}
 }
