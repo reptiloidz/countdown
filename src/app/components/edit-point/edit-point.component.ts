@@ -16,6 +16,9 @@ import {
 	filter,
 	BehaviorSubject,
 	of,
+	distinctUntilChanged,
+	pairwise,
+	tap,
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -153,115 +156,50 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.form.controls['date'].valueChanges
+			this.form.valueChanges
+				.pipe(distinctUntilChanged())
+				.pipe(pairwise())
+				.pipe(
+					tap(([curr, prev]) => {
+						if (this.point) {
+							if (prev.greenwich !== curr.greenwich) {
+								this.point.greenwich =
+									this.form.controls['greenwich'].value;
+							}
+							if (prev.repeatable !== curr.repeatable) {
+								this.point.repeatable = !this.point.repeatable;
+								this.switchIteration();
+							}
+							if (prev.public !== curr.public) {
+								this.point.public =
+									this.form.controls['public'].value;
+							}
+						}
+					})
+				)
 				.pipe(debounce(() => timer(this._debounceTime)))
 				.subscribe({
-					next: () => {
-						this.dateChanged();
+					next: ([curr, prev]) => {
+						if (
+							prev.date !== curr.date ||
+							prev.time !== curr.time
+						) {
+							this.dateChanged();
+						}
+						if (
+							prev.difference !== curr.difference ||
+							prev.direction !== curr.direction
+						) {
+							this.differenceChanged();
+						}
 					},
 					error: (err) => {
 						console.error(
-							'Ошибка при изменении даты:\n',
+							'Ошибка при изменении в поле формы:\n',
 							err.message
 						);
 					},
 				})
-		);
-
-		this.subscriptions.add(
-			this.form.controls['time'].valueChanges
-				.pipe(debounce(() => timer(this._debounceTime)))
-				.subscribe({
-					next: () => {
-						this.dateChanged();
-					},
-					error: (err) => {
-						console.error(
-							'Ошибка при изменении времени:\n',
-							err.message
-						);
-					},
-				})
-		);
-
-		this.subscriptions.add(
-			this.form.controls['difference'].valueChanges
-				.pipe(debounce(() => timer(this._debounceTime)))
-				.subscribe({
-					next: () => {
-						this.differenceChanged();
-					},
-					error: (err) => {
-						console.error(
-							'Ошибка при изменении таймера:\n',
-							err.message
-						);
-					},
-				})
-		);
-
-		this.subscriptions.add(
-			this.form.controls['direction'].valueChanges.subscribe({
-				next: () => {
-					this.differenceChanged();
-				},
-				error: (err) => {
-					console.error(
-						'Ошибка при изменении направления:\n',
-						err.message
-					);
-				},
-			})
-		);
-
-		this.subscriptions.add(
-			this.form.controls['greenwich'].valueChanges.subscribe({
-				next: () => {
-					if (this.point) {
-						this.point.greenwich =
-							this.form.controls['greenwich'].value;
-					}
-				},
-				error: (err) => {
-					console.error(
-						'Ошибка при переключении часового пояса:\n',
-						err.message
-					);
-				},
-			})
-		);
-
-		this.subscriptions.add(
-			this.form.controls['repeatable'].valueChanges.subscribe({
-				next: () => {
-					if (this.point) {
-						this.point.repeatable = !this.point.repeatable;
-						this.switchIteration();
-					}
-				},
-				error: (err) => {
-					console.error(
-						'Ошибка при переключении повторяемости:\n',
-						err.message
-					);
-				},
-			})
-		);
-
-		this.subscriptions.add(
-			this.form.controls['public'].valueChanges.subscribe({
-				next: () => {
-					if (this.point) {
-						this.point.public = this.form.controls['public'].value;
-					}
-				},
-				error: (err) => {
-					console.error(
-						'Ошибка при переключении публичности:\n',
-						err.message
-					);
-				},
-			})
 		);
 
 		this.subscriptions.add(

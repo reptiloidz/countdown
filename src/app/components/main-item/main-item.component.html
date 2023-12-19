@@ -1,7 +1,8 @@
 <h2>
-	<a routerLink="/point/{{ point.id }}">{{ point.title }}</a><ng-container
-		*ngIf="!loading && checkAccessEdit(point); else loader"
-	>&nbsp;|&nbsp;<button
+	<a
+		routerLink="/point/{{ point.id }}"
+		[attr.title]="point.description || null"
+	>{{ point.title }}</a><ng-container *ngIf="!loading && checkAccessEdit(point); else loader">&nbsp;|&nbsp;<button
 			type="button"
 			class="link"
 			(click)="delete(point.id)"
