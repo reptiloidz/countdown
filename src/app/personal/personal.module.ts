@@ -6,9 +6,10 @@ import { provideNgxMask } from 'ngx-mask';
 import { AuthComponent } from './components/auth/auth.component';
 import { RegComponent } from './components/reg/reg.component';
 import { authGuard } from '../services/auth.guard';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
-	declarations: [AuthComponent, RegComponent],
+	declarations: [AuthComponent, RegComponent, ProfileComponent],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -22,6 +23,10 @@ import { authGuard } from '../services/auth.guard';
 				path: 'reg',
 				component: RegComponent,
 				canActivate: [authGuard],
+			},
+			{
+				path: 'profile',
+				component: ProfileComponent,
 			},
 		]),
 	],
