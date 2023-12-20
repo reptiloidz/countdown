@@ -37,12 +37,12 @@ const routes: Routes = [
 	{
 		path: 'edit/:id',
 		component: EditPointComponent,
-		canActivate: [readGuard, editGuard],
+		canActivate: [editGuard],
 	},
 	{
 		path: 'create',
 		component: CreatePointComponent,
-		canActivate: [readGuard, editGuard],
+		canActivate: [editGuard],
 	},
 	{
 		path: '',
