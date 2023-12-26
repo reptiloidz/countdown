@@ -1,1 +1,61 @@
-<p>profile works!</p>
+<form
+	[formGroup]="formData"
+	class="form"
+	(ngSubmit)="updateProfile()"
+>
+	<div class="control">
+		<input
+			formControlName="name"
+			type="text"
+			placeholder="Имя пользователя"
+		>
+	</div>
+	<img
+		[src]="userpic"
+		[alt]="name || 'Юзерпик'"
+		class="userpic"
+	>
+	<button [disabled]="this.userpicLoading">
+		Обновить данные
+	</button>
+</form>
+
+<form
+	[formGroup]="formEmail"
+	class="form"
+>
+	<div class="control">
+		<input
+			formControlName="email"
+			type="text"
+			placeholder="Почта"
+		>
+	</div>
+	<button>
+		Обновить e-mail
+	</button>
+</form>
+
+<form class="form">
+	<div class="control">
+		<input
+			type="text"
+			placeholder="Старый пароль"
+		>
+	</div>
+	<div class="control">
+		<input
+			type="text"
+			placeholder="Новый пароль"
+		>
+	</div>
+	<button>
+		Обновить пароль
+	</button>
+</form>
+
+<div class="control">
+	<button type="button">
+		Удалить аккаунт
+	</button>
+</div>

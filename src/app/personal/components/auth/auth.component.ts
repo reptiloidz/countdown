@@ -51,7 +51,9 @@ export class AuthComponent implements OnInit, OnDestroy {
 		this.form = new FormGroup({
 			email: new FormControl(null, [
 				Validators.required,
-				Validators.email,
+				Validators.pattern(
+					'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
+				),
 			]),
 			password: new FormControl(null, [
 				Validators.required,

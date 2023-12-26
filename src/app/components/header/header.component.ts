@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	isMain = false;
 	isPrivacy = false;
+	isProfile = false;
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -26,6 +27,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 						this.isMain = !data.snapshot.url.length;
 						this.isPrivacy =
 							data.snapshot.url[0]?.path !== 'privacy';
+						this.isProfile =
+							data.snapshot.url[0]?.path !== 'profile';
 					},
 				})
 		);

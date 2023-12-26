@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Constants } from '../enums';
 import { FbAuthResponse } from '../interfaces/fbAuthResponse.interface';
@@ -13,11 +13,15 @@ import {
 	getAuth,
 	authState,
 	sendEmailVerification,
+	user,
+	User,
+	updateProfile,
 } from '@angular/fire/auth';
 import { goOffline, goOnline } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
 import { NotifyService } from './notify.service';
 import { HttpService } from './http.service';
+import { UserProfile } from '../interfaces/userProfile.interface';
 
 @Injectable({
 	providedIn: 'root',
@@ -37,6 +41,9 @@ export class AuthService implements OnInit, OnDestroy {
 		access: boolean;
 	}>();
 	eventEditAccessCheck$ = this._eventEditAccessCheckSubject.asObservable();
+
+	private _eventProfileUpdatedSubject = new Subject<UserProfile>();
+	eventProfileUpdated$ = this._eventProfileUpdatedSubject.asObservable();
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -114,6 +121,10 @@ export class AuthService implements OnInit, OnDestroy {
 		console.log(this.authFB);
 	}
 
+	get currentUser() {
+		return user(this.authFB);
+	}
+
 	setEditPointAccess(pointId: string | undefined, access: boolean) {
 		this._eventEditAccessCheckSubject.next({
 			pointId,
@@ -165,5 +176,11 @@ export class AuthService implements OnInit, OnDestroy {
 			localStorage.setItem('fb-uid', response.localId);
 			localStorage.setItem('fb-token-exp', expDate.toString());
 		}
+	}
+
+	updateProfile(user: User, data: UserProfile) {
+		updateProfile(user, data).then(() => {
+			this._eventProfileUpdatedSubject.next(data);
+		});
 	}
 }
