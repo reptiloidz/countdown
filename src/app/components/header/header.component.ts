@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import { ActivationStart, Event, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,6 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	isMain = false;
 	isPrivacy = false;
 	isProfile = false;
+	user!: User;
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -31,6 +33,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 							data.snapshot.url[0]?.path !== 'profile';
 					},
 				})
+		);
+
+		this.subscriptions.add(
+			this.auth.currentUser.subscribe({
+				next: (data) => {
+					this.user = data as User;
+				},
+			})
 		);
 	}
 

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { debounce, Subscription, tap, timer } from 'rxjs';
+import { debounce, distinctUntilChanged, Subscription, tap, timer } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotifyService } from 'src/app/services/notify.service';
 
@@ -9,7 +9,7 @@ import { NotifyService } from 'src/app/services/notify.service';
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 	constructor(private auth: AuthService, private notify: NotifyService) {}
 
 	formData!: FormGroup;
@@ -36,6 +36,17 @@ export class ProfileComponent implements OnInit {
 			]),
 		});
 
+		this.formPassword = new FormGroup({
+			password: new FormControl(null, [
+				Validators.required,
+				Validators.minLength(8),
+			]),
+			'new-password': new FormControl(null, [
+				Validators.required,
+				Validators.minLength(8),
+			]),
+		});
+
 		this.subscriptions.add(
 			this.auth.currentUser.subscribe({
 				next: (data) => {
@@ -48,13 +59,42 @@ export class ProfileComponent implements OnInit {
 		);
 
 		this.subscriptions.add(
-			this.auth.eventProfileUpdated$.subscribe({
-				next: (data) => {
-					this.notify.add({
-						title: `Данные пользователя ${data?.displayName} (${this.user?.email}) обновлены.`,
-					});
-				},
-			})
+			this.auth.eventProfileUpdated$
+				.pipe(distinctUntilChanged())
+				.subscribe({
+					next: (data) => {
+						this.notify.add({
+							title: `Данные пользователя ${data?.displayName} (${this.user?.email}) обновлены.`,
+						});
+					},
+				})
+		);
+
+		this.subscriptions.add(
+			this.auth.eventEmailUpdated$
+				.pipe(distinctUntilChanged())
+				.subscribe({
+					next: () => {
+						this.auth.verifyEmail();
+					},
+				})
+		);
+
+		this.subscriptions.add(
+			this.auth.eventPasswordUpdated$
+				.pipe(distinctUntilChanged())
+				.subscribe({
+					next: () => {
+						this.notify.add({
+							title: `Пароль пользователя ${this.user?.displayName} (${this.user?.email}) обновлён.`,
+						});
+
+						this.formPassword.controls['password'].setValue(null);
+						this.formPassword.controls['new-password'].setValue(
+							null
+						);
+					},
+				})
 		);
 
 		this.subscriptions.add(
@@ -77,11 +117,29 @@ export class ProfileComponent implements OnInit {
 		);
 	}
 
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
+	}
+
 	updateProfile() {
 		this.auth.updateProfile(this.user, {
 			displayName: this.formData.controls['name'].value,
 			photoURL: this.userpic,
 		});
+	}
+
+	updateEmail() {
+		this.auth.updateEmail(
+			this.user,
+			this.formEmail.controls['email'].value
+		);
+	}
+
+	updatePassword() {
+		this.auth.updatePassword(
+			this.user,
+			this.formPassword.controls['new-password'].value
+		);
 	}
 
 	generateUserpicUrl(name: string) {

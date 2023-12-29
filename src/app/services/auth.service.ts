@@ -16,6 +16,8 @@ import {
 	user,
 	User,
 	updateProfile,
+	updateEmail,
+	updatePassword,
 } from '@angular/fire/auth';
 import { goOffline, goOnline } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
@@ -44,6 +46,12 @@ export class AuthService implements OnInit, OnDestroy {
 
 	private _eventProfileUpdatedSubject = new Subject<UserProfile>();
 	eventProfileUpdated$ = this._eventProfileUpdatedSubject.asObservable();
+
+	private _eventEmailUpdatedSubject = new Subject<string>();
+	eventEmailUpdated$ = this._eventEmailUpdatedSubject.asObservable();
+
+	private _eventPasswordUpdatedSubject = new Subject<string>();
+	eventPasswordUpdated$ = this._eventPasswordUpdatedSubject.asObservable();
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -181,6 +189,18 @@ export class AuthService implements OnInit, OnDestroy {
 	updateProfile(user: User, data: UserProfile) {
 		updateProfile(user, data).then(() => {
 			this._eventProfileUpdatedSubject.next(data);
+		});
+	}
+
+	updateEmail(user: User, data: string) {
+		updateEmail(user, data).then(() => {
+			this._eventEmailUpdatedSubject.next(data);
+		});
+	}
+
+	updatePassword(user: User, data: string) {
+		updatePassword(user, data).then(() => {
+			this._eventPasswordUpdatedSubject.next(data);
 		});
 	}
 }

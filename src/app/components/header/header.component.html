@@ -10,7 +10,14 @@
 			<a
 				class="nav__item"
 				[routerLink]="'/profile'"
-			>Профиль</a>
+				[title]="user.email"
+			>
+				<img
+					class="userpic userpic--sm"
+					[src]="user.photoURL"
+					[alt]="user.displayName"
+				>Профиль ({{ user.displayName }})
+			</a>
 			<span class="nav__divider"> | </span>
 		</ng-container>
 		<button

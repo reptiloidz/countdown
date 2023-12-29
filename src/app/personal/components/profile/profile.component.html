@@ -15,7 +15,7 @@
 		[alt]="name || 'Юзерпик'"
 		class="userpic"
 	>
-	<button [disabled]="this.userpicLoading">
+	<button [disabled]="this.userpicLoading || formData.invalid">
 		Обновить данные
 	</button>
 </form>
@@ -23,6 +23,7 @@
 <form
 	[formGroup]="formEmail"
 	class="form"
+	(ngSubmit)="updateEmail()"
 >
 	<div class="control">
 		<input
@@ -31,25 +32,31 @@
 			placeholder="Почта"
 		>
 	</div>
-	<button>
+	<button [disabled]="formEmail.invalid">
 		Обновить e-mail
 	</button>
 </form>
 
-<form class="form">
+<form
+	[formGroup]="formPassword"
+	class="form"
+	(ngSubmit)="updatePassword()"
+>
 	<div class="control">
 		<input
 			type="text"
+			formControlName="password"
 			placeholder="Старый пароль"
 		>
 	</div>
 	<div class="control">
 		<input
 			type="text"
+			formControlName="new-password"
 			placeholder="Новый пароль"
 		>
 	</div>
-	<button>
+	<button [disabled]="formPassword.invalid">
 		Обновить пароль
 	</button>
 </form>

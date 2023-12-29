@@ -241,6 +241,11 @@ a,
 	width: 64px;
 	height: 64px;
 	background-color: #CCCCCC;
+
+	&--sm {
+		width: 16px;
+		height: 16px;
+	}
 }
 
 .ol-nested {
