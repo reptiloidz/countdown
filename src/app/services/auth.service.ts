@@ -18,6 +18,10 @@ import {
 	updateProfile,
 	updateEmail,
 	updatePassword,
+	deleteUser,
+	reauthenticateWithCredential,
+	EmailAuthProvider,
+	EmailAuthCredential,
 } from '@angular/fire/auth';
 import { goOffline, goOnline } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
@@ -50,8 +54,11 @@ export class AuthService implements OnInit, OnDestroy {
 	private _eventEmailUpdatedSubject = new Subject<string>();
 	eventEmailUpdated$ = this._eventEmailUpdatedSubject.asObservable();
 
-	private _eventPasswordUpdatedSubject = new Subject<string>();
+	private _eventPasswordUpdatedSubject = new Subject<void>();
 	eventPasswordUpdated$ = this._eventPasswordUpdatedSubject.asObservable();
+
+	private _eventAccountDeletedSubject = new Subject<void>();
+	eventAccountDeleted$ = this._eventAccountDeletedSubject.asObservable();
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -109,6 +116,12 @@ export class AuthService implements OnInit, OnDestroy {
 			user.email,
 			user.password
 		);
+		if (this.authFB?.currentUser && !this.authFB?.currentUser.displayName) {
+			this.updateProfile(this.authFB.currentUser, {
+				displayName: user.email.split('@')[0],
+			});
+		}
+
 		this.setToken(value._tokenResponse);
 		goOnline(this.http.db);
 		this.verifyEmail();
@@ -193,14 +206,76 @@ export class AuthService implements OnInit, OnDestroy {
 	}
 
 	updateEmail(user: User, data: string) {
-		updateEmail(user, data).then(() => {
-			this._eventEmailUpdatedSubject.next(data);
-		});
+		this.reAuth()
+			.then(() => {
+				updateEmail(user, data).then(() => {
+					this._eventEmailUpdatedSubject.next(data);
+				});
+			})
+			.catch(() => {
+				this.notify.add({
+					title: 'Не подтверждён пароль',
+				});
+			});
 	}
 
-	updatePassword(user: User, data: string) {
-		updatePassword(user, data).then(() => {
-			this._eventPasswordUpdatedSubject.next(data);
-		});
+	updatePassword(user: User, password: string, newPassword: string) {
+		this.reAuth(password)
+			.then(() => {
+				updatePassword(user, newPassword).then(() => {
+					this._eventPasswordUpdatedSubject.next();
+				});
+			})
+			.catch(() => {
+				this.notify.add({
+					title: 'Не подтверждён пароль',
+				});
+			});
+	}
+
+	removeAccount(user: User) {
+		this.reAuth()
+			.then(() => {
+				deleteUser(user).then(() => {
+					this._eventAccountDeletedSubject.next();
+				});
+			})
+			.catch(() => {
+				this.notify.add({
+					title: 'Не подтверждён пароль',
+				});
+			});
+	}
+
+	async reAuth(password?: string): Promise<any> {
+		let credential: EmailAuthCredential | null | '' = null;
+
+		// https://stackoverflow.com/questions/37811684/how-to-create-credential-object-needed-by-firebase-web-user-reauthenticatewith
+		if (this.authFB.currentUser) {
+			if (
+				!password &&
+				this.authFB.currentUser.metadata.lastSignInTime &&
+				+new Date(this.authFB.currentUser.metadata.lastSignInTime) +
+					60 * Constants.msInMinute >
+					+new Date()
+			) {
+				return new Promise((resolve) => {
+					resolve(null);
+				});
+			}
+
+			credential =
+				this.authFB.currentUser.email &&
+				EmailAuthProvider.credential(
+					this.authFB.currentUser.email,
+					password || prompt('Введите пароль') || ''
+				);
+		}
+
+		return this.authFB.currentUser && credential
+			? reauthenticateWithCredential(this.authFB.currentUser, credential)
+			: new Promise((resolve) => {
+					resolve(null);
+			  });
 	}
 }

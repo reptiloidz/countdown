@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	isMain = false;
 	isPrivacy = false;
 	isProfile = false;
-	user!: User;
+	user: User | undefined;
 
 	ngOnInit(): void {
 		this.subscriptions.add(

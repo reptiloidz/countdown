@@ -7,6 +7,7 @@ import { AuthComponent } from './components/auth/auth.component';
 import { RegComponent } from './components/reg/reg.component';
 import { authGuard } from '../services/auth.guard';
 import { ProfileComponent } from './components/profile/profile.component';
+import { unauthGuard } from '../services/unauth.guard';
 
 @NgModule({
 	declarations: [AuthComponent, RegComponent, ProfileComponent],
@@ -27,6 +28,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 			{
 				path: 'profile',
 				component: ProfileComponent,
+				canActivate: [unauthGuard],
 			},
 		]),
 	],

@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		});
 
 		this.subscriptions.add(
-			this.auth.currentUser.subscribe({
+			this.auth.currentUser.pipe(distinctUntilChanged()).subscribe({
 				next: (data) => {
 					this.user = data as User;
 					this.formEmail.controls['email'].setValue(data?.email);
@@ -98,6 +98,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
+			this.auth.eventAccountDeleted$.subscribe({
+				next: () => {
+					this.auth.logout();
+
+					this.notify.add({
+						title: `Учётная запись ${this.user?.displayName} (${this.user?.email}) удалена.`,
+					});
+				},
+			})
+		);
+
+		this.subscriptions.add(
 			this.formData.controls['name'].valueChanges
 				.pipe(
 					tap(() => {
@@ -138,11 +150,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	updatePassword() {
 		this.auth.updatePassword(
 			this.user,
+			this.formPassword.controls['password'].value,
 			this.formPassword.controls['new-password'].value
 		);
 	}
 
 	generateUserpicUrl(name: string) {
 		return name.replaceAll(' ', '+');
+	}
+
+	removeAccount() {
+		confirm('Точно удалить учётную запись? Действие необратимо!') &&
+			this.auth.removeAccount(this.user);
 	}
 }

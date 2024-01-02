@@ -10,13 +10,14 @@
 			<a
 				class="nav__item"
 				[routerLink]="'/profile'"
-				[title]="user.email"
+				[title]="user?.email"
 			>
 				<img
+					*ngIf="user?.photoURL"
 					class="userpic userpic--sm"
-					[src]="user.photoURL"
-					[alt]="user.displayName"
-				>Профиль ({{ user.displayName }})
+					[src]="user?.photoURL"
+					[alt]="user?.displayName"
+				>Профиль ({{ user?.displayName }})
 			</a>
 			<span class="nav__divider"> | </span>
 		</ng-container>
