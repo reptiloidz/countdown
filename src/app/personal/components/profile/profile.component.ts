@@ -81,20 +81,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.auth.eventPasswordUpdated$
-				.pipe(distinctUntilChanged())
-				.subscribe({
-					next: () => {
-						this.notify.add({
-							title: `Пароль пользователя ${this.user?.displayName} (${this.user?.email}) обновлён.`,
-						});
+			this.auth.eventPasswordUpdated$.subscribe({
+				next: () => {
+					this.notify.add({
+						title: `Пароль пользователя ${this.user?.displayName} (${this.user?.email}) обновлён.`,
+					});
 
-						this.formPassword.controls['password'].setValue(null);
-						this.formPassword.controls['new-password'].setValue(
-							null
-						);
-					},
-				})
+					this.formPassword.controls['password'].setValue(null);
+					this.formPassword.controls['new-password'].setValue(null);
+				},
+			})
 		);
 
 		this.subscriptions.add(
