@@ -39,4 +39,12 @@
 	<button [disabled]="form.invalid || isLoading">
 		Войти
 	</button>
+	<button
+		[disabled]="form.invalid || isLoading"
+		type="button"
+		class="link"
+		(click)="resetPassword()"
+	>
+		Сброс пароля
+	</button>
 </form>

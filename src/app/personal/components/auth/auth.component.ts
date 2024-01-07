@@ -10,6 +10,7 @@ import {
 	ValidationObjectField,
 } from 'src/app/interfaces/validation.interface';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifyService } from 'src/app/services/notify.service';
 
 @Component({
 	selector: 'app-auth',
@@ -18,6 +19,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class AuthComponent implements OnInit, OnDestroy {
 	form!: FormGroup;
 	isLoading = false;
+	emailForReset = '';
 	controlsValidated: ValidationObject = {
 		email: {
 			required: {
@@ -45,7 +47,11 @@ export class AuthComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 	errorMessages: string[] = [];
 
-	constructor(private auth: AuthService, private router: Router) {}
+	constructor(
+		private auth: AuthService,
+		private router: Router,
+		private notify: NotifyService
+	) {}
 
 	ngOnInit(): void {
 		this.form = new FormGroup({
@@ -103,6 +109,16 @@ export class AuthComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.auth.eventResetPassword$.subscribe({
+				next: () => {
+					this.notify.add({
+						title: `Письмо для сброса пароля отправлено на ${this.emailForReset}`,
+					});
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -119,6 +135,12 @@ export class AuthComponent implements OnInit, OnDestroy {
 		return hasFieldErrors(
 			this.controlsValidated['password'] as ValidationObjectField
 		);
+	}
+
+	resetPassword() {
+		this.emailForReset =
+			prompt('Введите e-mail-адрес для сброса пароля') || '';
+		this.emailForReset && this.auth.resetPassword(this.emailForReset);
 	}
 
 	submit() {

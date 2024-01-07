@@ -22,6 +22,7 @@ import {
 	reauthenticateWithCredential,
 	EmailAuthProvider,
 	EmailAuthCredential,
+	sendPasswordResetEmail,
 } from '@angular/fire/auth';
 import { goOffline, goOnline } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
@@ -59,6 +60,9 @@ export class AuthService implements OnInit, OnDestroy {
 
 	private _eventAccountDeletedSubject = new Subject<void>();
 	eventAccountDeleted$ = this._eventAccountDeletedSubject.asObservable();
+
+	private _eventResetPasswordSubject = new Subject<void>();
+	eventResetPassword$ = this._eventResetPasswordSubject.asObservable();
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -110,6 +114,14 @@ export class AuthService implements OnInit, OnDestroy {
 		}
 	}
 
+	get currentUser() {
+		return user(this.authFB);
+	}
+
+	get isAuthenticated(): boolean {
+		return !!this.token;
+	}
+
 	async login(user: UserPoint): Promise<any> {
 		const value: any = await signInWithEmailAndPassword(
 			getAuth(),
@@ -142,10 +154,6 @@ export class AuthService implements OnInit, OnDestroy {
 		console.log(this.authFB);
 	}
 
-	get currentUser() {
-		return user(this.authFB);
-	}
-
 	setEditPointAccess(pointId: string | undefined, access: boolean) {
 		this._eventEditAccessCheckSubject.next({
 			pointId,
@@ -176,10 +184,6 @@ export class AuthService implements OnInit, OnDestroy {
 				});
 			});
 		}
-	}
-
-	get isAuthenticated(): boolean {
-		return !!this.token;
 	}
 
 	setToken(response: FbAuthResponse | null) {
@@ -243,6 +247,18 @@ export class AuthService implements OnInit, OnDestroy {
 			.catch(() => {
 				this.notify.add({
 					title: 'Не подтверждён пароль',
+				});
+			});
+	}
+
+	resetPassword(email: string) {
+		sendPasswordResetEmail(this.authFB, email)
+			.then(() => {
+				this._eventResetPasswordSubject.next();
+			})
+			.catch(() => {
+				this.notify.add({
+					title: 'Не удалось отправить письмо для сброса пароля',
 				});
 			});
 	}
