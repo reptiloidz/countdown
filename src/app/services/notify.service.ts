@@ -8,7 +8,7 @@ import { Notification } from '../interfaces/notification.interface';
 export class NotifyService {
 	constructor() {}
 
-	private _timer = 5000;
+	private _timer = 10000;
 	private _notificationsSubject = new BehaviorSubject<Notification[]>([]);
 	notifications$ = this._notificationsSubject.asObservable();
 

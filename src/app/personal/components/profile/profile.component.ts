@@ -1,8 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { debounce, distinctUntilChanged, Subscription, tap, timer } from 'rxjs';
+import { format, parse } from 'date-fns';
+import {
+	debounce,
+	distinctUntilChanged,
+	EMPTY,
+	Subscription,
+	switchMap,
+	tap,
+	timer,
+} from 'rxjs';
+import { Constants } from 'src/app/enums';
 import { AuthService } from 'src/app/services/auth.service';
+import { HttpService } from 'src/app/services/http.service';
 import { NotifyService } from 'src/app/services/notify.service';
 
 @Component({
@@ -10,7 +21,11 @@ import { NotifyService } from 'src/app/services/notify.service';
 	templateUrl: './profile.component.html',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-	constructor(private auth: AuthService, private notify: NotifyService) {}
+	constructor(
+		private auth: AuthService,
+		private http: HttpService,
+		private notify: NotifyService
+	) {}
 
 	formData!: FormGroup;
 	formEmail!: FormGroup;
@@ -18,13 +33,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	userpic = '';
 	name = '';
 	userpicLoading = false;
-	private user!: User;
+	private _user!: User;
+	private _birthDate = '';
+	private _birthDatePointId = '';
 	private _debounceTime = 1000;
 	private subscriptions = new Subscription();
 
 	ngOnInit(): void {
 		this.formData = new FormGroup({
 			name: new FormControl(null, [Validators.required]),
+			birthDate: new FormControl(null),
 		});
 
 		this.formEmail = new FormGroup({
@@ -48,23 +66,58 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		});
 
 		this.subscriptions.add(
-			this.auth.currentUser.pipe(distinctUntilChanged()).subscribe({
-				next: (data) => {
-					this.user = data as User;
-					this.formEmail.controls['email'].setValue(data?.email);
-					this.formData.controls['name'].setValue(data?.displayName);
-					this.userpic = data?.photoURL as string;
-				},
-			})
+			this.auth.currentUser
+				.pipe(
+					tap((data) => {
+						this._user = data as User;
+						this.formEmail.controls['email'].setValue(data?.email);
+						this.formData.controls['name'].setValue(
+							data?.displayName
+						);
+						this.userpic = data?.photoURL as string;
+					})
+				)
+				.pipe(
+					switchMap((data) => {
+						return data ? this.http.getUserData(data.uid) : EMPTY;
+					})
+				)
+				.subscribe({
+					next: (user) => {
+						this._birthDatePointId = user.birthDatePointId;
+						this._birthDate = user.birthDate
+							? format(
+									parse(
+										'00:00',
+										Constants.timeFormat,
+										parse(
+											user.birthDate,
+											Constants.fullDateFormat,
+											new Date()
+										)
+									),
+									Constants.shortDateFormat
+							  )
+							: '';
+						this.formData.controls['birthDate'].setValue(
+							this._birthDate
+						);
+					},
+				})
 		);
 
 		this.subscriptions.add(
-			this.auth.eventProfileUpdated$
+			this.http.eventBirthDateAdded$
+				.pipe(
+					switchMap(() => {
+						return this.auth.eventProfileUpdated$;
+					})
+				)
 				.pipe(distinctUntilChanged())
 				.subscribe({
 					next: (data) => {
 						this.notify.add({
-							title: `Данные пользователя ${data?.displayName} (${this.user?.email}) обновлены.`,
+							title: `Данные пользователя ${data?.displayName} (${this._user?.email}) обновлены.`,
 						});
 					},
 				})
@@ -84,7 +137,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.auth.eventPasswordUpdated$.subscribe({
 				next: () => {
 					this.notify.add({
-						title: `Пароль пользователя ${this.user?.displayName} (${this.user?.email}) обновлён.`,
+						title: `Пароль пользователя ${this._user?.displayName} (${this._user?.email}) обновлён.`,
 					});
 
 					this.formPassword.controls['password'].setValue(null);
@@ -99,7 +152,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.auth.logout();
 
 					this.notify.add({
-						title: `Учётная запись ${this.user?.displayName} (${this.user?.email}) удалена.`,
+						title: `Учётная запись ${this._user?.displayName} (${this._user?.email}) удалена.`,
 					});
 				},
 			})
@@ -129,23 +182,56 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	updateProfile() {
-		this.auth.updateProfile(this.user, {
+	updateNameAndPhoto() {
+		this.auth.updateProfile(this._user, {
 			displayName: this.formData.controls['name'].value,
 			photoURL: this.userpic,
 		});
 	}
 
+	updateProfile() {
+		this.updateNameAndPhoto();
+		const bdValue = this.formData.controls['birthDate'].value;
+
+		if (bdValue == this._birthDate) {
+			this.http.eventBirthDateAdded();
+		} else {
+			const bdFinalValue = bdValue
+				? format(
+						parse(
+							'00:00',
+							Constants.timeFormat,
+							parse(
+								bdValue,
+								Constants.shortDateFormat,
+								new Date()
+							)
+						),
+						Constants.fullDateFormat
+				  )
+				: '';
+
+			if (!this._birthDatePointId && bdFinalValue) {
+				// TODO: создавать событие с ДР, сохранять id, выводить сообщение с ссылкой
+			}
+
+			this.http.updateUserBirthDate(this._user.uid, {
+				birthDate: bdFinalValue,
+				birthDatePointId: '',
+			});
+		}
+	}
+
 	updateEmail() {
 		this.auth.updateEmail(
-			this.user,
+			this._user,
 			this.formEmail.controls['email'].value
 		);
 	}
 
 	updatePassword() {
 		this.auth.updatePassword(
-			this.user,
+			this._user,
 			this.formPassword.controls['password'].value,
 			this.formPassword.controls['new-password'].value
 		);
@@ -157,6 +243,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	removeAccount() {
 		confirm('Точно удалить учётную запись? Действие необратимо!') &&
-			this.auth.removeAccount(this.user);
+			this.auth.removeAccount(this._user);
 	}
 }

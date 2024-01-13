@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap, combineLatest } from 'rxjs';
+import { map, Observable, switchMap, combineLatest, Subject } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 import {
@@ -14,12 +14,20 @@ import {
 	push,
 } from '@angular/fire/database';
 import { Auth, user } from '@angular/fire/auth';
+import { UserExtraData } from '../interfaces/userExtraData.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class HttpService implements HttpServiceInterface {
 	constructor(private authFB: Auth) {}
+
+	private _eventBirthDateAddedSubject = new Subject<void>();
+	eventBirthDateAdded$ = this._eventBirthDateAddedSubject.asObservable();
+
+	eventBirthDateAdded() {
+		this._eventBirthDateAddedSubject.next();
+	}
 
 	getPoints(): Observable<Point[]> {
 		return user(this.authFB).pipe(
@@ -105,6 +113,18 @@ export class HttpService implements HttpServiceInterface {
 	async deletePoint(id: string | undefined): Promise<void> {
 		await set(ref(this.db, `points/${id}`), null);
 		return await new Promise((resolve) => {
+			resolve();
+		});
+	}
+
+	getUserData(id: string): Observable<UserExtraData> {
+		return objectVal<any>(query(ref(this.db, `users/${id}`)));
+	}
+
+	async updateUserBirthDate(id: string, param: UserExtraData): Promise<void> {
+		await set(ref(this.db, `users/${id}`), param);
+		return await new Promise((resolve) => {
+			this.eventBirthDateAdded();
 			resolve();
 		});
 	}

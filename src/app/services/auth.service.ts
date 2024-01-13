@@ -128,9 +128,32 @@ export class AuthService implements OnInit, OnDestroy {
 			user.email,
 			user.password
 		);
-		if (this.authFB?.currentUser && !this.authFB?.currentUser.displayName) {
-			this.updateProfile(this.authFB.currentUser, {
-				displayName: user.email.split('@')[0],
+		if (this.authFB?.currentUser) {
+			!this.authFB?.currentUser.displayName &&
+				this.updateProfile(this.authFB.currentUser, {
+					displayName: user.email.split('@')[0],
+				});
+
+			this.http.getUserData(this.authFB.currentUser.uid).subscribe({
+				next: (data) => {
+					if (!data) {
+						this.authFB.currentUser?.uid &&
+							this.http
+								.updateUserBirthDate(
+									this.authFB.currentUser.uid,
+									{
+										birthDate: '',
+										birthDatePointId: '',
+									}
+								)
+								.then(() => {
+									this.router.navigate(['/profile/']);
+									this.notify.add({
+										title: `Заполните профиль`,
+									});
+								});
+					}
+				},
 			});
 		}
 
