@@ -13,6 +13,7 @@ import {
 } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 import { HttpService } from 'src/app/services/http.service';
 import { NotifyService } from 'src/app/services/notify.service';
 
@@ -24,6 +25,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	constructor(
 		private auth: AuthService,
 		private http: HttpService,
+		private data: DataService,
 		private notify: NotifyService
 	) {}
 
@@ -84,23 +86,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: (user) => {
-						this._birthDatePointId = user.birthDatePointId;
-						this._birthDate = user.birthDate
-							? format(
-									parse(
-										'00:00',
-										Constants.timeFormat,
-										parse(
-											user.birthDate,
-											Constants.fullDateFormat,
-											new Date()
-										)
-									),
-									Constants.shortDateFormat
-							  )
-							: '';
+						user?.birthDatePointId &&
+							(this._birthDatePointId = user.birthDatePointId);
+						this._birthDate = user?.birthDate || '';
+
 						this.formData.controls['birthDate'].setValue(
-							this._birthDate
+							user?.birthDate
+								? format(
+										parse(
+											'00:00',
+											Constants.timeFormat,
+											parse(
+												user.birthDate,
+												Constants.fullDateFormat,
+												new Date()
+											)
+										),
+										Constants.shortDateFormat
+								  )
+								: ''
 						);
 					},
 				})
@@ -176,6 +180,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					},
 				})
 		);
+
+		this.subscriptions.add(
+			// Рассчитываем, что на этой странице создаётся только событие ДР и выводим ссылку на него
+			this.data.eventAddPoint$.subscribe({
+				next: (point) => {
+					this.http
+						.updateUserBirthDate(this._user.uid, {
+							birthDate: this._birthDate,
+							birthDatePointId: point.id,
+						})
+						.then(() => {
+							this.notify.add({
+								// TODO: не выводится разметка
+								title: `Создано событие "<a href="../point/${point.id}">Я родился</a>"`,
+							});
+						});
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -212,7 +235,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				: '';
 
 			if (!this._birthDatePointId && bdFinalValue) {
-				// TODO: создавать событие с ДР, сохранять id, выводить сообщение с ссылкой
+				this.data.addPoint({
+					dates: [
+						{
+							date: bdFinalValue,
+							reason: 'byHand',
+						},
+					],
+					title: 'Я родился',
+					direction: 'forward',
+					greenwich: false,
+					repeatable: false,
+					user: this._user.uid,
+				});
 			}
 
 			this.http.updateUserBirthDate(this._user.uid, {

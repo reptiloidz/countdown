@@ -1,4 +1,4 @@
 export interface UserExtraData {
 	birthDate: string;
-	birthDatePointId: string;
+	birthDatePointId?: string;
 }

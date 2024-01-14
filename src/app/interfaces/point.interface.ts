@@ -3,7 +3,7 @@ import { Iteration } from './iteration.interface';
 
 export interface Point {
 	title: string;
-	description: string;
+	description?: string;
 	dates: Iteration[];
 	id?: string;
 	difference?: number;

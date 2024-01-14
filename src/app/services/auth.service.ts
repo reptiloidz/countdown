@@ -134,6 +134,7 @@ export class AuthService implements OnInit, OnDestroy {
 					displayName: user.email.split('@')[0],
 				});
 
+			// TODO: Это должно быть в ngOnInit или выполняться только раз
 			this.http.getUserData(this.authFB.currentUser.uid).subscribe({
 				next: (data) => {
 					if (!data) {
