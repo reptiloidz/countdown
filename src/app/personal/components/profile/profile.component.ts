@@ -68,7 +68,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		});
 
 		this.subscriptions.add(
-			this.auth.currentUser
+			this.auth.eventProfileUpdated$
+				.pipe(switchMap(() => this.auth.currentUser))
 				.pipe(
 					tap((data) => {
 						this._user = data as User;
@@ -192,7 +193,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						})
 						.then(() => {
 							this.notify.add({
-								// TODO: не выводится разметка
 								title: `Создано событие "<a href="../point/${point.id}">Я родился</a>"`,
 							});
 						});
@@ -273,11 +273,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	generateUserpicUrl(name: string) {
-		return name.replaceAll(' ', '+');
+		return name?.replaceAll(' ', '+');
 	}
 
 	removeAccount() {
 		confirm('Точно удалить учётную запись? Действие необратимо!') &&
-			this.auth.removeAccount(this._user);
+			this.auth.removeAccount(this._user, this._birthDatePointId);
 	}
 }

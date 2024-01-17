@@ -1,7 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import {
+	Observable,
+	ReplaySubject,
+	BehaviorSubject,
+	Subject,
+	Subscription,
+	concatMap,
+	take,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Constants } from '../enums';
 import { FbAuthResponse } from '../interfaces/fbAuthResponse.interface';
@@ -24,7 +32,7 @@ import {
 	EmailAuthCredential,
 	sendPasswordResetEmail,
 } from '@angular/fire/auth';
-import { goOffline, goOnline } from '@angular/fire/database';
+import { goOnline } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
 import { NotifyService } from './notify.service';
 import { HttpService } from './http.service';
@@ -33,38 +41,14 @@ import { UserProfile } from '../interfaces/userProfile.interface';
 @Injectable({
 	providedIn: 'root',
 })
-export class AuthService implements OnInit, OnDestroy {
+export class AuthService implements OnDestroy {
 	constructor(
 		private httpClient: HttpClient,
 		private http: HttpService,
 		private router: Router,
 		private authFB: Auth,
 		private notify: NotifyService
-	) {}
-
-	private subscriptions = new Subscription();
-	private _eventEditAccessCheckSubject = new ReplaySubject<{
-		pointId?: string;
-		access: boolean;
-	}>();
-	eventEditAccessCheck$ = this._eventEditAccessCheckSubject.asObservable();
-
-	private _eventProfileUpdatedSubject = new Subject<UserProfile>();
-	eventProfileUpdated$ = this._eventProfileUpdatedSubject.asObservable();
-
-	private _eventEmailUpdatedSubject = new Subject<string>();
-	eventEmailUpdated$ = this._eventEmailUpdatedSubject.asObservable();
-
-	private _eventPasswordUpdatedSubject = new Subject<void>();
-	eventPasswordUpdated$ = this._eventPasswordUpdatedSubject.asObservable();
-
-	private _eventAccountDeletedSubject = new Subject<void>();
-	eventAccountDeleted$ = this._eventAccountDeletedSubject.asObservable();
-
-	private _eventResetPasswordSubject = new Subject<void>();
-	eventResetPassword$ = this._eventResetPasswordSubject.asObservable();
-
-	ngOnInit(): void {
+	) {
 		this.subscriptions.add(
 			authState(this.authFB).subscribe({
 				next: (data: any) => {
@@ -80,7 +64,64 @@ export class AuthService implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.eventLogin$
+				.pipe(
+					concatMap((id) => {
+						return this.http.getUserData(id).pipe(take(1));
+					})
+				)
+				.subscribe({
+					next: (data) => {
+						if (!data) {
+							this._user?.uid &&
+								this.http
+									.updateUserBirthDate(this._user.uid, {
+										birthDate: '',
+										birthDatePointId: '',
+										auth: true,
+									})
+									.then(() => {
+										this.router.navigate(['/profile/']);
+										this.notify.add({
+											title: `Заполните профиль`,
+										});
+									});
+						}
+					},
+				})
+		);
 	}
+
+	private subscriptions = new Subscription();
+	private _eventEditAccessCheckSubject = new ReplaySubject<{
+		pointId?: string;
+		access: boolean;
+	}>();
+	eventEditAccessCheck$ = this._eventEditAccessCheckSubject.asObservable();
+
+	private _eventLoginSubject = new Subject<string>();
+	eventLogin$ = this._eventLoginSubject.asObservable();
+
+	private _eventProfileUpdatedSubject = new BehaviorSubject<UserProfile>({
+		displayName: '',
+	});
+	eventProfileUpdated$ = this._eventProfileUpdatedSubject.asObservable();
+
+	private _eventEmailUpdatedSubject = new Subject<string>();
+	eventEmailUpdated$ = this._eventEmailUpdatedSubject.asObservable();
+
+	private _eventPasswordUpdatedSubject = new Subject<void>();
+	eventPasswordUpdated$ = this._eventPasswordUpdatedSubject.asObservable();
+
+	private _eventAccountDeletedSubject = new Subject<void>();
+	eventAccountDeleted$ = this._eventAccountDeletedSubject.asObservable();
+
+	private _eventResetPasswordSubject = new Subject<void>();
+	eventResetPassword$ = this._eventResetPasswordSubject.asObservable();
+
+	private _user: User | undefined;
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
@@ -128,35 +169,16 @@ export class AuthService implements OnInit, OnDestroy {
 			user.email,
 			user.password
 		);
-		if (this.authFB?.currentUser) {
-			!this.authFB?.currentUser.displayName &&
-				this.updateProfile(this.authFB.currentUser, {
-					displayName: user.email.split('@')[0],
-				});
 
-			// TODO: Это должно быть в ngOnInit или выполняться только раз
-			this.http.getUserData(this.authFB.currentUser.uid).subscribe({
-				next: (data) => {
-					if (!data) {
-						this.authFB.currentUser?.uid &&
-							this.http
-								.updateUserBirthDate(
-									this.authFB.currentUser.uid,
-									{
-										birthDate: '',
-										birthDatePointId: '',
-									}
-								)
-								.then(() => {
-									this.router.navigate(['/profile/']);
-									this.notify.add({
-										title: `Заполните профиль`,
-									});
-								});
-					}
-				},
+		this._user = value.user;
+
+		this._user &&
+			!this._user.displayName &&
+			this.updateProfile(this._user, {
+				displayName: user.email.split('@')[0],
 			});
-		}
+
+		this._eventLoginSubject.next(this._user?.uid || '');
 
 		this.setToken(value._tokenResponse);
 		goOnline(this.http.db);
@@ -169,7 +191,7 @@ export class AuthService implements OnInit, OnDestroy {
 	logout() {
 		signOut(this.authFB).then(() => {
 			this.setToken(null);
-			goOffline(this.http.db);
+			// goOffline(this.http.db);
 			this.router.navigate(['/auth/']);
 		});
 	}
@@ -196,13 +218,13 @@ export class AuthService implements OnInit, OnDestroy {
 	}
 
 	verifyEmail() {
-		if (this.authFB.currentUser) {
+		if (this._user) {
 			if (this.checkEmailVerified) return;
 
-			sendEmailVerification(this.authFB.currentUser).then(() => {
+			sendEmailVerification(this._user).then(() => {
 				this.notify.add({
 					title: `
-						Сообщение для подтверждения почты отправлено на ${this.authFB.currentUser?.email}.
+						Сообщение для подтверждения почты отправлено на ${this._user?.email}.
 						Без подтверждения доступ открыт только к публичным событиям и только для чтения.
 					`,
 				});
@@ -261,11 +283,15 @@ export class AuthService implements OnInit, OnDestroy {
 			});
 	}
 
-	removeAccount(user: User) {
+	removeAccount(user: User, birthDatePointId: string) {
 		this.reAuth()
 			.then(() => {
-				deleteUser(user).then(() => {
-					this._eventAccountDeletedSubject.next();
+				this.http.updateUserBirthDate(user.uid, null).then(() => {
+					this.http.deletePoint(birthDatePointId).then(() => {
+						deleteUser(user).then(() => {
+							this._eventAccountDeletedSubject.next();
+						});
+					});
 				});
 			})
 			.catch(() => {

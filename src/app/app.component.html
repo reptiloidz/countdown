@@ -7,7 +7,8 @@
 	<li
 		*ngFor="let notify of notifyList"
 		class="notify-list__item info"
-	>{{ notify.title }}</li>
+		[innerHTML]="notify.title"
+	></li>
 </ul>
 
 <main class="main">

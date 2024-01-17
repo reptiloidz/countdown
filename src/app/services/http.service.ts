@@ -111,7 +111,7 @@ export class HttpService implements HttpServiceInterface {
 	}
 
 	async deletePoint(id: string | undefined): Promise<void> {
-		await set(ref(this.db, `points/${id}`), null);
+		await (id ? set(ref(this.db, `points/${id}`), null) : null);
 		return await new Promise((resolve) => {
 			resolve();
 		});
@@ -121,13 +121,17 @@ export class HttpService implements HttpServiceInterface {
 		return objectVal<any>(query(ref(this.db, `users/${id}`)));
 	}
 
-	async updateUserBirthDate(id: string, param: UserExtraData): Promise<void> {
+	async updateUserBirthDate(
+		id: string,
+		param: UserExtraData | null
+	): Promise<void> {
 		await set(ref(this.db, `users/${id}`), {
-			birthDate: param.birthDate || null,
-			birthDatePointId: param.birthDatePointId || null,
+			birthDate: param?.birthDate || null,
+			birthDatePointId: param?.birthDatePointId || null,
+			auth: param?.auth || null,
 		} as UserExtraData);
 		return await new Promise((resolve) => {
-			this.eventBirthDateAdded();
+			param && this.eventBirthDateAdded();
 			resolve();
 		});
 	}
