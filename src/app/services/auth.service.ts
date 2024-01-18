@@ -191,7 +191,6 @@ export class AuthService implements OnDestroy {
 	logout() {
 		signOut(this.authFB).then(() => {
 			this.setToken(null);
-			// goOffline(this.http.db);
 			this.router.navigate(['/auth/']);
 		});
 	}

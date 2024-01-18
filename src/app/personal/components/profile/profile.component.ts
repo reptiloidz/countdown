@@ -29,6 +29,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		private notify: NotifyService
 	) {}
 
+	birthDateEventName = 'Я родился';
+
 	formData!: FormGroup;
 	formEmail!: FormGroup;
 	formPassword!: FormGroup;
@@ -193,7 +195,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						})
 						.then(() => {
 							this.notify.add({
-								title: `Создано событие "<a href="../point/${point.id}">Я родился</a>"`,
+								title: `Создано событие "<a href="../point/${point.id}">${this.birthDateEventName}</a>"`,
 							});
 						});
 				},
@@ -242,10 +244,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							reason: 'byHand',
 						},
 					],
-					title: 'Я родился',
+					title: this.birthDateEventName,
 					direction: 'forward',
 					greenwich: false,
 					repeatable: false,
+					public: false,
 					user: this._user.uid,
 				});
 			}
