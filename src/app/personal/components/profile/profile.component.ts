@@ -7,7 +7,7 @@ import {
 	distinctUntilChanged,
 	EMPTY,
 	Subscription,
-	switchMap,
+	concatMap,
 	tap,
 	timer,
 } from 'rxjs';
@@ -122,7 +122,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.add(
 			this.auth.eventProfileUpdated$
-				.pipe(switchMap(() => this.auth.currentUser))
+				.pipe(concatMap(() => this.auth.currentUser))
 				.pipe(
 					tap((data) => {
 						this._user = data as User;
@@ -134,7 +134,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					})
 				)
 				.pipe(
-					switchMap((data) => {
+					concatMap((data) => {
 						return data ? this.http.getUserData(data.uid) : EMPTY;
 					})
 				)
@@ -167,16 +167,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.http.eventBirthDateAdded$
 				.pipe(
-					switchMap(() => {
+					concatMap(() => {
 						return this.auth.eventProfileUpdated$;
 					})
 				)
 				.pipe(distinctUntilChanged())
 				.subscribe({
 					next: (data) => {
-						this.notify.add({
-							title: `Данные пользователя ${data?.displayName} (${this._user?.email}) обновлены.`,
-						});
+						data?.displayName &&
+							this.notify.add({
+								title: `Данные пользователя ${data.displayName} (${this._user?.email}) обновлены.`,
+							});
 					},
 				})
 		);
@@ -340,25 +341,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	updateProfile() {
 		this.updateNameAndPhoto();
 		const bdValue = this.formData.controls['birthDate'].value;
+		const bdFinalValue = bdValue
+			? format(
+					parse(
+						'00:00',
+						Constants.timeFormat,
+						parse(bdValue, Constants.shortDateFormat, new Date())
+					),
+					Constants.fullDateFormat
+			  )
+			: '';
 
-		if (bdValue == this._birthDate) {
+		if (bdFinalValue == this._birthDate) {
 			this.http.eventBirthDateAdded();
 		} else {
-			const bdFinalValue = bdValue
-				? format(
-						parse(
-							'00:00',
-							Constants.timeFormat,
-							parse(
-								bdValue,
-								Constants.shortDateFormat,
-								new Date()
-							)
-						),
-						Constants.fullDateFormat
-				  )
-				: '';
-
 			if (!this._birthDatePointId && bdFinalValue) {
 				this.data.addPoint({
 					dates: [
@@ -375,7 +371,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					user: this._user.uid,
 				});
 			}
-
 			this.http.updateUserBirthDate(this._user.uid, {
 				birthDate: bdFinalValue,
 				birthDatePointId: '',
