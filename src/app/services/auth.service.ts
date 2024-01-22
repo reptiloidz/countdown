@@ -112,7 +112,7 @@ export class AuthService implements OnDestroy {
 	private _eventEmailUpdatedSubject = new Subject<string>();
 	eventEmailUpdated$ = this._eventEmailUpdatedSubject.asObservable();
 
-	private _eventPasswordUpdatedSubject = new Subject<void>();
+	private _eventPasswordUpdatedSubject = new Subject<boolean | void>();
 	eventPasswordUpdated$ = this._eventPasswordUpdatedSubject.asObservable();
 
 	private _eventAccountDeletedSubject = new Subject<void>();
@@ -288,6 +288,7 @@ export class AuthService implements OnDestroy {
 						this._eventPasswordUpdatedSubject.next();
 					})
 					.catch(() => {
+						this._eventPasswordUpdatedSubject.next(true);
 						this.notify.add({
 							title: 'Ошибка при обновлении пароля',
 						});
@@ -296,6 +297,7 @@ export class AuthService implements OnDestroy {
 			.catch((err) => {
 				let authErrMsg = '';
 
+				this._eventPasswordUpdatedSubject.next(true);
 				switch (err.code) {
 					case 'auth/wrong-password':
 						authErrMsg = 'Неверный пароль';

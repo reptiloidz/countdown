@@ -17,11 +17,16 @@
 			placeholder="Дата рождения"
 		>
 	</div>
-	<img
-		[src]="userpic"
-		[alt]="name || 'Юзерпик'"
-		class="userpic"
-	>
+	<div class="userpic-wrapper"><img
+			[src]="userpic"
+			[alt]="name || 'Юзерпик'"
+			class="userpic"
+		>
+		<h2
+			*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
+			class="loader rotating"
+		></h2>
+	</div>
 	<ul
 		*ngIf="nameErrorMessages.length"
 		class="info info--error"

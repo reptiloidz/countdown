@@ -8,6 +8,7 @@ import {
 	EMPTY,
 	Subscription,
 	concatMap,
+	switchMap,
 	tap,
 	timer,
 } from 'rxjs';
@@ -39,7 +40,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	formPassword!: FormGroup;
 	userpic = '';
 	name = '';
-	userpicLoading = false;
+	userpicLoading = true;
+	profileLoading = true;
+	emailLoading = true;
+	passwordLoading = false;
+	removeLoading = false;
 	private _user!: User;
 	private _birthDate = '';
 	private _birthDatePointId = '';
@@ -122,9 +127,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.add(
 			this.auth.eventProfileUpdated$
-				.pipe(concatMap(() => this.auth.currentUser))
+				.pipe(
+					tap(() => {
+						this.profileLoading = false;
+					})
+				)
+				.pipe(switchMap(() => this.auth.currentUser))
 				.pipe(
 					tap((data) => {
+						this.emailLoading = false;
 						this._user = data as User;
 						this.formEmail.controls['email'].setValue(data?.email);
 						this.formData.controls['name'].setValue(
@@ -187,6 +198,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				.pipe(distinctUntilChanged())
 				.subscribe({
 					next: () => {
+						this.emailLoading = false;
 						this.auth.verifyEmail();
 					},
 				})
@@ -194,13 +206,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.add(
 			this.auth.eventPasswordUpdated$.subscribe({
-				next: () => {
-					this.notify.add({
-						title: `Пароль пользователя ${this._user?.displayName} (${this._user?.email}) обновлён.`,
-					});
+				next: (passwordError) => {
+					this.passwordLoading = false;
+					if (!passwordError) {
+						this.notify.add({
+							title: `Пароль пользователя ${this._user?.displayName} (${this._user?.email}) обновлён.`,
+						});
 
-					this.formPassword.controls['password'].setValue(null);
-					this.formPassword.controls['new-password'].setValue(null);
+						this.formPassword.controls['password'].setValue(null);
+						this.formPassword.controls['new-password'].setValue(
+							null
+						);
+						this.passwordErrorMessages = [];
+					}
 				},
 			})
 		);
@@ -332,6 +350,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	updateNameAndPhoto() {
+		this.profileLoading = true;
 		this.auth.updateProfile(this._user, {
 			displayName: this.formData.controls['name'].value,
 			photoURL: this.userpic,
@@ -379,6 +398,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	updateEmail() {
+		this.emailLoading = true;
 		this.auth.updateEmail(
 			this._user,
 			this.formEmail.controls['email'].value
@@ -386,6 +406,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	updatePassword() {
+		this.passwordLoading = true;
 		this.auth.updatePassword(
 			this._user,
 			this.formPassword.controls['password'].value,
@@ -399,6 +420,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	removeAccount() {
 		confirm('Точно удалить учётную запись? Действие необратимо!') &&
+			(this.removeLoading = true) &&
 			this.auth.removeAccount(this._user, this._birthDatePointId);
 	}
 }

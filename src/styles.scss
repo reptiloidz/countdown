@@ -248,6 +248,11 @@ a,
 	}
 }
 
+.userpic-wrapper {
+	display: flex;
+	align-items: center;
+}
+
 .ol-nested {
 	counter-reset: item;
 	padding: 0;
