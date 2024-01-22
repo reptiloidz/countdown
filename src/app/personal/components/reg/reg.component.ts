@@ -16,6 +16,7 @@ import {
 	ValidationObjectField,
 } from 'src/app/interfaces/validation.interface';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifyService } from 'src/app/services/notify.service';
 import { passwordRepeat } from 'src/app/services/password-repeat.validator';
 
 @Component({
@@ -79,7 +80,11 @@ export class RegComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 	errorMessages: string[] = [];
 
-	constructor(private auth: AuthService, private router: Router) {}
+	constructor(
+		private auth: AuthService,
+		private router: Router,
+		private notify: NotifyService
+	) {}
 
 	ngOnInit(): void {
 		this.form = new FormGroup({
@@ -230,6 +235,21 @@ export class RegComponent implements OnInit, OnDestroy {
 					},
 					error: (err) => {
 						this.isLoading = false;
+						let authErrMsg = '';
+
+						switch (err.error.error.message) {
+							case 'EMAIL_EXISTS':
+								authErrMsg =
+									'Пользователь с&nbsp;таким e-mail уже существует';
+								break;
+							default:
+								authErrMsg = 'Произошла ошибка';
+								break;
+						}
+
+						this.notify.add({
+							title: authErrMsg,
+						});
 
 						console.error('Ошибка при регистрации:\n', err.message);
 					},

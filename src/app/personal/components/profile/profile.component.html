@@ -22,6 +22,15 @@
 		[alt]="name || 'Юзерпик'"
 		class="userpic"
 	>
+	<ul
+		*ngIf="nameErrorMessages.length"
+		class="info info--error"
+	>
+		<li
+			*ngFor="let errMessage of nameErrorMessages"
+			class="info__item"
+		>{{ errMessage }}</li>
+	</ul>
 	<button [disabled]="this.userpicLoading || formData.invalid">
 		Обновить данные
 	</button>
@@ -39,6 +48,15 @@
 			placeholder="Почта"
 		>
 	</div>
+	<ul
+		*ngIf="emailErrorMessages.length"
+		class="info info--error"
+	>
+		<li
+			*ngFor="let errMessage of emailErrorMessages"
+			class="info__item"
+		>{{ errMessage }}</li>
+	</ul>
 	<button [disabled]="formEmail.invalid">
 		Обновить e-mail
 	</button>
@@ -63,6 +81,15 @@
 			placeholder="Новый пароль"
 		>
 	</div>
+	<ul
+		*ngIf="passwordErrorMessages.length"
+		class="info info--error"
+	>
+		<li
+			*ngFor="let errMessage of passwordErrorMessages"
+			class="info__item"
+		>{{ errMessage }}</li>
+	</ul>
 	<button [disabled]="formPassword.invalid">
 		Обновить пароль
 	</button>

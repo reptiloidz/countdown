@@ -12,6 +12,9 @@ import {
 	timer,
 } from 'rxjs';
 import { Constants } from 'src/app/enums';
+import { getErrorMessages } from 'src/app/helpers/getErrorMessages';
+import { mergeDeep } from 'src/app/helpers/mergeDeep';
+import { ValidationObject } from 'src/app/interfaces/validation.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -42,6 +45,54 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	private _birthDatePointId = '';
 	private _debounceTime = 1000;
 	private subscriptions = new Subscription();
+
+	nameValidated: ValidationObject = {
+		name: {
+			required: {
+				value: false,
+				message: 'Вы не ввели имя пользователя',
+			},
+			dirty: false,
+		},
+	};
+	nameErrorMessages: string[] = [];
+
+	emailValidated: ValidationObject = {
+		email: {
+			required: {
+				value: false,
+				message: 'Вы не ввели почту',
+			},
+			correct: {
+				value: false,
+				message: 'Вы ввели почту неверно',
+			},
+			dirty: false,
+		},
+	};
+	emailErrorMessages: string[] = [];
+
+	passwordValidated: ValidationObject = {
+		password: {
+			required: {
+				value: false,
+				message: 'Вы не ввели пароль',
+			},
+			dirty: false,
+		},
+		passwordNew: {
+			required: {
+				value: false,
+				message: 'Вы не ввели новый пароль',
+			},
+			enough: {
+				value: false,
+				message: 'Новый пароль слишком короткий',
+			},
+			dirty: false,
+		},
+	};
+	passwordErrorMessages: string[] = [];
 
 	ngOnInit(): void {
 		this.formData = new FormGroup({
@@ -180,8 +231,80 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							data
 						)}&background=random`;
 						this.userpicLoading = false;
+
+						this.nameValidated = mergeDeep(this.nameValidated, {
+							name: {
+								required: {
+									value: !this.formData.controls['name']
+										.errors?.['required'],
+								},
+								dirty: this.formData.controls['name'].dirty,
+							},
+						}) as ValidationObject;
+						this.nameErrorMessages = getErrorMessages(
+							this.nameValidated
+						);
 					},
 				})
+		);
+
+		this.subscriptions.add(
+			this.formEmail.controls['email'].valueChanges.subscribe({
+				next: () => {
+					this.emailValidated = mergeDeep(this.emailValidated, {
+						email: {
+							correct: {
+								value: !this.formEmail.controls['email']
+									.errors?.['pattern'],
+							},
+							required: {
+								value: !this.formEmail.controls['email']
+									.errors?.['required'],
+							},
+							dirty: this.formEmail.controls['email'].dirty,
+						},
+					}) as ValidationObject;
+					this.emailErrorMessages = getErrorMessages(
+						this.emailValidated
+					);
+				},
+			})
+		);
+
+		this.subscriptions.add(
+			this.formPassword.valueChanges.subscribe({
+				next: () => {
+					this.passwordValidated = mergeDeep(this.passwordValidated, {
+						password: {
+							required: {
+								value: !this.formPassword.controls['password']
+									.errors?.['required'],
+							},
+							dirty: this.formPassword.controls['password'].dirty,
+						},
+						passwordNew: {
+							required: {
+								value: !this.formPassword.controls[
+									'new-password'
+								].errors?.['required'],
+							},
+							enough: {
+								value: !(
+									this.formPassword.controls['new-password']
+										.errors?.['minlength']?.actualLength <
+									this.formPassword.controls['new-password']
+										.errors?.['minlength']?.requiredLength
+								),
+							},
+							dirty: this.formPassword.controls['new-password']
+								.dirty,
+						},
+					}) as ValidationObject;
+					this.passwordErrorMessages = getErrorMessages(
+						this.passwordValidated
+					);
+				},
+			})
 		);
 
 		this.subscriptions.add(

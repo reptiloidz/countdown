@@ -228,12 +228,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					this.point = point;
 					this.success();
 				},
-				error: (err) => {
-					console.error(
-						'Ошибка при создании события:\n',
-						err.message
-					);
-				},
 			})
 		);
 
@@ -243,12 +237,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					this.sortDates();
 					this.switchIteration();
 					this.success(point);
-				},
-				error: (err) => {
-					console.error(
-						'Ошибка при редактировании события:\n',
-						err.message
-					);
 				},
 			})
 		);

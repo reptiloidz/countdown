@@ -74,7 +74,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 						email: {
 							correct: {
 								value: !this.form.controls['email'].errors?.[
-									'email'
+									'pattern'
 								],
 							},
 							required: {
@@ -114,7 +114,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 			this.auth.eventResetPassword$.subscribe({
 				next: () => {
 					this.notify.add({
-						title: `Письмо для сброса пароля отправлено на ${this.emailForReset}`,
+						title: `Письмо для сброса пароля отправлено&nbsp;на ${this.emailForReset}`,
 					});
 				},
 			})
@@ -155,6 +155,24 @@ export class AuthComponent implements OnInit, OnDestroy {
 				})
 				.catch((err) => {
 					this.isLoading = false;
+					let authErrMsg = '';
+
+					switch (err.code) {
+						case 'auth/user-not-found':
+							authErrMsg =
+								'Пользователя с&nbsp;таким e-mail не&nbsp;существует';
+							break;
+						case 'auth/wrong-password':
+							authErrMsg = 'Неверный пароль';
+							break;
+						default:
+							authErrMsg = 'Произошла ошибка';
+							break;
+					}
+
+					this.notify.add({
+						title: authErrMsg,
+					});
 
 					console.error('Ошибка при авторизации:\n', err.message);
 				});

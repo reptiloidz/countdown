@@ -223,8 +223,8 @@ export class AuthService implements OnDestroy {
 			sendEmailVerification(this._user).then(() => {
 				this.notify.add({
 					title: `
-						Сообщение для подтверждения почты отправлено на ${this._user?.email}.
-						Без подтверждения доступ открыт только к публичным событиям и только для чтения.
+						Сообщение для подтверждения почты отправлено&nbsp;на ${this._user?.email}.
+						Без подтверждения доступ открыт только к&nbsp;публичным событиям и&nbsp;только для чтения.
 					`,
 				});
 			});
@@ -249,21 +249,33 @@ export class AuthService implements OnDestroy {
 	}
 
 	updateProfile(user: User, data: UserProfile) {
-		updateProfile(user, data).then(() => {
-			this._eventProfileUpdatedSubject.next(data);
-		});
+		updateProfile(user, data)
+			.then(() => {
+				this._eventProfileUpdatedSubject.next(data);
+			})
+			.catch(() => {
+				this.notify.add({
+					title: 'Ошибка при обновлении профиля',
+				});
+			});
 	}
 
 	updateEmail(user: User, data: string) {
 		this.reAuth()
 			.then(() => {
-				updateEmail(user, data).then(() => {
-					this._eventEmailUpdatedSubject.next(data);
-				});
+				updateEmail(user, data)
+					.then(() => {
+						this._eventEmailUpdatedSubject.next(data);
+					})
+					.catch(() => {
+						this.notify.add({
+							title: 'Ошибка при обновлении e-mail',
+						});
+					});
 			})
 			.catch(() => {
 				this.notify.add({
-					title: 'Не подтверждён пароль',
+					title: 'Не&nbsp;подтверждён пароль',
 				});
 			});
 	}
@@ -271,13 +283,30 @@ export class AuthService implements OnDestroy {
 	updatePassword(user: User, password: string, newPassword: string) {
 		this.reAuth(password)
 			.then(() => {
-				updatePassword(user, newPassword).then(() => {
-					this._eventPasswordUpdatedSubject.next();
-				});
+				updatePassword(user, newPassword)
+					.then(() => {
+						this._eventPasswordUpdatedSubject.next();
+					})
+					.catch(() => {
+						this.notify.add({
+							title: 'Ошибка при обновлении пароля',
+						});
+					});
 			})
-			.catch(() => {
+			.catch((err) => {
+				let authErrMsg = '';
+
+				switch (err.code) {
+					case 'auth/wrong-password':
+						authErrMsg = 'Неверный пароль';
+						break;
+					default:
+						authErrMsg = 'Произошла ошибка';
+						break;
+				}
+
 				this.notify.add({
-					title: 'Не подтверждён пароль',
+					title: authErrMsg,
 				});
 			});
 	}
@@ -285,17 +314,31 @@ export class AuthService implements OnDestroy {
 	removeAccount(user: User, birthDatePointId: string) {
 		this.reAuth()
 			.then(() => {
-				this.http.updateUserBirthDate(user.uid, null).then(() => {
-					this.http.deletePoint(birthDatePointId).then(() => {
-						deleteUser(user).then(() => {
-							this._eventAccountDeletedSubject.next();
+				this.http
+					.updateUserBirthDate(user.uid, null)
+					.then(() => {
+						this.http
+							.deletePoint(birthDatePointId)
+							.then(() => {
+								deleteUser(user).then(() => {
+									this._eventAccountDeletedSubject.next();
+								});
+							})
+							.catch(() => {
+								this.notify.add({
+									title: 'Ошибка при удалении события',
+								});
+							});
+					})
+					.catch(() => {
+						this.notify.add({
+							title: 'Ошибка при обновлении даты рождения',
 						});
 					});
-				});
 			})
 			.catch(() => {
 				this.notify.add({
-					title: 'Не подтверждён пароль',
+					title: 'Не&nbsp;подтверждён пароль',
 				});
 			});
 	}
@@ -307,7 +350,7 @@ export class AuthService implements OnDestroy {
 			})
 			.catch(() => {
 				this.notify.add({
-					title: 'Не удалось отправить письмо для сброса пароля',
+					title: 'Не&nbsp;удалось отправить письмо для сброса пароля',
 				});
 			});
 	}

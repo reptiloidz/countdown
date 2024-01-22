@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpService } from './http.service';
+import { NotifyService } from './notify.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -28,7 +29,7 @@ export class DataService {
 	eventRemovePoint$ = this._eventRemovePointSubject.asObservable();
 	eventStartRemovePoint$ = this._eventStartRemovePointSubject.asObservable();
 
-	constructor(private http: HttpService) {
+	constructor(private http: HttpService, private notify: NotifyService) {
 		this.subscriptions.add(
 			this.eventFetchAllPoints$.subscribe({
 				next: (points) => {
@@ -129,9 +130,21 @@ export class DataService {
 
 	addPoint(point: Point | undefined) {
 		if (point && !this._points.find((item) => item.id === point?.id)) {
-			this.http.postPoint(point).then((id) => {
-				this._eventAddPointSubject.next({ ...point, id });
-			});
+			this.http
+				.postPoint(point)
+				.then((id) => {
+					this._eventAddPointSubject.next({ ...point, id });
+				})
+				.catch((err) => {
+					this.notify.add({
+						title: 'Ошибка при создании события',
+					});
+
+					console.error(
+						'Ошибка при создании события:\n',
+						err.message
+					);
+				});
 		}
 	}
 
@@ -145,6 +158,10 @@ export class DataService {
 					this._eventEditPointSubject.next(point);
 				})
 				.catch((err) => {
+					this.notify.add({
+						title: 'Ошибка при редактировании события',
+					});
+
 					console.error(
 						'Ошибка при редактировании события:\n',
 						err.message
@@ -164,6 +181,10 @@ export class DataService {
 					this._eventRemovePointSubject.next(id);
 				})
 				.catch((err) => {
+					this.notify.add({
+						title: 'Ошибка при удалении события',
+					});
+
 					console.error(
 						'Ошибка при удалении события:\n',
 						err.message
