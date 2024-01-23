@@ -5,7 +5,6 @@ import { format, parse } from 'date-fns';
 import {
 	debounce,
 	distinctUntilChanged,
-	EMPTY,
 	Subscription,
 	concatMap,
 	switchMap,
@@ -126,27 +125,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		});
 
 		this.subscriptions.add(
-			this.auth.eventProfileUpdated$
-				.pipe(
-					tap(() => {
-						this.profileLoading = false;
-					})
-				)
-				.pipe(switchMap(() => this.auth.currentUser))
+			this.auth.currentUser
 				.pipe(
 					tap((data) => {
 						this.emailLoading = false;
 						this._user = data as User;
-						this.formEmail.controls['email'].setValue(data?.email);
-						this.formData.controls['name'].setValue(
-							data?.displayName
+					}),
+					switchMap(() => {
+						return this.auth.eventProfileUpdated$;
+					}),
+					tap(() => {
+						this.profileLoading = false;
+						this.formEmail.controls['email'].setValue(
+							this._user?.email
 						);
-						this.userpic = data?.photoURL as string;
-					})
-				)
-				.pipe(
-					concatMap((data) => {
-						return data ? this.http.getUserData(data.uid) : EMPTY;
+						this.formData.controls['name'].setValue(
+							this._user?.displayName
+						);
+						this.userpic = this._user?.photoURL as string;
+					}),
+					concatMap(() => {
+						return this.http.getUserData(this._user.uid);
 					})
 				)
 				.subscribe({
@@ -228,6 +227,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.auth.logout();
 
+					this._birthDatePointId = '';
 					this.notify.add({
 						title: `Учётная запись ${this._user?.displayName} (${this._user?.email}) удалена.`,
 					});
@@ -392,7 +392,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			}
 			this.http.updateUserBirthDate(this._user.uid, {
 				birthDate: bdFinalValue,
-				birthDatePointId: '',
+				birthDatePointId: this._birthDatePointId || '',
 			});
 		}
 	}

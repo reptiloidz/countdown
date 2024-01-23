@@ -260,28 +260,26 @@ export class AuthService implements OnDestroy {
 			});
 	}
 
-	updateEmail(user: User, data: string) {
-		this.reAuth()
-			.then(() => {
-				updateEmail(user, data)
-					.then(() => {
-						this._eventEmailUpdatedSubject.next(data);
-					})
-					.catch(() => {
+	updateEmail(user: User, data: string, reAuthRequired = false) {
+		this.reAuth(reAuthRequired).then(() => {
+			updateEmail(user, data)
+				.then(() => {
+					this._eventEmailUpdatedSubject.next(data);
+				})
+				.catch((err) => {
+					if (err.code === 'auth/requires-recent-login') {
+						this.updateEmail(user, data, true);
+					} else {
 						this.notify.add({
-							title: 'Ошибка при обновлении e-mail',
+							title: 'Произошла ошибка',
 						});
-					});
-			})
-			.catch(() => {
-				this.notify.add({
-					title: 'Не&nbsp;подтверждён пароль',
+					}
 				});
-			});
+		});
 	}
 
 	updatePassword(user: User, password: string, newPassword: string) {
-		this.reAuth(password)
+		this.reAuth(true, password)
 			.then(() => {
 				updatePassword(user, newPassword)
 					.then(() => {
@@ -313,36 +311,51 @@ export class AuthService implements OnDestroy {
 			});
 	}
 
-	removeAccount(user: User, birthDatePointId: string) {
-		this.reAuth()
-			.then(() => {
-				this.http
-					.updateUserBirthDate(user.uid, null)
-					.then(() => {
-						this.http
-							.deletePoint(birthDatePointId)
-							.then(() => {
-								deleteUser(user).then(() => {
+	removeAccount(
+		user: User,
+		birthDatePointId: string,
+		reAuthRequired = false
+	) {
+		this.reAuth(reAuthRequired).then(() => {
+			this.http
+				.updateUserBirthDate(user.uid, null)
+				.then(() => {
+					this.http
+						.deletePoint(birthDatePointId)
+						.then(() => {
+							deleteUser(user)
+								.then(() => {
 									this._eventAccountDeletedSubject.next();
+								})
+								.catch((err) => {
+									if (
+										err.code ===
+										'auth/requires-recent-login'
+									) {
+										this.removeAccount(
+											user,
+											birthDatePointId,
+											true
+										);
+									} else {
+										this.notify.add({
+											title: 'Произошла ошибка',
+										});
+									}
 								});
-							})
-							.catch(() => {
-								this.notify.add({
-									title: 'Ошибка при удалении события',
-								});
+						})
+						.catch(() => {
+							this.notify.add({
+								title: 'Ошибка при удалении события',
 							});
-					})
-					.catch(() => {
-						this.notify.add({
-							title: 'Ошибка при обновлении даты рождения',
 						});
+				})
+				.catch(() => {
+					this.notify.add({
+						title: 'Ошибка при обновлении даты рождения',
 					});
-			})
-			.catch(() => {
-				this.notify.add({
-					title: 'Не&nbsp;подтверждён пароль',
 				});
-			});
+		});
 	}
 
 	resetPassword(email: string) {
@@ -357,18 +370,12 @@ export class AuthService implements OnDestroy {
 			});
 	}
 
-	async reAuth(password?: string): Promise<any> {
+	async reAuth(reAuthRequired = false, password?: string): Promise<any> {
 		let credential: EmailAuthCredential | null | '' = null;
 
 		// https://stackoverflow.com/questions/37811684/how-to-create-credential-object-needed-by-firebase-web-user-reauthenticatewith
 		if (this.authFB.currentUser) {
-			if (
-				!password &&
-				this.authFB.currentUser.metadata.lastSignInTime &&
-				+new Date(this.authFB.currentUser.metadata.lastSignInTime) +
-					60 * Constants.msInMinute >
-					+new Date()
-			) {
+			if (!password && !reAuthRequired) {
 				return new Promise((resolve) => {
 					resolve(null);
 				});
