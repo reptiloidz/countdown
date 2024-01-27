@@ -144,6 +144,7 @@
 				placeholder="Срок в минутах"
 				formControlName="difference"
 				mask="0*"
+				[allowNegativeNumbers]="true"
 				[validation]="false"
 				[maxlength]="validatorDifferenceMaxLength"
 			>

@@ -72,7 +72,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			difference: new FormControl(this.difference, [
 				Validators.required,
 				Validators.pattern(
-					`^[0-9]{1,${this.validatorDifferenceMaxLength}}$`
+					`^-?[0-9]{1,${this.validatorDifferenceMaxLength}}$`
 				),
 			]),
 			direction: new FormControl('backward', [Validators.required]),
@@ -169,7 +169,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 									this.form.controls['greenwich'].value;
 							}
 							if (prev.repeatable !== curr.repeatable) {
-								this.point.repeatable = !this.point.repeatable;
+								// Было так. Но стало работать неправильно.
+								// Если снова сломается, решить, какой вариант оставить и доделать
+								// this.point.repeatable = !this.point.repeatable;
+								this.point.repeatable =
+									this.form.controls['repeatable'].value;
 								this.switchIteration();
 							}
 							if (prev.public !== curr.public) {
@@ -343,9 +347,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	differenceChanged() {
 		const diff = +this.form.controls['difference'].value;
 		const currentDate = new Date();
-		const targetDate = this.isForward
-			? new Date(currentDate.getTime() - diff * Constants.msInMinute)
-			: new Date(currentDate.getTime() + diff * Constants.msInMinute);
+		const targetDate = new Date(
+			currentDate.getTime() + diff * Constants.msInMinute
+		);
+		// Пришлось упростить, когда добавил вывод отрицательных значений
+		// const targetDate = this.isForward
+		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
+		// 	: new Date(currentDate.getTime() + diff * Constants.msInMinute);
 
 		this.form.patchValue({
 			date: format(targetDate, Constants.shortDateFormat),
@@ -379,9 +387,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	convertToMinutes(ms: number): number {
-		return Math[this.isForward ? 'trunc' : 'ceil'](
-			Math.abs(ms) / Constants.msInMinute
-		);
+		return Math.ceil(ms / Constants.msInMinute);
+		// Оставил только ceil, когда начал выводить отрицательные значения
+		// return Math[this.isForward ? 'trunc' : 'ceil'](
+		// 	Math.abs(ms) / Constants.msInMinute
+		// );
 	}
 
 	getRepeats(repeats: Iteration[]) {
