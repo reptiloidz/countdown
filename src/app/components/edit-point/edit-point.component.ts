@@ -373,7 +373,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	removeIteration(i: number) {
-		let newDatesArray = this.dates;
+		let newDatesArray = this.dates?.slice(0);
 		newDatesArray && newDatesArray.splice(i, 1);
 
 		confirm('Удалить итерацию?') &&
@@ -409,7 +409,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		this.differenceChanged();
 		this.loading = true;
-		let newDatesArray = this.dates;
+		let newDatesArray = this.dates?.slice(0);
 
 		if (repeats.length) {
 			newDatesArray?.push(...repeats);

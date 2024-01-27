@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
 	Observable,
@@ -32,11 +32,12 @@ import {
 	EmailAuthCredential,
 	sendPasswordResetEmail,
 } from '@angular/fire/auth';
-import { goOnline } from '@angular/fire/database';
+import { goOnline, objectVal, query, ref, set } from '@angular/fire/database';
 import { Point } from '../interfaces/point.interface';
 import { NotifyService } from './notify.service';
 import { HttpService } from './http.service';
 import { UserProfile } from '../interfaces/userProfile.interface';
+import { UserExtraData } from '../interfaces/userExtraData.interface';
 
 @Injectable({
 	providedIn: 'root',
@@ -69,25 +70,23 @@ export class AuthService implements OnDestroy {
 			this.eventLogin$
 				.pipe(
 					concatMap((id) => {
-						return this.http.getUserData(id).pipe(take(1));
+						return this.getUserData(id).pipe(take(1));
 					})
 				)
 				.subscribe({
 					next: (data) => {
 						if (!data) {
 							this._user?.uid &&
-								this.http
-									.updateUserBirthDate(this._user.uid, {
-										birthDate: '',
-										birthDatePointId: '',
-										auth: true,
-									})
-									.then(() => {
-										this.router.navigate(['/profile/']);
-										this.notify.add({
-											title: `Заполните профиль`,
-										});
+								this.updateUserBirthDate(this._user.uid, {
+									birthDate: '',
+									birthDatePointId: '',
+									auth: true,
+								}).then(() => {
+									this.router.navigate(['/profile/']);
+									this.notify.add({
+										title: `Заполните профиль`,
 									});
+								});
 						}
 					},
 				})
@@ -120,6 +119,9 @@ export class AuthService implements OnDestroy {
 
 	private _eventResetPasswordSubject = new Subject<void>();
 	eventResetPassword$ = this._eventResetPasswordSubject.asObservable();
+
+	private _eventBirthDateAddedSubject = new Subject<void>();
+	eventBirthDateAdded$ = this._eventBirthDateAddedSubject.asObservable();
 
 	private _user: User | undefined;
 
@@ -161,6 +163,10 @@ export class AuthService implements OnDestroy {
 
 	get isAuthenticated(): boolean {
 		return !!this.token;
+	}
+
+	eventBirthDateAdded() {
+		this._eventBirthDateAddedSubject.next();
 	}
 
 	async login(user: UserPoint): Promise<any> {
@@ -317,8 +323,7 @@ export class AuthService implements OnDestroy {
 		reAuthRequired = false
 	) {
 		this.reAuth(reAuthRequired).then(() => {
-			this.http
-				.updateUserBirthDate(user.uid, null)
+			this.updateUserBirthDate(user.uid, null)
 				.then(() => {
 					this.http
 						.deletePoint(birthDatePointId)
@@ -368,6 +373,25 @@ export class AuthService implements OnDestroy {
 					title: 'Не&nbsp;удалось отправить письмо для сброса пароля',
 				});
 			});
+	}
+
+	getUserData(id: string): Observable<UserExtraData> {
+		return objectVal<any>(query(ref(this.http.db, `users/${id}`)));
+	}
+
+	async updateUserBirthDate(
+		id: string,
+		param: UserExtraData | null
+	): Promise<void> {
+		await set(ref(this.http.db, `users/${id}`), {
+			birthDate: param?.birthDate || null,
+			birthDatePointId: param?.birthDatePointId || null,
+			auth: param?.auth || null,
+		} as UserExtraData);
+		return await new Promise((resolve) => {
+			param && this.eventBirthDateAdded();
+			resolve();
+		});
 	}
 
 	async reAuth(reAuthRequired = false, password?: string): Promise<any> {

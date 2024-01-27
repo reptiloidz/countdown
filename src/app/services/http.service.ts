@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap, combineLatest, Subject } from 'rxjs';
+import { map, Observable, switchMap, combineLatest } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpServiceInterface } from '../interfaces/http.interface';
 import {
@@ -14,20 +14,12 @@ import {
 	push,
 } from '@angular/fire/database';
 import { Auth, user } from '@angular/fire/auth';
-import { UserExtraData } from '../interfaces/userExtraData.interface';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class HttpService implements HttpServiceInterface {
 	constructor(private authFB: Auth) {}
-
-	private _eventBirthDateAddedSubject = new Subject<void>();
-	eventBirthDateAdded$ = this._eventBirthDateAddedSubject.asObservable();
-
-	eventBirthDateAdded() {
-		this._eventBirthDateAddedSubject.next();
-	}
 
 	getPoints(): Observable<Point[]> {
 		return user(this.authFB).pipe(
@@ -103,35 +95,13 @@ export class HttpService implements HttpServiceInterface {
 		});
 	}
 
-	async patchPoint(point: Point): Promise<Point> {
-		await set(ref(this.db, `points/${point?.id}`), point);
-		return await new Promise((resolve) => {
-			resolve(point);
-		});
+	patchPoint(point: Point): Promise<any> {
+		return set(ref(this.db, `points/${point?.id}`), point);
 	}
 
 	async deletePoint(id: string | undefined): Promise<void> {
 		await (id ? set(ref(this.db, `points/${id}`), null) : null);
 		return await new Promise((resolve) => {
-			resolve();
-		});
-	}
-
-	getUserData(id: string): Observable<UserExtraData> {
-		return objectVal<any>(query(ref(this.db, `users/${id}`)));
-	}
-
-	async updateUserBirthDate(
-		id: string,
-		param: UserExtraData | null
-	): Promise<void> {
-		await set(ref(this.db, `users/${id}`), {
-			birthDate: param?.birthDate || null,
-			birthDatePointId: param?.birthDatePointId || null,
-			auth: param?.auth || null,
-		} as UserExtraData);
-		return await new Promise((resolve) => {
-			param && this.eventBirthDateAdded();
 			resolve();
 		});
 	}

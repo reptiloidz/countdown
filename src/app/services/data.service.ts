@@ -154,7 +154,7 @@ export class DataService {
 			this._eventStartEditPointSubject.next();
 			this.http
 				.patchPoint(point)
-				.then((point) => {
+				.then(() => {
 					this._eventEditPointSubject.next(point);
 				})
 				.catch((err) => {

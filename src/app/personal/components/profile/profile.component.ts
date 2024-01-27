@@ -145,7 +145,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this.userpic = this._user?.photoURL as string;
 					}),
 					concatMap(() => {
-						return this.http.getUserData(this._user.uid);
+						return this.auth.getUserData(this._user.uid);
 					})
 				)
 				.subscribe({
@@ -175,7 +175,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.http.eventBirthDateAdded$
+			this.auth.eventBirthDateAdded$
 				.pipe(
 					concatMap(() => {
 						return this.auth.eventProfileUpdated$;
@@ -330,7 +330,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			// Рассчитываем, что на этой странице создаётся только событие ДР и выводим ссылку на него
 			this.data.eventAddPoint$.subscribe({
 				next: (point) => {
-					this.http
+					this.auth
 						.updateUserBirthDate(this._user.uid, {
 							birthDate: this._birthDate,
 							birthDatePointId: point.id,
@@ -372,7 +372,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			: '';
 
 		if (bdFinalValue == this._birthDate) {
-			this.http.eventBirthDateAdded();
+			this.auth.eventBirthDateAdded();
 		} else {
 			if (!this._birthDatePointId && bdFinalValue) {
 				this.data.addPoint({
@@ -390,7 +390,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					user: this._user.uid,
 				});
 			}
-			this.http.updateUserBirthDate(this._user.uid, {
+			this.auth.updateUserBirthDate(this._user.uid, {
 				birthDate: bdFinalValue,
 				birthDatePointId: this._birthDatePointId || '',
 			});
