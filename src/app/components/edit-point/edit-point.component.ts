@@ -19,6 +19,7 @@ import {
 	distinctUntilChanged,
 	pairwise,
 	tap,
+	startWith,
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -157,9 +158,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.add(
 			this.form.valueChanges
-				.pipe(distinctUntilChanged())
-				.pipe(pairwise())
 				.pipe(
+					startWith(this.form.value),
+					distinctUntilChanged(),
+					pairwise(),
 					tap(([curr, prev]) => {
 						if (this.point) {
 							if (prev.greenwich !== curr.greenwich) {
@@ -175,9 +177,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 									this.form.controls['public'].value;
 							}
 						}
-					})
+					}),
+					debounce(() => timer(this._debounceTime))
 				)
-				.pipe(debounce(() => timer(this._debounceTime)))
 				.subscribe({
 					next: ([curr, prev]) => {
 						if (
@@ -234,6 +236,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
 				next: (point) => {
+					this.point = point;
 					this.sortDates();
 					this.switchIteration();
 					this.success(point);
