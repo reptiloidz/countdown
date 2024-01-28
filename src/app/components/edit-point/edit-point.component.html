@@ -90,7 +90,7 @@
 		</div>
 
 		<app-generate-iterations
-			*ngIf="isRepeatable"
+			*ngIf="isRepeatable && !isCreation"
 			class="form"
 			[loading]="loading"
 			[form]="formGroup"
