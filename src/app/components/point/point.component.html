@@ -25,7 +25,12 @@
 			>{{ i + 1 }}
 				<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
 			</button>
+			<input
+				*ngIf="hasAccess"
+				type="checkbox"
+			>
 			<button
+				*ngIf="hasAccess"
 				class="link"
 				(click)="removeIteration(i)"
 				type="button"

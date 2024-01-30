@@ -11,6 +11,7 @@ import {
 import { ru } from 'date-fns/locale';
 import { DateText } from 'src/app/enums/index';
 import { getPointDate } from 'src/app/helpers';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
 	selector: 'app-point',
@@ -24,13 +25,18 @@ export class PointComponent implements OnInit, OnDestroy {
 	timer = '0:00:00';
 	loading = false;
 	dateLoading = true;
+	hasAccess: boolean | undefined = false;
 	tzOffset = this.pointDate.getTimezoneOffset();
 	currentIterationIndex = new BehaviorSubject<number>(0);
 	removedIterationIndex = 0;
 
 	private subscriptions = new Subscription();
 
-	constructor(private data: DataService, private route: ActivatedRoute) {}
+	constructor(
+		private data: DataService,
+		private route: ActivatedRoute,
+		private auth: AuthService
+	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -38,11 +44,11 @@ export class PointComponent implements OnInit, OnDestroy {
 				.pipe(
 					switchMap((data: any) => {
 						return this.data.fetchPoint(data['id']);
-					})
-				)
-				.pipe(
+					}),
 					switchMap((point: Point | undefined) => {
 						this.point = point;
+						this.hasAccess =
+							point && this.auth.checkAccessEdit(point);
 						this.switchIteration(
 							this.dates?.length ? this.dates.length - 1 : 0
 						);
