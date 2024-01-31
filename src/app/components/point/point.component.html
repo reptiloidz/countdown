@@ -8,6 +8,7 @@
 		class="description"
 	>{{ remainText }}</h2>
 	<ul
+		#iterationsList
 		*ngIf="this.dates?.length && (this.dates?.length != 1)"
 		class="tabs"
 	>
@@ -28,6 +29,8 @@
 			<input
 				*ngIf="hasAccess"
 				type="checkbox"
+				[name]="i"
+				(change)="checkIteration()"
 			>
 			<button
 				*ngIf="hasAccess"
@@ -37,6 +40,15 @@
 			>x</button>
 		</li>
 	</ul>
+
+	<div *ngIf="!loading && !dateLoading && isDatesLengthPlural">
+		<button (click)="checkAllIterations()">Выбрать все</button>
+		<ng-container *ngIf="iterationsChecked.length">
+			<button (click)="uncheckAllIterations()">Снять выбор</button>
+			<button (click)="removeCheckedIterations()">Удалить выбранные итерации</button>
+		</ng-container>
+	</div>
+
 	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
 	<small *ngIf="point?.repeatable">&nbsp;Повторяемое</small>
 	<small *ngIf="point?.public">&nbsp;Публичное</small>

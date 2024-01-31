@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	OnDestroy,
+	ViewChild,
+	ElementRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { interval, Subscription, switchMap, BehaviorSubject } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
@@ -18,6 +24,7 @@ import { AuthService } from 'src/app/services/auth.service';
 	templateUrl: './point.component.html',
 })
 export class PointComponent implements OnInit, OnDestroy {
+	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	point!: Point | undefined;
 	pointDate = new Date();
 	remainTextValue = '';
@@ -29,6 +36,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	tzOffset = this.pointDate.getTimezoneOffset();
 	currentIterationIndex = new BehaviorSubject<number>(0);
 	removedIterationIndex = 0;
+	iterationsChecked: Number[] = [];
 
 	private subscriptions = new Subscription();
 
@@ -206,5 +214,54 @@ export class PointComponent implements OnInit, OnDestroy {
 					dates: newDatesArray,
 				} as Point);
 			})();
+	}
+
+	checkIteration() {
+		this.iterationsChecked = Array.from(
+			this.iterationsList.nativeElement.children
+		)
+			.filter((item: any) => item.querySelector('input').checked)
+			.map((item: any) => item.querySelector('input').name);
+	}
+
+	checkAllIterations() {
+		this.iterationsList.nativeElement
+			.querySelectorAll('input')
+			.forEach((item: any) => {
+				item.checked = true;
+			});
+		this.checkIteration();
+	}
+
+	uncheckAllIterations() {
+		this.iterationsList.nativeElement
+			.querySelectorAll('input')
+			.forEach((item: any) => {
+				item.checked = false;
+			});
+		this.checkIteration();
+	}
+
+	removeCheckedIterations() {
+		let newDatesArray = this.dates?.slice(0);
+		newDatesArray = newDatesArray?.filter(
+			(item, i: any) => !this.iterationsChecked.includes(i.toString())
+		);
+
+		confirm(
+			'Удалить выбранные итерации? Если выбраны все, останется только последняя'
+		) &&
+			(() => {
+				this.data.editPoint(this.point?.id, {
+					...this.point,
+					dates: newDatesArray?.length
+						? newDatesArray
+						: [this.dates?.[this.dates?.length - 1]],
+				} as Point);
+			})();
+	}
+
+	get isDatesLengthPlural() {
+		return this.dates && this.dates?.length > 1;
 	}
 }
