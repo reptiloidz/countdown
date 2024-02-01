@@ -49,17 +49,11 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.loading = this.data.loading = false;
 				},
-				error: (err) => {
-					console.error(
-						'Ошибка при удалении события:\n',
-						err.message
-					);
-				},
 			})
 		);
 
 		this.subscriptions.add(
-			this.data.eventPointsChecked$.subscribe({
+			this.data.eventPointsCheckedAll$.subscribe({
 				next: (check) => {
 					this.pointCheckbox &&
 						(this.pointCheckbox.nativeElement.checked = check);
@@ -77,7 +71,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	delete(id: string | undefined) {
-		confirm('Удалить событие?') && this.data.removePoint(id);
+		this.data.removePoints(id);
 	}
 
 	checkPoint() {

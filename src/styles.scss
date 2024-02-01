@@ -61,19 +61,29 @@ body {
 
 		&__item {
 			margin-top: 12px;
+			margin-right: auto;
 		}
 	}
 
 	&__aside {
 		align-items: flex-start;
-		margin-bottom: auto;
+		margin-top: auto;
 
 		&--right {
 			margin-left: auto;
+
+			@media (max-width: 1024px) {
+				.nav__item {
+					margin-right: 0;
+				}
+			}
 		}
 
 		@media (max-width: 1024px) {
 			&--top {
+				margin-top: 0;
+				margin-bottom: auto;
+
 				.nav__item {
 					margin-top: 0;
 					margin-bottom: 12px;

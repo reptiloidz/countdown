@@ -50,12 +50,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 						(point) => point.id !== id
 					);
 				},
-				error: (err) => {
-					console.error(
-						'Ошибка при удалении события:\n',
-						err.message
-					);
-				},
 			})
 		);
 

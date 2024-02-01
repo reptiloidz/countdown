@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, Event, ActivationEnd } from '@angular/router';
+import { Router, Event, ActivationStart } from '@angular/router';
 import { format } from 'date-fns';
 import { filter, Subscription, switchMap, EMPTY } from 'rxjs';
 import { Constants } from 'src/app/enums';
@@ -17,7 +17,9 @@ export class FooterComponent implements OnInit, OnDestroy {
 	pointId!: string;
 	point!: Point | undefined;
 	isEdit = false;
+	isMain = false;
 	hasAccess: boolean | undefined = false;
+	pointsChecked: boolean = false;
 	tzOffset = new Date().getTimezoneOffset();
 	private subscriptions = new Subscription();
 
@@ -38,11 +40,14 @@ export class FooterComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.router.events
-				.pipe(filter((event: Event) => event instanceof ActivationEnd))
+				.pipe(
+					filter((event: Event) => event instanceof ActivationStart)
+				)
 				.pipe(
 					switchMap((data: any) => {
 						this.pointId = data.snapshot.params['id'];
 						this.isEdit = data.snapshot.url[0]?.path === 'edit';
+						this.isMain = !data.snapshot.url.length;
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
 							: EMPTY;
@@ -73,6 +78,14 @@ export class FooterComponent implements OnInit, OnDestroy {
 						'Ошибка при обновлении итераций события:\n',
 						err.message
 					);
+				},
+			})
+		);
+
+		this.subscriptions.add(
+			this.data.eventPointsChecked$.subscribe({
+				next: (check) => {
+					this.pointsChecked = check;
 				},
 			})
 		);
@@ -117,6 +130,6 @@ export class FooterComponent implements OnInit, OnDestroy {
 	}
 
 	removeAllCheckedPoints() {
-		this.data.removeAllCheckedPoints();
+		this.data.removePoints();
 	}
 }

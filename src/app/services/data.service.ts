@@ -21,6 +21,7 @@ export class DataService {
 	private _eventStartEditPointSubject = new Subject<void>();
 	private _eventRemovePointSubject = new Subject<string | undefined>();
 	private _eventStartRemovePointSubject = new Subject<string>();
+	private _eventPointsCheckedAllSubject = new Subject<boolean>();
 	private _eventPointsCheckedSubject = new Subject<boolean>();
 
 	pointsChecked: string[] = [];
@@ -31,6 +32,7 @@ export class DataService {
 	eventStartEditPoint$ = this._eventStartEditPointSubject.asObservable();
 	eventRemovePoint$ = this._eventRemovePointSubject.asObservable();
 	eventStartRemovePoint$ = this._eventStartRemovePointSubject.asObservable();
+	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
 	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
 
 	constructor(private http: HttpService, private notify: NotifyService) {
@@ -174,13 +176,13 @@ export class DataService {
 		}
 	}
 
-	removePoint(id: string | undefined) {
-		if (id) {
-			this.loading = true;
-			this._eventStartRemovePointSubject.next(id);
+	removePoints(id?: string) {
+		this.loading = true;
+		id && this._eventStartRemovePointSubject.next(id);
 
+		confirm(`Удалить ${id ? 'событие' : 'выбранные события'}?`) &&
 			this.http
-				.deletePoint(id)
+				.deletePoints(id ? [id] : this.pointsChecked)
 				.then(() => {
 					this._eventRemovePointSubject.next(id);
 				})
@@ -194,27 +196,22 @@ export class DataService {
 						err.message
 					);
 				});
-		}
 	}
 
 	getCheckedPoints(el: Element) {
 		this.pointsChecked = Array.from(el.children)
 			.filter((item: any) => item?.querySelector('input')?.checked)
 			.map((item: any) => item.getAttribute('data-id'));
+		this._eventPointsCheckedSubject.next(!!this.pointsChecked.length);
 	}
 
 	checkAllPoints() {
+		this._eventPointsCheckedAllSubject.next(true);
 		this._eventPointsCheckedSubject.next(true);
 	}
 
 	uncheckAllPoints() {
+		this._eventPointsCheckedAllSubject.next(false);
 		this._eventPointsCheckedSubject.next(false);
-	}
-
-	removeAllCheckedPoints() {
-		confirm('Удалить выбранные события?') &&
-			(() => {
-				this.http.deletePoints(this.pointsChecked);
-			})();
 	}
 }
