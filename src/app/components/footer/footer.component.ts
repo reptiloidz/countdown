@@ -62,6 +62,20 @@ export class FooterComponent implements OnInit, OnDestroy {
 					},
 				})
 		);
+
+		this.subscriptions.add(
+			this.data.eventEditPoint$.subscribe({
+				next: (point) => {
+					this.point = point;
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при обновлении итераций события:\n',
+						err.message
+					);
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
