@@ -177,25 +177,26 @@ export class DataService {
 	}
 
 	removePoints(id?: string) {
-		this.loading = true;
-		id && this._eventStartRemovePointSubject.next(id);
-
 		confirm(`Удалить ${id ? 'событие' : 'выбранные события'}?`) &&
-			this.http
-				.deletePoints(id ? [id] : this.pointsChecked)
-				.then(() => {
-					this._eventRemovePointSubject.next(id);
-				})
-				.catch((err) => {
-					this.notify.add({
-						title: 'Ошибка при удалении события',
-					});
+			(() => {
+				this.loading = true;
+				id && this._eventStartRemovePointSubject.next(id);
+				this.http
+					.deletePoints(id ? [id] : this.pointsChecked)
+					.then(() => {
+						this._eventRemovePointSubject.next(id);
+					})
+					.catch((err) => {
+						this.notify.add({
+							title: 'Ошибка при удалении события',
+						});
 
-					console.error(
-						'Ошибка при удалении события:\n',
-						err.message
-					);
-				});
+						console.error(
+							'Ошибка при удалении события:\n',
+							err.message
+						);
+					});
+			})();
 	}
 
 	getCheckedPoints(el: Element) {
