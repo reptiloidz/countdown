@@ -7,21 +7,22 @@
 		class="nav__item link"
 		(click)="checkAllPoints()"
 	>
-		Выбрать все</button><span class="nav__divider"> | </span>
-	<button
-		*ngIf="pointsChecked"
-		type="button"
-		class="nav__item link"
-		(click)="uncheckAllPoints()"
-	>
-		Сбросить все</button><span class="nav__divider"> | </span>
-	<button
-		*ngIf="pointsChecked"
-		type="button"
-		class="nav__item link"
-		(click)="removeAllCheckedPoints()"
-	>
-		Удалить выбранные</button>
+		Выбрать все</button>
+	<ng-container *ngIf="pointsChecked">
+		<span class="nav__divider"> | </span>
+		<button
+			type="button"
+			class="nav__item link"
+			(click)="uncheckAllPoints()"
+		>
+			Сбросить все</button><span class="nav__divider"> | </span>
+		<button
+			type="button"
+			class="nav__item link"
+			(click)="removeAllCheckedPoints()"
+		>
+			Удалить выбранные</button>
+	</ng-container>
 </div>
 
 
