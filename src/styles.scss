@@ -142,7 +142,6 @@ a,
 
 .item {
 	display: flex;
-	padding: 20px 0;
 
 	@media (max-width: 1024px) {
 		flex-direction: column;
@@ -154,6 +153,15 @@ a,
 
 		@media (max-width: 1024px) {
 			margin-left: 0;
+		}
+	}
+
+	&__inner {
+		width: 100%;
+		padding: 20px 0;
+
+		&--available {
+			background-color: #EEEEEE;
 		}
 	}
 

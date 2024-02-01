@@ -107,4 +107,10 @@ export class FooterComponent implements OnInit, OnDestroy {
 				dates: newDatesArray,
 			} as Point);
 	}
+
+	checkAllPoints() {}
+
+	uncheckAllPoints() {}
+
+	removeAllCheckedPoints() {}
 }

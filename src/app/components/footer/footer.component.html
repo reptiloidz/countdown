@@ -1,6 +1,21 @@
-<!-- <div>
-	<a>Настройки</a>
-	</div> -->
+<div class="nav__aside">
+	<button
+		class="nav__item link"
+		(click)="checkAllPoints()"
+	>
+		Выбрать все</button><span class="nav__divider"> | </span>
+	<button
+		class="nav__item link"
+		(click)="uncheckAllPoints()"
+	>
+		Сбросить все</button><span class="nav__divider"> | </span>
+	<button
+		class="nav__item link"
+		(click)="removeAllCheckedPoints()"
+	>
+		Удалить выбранные</button>
+</div>
+
 
 <div class="nav__aside nav__aside--right">
 	<ng-container *ngIf="pointId && hasAccess">

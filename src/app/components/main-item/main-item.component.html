@@ -1,28 +1,36 @@
-<h2>
-	<a
-		routerLink="/point/{{ point.id }}"
-		[attr.title]="point.description || null"
-	>{{ point.title }}</a><ng-container *ngIf="!loading && checkAccessEdit(point); else loader">&nbsp;|&nbsp;<button
-			type="button"
-			class="link"
-			(click)="delete(point.id)"
-		>x</button></ng-container>
-</h2><small
-	*ngIf="point?.greenwich"
-	class="item__addon"
->Гринвич</small>
-<small
-	*ngIf="point?.repeatable"
-	class="item__addon"
->Повторяемое</small>
-<small
-	*ngIf="point?.public"
-	class="item__addon"
->Публичное</small>
+<div
+	class="item__inner"
+	[ngClass]="checkAccessEdit(point) ? 'item__inner--available' : ''"
+>
+	<h2>
+		<a
+			routerLink="/point/{{ point.id }}"
+			[attr.title]="point.description || null"
+		>{{ point.title }}</a><ng-container *ngIf="!loading && checkAccessEdit(point); else loader">&nbsp;|&nbsp;<button
+				type="button"
+				class="link"
+				(click)="delete(point.id)"
+			>x</button>
+			<input type="checkbox">
+		</ng-container>
+	</h2><small
+		*ngIf="point?.greenwich"
+		class="item__addon"
+	>Гринвич</small>
+	<small
+		*ngIf="point?.repeatable"
+		class="item__addon"
+	>Повторяемое</small>
+	<small
+		*ngIf="point?.public"
+		class="item__addon"
+	>Публичное</small>
 
-<ng-template #loader>
-	<span
-		*ngIf="loading"
-		class="loader rotating"
-	></span>
-</ng-template>
+	<ng-template #loader>
+		<span
+			*ngIf="loading"
+			class="loader rotating"
+		></span>
+	</ng-template>
+
+</div>
