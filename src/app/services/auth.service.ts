@@ -222,14 +222,14 @@ export class AuthService implements OnDestroy {
 		);
 	}
 
-	verifyEmail() {
-		if (this._user) {
+	verifyEmail(user: User | undefined = this._user) {
+		if (user) {
 			if (this.checkEmailVerified) return;
 
-			sendEmailVerification(this._user).then(() => {
+			sendEmailVerification(user).then(() => {
 				this.notify.add({
 					title: `
-						Сообщение для подтверждения почты отправлено&nbsp;на ${this._user?.email}.
+						Сообщение для подтверждения почты отправлено&nbsp;на ${user?.email}.
 						Без подтверждения доступ открыт только к&nbsp;публичным событиям и&nbsp;только для чтения.
 					`,
 				});

@@ -100,6 +100,18 @@
 	</button>
 </form>
 
+<div
+	*ngIf="!emailVerified"
+	class="control"
+>
+	<button
+		type="button"
+		(click)="sendEmailVerification()"
+	>
+		Подтвердить почту
+	</button>
+</div>
+
 <div class="control">
 	<button
 		type="button"

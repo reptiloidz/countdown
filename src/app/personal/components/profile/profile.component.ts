@@ -17,7 +17,6 @@ import { mergeDeep } from 'src/app/helpers/mergeDeep';
 import { ValidationObject } from 'src/app/interfaces/validation.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
-import { HttpService } from 'src/app/services/http.service';
 import { NotifyService } from 'src/app/services/notify.service';
 
 @Component({
@@ -27,7 +26,6 @@ import { NotifyService } from 'src/app/services/notify.service';
 export class ProfileComponent implements OnInit, OnDestroy {
 	constructor(
 		private auth: AuthService,
-		private http: HttpService,
 		private data: DataService,
 		private notify: NotifyService
 	) {}
@@ -198,7 +196,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: () => {
 						this.emailLoading = false;
-						this.auth.verifyEmail();
+						this.auth.verifyEmail(this._user);
 					},
 				})
 		);
@@ -349,6 +347,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
+	get emailVerified() {
+		return this._user?.emailVerified;
+	}
+
 	updateNameAndPhoto() {
 		this.profileLoading = true;
 		this.auth.updateProfile(this._user, {
@@ -395,6 +397,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				birthDatePointId: this._birthDatePointId || '',
 			});
 		}
+	}
+
+	sendEmailVerification() {
+		this.auth.verifyEmail(this._user);
 	}
 
 	updateEmail() {
