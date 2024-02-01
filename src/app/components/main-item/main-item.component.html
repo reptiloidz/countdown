@@ -11,7 +11,11 @@
 				class="link"
 				(click)="delete(point.id)"
 			>x</button>
-			<input type="checkbox">
+			<input
+				#pointCheckbox
+				type="checkbox"
+				(change)="checkPoint()"
+			>
 		</ng-container>
 	</h2><small
 		*ngIf="point?.greenwich"

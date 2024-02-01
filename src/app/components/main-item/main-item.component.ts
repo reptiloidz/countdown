@@ -1,4 +1,13 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+	ElementRef,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,11 +18,14 @@ import { DataService } from 'src/app/services/data.service';
 	templateUrl: './main-item.component.html',
 })
 export class MainItemComponent implements OnInit, OnDestroy {
-	constructor(private data: DataService, private auth: AuthService) {}
+	@ViewChild('pointCheckbox') private pointCheckbox!: ElementRef;
 
 	private subscriptions = new Subscription();
 	@Input() point!: Point;
+	@Output() pointCheck = new EventEmitter();
 	loading = false;
+
+	constructor(private data: DataService, private auth: AuthService) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -45,6 +57,15 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.data.eventPointsChecked$.subscribe({
+				next: (check) => {
+					this.pointCheckbox &&
+						(this.pointCheckbox.nativeElement.checked = check);
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -57,5 +78,9 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	delete(id: string | undefined) {
 		confirm('Удалить событие?') && this.data.removePoint(id);
+	}
+
+	checkPoint() {
+		this.pointCheck.emit();
 	}
 }

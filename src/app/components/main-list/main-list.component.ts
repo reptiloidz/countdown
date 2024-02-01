@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+	ElementRef,
+	ViewChild,
+	Component,
+	OnDestroy,
+	OnInit,
+} from '@angular/core';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -8,6 +14,7 @@ import { DataService } from 'src/app/services/data.service';
 	templateUrl: './main-list.component.html',
 })
 export class MainListComponent implements OnInit, OnDestroy {
+	@ViewChild('pointsList') private pointsList!: ElementRef;
 	points: Point[] = [];
 	loading = true;
 	private subscriptions = new Subscription();
@@ -58,5 +65,9 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	checkPoint() {
+		this.data.getCheckedPoints(this.pointsList.nativeElement);
 	}
 }

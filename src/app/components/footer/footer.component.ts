@@ -108,9 +108,15 @@ export class FooterComponent implements OnInit, OnDestroy {
 			} as Point);
 	}
 
-	checkAllPoints() {}
+	checkAllPoints() {
+		this.data.checkAllPoints();
+	}
 
-	uncheckAllPoints() {}
+	uncheckAllPoints() {
+		this.data.uncheckAllPoints();
+	}
 
-	removeAllCheckedPoints() {}
+	removeAllCheckedPoints() {
+		this.data.removeAllCheckedPoints();
+	}
 }

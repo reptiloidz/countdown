@@ -1,13 +1,16 @@
 <ng-container *ngIf="!loading; else loader">
 	<ul
+		#pointsList
 		*ngIf="points.length; else empty"
 		class="list"
 	>
 		<li
 			app-main-item
+			[attr.data-id]="point.id"
 			class="item"
 			*ngFor="let point of points; let i = index"
 			[point]="point"
+			(pointCheck)="checkPoint()"
 		></li>
 	</ul>
 </ng-container>

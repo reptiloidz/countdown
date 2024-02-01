@@ -21,6 +21,9 @@ export class DataService {
 	private _eventStartEditPointSubject = new Subject<void>();
 	private _eventRemovePointSubject = new Subject<string | undefined>();
 	private _eventStartRemovePointSubject = new Subject<string>();
+	private _eventPointsCheckedSubject = new Subject<boolean>();
+
+	pointsChecked: string[] = [];
 
 	eventFetchAllPoints$ = this._eventFetchAllPointsSubject.asObservable();
 	eventAddPoint$ = this._eventAddPointSubject.asObservable();
@@ -28,6 +31,7 @@ export class DataService {
 	eventStartEditPoint$ = this._eventStartEditPointSubject.asObservable();
 	eventRemovePoint$ = this._eventRemovePointSubject.asObservable();
 	eventStartRemovePoint$ = this._eventStartRemovePointSubject.asObservable();
+	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
 
 	constructor(private http: HttpService, private notify: NotifyService) {
 		this.subscriptions.add(
@@ -191,5 +195,26 @@ export class DataService {
 					);
 				});
 		}
+	}
+
+	getCheckedPoints(el: Element) {
+		this.pointsChecked = Array.from(el.children)
+			.filter((item: any) => item?.querySelector('input')?.checked)
+			.map((item: any) => item.getAttribute('data-id'));
+	}
+
+	checkAllPoints() {
+		this._eventPointsCheckedSubject.next(true);
+	}
+
+	uncheckAllPoints() {
+		this._eventPointsCheckedSubject.next(false);
+	}
+
+	removeAllCheckedPoints() {
+		confirm('Удалить выбранные события?') &&
+			(() => {
+				this.http.deletePoints(this.pointsChecked);
+			})();
 	}
 }

@@ -12,6 +12,7 @@ import {
 	orderByChild,
 	set,
 	push,
+	update,
 } from '@angular/fire/database';
 import { Auth, user } from '@angular/fire/auth';
 
@@ -101,6 +102,21 @@ export class HttpService implements HttpServiceInterface {
 
 	async deletePoint(id: string | undefined): Promise<void> {
 		await (id ? set(ref(this.db, `points/${id}`), null) : null);
+		return await new Promise((resolve) => {
+			resolve();
+		});
+	}
+
+	async deletePoints(points: string[]): Promise<void> {
+		await (points.length
+			? update(
+					ref(this.db, `points/`),
+					points.reduce((acc: any, currentValue) => {
+						acc[currentValue] = null;
+						return acc;
+					}, {})
+			  )
+			: null);
 		return await new Promise((resolve) => {
 			resolve();
 		});
