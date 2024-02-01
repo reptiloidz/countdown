@@ -3,18 +3,21 @@
 	class="nav__aside"
 >
 	<button
+		type="button"
 		class="nav__item link"
 		(click)="checkAllPoints()"
 	>
 		Выбрать все</button><span class="nav__divider"> | </span>
 	<button
 		*ngIf="pointsChecked"
+		type="button"
 		class="nav__item link"
 		(click)="uncheckAllPoints()"
 	>
 		Сбросить все</button><span class="nav__divider"> | </span>
 	<button
 		*ngIf="pointsChecked"
+		type="button"
 		class="nav__item link"
 		(click)="removeAllCheckedPoints()"
 	>

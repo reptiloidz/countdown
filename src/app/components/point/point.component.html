@@ -42,10 +42,19 @@
 	</ul>
 
 	<div *ngIf="!loading && !dateLoading && isDatesLengthPlural">
-		<button (click)="checkAllIterations()">Выбрать все</button>
+		<button
+			type="button"
+			(click)="checkAllIterations()"
+		>Выбрать все</button>
 		<ng-container *ngIf="iterationsChecked.length">
-			<button (click)="uncheckAllIterations()">Снять выбор</button>
-			<button (click)="removeCheckedIterations()">Удалить выбранные итерации</button>
+			<button
+				type="button"
+				(click)="uncheckAllIterations()"
+			>Снять выбор</button>
+			<button
+				type="button"
+				(click)="removeCheckedIterations()"
+			>Удалить выбранные итерации</button>
 		</ng-container>
 	</div>
 
