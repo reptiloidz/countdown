@@ -5,8 +5,15 @@ import {
 	ViewChild,
 	ElementRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { interval, Subscription, switchMap, BehaviorSubject } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
+import {
+	interval,
+	Subscription,
+	switchMap,
+	distinctUntilChanged,
+	concatMap,
+	tap,
+} from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import {
@@ -34,7 +41,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	dateLoading = true;
 	hasAccess: boolean | undefined = false;
 	tzOffset = this.pointDate.getTimezoneOffset();
-	currentIterationIndex = new BehaviorSubject<number>(0);
+	currentIterationIndex!: number;
 	removedIterationIndex = 0;
 	iterationsChecked: Number[] = [];
 
@@ -42,14 +49,21 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private data: DataService,
+		private router: Router,
 		private route: ActivatedRoute,
 		private auth: AuthService
 	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.route.params
+			this.route.queryParams
 				.pipe(
+					tap((data: any) => {
+						data.iteration &&
+							(this.currentIterationIndex = data.iteration - 1);
+					}),
+					concatMap(() => this.route.params),
+					distinctUntilChanged(),
 					switchMap((data: any) => {
 						return this.data.fetchPoint(data['id']);
 					}),
@@ -57,9 +71,21 @@ export class PointComponent implements OnInit, OnDestroy {
 						this.point = point;
 						this.hasAccess =
 							point && this.auth.checkAccessEdit(point);
-						this.switchIteration(
-							this.dates?.length ? this.dates.length - 1 : 0
-						);
+
+						if (this.dates?.length) {
+							if (
+								this.currentIterationIndex >
+									this.dates.length ||
+								typeof this.currentIterationIndex !==
+									'number' ||
+								isNaN(this.currentIterationIndex) ||
+								this.currentIterationIndex < 0
+							) {
+								this.switchIteration(this.dates.length - 1);
+							}
+						} else {
+							this.switchIteration();
+						}
 						return interval(1000);
 					})
 				)
@@ -94,11 +120,11 @@ export class PointComponent implements OnInit, OnDestroy {
 					this.loading = this.data.loading = false;
 					this.point = point;
 					if (
-						this.currentIterationIndex.getValue() >=
-						this.removedIterationIndex
+						this.currentIterationIndex >= this.removedIterationIndex
 					) {
-						this.currentIterationIndex.next(point.dates.length - 1);
+						this.currentIterationIndex = point.dates.length - 1;
 					}
+					this.switchIteration();
 					this.setAllTimers();
 				},
 				error: (err) => {
@@ -127,11 +153,10 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setAllTimers() {
-		if (this.dates?.[this.currentIterationIndex.getValue()]) {
+		if (this.dates?.[this.currentIterationIndex]) {
 			this.pointDate = getPointDate({
 				pointDate: new Date(
-					this.dates?.[this.currentIterationIndex.getValue()].date ||
-						''
+					this.dates?.[this.currentIterationIndex].date || ''
 				),
 				tzOffset: this.tzOffset,
 				isGreenwich: this.point?.greenwich,
@@ -197,9 +222,14 @@ export class PointComponent implements OnInit, OnDestroy {
 		return this.point?.dates;
 	}
 
-	switchIteration(i: number) {
-		this.currentIterationIndex.next(i);
-		this.setAllTimers();
+	switchIteration(i: number = this.currentIterationIndex) {
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: {
+				iteration: i + 1,
+			},
+			queryParamsHandling: 'merge',
+		});
 	}
 
 	removeIteration(i: number) {

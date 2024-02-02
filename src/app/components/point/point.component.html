@@ -16,7 +16,7 @@
 			*ngFor="let date of this.dates | sort; let i = index"
 			class="tabs__item"
 			[ngClass]="{
-				'tabs__item--active': i == (currentIterationIndex | async)
+				'tabs__item--active': i == currentIterationIndex
 			}"
 		>
 			<button
@@ -41,7 +41,7 @@
 		</li>
 	</ul>
 
-	<div *ngIf="!loading && !dateLoading && isDatesLengthPlural">
+	<div *ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural">
 		<button
 			type="button"
 			(click)="checkAllIterations()"
