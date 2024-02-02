@@ -2,9 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { getErrorMessages } from 'src/app/helpers/getErrorMessages';
-import { hasFieldErrors } from 'src/app/helpers/hasFieldErrors';
-import { mergeDeep } from 'src/app/helpers/mergeDeep';
+import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
 import {
 	ValidationObject,
 	ValidationObjectField,

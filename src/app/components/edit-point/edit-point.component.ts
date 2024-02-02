@@ -26,7 +26,7 @@ import {
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import { format, parse } from 'date-fns';
-import { getPointDate } from 'src/app/helpers';
+import { getPointDate, isDateValid } from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
 import { SortPipe } from 'src/app/pipes/sort.pipe';
@@ -338,7 +338,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				? false
 				: this.form.controls['greenwich'].value,
 		});
-		!isNaN(Date.parse(pointDate.toString())) &&
+		isDateValid(pointDate) &&
 			this.form.patchValue({
 				date: format(pointDate, Constants.shortDateFormat),
 				time: format(pointDate, Constants.timeFormat),
@@ -348,23 +348,33 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	dateChanged(date?: Date) {
+		const dateParsed = parse(
+			this.form.controls['time'].value,
+			Constants.timeFormat,
+			parse(
+				this.form.controls['date'].value,
+				Constants.shortDateFormat,
+				new Date()
+			)
+		);
 		this.difference = this.convertToMinutes(
 			+(
 				date ||
-				new Date(
-					format(
-						parse(
-							this.form.controls['time'].value,
-							Constants.timeFormat,
+				(isDateValid(dateParsed) &&
+					new Date(
+						format(
 							parse(
-								this.form.controls['date'].value,
-								Constants.shortDateFormat,
-								new Date()
-							)
-						),
-						Constants.fullDateFormat
-					)
-				)
+								this.form.controls['time'].value,
+								Constants.timeFormat,
+								parse(
+									this.form.controls['date'].value,
+									Constants.shortDateFormat,
+									new Date()
+								)
+							),
+							Constants.fullDateFormat
+						)
+					))
 			) - +new Date()
 		);
 		this.form.controls['difference'].setValue(this.difference, {
@@ -383,7 +393,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
 		// 	: new Date(currentDate.getTime() + diff * Constants.msInMinute);
 
-		!isNaN(Date.parse(targetDate.toString())) &&
+		isDateValid(targetDate) &&
 			this.form.patchValue({
 				date: format(targetDate, Constants.shortDateFormat),
 				time: format(targetDate, Constants.timeFormat),

@@ -12,8 +12,7 @@ import {
 	timer,
 } from 'rxjs';
 import { Constants } from 'src/app/enums';
-import { getErrorMessages } from 'src/app/helpers/getErrorMessages';
-import { mergeDeep } from 'src/app/helpers/mergeDeep';
+import { getErrorMessages, mergeDeep } from 'src/app/helpers';
 import { ValidationObject } from 'src/app/interfaces/validation.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
