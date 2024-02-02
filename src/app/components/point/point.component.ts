@@ -9,10 +9,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
 	interval,
 	Subscription,
-	switchMap,
 	distinctUntilChanged,
-	concatMap,
 	tap,
+	mergeMap,
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -58,16 +57,16 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.route.queryParams
 				.pipe(
+					distinctUntilChanged(),
 					tap((data: any) => {
 						data.iteration &&
 							(this.currentIterationIndex = data.iteration - 1);
 					}),
-					concatMap(() => this.route.params),
-					distinctUntilChanged(),
-					switchMap((data: any) => {
+					mergeMap(() => this.route.params),
+					mergeMap((data: any) => {
 						return this.data.fetchPoint(data['id']);
 					}),
-					switchMap((point: Point | undefined) => {
+					mergeMap((point: Point | undefined) => {
 						this.point = point;
 						this.hasAccess =
 							point && this.auth.checkAccessEdit(point);

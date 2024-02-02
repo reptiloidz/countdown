@@ -27,12 +27,15 @@
 
 
 <div class="nav__aside nav__aside--right">
-	<ng-container *ngIf="pointId && hasAccess">
-		<a
-			class="nav__item"
-			routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}"
-		>
-			{{isEdit ? 'Перейти к событию' : 'Редактировать'}}</a><span class="nav__divider"> | </span>
+	<a
+		*ngIf="pointId && hasAccess"
+		class="nav__item"
+		routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}"
+		[queryParams]="{iteration}"
+	>
+		{{isEdit ? 'Перейти к событию' : 'Редактировать'}}</a>
+	<ng-container *ngIf="pointId && hasAccess && !isEdit">
+		<span class="nav__divider"> | </span>
 		<button
 			(click)="setDateNow()"
 			class="nav__item link"

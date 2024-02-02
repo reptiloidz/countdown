@@ -107,7 +107,7 @@
 			*ngFor="let date of dates | sort; let i = index"
 			class="tabs__item"
 			[ngClass]="{
-					'tabs__item--active': i == (currentIterationIndex | async) && !isIterationAdded
+					'tabs__item--active': i == currentIterationIndex && !isIterationAdded
 				}"
 		>
 			<button
@@ -117,17 +117,19 @@
 			>{{ i + 1 }}
 				<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
 			</button>
-			<button
-				*ngIf="dates?.length && (dates?.length != 1)"
-				class="link"
-				(click)="removeIteration(i)"
-				type="button"
-			>x</button>
-			<input
-				type="checkbox"
-				[name]="i"
-				(change)="checkIteration()"
-			>
+
+			<ng-container *ngIf="dates?.length && (dates?.length != 1)">
+				<button
+					class="link"
+					(click)="removeIteration(i)"
+					type="button"
+				>x</button>
+				<input
+					type="checkbox"
+					[name]="i"
+					(change)="checkIteration()"
+				>
+			</ng-container>
 		</li>
 		<li
 			class="tabs__item"

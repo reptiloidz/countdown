@@ -11,7 +11,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
 	Subscription,
-	switchMap,
 	interval,
 	debounce,
 	timer,
@@ -22,6 +21,7 @@ import {
 	pairwise,
 	tap,
 	startWith,
+	mergeMap,
 } from 'rxjs';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -51,7 +51,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	loading = false;
 	validatorDifferenceMaxLength = 8;
 	tzOffset = new Date().getTimezoneOffset();
-	currentIterationIndex = new BehaviorSubject<number>(0);
+	currentIterationIndex!: number;
 	removedIterationIndex = 0;
 	isIterationAdded = false;
 	iterationControls = {};
@@ -123,20 +123,38 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		});
 
 		this.subscriptions.add(
-			this.route.params
+			this.route.queryParams
 				.pipe(
-					switchMap((data: any) => {
+					distinctUntilChanged(),
+					tap((data: any) => {
+						data.iteration &&
+							(this.currentIterationIndex = data.iteration - 1);
+						this.isIterationAdded = false;
+					}),
+					mergeMap(() => this.route.params),
+					mergeMap((data: any) => {
 						return data['id']
 							? this.data.fetchPoint(data['id'])
 							: of(undefined);
 					}),
-					switchMap((point: Point | undefined) => {
+					mergeMap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
 							this.sortDates();
-							this.switchIteration(
-								this.dates?.length ? this.dates.length - 1 : 0
-							);
+							if (this.dates?.length) {
+								if (
+									this.currentIterationIndex >
+										this.dates.length ||
+									typeof this.currentIterationIndex !==
+										'number' ||
+									isNaN(this.currentIterationIndex) ||
+									this.currentIterationIndex < 0
+								) {
+									this.switchIteration(this.dates.length - 1);
+								}
+							} else {
+								this.switchIteration();
+							}
 						}
 
 						return this.auth.eventEditAccessCheck$;
@@ -149,6 +167,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							(pointId === this.point?.id || !pointId)
 						) {
 							this.checking.next(false);
+							this.setValues();
 						}
 					},
 					error: (err) => {
@@ -245,6 +264,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$.subscribe({
 				next: (point) => {
 					this.point = point;
+					if (
+						this.currentIterationIndex >= this.removedIterationIndex
+					) {
+						this.currentIterationIndex = point.dates.length - 1;
+					}
 					this.sortDates();
 					this.switchIteration();
 					this.success(point);
@@ -307,18 +331,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			pointDate: isReset
 				? new Date()
 				: new Date(
-						this.dates?.[this.currentIterationIndex.getValue()]
-							?.date || ''
+						this.dates?.[this.currentIterationIndex]?.date || ''
 				  ),
 			tzOffset: this.tzOffset,
 			isGreenwich: this.isIterationAdded
 				? false
 				: this.form.controls['greenwich'].value,
 		});
-		this.form.patchValue({
-			date: format(pointDate, Constants.shortDateFormat),
-			time: format(pointDate, Constants.timeFormat),
-		});
+		!isNaN(Date.parse(pointDate.toString())) &&
+			this.form.patchValue({
+				date: format(pointDate, Constants.shortDateFormat),
+				time: format(pointDate, Constants.timeFormat),
+			});
 
 		this.dateChanged(pointDate);
 	}
@@ -359,16 +383,21 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
 		// 	: new Date(currentDate.getTime() + diff * Constants.msInMinute);
 
-		this.form.patchValue({
-			date: format(targetDate, Constants.shortDateFormat),
-			time: format(targetDate, Constants.timeFormat),
-		});
+		!isNaN(Date.parse(targetDate.toString())) &&
+			this.form.patchValue({
+				date: format(targetDate, Constants.shortDateFormat),
+				time: format(targetDate, Constants.timeFormat),
+			});
 	}
 
-	switchIteration(i = (this.dates?.length || 1) - 1) {
-		this.currentIterationIndex.next(i);
-		this.isIterationAdded = false;
-		this.setValues();
+	switchIteration(i: number = this.currentIterationIndex) {
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: {
+				iteration: i + 1,
+			},
+			queryParamsHandling: 'merge',
+		});
 	}
 
 	addIteration() {
@@ -488,7 +517,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			} else if (this.isIterationAdded) {
 				saveIteration && newDatesArray?.push(lastDate);
 			} else if (newDatesArray) {
-				newDatesArray[this.currentIterationIndex.getValue()] = lastDate;
+				newDatesArray[this.currentIterationIndex] = lastDate;
 			}
 		}
 
@@ -530,7 +559,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				...point,
 			});
 		this.point?.id &&
-			this.router.navigate(['/edit/' + this.point?.id.toString()]);
+			this.router.navigate(['/edit/' + this.point?.id.toString()], {
+				queryParams: {
+					iteration: this.currentIterationIndex + 1,
+				},
+			});
 		alert('Успешно');
 	}
 }

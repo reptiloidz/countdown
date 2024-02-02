@@ -1,7 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, Event, ActivationStart } from '@angular/router';
+import {
+	Router,
+	Event,
+	ActivationStart,
+	ActivatedRoute,
+} from '@angular/router';
 import { format } from 'date-fns';
-import { filter, Subscription, switchMap, EMPTY } from 'rxjs';
+import { filter, Subscription, switchMap, EMPTY, concatMap, tap } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
@@ -22,10 +27,12 @@ export class FooterComponent implements OnInit, OnDestroy {
 	hasAccess: boolean | undefined = false;
 	pointsChecked: boolean = false;
 	tzOffset = new Date().getTimezoneOffset();
+	iteration = 0;
 	private subscriptions = new Subscription();
 
 	constructor(
 		private router: Router,
+		private route: ActivatedRoute,
 		private data: DataService,
 		private auth: AuthService
 	) {}
@@ -40,8 +47,12 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.router.events
+			this.route.queryParams
 				.pipe(
+					tap((data: any) => {
+						this.iteration = data.iteration;
+					}),
+					concatMap(() => this.router.events),
 					filter((event: Event) => event instanceof ActivationStart)
 				)
 				.pipe(
