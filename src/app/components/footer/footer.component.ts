@@ -17,6 +17,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	pointId!: string;
 	point!: Point | undefined;
 	isEdit = false;
+	isCreate = false;
 	isMain = false;
 	hasAccess: boolean | undefined = false;
 	pointsChecked: boolean = false;
@@ -47,6 +48,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 					switchMap((data: any) => {
 						this.pointId = data.snapshot.params['id'];
 						this.isEdit = data.snapshot.url[0]?.path === 'edit';
+						this.isCreate = data.snapshot.url[0]?.path === 'create';
 						this.isMain = !data.snapshot.url.length;
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)

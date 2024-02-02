@@ -123,6 +123,9 @@ export class AuthService implements OnDestroy {
 	private _eventBirthDateAddedSubject = new Subject<void>();
 	eventBirthDateAdded$ = this._eventBirthDateAddedSubject.asObservable();
 
+	private _eventVerifyEmailSentSubject = new Subject<void>();
+	eventVerifyEmailSent$ = this._eventVerifyEmailSentSubject.asObservable();
+
 	private _user: User | undefined;
 
 	ngOnDestroy(): void {
@@ -227,6 +230,7 @@ export class AuthService implements OnDestroy {
 			if (this.checkEmailVerified) return;
 
 			sendEmailVerification(user).then(() => {
+				this._eventVerifyEmailSentSubject.next();
 				this.notify.add({
 					title: `
 						Сообщение для подтверждения почты отправлено&nbsp;на ${user?.email}.

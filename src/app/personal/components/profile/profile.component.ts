@@ -42,6 +42,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	emailLoading = true;
 	passwordLoading = false;
 	removeLoading = false;
+	verifyButtonDisabled = false;
 	private _user!: User;
 	private _birthDate = '';
 	private _birthDatePointId = '';
@@ -341,6 +342,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.auth.eventVerifyEmailSent$.subscribe({
+				next: () => {
+					this.verifyButtonDisabled = false;
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -401,6 +410,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	sendEmailVerification() {
 		this.auth.verifyEmail(this._user);
+		this.verifyButtonDisabled = true;
 	}
 
 	updateEmail() {
