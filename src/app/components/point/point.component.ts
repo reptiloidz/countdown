@@ -16,12 +16,13 @@ import {
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 import {
+	format,
 	formatDistanceToNow,
 	formatDuration,
 	intervalToDuration,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { DateText } from 'src/app/enums/index';
+import { Constants, DateText } from 'src/app/enums/index';
 import { getPointDate } from 'src/app/helpers';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -219,6 +220,10 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get dates() {
 		return this.point?.dates;
+	}
+
+	get iterationDate() {
+		return format(this.pointDate, Constants.fullDateFormat);
 	}
 
 	switchIteration(i: number = this.currentIterationIndex) {

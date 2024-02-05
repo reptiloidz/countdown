@@ -56,4 +56,13 @@
 			[title]="!isVerified && 'Подтвердите почту, чтобы иметь доступ к созданию и редактированию'"
 		>Создать</a>
 	</ng-container>
+
+	<ng-container *ngIf="pointId && !isEdit">
+		<span class="nav__divider"> | </span>
+		<a
+			class="nav__item"
+			[href]="exportGoogleLink"
+			target="_blank"
+		>Экспорт в Google Calendar</a>
+	</ng-container>
 </div>

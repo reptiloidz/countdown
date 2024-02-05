@@ -64,6 +64,7 @@
 	<p
 		*ngIf="!dateLoading; else dateLoader"
 		class="timer"
+		[attr.title]="iterationDate || null"
 	>{{ dateTimer }} {{ timer }}</p>
 	<ng-template #dateLoader>
 		<h2>

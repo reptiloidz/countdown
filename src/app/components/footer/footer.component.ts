@@ -5,14 +5,15 @@ import {
 	ActivationStart,
 	ActivatedRoute,
 } from '@angular/router';
-import { format } from 'date-fns';
-import { filter, Subscription, switchMap, EMPTY, concatMap, tap } from 'rxjs';
+import { format, formatISO, parse } from 'date-fns';
+import { filter, Subscription, EMPTY, mergeMap, combineLatestWith } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
 import { Point } from 'src/app/interfaces/point.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
 	selector: '[app-footer]',
@@ -28,6 +29,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	pointsChecked: boolean = false;
 	tzOffset = new Date().getTimezoneOffset();
 	iteration = 0;
+	exportGoogleLink = '';
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -47,20 +49,17 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.route.queryParams
+			this.router.events
 				.pipe(
-					tap((data: any) => {
-						this.iteration = data.iteration;
-					}),
-					concatMap(() => this.router.events),
-					filter((event: Event) => event instanceof ActivationStart)
-				)
-				.pipe(
-					switchMap((data: any) => {
-						this.pointId = data.snapshot.params['id'];
-						this.isEdit = data.snapshot.url[0]?.path === 'edit';
-						this.isCreate = data.snapshot.url[0]?.path === 'create';
-						this.isMain = !data.snapshot.url.length;
+					filter((event: Event) => event instanceof ActivationStart),
+					combineLatestWith(this.route.queryParams),
+					mergeMap(([event, queryParams]: [any, any]) => {
+						this.iteration = queryParams.iteration;
+						this.pointId = event.snapshot.params['id'];
+						this.isEdit = event.snapshot.url[0]?.path === 'edit';
+						this.isCreate =
+							event.snapshot.url[0]?.path === 'create';
+						this.isMain = !event.snapshot.url.length;
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
 							: EMPTY;
@@ -69,6 +68,30 @@ export class FooterComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (point: Point | undefined) => {
 						this.point = point;
+						const googleLinkDate =
+							point?.dates[this.iteration - 1]?.date &&
+							formatISO(
+								parse(
+									point?.dates[this.iteration - 1]?.date,
+									Constants.fullDateFormat,
+									new Date()
+								),
+								{ format: 'basic' }
+							) + (point?.greenwich ? 'Z' : '');
+
+						const googleLinkParams = {
+							text: point?.title || '',
+							details: point?.description || '',
+							dates: googleLinkDate
+								? googleLinkDate + '/' + googleLinkDate
+								: '',
+						};
+
+						this.exportGoogleLink =
+							'https://calendar.google.com/calendar/u/0/r/eventedit?' +
+							new HttpParams({
+								fromObject: googleLinkParams,
+							}).toString();
 						this.hasAccess =
 							point && this.auth.checkAccessEdit(point);
 					},
