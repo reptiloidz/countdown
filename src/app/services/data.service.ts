@@ -3,6 +3,7 @@ import { Observable, of, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { Point } from '../interfaces/point.interface';
 import { HttpService } from './http.service';
 import { NotifyService } from './notify.service';
+import { EditPointEvent } from '../interfaces/editPointEvent.type';
 
 @Injectable({
 	providedIn: 'root',
@@ -17,7 +18,7 @@ export class DataService {
 		this._points
 	);
 	private _eventAddPointSubject = new Subject<Point>();
-	private _eventEditPointSubject = new Subject<Point>();
+	private _eventEditPointSubject = new Subject<[Point, EditPointEvent?]>();
 	private _eventStartEditPointSubject = new Subject<void>();
 	private _eventRemovePointSubject = new Subject<string | undefined>();
 	private _eventStartRemovePointSubject = new Subject<string>();
@@ -66,7 +67,7 @@ export class DataService {
 
 		this.subscriptions.add(
 			this.eventEditPoint$.subscribe({
-				next: (updatedPoint) => {
+				next: ([updatedPoint]) => {
 					const index = this._points.findIndex(
 						(item) => item.id === updatedPoint.id
 					);
@@ -154,14 +155,18 @@ export class DataService {
 		}
 	}
 
-	editPoint(id: string | undefined, point: Point) {
+	editPoint(
+		id: string | undefined,
+		point: Point,
+		isIterationsEdit: EditPointEvent | undefined = undefined
+	) {
 		if (id) {
 			this.loading = true;
 			this._eventStartEditPointSubject.next();
 			this.http
 				.patchPoint(point)
 				.then(() => {
-					this._eventEditPointSubject.next(point);
+					this._eventEditPointSubject.next([point, isIterationsEdit]);
 				})
 				.catch((err) => {
 					this.notify.add({

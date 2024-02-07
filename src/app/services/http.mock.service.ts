@@ -101,16 +101,4 @@ export class HttpService implements HttpServiceInterface {
 		// 	})
 		// );
 	}
-
-	deletePoint(): Promise<void> {
-		return new Promise((resolve) => {
-			resolve();
-		});
-
-		// return timer(1000).pipe(
-		// 	switchMap(() => {
-		// 		return of(undefined);
-		// 	})
-		// );
-	}
 }

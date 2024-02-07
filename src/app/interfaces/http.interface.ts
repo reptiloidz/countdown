@@ -6,5 +6,4 @@ export interface HttpServiceInterface {
 	getPoint(id: string): Observable<Point>;
 	postPoint(point: Point): Promise<string>;
 	patchPoint(point: Point): Promise<Point>;
-	deletePoint(id: string): Promise<void>;
 }

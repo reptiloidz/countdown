@@ -162,8 +162,9 @@
 	</div>
 
 	<div class="form">
-		<div class="control">
+		<div class="control control--row">
 			<input
+				class="control__field"
 				type="text"
 				placeholder="Срок в минутах"
 				formControlName="difference"
@@ -172,6 +173,11 @@
 				[validation]="false"
 				[maxlength]="validatorDifferenceMaxLength"
 			>
+			<button
+				title="Сброс (итерация произошла сейчас)"
+				(click)="resetDifference()"
+				type="button"
+			>X</button>
 		</div>
 
 		<div class="control">

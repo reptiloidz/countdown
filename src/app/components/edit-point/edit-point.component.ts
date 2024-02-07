@@ -31,10 +31,21 @@ import { Constants } from 'src/app/enums';
 import { Iteration } from 'src/app/interfaces/iteration.interface';
 import { SortPipe } from 'src/app/pipes/sort.pipe';
 import { AuthService } from 'src/app/services/auth.service';
+import { EditPointEvent } from 'src/app/interfaces/editPointEvent.type';
 
 export enum EditPointType {
 	Create = 'create',
 	Edit = 'edit',
+}
+
+enum EditPointSuccessMessage {
+	pointAdded = 'Событие добавлено',
+	pointEdited = 'Событие изменено',
+	iterationAdded = 'Итерация добавлена',
+	iterationEdited = 'Итерация изменена',
+	iterationsGenerated = 'Итерации сгенерированы',
+	iterationRemoved = 'Итерация удалена',
+	iterationsRemoved = 'Итерации удалены',
 }
 
 @Component({
@@ -255,14 +266,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventAddPoint$.subscribe({
 				next: (point) => {
 					this.point = point;
-					this.success();
+					this.success(undefined, 'pointAdded');
 				},
 			})
 		);
 
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
-				next: (point) => {
+				next: ([point, editPointEvent]) => {
 					this.point = point;
 					if (
 						this.currentIterationIndex >= this.removedIterationIndex
@@ -271,7 +282,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					}
 					this.sortDates();
 					this.switchIteration();
-					this.success(point);
+					this.success(point, editPointEvent);
 				},
 			})
 		);
@@ -422,10 +433,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		confirm('Удалить итерацию?') &&
 			(() => {
 				this.removedIterationIndex = i;
-				this.data.editPoint(this.point?.id, {
-					...this.point,
-					dates: newDatesArray,
-				} as Point);
+				this.data.editPoint(
+					this.point?.id,
+					{
+						...this.point,
+						dates: newDatesArray,
+					} as Point,
+					'iterationRemoved'
+				);
 			})();
 	}
 
@@ -465,12 +480,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			'Удалить выбранные итерации? Если выбраны все, останется только последняя'
 		) &&
 			(() => {
-				this.data.editPoint(this.point?.id, {
-					...this.point,
-					dates: newDatesArray?.length
-						? newDatesArray
-						: [this.dates?.[this.dates?.length - 1]],
-				} as Point);
+				this.data.editPoint(
+					this.point?.id,
+					{
+						...this.point,
+						dates: newDatesArray?.length
+							? newDatesArray
+							: [this.dates?.[this.dates?.length - 1]],
+					} as Point,
+					'iterationsRemoved'
+				);
 			})();
 	}
 
@@ -494,6 +513,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.iterationControls = controls;
 	}
 
+	resetDifference() {
+		this.form.controls['difference'].setValue(0);
+	}
+
 	submit(saveIteration = false, repeats: Iteration[] = []) {
 		if (this.form.invalid) {
 			return;
@@ -502,9 +525,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.differenceChanged();
 		this.loading = true;
 		let newDatesArray = this.dates?.slice(0);
+		let editPointEvent: EditPointEvent = 'pointEdited';
 
 		if (repeats.length) {
 			newDatesArray?.push(...repeats);
+			editPointEvent = 'iterationsGenerated';
 		} else {
 			const dateTime = format(
 				getPointDate({
@@ -526,8 +551,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				newDatesArray = [lastDate];
 			} else if (this.isIterationAdded) {
 				saveIteration && newDatesArray?.push(lastDate);
+				editPointEvent = 'iterationAdded';
 			} else if (newDatesArray) {
 				newDatesArray[this.currentIterationIndex] = lastDate;
+				editPointEvent = 'iterationEdited';
 			}
 		}
 
@@ -546,12 +573,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.addPoint(result);
 		} else if (saveIteration || repeats.length) {
 			if (newDatesArray) {
-				this.data.editPoint(this.point?.id, {
-					...result,
-					repeatable: true,
-					dates: newDatesArray,
-					id: this.point?.id,
-				} as Point);
+				this.data.editPoint(
+					this.point?.id,
+					{
+						...result,
+						repeatable: true,
+						dates: newDatesArray,
+						id: this.point?.id,
+					} as Point,
+					editPointEvent
+				);
 			}
 		} else {
 			this.data.editPoint(this.point?.id, {
@@ -561,7 +592,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	success(point?: Point) {
+	success(
+		point?: Point,
+		editPointEvent: EditPointEvent | undefined = undefined
+	) {
 		this.loading = false;
 		point &&
 			(this.point = {
@@ -574,6 +608,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					iteration: this.currentIterationIndex + 1,
 				},
 			});
-		alert('Успешно');
+
+		editPointEvent && alert(EditPointSuccessMessage[editPointEvent]);
 	}
 }

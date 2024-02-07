@@ -116,7 +116,7 @@ export class PointComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
-				next: (point) => {
+				next: ([point]) => {
 					this.loading = this.data.loading = false;
 					this.point = point;
 					if (

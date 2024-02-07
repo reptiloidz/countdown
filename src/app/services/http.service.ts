@@ -100,13 +100,6 @@ export class HttpService implements HttpServiceInterface {
 		return set(ref(this.db, `points/${point?.id}`), point);
 	}
 
-	async deletePoint(id: string | undefined): Promise<void> {
-		await (id ? set(ref(this.db, `points/${id}`), null) : null);
-		return await new Promise((resolve) => {
-			resolve();
-		});
-	}
-
 	async deletePoints(points: string[]): Promise<void> {
 		await (points.length
 			? update(

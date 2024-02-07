@@ -330,7 +330,7 @@ export class AuthService implements OnDestroy {
 			this.updateUserBirthDate(user.uid, null)
 				.then(() => {
 					this.http
-						.deletePoint(birthDatePointId)
+						.deletePoints([birthDatePointId])
 						.then(() => {
 							deleteUser(user)
 								.then(() => {

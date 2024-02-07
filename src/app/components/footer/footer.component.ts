@@ -68,30 +68,33 @@ export class FooterComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (point: Point | undefined) => {
 						this.point = point;
-						const googleLinkDate =
-							point?.dates[this.iteration - 1]?.date &&
-							formatISO(
-								parse(
-									point?.dates[this.iteration - 1]?.date,
-									Constants.fullDateFormat,
-									new Date()
-								),
-								{ format: 'basic' }
-							) + (point?.greenwich ? 'Z' : '');
 
-						const googleLinkParams = {
-							text: point?.title || '',
-							details: point?.description || '',
-							dates: googleLinkDate
-								? googleLinkDate + '/' + googleLinkDate
-								: '',
-						};
+						if (this.iteration) {
+							const googleLinkDate =
+								point?.dates[this.iteration - 1]?.date &&
+								formatISO(
+									parse(
+										point?.dates[this.iteration - 1]?.date,
+										Constants.fullDateFormat,
+										new Date()
+									),
+									{ format: 'basic' }
+								) + (point?.greenwich ? 'Z' : '');
 
-						this.exportGoogleLink =
-							'https://calendar.google.com/calendar/u/0/r/eventedit?' +
-							new HttpParams({
-								fromObject: googleLinkParams,
-							}).toString();
+							const googleLinkParams = {
+								text: point?.title || '',
+								details: point?.description || '',
+								dates: googleLinkDate
+									? googleLinkDate + '/' + googleLinkDate
+									: '',
+							};
+
+							this.exportGoogleLink =
+								'https://calendar.google.com/calendar/u/0/r/eventedit?' +
+								new HttpParams({
+									fromObject: googleLinkParams,
+								}).toString();
+						}
 						this.hasAccess =
 							point && this.auth.checkAccessEdit(point);
 					},
@@ -106,7 +109,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
-				next: (point) => {
+				next: ([point]) => {
 					this.point = point;
 				},
 				error: (err) => {
