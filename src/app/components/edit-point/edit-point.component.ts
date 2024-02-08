@@ -328,7 +328,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			{
 				title: this.point?.title,
 				description: this.point?.description,
-				direction: this.point?.direction,
+				direction: this.point?.direction || 'backward',
 				greenwich: this.point?.greenwich || false,
 				repeatable: this.point?.repeatable || false,
 				public: this.point?.public || false,
@@ -338,7 +338,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		const pointDate = getPointDate({
+		let pointDate = getPointDate({
 			pointDate: isReset
 				? new Date()
 				: new Date(
@@ -349,11 +349,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				? false
 				: this.form.controls['greenwich'].value,
 		});
-		isDateValid(pointDate) &&
-			this.form.patchValue({
-				date: format(pointDate, Constants.shortDateFormat),
-				time: format(pointDate, Constants.timeFormat),
-			});
+
+		pointDate = isDateValid(pointDate) ? pointDate : new Date();
+		this.form.patchValue({
+			date: format(pointDate, Constants.shortDateFormat),
+			time: format(pointDate, Constants.timeFormat),
+		});
 
 		this.dateChanged(pointDate);
 	}
@@ -592,10 +593,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	success(
-		point?: Point,
-		editPointEvent: EditPointEvent | undefined = undefined
-	) {
+	success(point: Point | undefined, editPointEvent: EditPointEvent) {
 		this.loading = false;
 		point &&
 			(this.point = {

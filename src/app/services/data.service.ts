@@ -18,7 +18,7 @@ export class DataService {
 		this._points
 	);
 	private _eventAddPointSubject = new Subject<Point>();
-	private _eventEditPointSubject = new Subject<[Point, EditPointEvent?]>();
+	private _eventEditPointSubject = new Subject<[Point, EditPointEvent]>();
 	private _eventStartEditPointSubject = new Subject<void>();
 	private _eventRemovePointSubject = new Subject<string | undefined>();
 	private _eventStartRemovePointSubject = new Subject<string>();
@@ -158,7 +158,7 @@ export class DataService {
 	editPoint(
 		id: string | undefined,
 		point: Point,
-		isIterationsEdit: EditPointEvent | undefined = undefined
+		editPointEvent: EditPointEvent = 'pointEdited'
 	) {
 		if (id) {
 			this.loading = true;
@@ -166,7 +166,7 @@ export class DataService {
 			this.http
 				.patchPoint(point)
 				.then(() => {
-					this._eventEditPointSubject.next([point, isIterationsEdit]);
+					this._eventEditPointSubject.next([point, editPointEvent]);
 				})
 				.catch((err) => {
 					this.notify.add({
