@@ -359,10 +359,15 @@ export class AuthService implements OnDestroy {
 							});
 						});
 				})
-				.catch(() => {
-					this.notify.add({
-						title: 'Ошибка при обновлении даты рождения',
-					});
+				.catch((err) => {
+					if (err.code === 'INVALID_PARAMETERS') {
+						console.error(err);
+						this.removeAccount(user, birthDatePointId, true);
+					} else {
+						this.notify.add({
+							title: 'Ошибка при удалении события',
+						});
+					}
 				});
 		});
 	}

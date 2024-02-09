@@ -10,6 +10,7 @@ import {
 	switchMap,
 	tap,
 	timer,
+	skipWhile,
 } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { getErrorMessages, mergeDeep } from 'src/app/helpers';
@@ -46,6 +47,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	private _birthDate = '';
 	private _birthDatePointId = '';
 	private _debounceTime = 1000;
+	private _profileChanged = false;
 	private subscriptions = new Subscription();
 
 	nameValidated: ValidationObject = {
@@ -177,9 +179,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				.pipe(
 					concatMap(() => {
 						return this.auth.eventProfileUpdated$;
-					})
+					}),
+					skipWhile(() => {
+						const isSkipped = !this._profileChanged;
+						this._profileChanged = true;
+						return isSkipped;
+					}),
+					distinctUntilChanged()
 				)
-				.pipe(distinctUntilChanged())
 				.subscribe({
 					next: (data) => {
 						data?.displayName &&
