@@ -38,6 +38,7 @@ import { NotifyService } from './notify.service';
 import { HttpService } from './http.service';
 import { UserProfile } from '../interfaces/userProfile.interface';
 import { UserExtraData } from '../interfaces/userExtraData.interface';
+import { generateUserpicName, randomHEXColor } from '../helpers';
 
 @Injectable({
 	providedIn: 'root',
@@ -179,12 +180,17 @@ export class AuthService implements OnDestroy {
 			user.password
 		);
 
+		const displayName = user.email.split('@')[0];
+
 		this._user = value.user;
 
 		this._user &&
-			!this._user.displayName &&
+			(!this._user.displayName || !this._user.photoURL) &&
 			this.updateProfile(this._user, {
-				displayName: user.email.split('@')[0],
+				displayName,
+				photoURL: `https://ui-avatars.com/api/?name=${generateUserpicName(
+					displayName
+				)}&background=${randomHEXColor()}`,
 			});
 
 		this._eventLoginSubject.next(this._user?.uid || '');
@@ -321,12 +327,8 @@ export class AuthService implements OnDestroy {
 			});
 	}
 
-	removeAccount(
-		user: User,
-		birthDatePointId: string,
-		reAuthRequired = false
-	) {
-		this.reAuth(reAuthRequired).then(() => {
+	removeAccount(user: User, birthDatePointId: string) {
+		this.reAuth(true).then(() => {
 			this.updateUserBirthDate(user.uid, null)
 				.then(() => {
 					this.http
@@ -337,37 +339,24 @@ export class AuthService implements OnDestroy {
 									this._eventAccountDeletedSubject.next();
 								})
 								.catch((err) => {
-									if (
-										err.code ===
-										'auth/requires-recent-login'
-									) {
-										this.removeAccount(
-											user,
-											birthDatePointId,
-											true
-										);
-									} else {
-										this.notify.add({
-											title: 'Произошла ошибка',
-										});
-									}
+									console.error(err);
+									this.notify.add({
+										title: 'Ошибка при удалении учётной записи',
+									});
 								});
 						})
-						.catch(() => {
+						.catch((err) => {
+							console.error(err);
 							this.notify.add({
 								title: 'Ошибка при удалении события',
 							});
 						});
 				})
 				.catch((err) => {
-					if (err.code === 'INVALID_PARAMETERS') {
-						console.error(err);
-						this.removeAccount(user, birthDatePointId, true);
-					} else {
-						this.notify.add({
-							title: 'Ошибка при удалении события',
-						});
-					}
+					console.error(err);
+					this.notify.add({
+						title: 'Ошибка при удалении события',
+					});
 				});
 		});
 	}

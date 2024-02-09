@@ -13,7 +13,12 @@ import {
 	skipWhile,
 } from 'rxjs';
 import { Constants } from 'src/app/enums';
-import { getErrorMessages, mergeDeep } from 'src/app/helpers';
+import {
+	generateUserpicName,
+	getErrorMessages,
+	mergeDeep,
+	randomHEXColor,
+} from 'src/app/helpers';
 import { ValidationObject } from 'src/app/interfaces/validation.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
@@ -142,6 +147,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this.formData.controls['name'].setValue(
 							this._user?.displayName
 						);
+						this.name = this._user?.displayName as string;
 						this.userpic = this._user?.photoURL as string;
 					}),
 					concatMap(() => {
@@ -250,24 +256,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				.pipe(debounce(() => timer(this._debounceTime)))
 				.subscribe({
 					next: (data) => {
-						this.name = data;
-						this.userpic = `https://ui-avatars.com/api/?name=${this.generateUserpicUrl(
-							data
-						)}&background=random`;
-						this.userpicLoading = false;
-
-						this.nameValidated = mergeDeep(this.nameValidated, {
-							name: {
-								required: {
-									value: !this.formData.controls['name']
-										.errors?.['required'],
+						if (this.name !== data) {
+							this.name = data;
+							this.userpic = `https://ui-avatars.com/api/?name=${generateUserpicName(
+								data
+							)}&background=${randomHEXColor()}`;
+							this.nameValidated = mergeDeep(this.nameValidated, {
+								name: {
+									required: {
+										value: !this.formData.controls['name']
+											.errors?.['required'],
+									},
+									dirty: this.formData.controls['name'].dirty,
 								},
-								dirty: this.formData.controls['name'].dirty,
-							},
-						}) as ValidationObject;
-						this.nameErrorMessages = getErrorMessages(
-							this.nameValidated
-						);
+							}) as ValidationObject;
+							this.nameErrorMessages = getErrorMessages(
+								this.nameValidated
+							);
+						}
+						this.userpicLoading = false;
 					},
 				})
 		);
@@ -436,13 +443,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	generateUserpicUrl(name: string) {
-		return name?.replaceAll(' ', '+');
-	}
-
 	removeAccount() {
 		confirm('Точно удалить учётную запись? Действие необратимо!') &&
-			(this.removeLoading = true) &&
 			this.auth.removeAccount(this._user, this._birthDatePointId);
 	}
 }
