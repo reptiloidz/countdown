@@ -64,4 +64,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 	checkPoint() {
 		this.data.getCheckedPoints(this.pointsList.nativeElement);
 	}
+
+	dateSelected(date: Date) {
+		console.log(date);
+	}
 }

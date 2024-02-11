@@ -1,0 +1,33 @@
+<button
+	type="button"
+	(click)="previous()"
+>Предыдущий</button>
+<button
+	type="button"
+	(click)="next()"
+>Следующий</button>
+
+<table>
+	<thead>
+		<tr>
+			<th>пн</th>
+			<th>вт</th>
+			<th>ср</th>
+			<th>чт</th>
+			<th>пт</th>
+			<th>сб</th>
+			<th>вс</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let week of generateMonth()">
+			<td *ngFor="let item of week">
+				<div (click)="dateClicked(item.date)">
+					<span *ngIf="item.selectedDate">_</span>
+					<span *ngIf="item.nowDate">!</span>
+					{{ item.date | date : 'mediumDate' }}
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

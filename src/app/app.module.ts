@@ -21,6 +21,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 @NgModule({
 	declarations: [
@@ -35,6 +36,7 @@ import { PrivacyComponent } from './components/privacy/privacy.component';
 		GenerateIterationsComponent,
 		SortPipe,
 		PrivacyComponent,
+		CalendarComponent,
 	],
 	imports: [
 		BrowserModule,
