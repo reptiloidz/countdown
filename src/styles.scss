@@ -337,6 +337,32 @@ a,
 	}
 }
 
+.calendar {
+	&__nav {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	&__cell {
+		padding: 0;
+	}
+
+	&__button {
+		width: 100%;
+		height: 100%;
+		padding: 12px;
+		border: 2px solid transparent;
+
+		&--selected {
+			background-color: #BBBBBB;
+		}
+
+		&--now {
+			border-color: #999999;
+		}
+	}
+}
+
 table {
 	border-collapse: collapse;
 	table-layout: fixed;

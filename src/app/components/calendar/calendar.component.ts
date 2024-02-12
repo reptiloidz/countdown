@@ -1,122 +1,219 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	OnDestroy,
+	OnInit,
+	Output,
+} from '@angular/core';
 import {
 	addDays,
+	addHours,
+	addMinutes,
 	addMonths,
-	getDate,
-	getDay,
-	getDaysInMonth,
-	getMonth,
-	getYear,
+	addYears,
 	isMonday,
 	lastDayOfMonth,
 	previousMonday,
 	startOfDay,
+	startOfHour,
+	startOfMinute,
 	startOfMonth,
+	startOfYear,
 	subDays,
+	subHours,
 	subMonths,
+	subYears,
 } from 'date-fns';
+import { Subscription, interval } from 'rxjs';
 import { CalendarDate } from 'src/app/interfaces/calendarDate.interface';
+import { CalendarMode } from 'src/app/interfaces/calendarMode.type';
 
 @Component({
 	selector: 'app-calendar',
 	templateUrl: './calendar.component.html',
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
 	private nowDate = new Date();
 	private lastDateOfCurrentMonth!: Date;
 	private firstMonday!: Date;
 	private selectedDate = this.nowDate;
-	private currentDate = this.nowDate;
+	private visibleDate = this.nowDate;
+	private subscriptions = new Subscription();
+	activeMode: CalendarMode = 'month';
 
 	@Output() dateSelected = new EventEmitter<Date>();
 
 	ngOnInit() {
-		// console.log(this.getCurrentDateParams());
-		// this.getCurrentDateParams();
-		console.log(this.generateMonth());
+		this.subscriptions.add(
+			interval(10000).subscribe({
+				next: () => {
+					this.nowDate = new Date();
+				},
+			})
+		);
 	}
 
-	getCurrentDateParams(currentDate: Date) {
-		this.currentDate = currentDate;
-		this.lastDateOfCurrentMonth = lastDayOfMonth(currentDate);
-		this.firstMonday = isMonday(startOfMonth(currentDate))
-			? startOfMonth(currentDate)
-			: previousMonday(startOfMonth(currentDate));
-
-		// return {
-		// 	currentMonth: getMonth(currentDate),
-		// 	currentYear: getYear(currentDate),
-		// 	daysInCurrentMonth: getDaysInMonth(currentDate),
-		// 	currentDayOfWeek: getDay(startOfMonth(currentDate)),
-		// 	daysInPreviousMonth: getDate(subDays(startOfMonth(currentDate), 1)),
-		// 	lastDateOfCurrentMonth: lastDayOfMonth(currentDate),
-		// 	firstMonday: isMonday(startOfMonth(currentDate)) ? startOfMonth(currentDate) : previousMonday(startOfMonth(currentDate)),
-		// }
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	dateClicked(date: Date) {
+		this.selectedDate = date;
 		this.dateSelected.emit(date);
 	}
 
-	generateMonth(date: Date = this.currentDate) {
-		this.getCurrentDateParams(date);
+	generateCalendar({
+		date = this.visibleDate,
+		mode = this.activeMode,
+	}: {
+		date?: Date;
+		mode?: CalendarMode;
+	} = {}) {
+		this.visibleDate = date;
+		this.lastDateOfCurrentMonth = lastDayOfMonth(date);
+		this.firstMonday = isMonday(startOfMonth(date))
+			? startOfMonth(date)
+			: previousMonday(startOfMonth(date));
 
-		let monthArray = [];
-		let allDaysIterated = false;
+		let rows = 1;
+		let cols = 7;
+		let rowNumber = 0;
+
+		switch (mode) {
+			case 'year':
+				cols = 12;
+				break;
+			case 'day':
+				rows = 2;
+				cols = 12;
+				break;
+			case 'hour':
+				rows = 4;
+				cols = 15;
+				break;
+			default:
+				break;
+		}
+
+		let fullArray = [];
+		let loopFinished = false;
 		let previousDate!: Date;
 
-		while (!allDaysIterated) {
-			let weekArray: CalendarDate[] = [];
+		while (!loopFinished) {
+			let rowArray: CalendarDate[] = [];
 
-			for (let i = 0; i < 7; i++) {
+			for (let i = 0; i < cols; i++) {
 				if (!previousDate) {
-					const thisDate = this.firstMonday;
-					weekArray.push({
+					let thisDate = this.firstMonday;
+
+					switch (this.activeMode) {
+						case 'year':
+							thisDate = startOfYear(this.visibleDate);
+							break;
+						case 'day':
+							thisDate = startOfDay(this.visibleDate);
+							break;
+						case 'hour':
+							thisDate = startOfHour(this.visibleDate);
+							break;
+						default:
+							break;
+					}
+
+					rowArray.push({
 						date: thisDate,
-						currentDate: this.isCurrentDate(thisDate),
-						selectedDate: this.isSelectedDate(thisDate),
-						nowDate: this.isNowDate(thisDate),
+						visibleDate: this.isDateMatch(thisDate, 'visible'),
+						selectedDate: this.isDateMatch(thisDate, 'selected'),
+						nowDate: this.isDateMatch(thisDate, 'now'),
 					});
 					previousDate = thisDate;
 				} else {
-					const thisDate = addDays(previousDate, 1);
-					weekArray.push({
+					let thisDate = addDays(previousDate, 1);
+
+					switch (this.activeMode) {
+						case 'year':
+							thisDate = addMonths(previousDate, 1);
+							break;
+						case 'day':
+							thisDate = addHours(previousDate, 1);
+							break;
+						case 'hour':
+							thisDate = addMinutes(previousDate, 1);
+							break;
+						default:
+							break;
+					}
+
+					rowArray.push({
 						date: thisDate,
-						currentDate: this.isCurrentDate(thisDate),
-						selectedDate: this.isSelectedDate(thisDate),
-						nowDate: this.isNowDate(thisDate),
+						visibleDate: this.isDateMatch(thisDate, 'visible'),
+						selectedDate: this.isDateMatch(thisDate, 'selected'),
+						nowDate: this.isDateMatch(thisDate, 'now'),
 					});
 					previousDate = thisDate;
 
-					if (+thisDate === +this.lastDateOfCurrentMonth) {
-						allDaysIterated = true;
+					if (
+						(mode === 'month' &&
+							+thisDate === +this.lastDateOfCurrentMonth) ||
+						((mode === 'year' ||
+							mode === 'day' ||
+							mode === 'hour') &&
+							rowNumber === rows - 1)
+					) {
+						loopFinished = true;
 					}
 				}
 			}
 
-			monthArray.push(weekArray);
+			if (mode === 'year' || mode === 'day' || mode === 'hour') {
+				rowNumber++;
+			}
+
+			fullArray.push(rowArray);
 		}
 
-		return monthArray;
+		return fullArray;
 	}
 
-	isCurrentDate(date: Date) {
-		return +date === +startOfDay(this.currentDate);
+	isDateMatch(date: Date, matchMode: 'visible' | 'selected' | 'now') {
+		switch (this.activeMode) {
+			case 'year':
+				return +date === +startOfMonth(this[`${matchMode}Date`]);
+			case 'day':
+				return +date === +startOfHour(this[`${matchMode}Date`]);
+			case 'hour':
+				return +date === +startOfMinute(this[`${matchMode}Date`]);
+			default:
+				return +date === +startOfDay(this[`${matchMode}Date`]);
+		}
 	}
 
-	isSelectedDate(date: Date) {
-		return +date === +startOfDay(this.selectedDate);
+	switchCalendarMode(mode: CalendarMode) {
+		this.activeMode = mode;
 	}
 
-	isNowDate(date: Date) {
-		return +date === +startOfDay(this.nowDate);
-	}
+	switchCalendarPeriod(forward = true) {
+		const result = {
+			year: {
+				forward: addYears(this.visibleDate, 1),
+				backward: subYears(this.visibleDate, 1),
+			},
+			month: {
+				forward: addMonths(this.visibleDate, 1),
+				backward: subMonths(this.visibleDate, 1),
+			},
+			day: {
+				forward: addDays(this.visibleDate, 1),
+				backward: subDays(this.visibleDate, 1),
+			},
+			hour: {
+				forward: addHours(this.visibleDate, 1),
+				backward: subHours(this.visibleDate, 1),
+			},
+		};
 
-	previous() {
-		this.generateMonth(subMonths(this.currentDate, 1));
-	}
-
-	next() {
-		this.generateMonth(addMonths(this.currentDate, 1));
+		this.generateCalendar({
+			date: result[this.activeMode][forward ? 'forward' : 'backward'],
+		});
 	}
 }

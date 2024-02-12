@@ -1,6 +1,6 @@
 export interface CalendarDate {
 	date: Date;
 	selectedDate: boolean;
-	currentDate: boolean;
+	visibleDate: boolean;
 	nowDate: boolean;
 }

@@ -169,9 +169,9 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	setTimer() {
 		const currentInterval = this.interval;
-		this.timer = `${currentInterval.hours}:${this.zeroPad(
-			currentInterval.minutes
-		)}:${this.zeroPad(currentInterval.seconds)}`;
+		this.timer = `${currentInterval.hours || 0}:${this.zeroPad(
+			currentInterval.minutes || 0
+		)}:${this.zeroPad(currentInterval.seconds || 0)}`;
 	}
 
 	setDateTimer() {
