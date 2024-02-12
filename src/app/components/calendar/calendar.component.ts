@@ -41,7 +41,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 	activeMode: CalendarMode = 'month';
 
-	@Output() dateSelected = new EventEmitter<Date>();
+	@Output() dateSelected = new EventEmitter<{
+		date: Date;
+		mode: CalendarMode;
+	}>();
 
 	ngOnInit() {
 		this.subscriptions.add(
@@ -57,10 +60,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	dateClicked(date: Date) {
+	dateClicked(date: Date, activeMode: CalendarMode) {
 		this.selectedDate = date;
 		this.visibleDate = date;
-		this.dateSelected.emit(date);
+		this.dateSelected.emit({ date, mode: activeMode });
 	}
 
 	generateCalendar({

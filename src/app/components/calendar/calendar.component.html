@@ -46,7 +46,7 @@
 						'calendar__button--selected': item.selectedDate,
 						'calendar__button--now': item.nowDate,
 					}"
-					(click)="dateClicked(item.date)"
+					(click)="dateClicked(item.date, activeMode)"
 				>
 					{{ item.date | date : "dd.MM.yyyy '—' HH:mm" }}
 				</button>

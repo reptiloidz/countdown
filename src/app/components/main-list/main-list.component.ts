@@ -6,6 +6,7 @@ import {
 	OnInit,
 } from '@angular/core';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
+import { CalendarMode } from 'src/app/interfaces/calendarMode.type';
 import { Point } from 'src/app/interfaces/point.interface';
 import { DataService } from 'src/app/services/data.service';
 
@@ -65,7 +66,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.data.getCheckedPoints(this.pointsList.nativeElement);
 	}
 
-	dateSelected(date: Date) {
-		console.log(date);
+	dateSelected({ date, mode }: { date: Date; mode: CalendarMode }) {
+		console.log(date, mode);
 	}
 }
