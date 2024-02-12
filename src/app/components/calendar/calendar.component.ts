@@ -1,6 +1,9 @@
 import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
 	EventEmitter,
+	Input,
 	OnDestroy,
 	OnInit,
 	Output,
@@ -12,7 +15,12 @@ import {
 	addMonths,
 	addYears,
 	isMonday,
+	isSameDay,
+	isSameHour,
+	isSameMinute,
+	isSameMonth,
 	lastDayOfMonth,
+	parse,
 	previousMonday,
 	startOfDay,
 	startOfHour,
@@ -24,13 +32,18 @@ import {
 	subMonths,
 	subYears,
 } from 'date-fns';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, filter, interval, tap } from 'rxjs';
+import { Constants } from 'src/app/enums';
 import { CalendarDate } from 'src/app/interfaces/calendarDate.interface';
 import { CalendarMode } from 'src/app/interfaces/calendarMode.type';
+import { Iteration } from 'src/app/interfaces/iteration.interface';
+import { Point } from 'src/app/interfaces/point.interface';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
 	selector: 'app-calendar',
 	templateUrl: './calendar.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent implements OnInit, OnDestroy {
 	private nowDate = new Date();
@@ -41,18 +54,49 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 	activeMode: CalendarMode = 'month';
 
+	@Input() points?: Point[] = [];
+	@Input() iterations?: Iteration[] = [];
+
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;
 		mode: CalendarMode;
 	}>();
 
+	constructor(private cdr: ChangeDetectorRef, private data: DataService) {}
+
 	ngOnInit() {
 		this.subscriptions.add(
-			interval(10000).subscribe({
-				next: () => {
-					this.nowDate = new Date();
-				},
-			})
+			interval(1000)
+				.pipe(
+					filter(() => {
+						switch (this.activeMode) {
+							case 'year':
+								return !isSameMonth(this.nowDate, new Date());
+							case 'day':
+								return !isSameHour(this.nowDate, new Date());
+							case 'hour':
+								return !isSameMinute(this.nowDate, new Date());
+							default:
+								return !isSameDay(this.nowDate, new Date());
+						}
+					})
+				)
+				.subscribe({
+					next: () => {
+						this.nowDate = new Date();
+						this.cdr.detectChanges();
+					},
+				})
+		);
+
+		this.subscriptions.add(
+			this.data.eventEditPoint$
+				.pipe(
+					tap(() => {
+						this.cdr.detectChanges();
+					})
+				)
+				.subscribe()
 		);
 	}
 
@@ -142,6 +186,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
+						points: this.filterPoints(thisDate),
+						iterations: this.filterIterations(thisDate),
 					});
 					previousDate = thisDate;
 				} else {
@@ -166,6 +212,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
+						points: this.filterPoints(thisDate),
+						iterations: this.filterIterations(thisDate),
 					});
 					previousDate = thisDate;
 
@@ -188,8 +236,44 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 			fullArray.push(rowArray);
 		}
-
 		return fullArray;
+	}
+
+	filterPoints(date: Date) {
+		return !this.points
+			? []
+			: this.points?.filter((item) => {
+					return item.dates.some((iteration) =>
+						this.findIterations(iteration, date)
+					);
+			  });
+	}
+
+	filterIterations(date: Date) {
+		return !this.iterations
+			? []
+			: this.iterations?.filter((iteration) =>
+					this.findIterations(iteration, date)
+			  );
+	}
+
+	findIterations(iteration: Iteration, date: Date) {
+		const iterationDate = parse(
+			iteration.date,
+			Constants.fullDateFormat,
+			new Date()
+		);
+
+		switch (this.activeMode) {
+			case 'year':
+				return isSameMonth(iterationDate, date);
+			case 'day':
+				return isSameHour(iterationDate, date);
+			case 'hour':
+				return isSameMinute(iterationDate, date);
+			default:
+				return isSameDay(iterationDate, date);
+		}
 	}
 
 	isDateMatch(date: Date, matchMode: 'visible' | 'selected' | 'now') {

@@ -48,6 +48,10 @@
 					}"
 					(click)="dateClicked(item.date, activeMode)"
 				>
+					<span
+						*ngIf="item.points.length || item.iterations.length"
+						class="calendar__counter"
+					>{{ item.points.length || item.iterations.length }}</span>
 					{{ item.date | date : "dd.MM.yyyy '—' HH:mm" }}
 				</button>
 			</td>

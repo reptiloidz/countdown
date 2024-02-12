@@ -1,6 +1,7 @@
 <ng-container *ngIf="!loading; else loader">
 	<app-calendar
 		(dateSelected)="dateSelected($event)"
+		[points]="points"
 		class="calendar"
 	></app-calendar>
 	<ul

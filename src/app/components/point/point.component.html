@@ -7,6 +7,13 @@
 		*ngIf="point?.title"
 		class="description"
 	>{{ remainText }}</h2>
+
+	<app-calendar
+		*ngIf="this.dates?.length"
+		[iterations]="point?.dates"
+		class="calendar"
+	></app-calendar>
+
 	<ul
 		#iterationsList
 		*ngIf="this.dates?.length && (this.dates?.length != 1)"
