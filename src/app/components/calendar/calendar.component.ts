@@ -59,6 +59,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	dateClicked(date: Date) {
 		this.selectedDate = date;
+		this.visibleDate = date;
 		this.dateSelected.emit(date);
 	}
 
@@ -69,7 +70,20 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		date?: Date;
 		mode?: CalendarMode;
 	} = {}) {
-		this.visibleDate = date;
+		switch (this.activeMode) {
+			case 'year':
+				this.visibleDate = startOfMonth(date);
+				break;
+			case 'day':
+				this.visibleDate = startOfHour(date);
+				break;
+			case 'hour':
+				this.visibleDate = startOfMinute(date);
+				break;
+			default:
+				this.visibleDate = startOfDay(date);
+				break;
+		}
 		this.lastDateOfCurrentMonth = lastDayOfMonth(date);
 		this.firstMonday = isMonday(startOfMonth(date))
 			? startOfMonth(date)
