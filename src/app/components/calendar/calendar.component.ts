@@ -34,10 +34,10 @@ import { CalendarMode } from 'src/app/interfaces/calendarMode.type';
 })
 export class CalendarComponent implements OnInit, OnDestroy {
 	private nowDate = new Date();
-	private lastDateOfCurrentMonth!: Date;
-	private firstMonday!: Date;
 	private selectedDate = this.nowDate;
 	private visibleDate = this.nowDate;
+	private lastDateOfCurrentMonth!: Date;
+	private firstMonday!: Date;
 	private subscriptions = new Subscription();
 	activeMode: CalendarMode = 'month';
 
@@ -190,6 +190,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	switchCalendarMode(mode: CalendarMode) {
 		this.activeMode = mode;
+	}
+
+	switchCalendarToNow() {
+		this.visibleDate = this.nowDate;
 	}
 
 	switchCalendarPeriod(forward = true) {
