@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Iteration } from '../interfaces/iteration.interface';
+import { Iteration } from '../interfaces';
 
 @Pipe({
 	name: 'sort',

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { format, parse } from 'date-fns';
 import { Constants } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
-import { Iteration } from 'src/app/interfaces/iteration.interface';
+import { Iteration } from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-generate-iterations',

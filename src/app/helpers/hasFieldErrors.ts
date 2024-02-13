@@ -1,4 +1,4 @@
-import { ValidationObjectField } from '../interfaces/validation.interface';
+import { ValidationObjectField } from '../interfaces';
 
 export const hasFieldErrors = (field: ValidationObjectField) => {
 	for (const key in field) {

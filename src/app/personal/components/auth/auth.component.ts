@@ -3,10 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
-import {
-	ValidationObject,
-	ValidationObjectField,
-} from 'src/app/interfaces/validation.interface';
+import { ValidationObject, ValidationObjectField } from 'src/app/interfaces';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotifyService } from 'src/app/services/notify.service';
 

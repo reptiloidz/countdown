@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, switchMap, timer } from 'rxjs';
-import { Point } from '../interfaces/point.interface';
-import { HttpServiceInterface } from '../interfaces/http.interface';
+import { Point, HttpServiceInterface } from '../interfaces';
 
 @Injectable({
 	providedIn: 'root',

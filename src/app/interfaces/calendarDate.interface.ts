@@ -1,5 +1,4 @@
-import { Iteration } from './iteration.interface';
-import { Point } from './point.interface';
+import { Iteration, Point } from '.';
 
 export interface CalendarDate {
 	date: Date;

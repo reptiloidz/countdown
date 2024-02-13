@@ -19,7 +19,7 @@ import {
 	mergeDeep,
 	randomHEXColor,
 } from 'src/app/helpers';
-import { ValidationObject } from 'src/app/interfaces/validation.interface';
+import { ValidationObject } from 'src/app/interfaces';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { NotifyService } from 'src/app/services/notify.service';

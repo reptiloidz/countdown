@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 import { HttpService } from 'src/app/services/http.mock.service';
 import { HttpService as MockHttpService } from 'src/app/services/http.service';
-import { Environment } from './interface';
+import { Environment } from '../app/interfaces';
 
 export const environment: Environment = {
 	production: false,

@@ -9,7 +9,7 @@ import {
 	ElementRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Point } from 'src/app/interfaces/point.interface';
+import { Point } from 'src/app/interfaces';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 

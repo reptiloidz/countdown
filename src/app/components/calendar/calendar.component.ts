@@ -34,10 +34,12 @@ import {
 } from 'date-fns';
 import { Subscription, filter, interval, tap } from 'rxjs';
 import { Constants } from 'src/app/enums';
-import { CalendarDate } from 'src/app/interfaces/calendarDate.interface';
-import { CalendarMode } from 'src/app/interfaces/calendarMode.type';
-import { Iteration } from 'src/app/interfaces/iteration.interface';
-import { Point } from 'src/app/interfaces/point.interface';
+import {
+	CalendarDate,
+	CalendarMode,
+	Iteration,
+	Point,
+} from 'src/app/interfaces';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Point } from './point.interface';
+import { Point } from '.';
 
 export interface HttpServiceInterface {
 	getPoints(): Observable<Point[]>;

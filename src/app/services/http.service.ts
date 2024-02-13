@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, switchMap, combineLatest } from 'rxjs';
-import { Point } from '../interfaces/point.interface';
-import { HttpServiceInterface } from '../interfaces/http.interface';
+import { Point, HttpServiceInterface } from '../interfaces';
 import {
 	ref,
 	getDatabase,

@@ -6,9 +6,7 @@ import {
 	OnInit,
 } from '@angular/core';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
-import { CalendarMode } from 'src/app/interfaces/calendarMode.type';
-import { Iteration } from 'src/app/interfaces/iteration.interface';
-import { Point } from 'src/app/interfaces/point.interface';
+import { CalendarMode, Iteration, Point } from 'src/app/interfaces';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({

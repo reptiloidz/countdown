@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject, BehaviorSubject, Subscription } from 'rxjs';
-import { Point } from '../interfaces/point.interface';
+import { Point, EditPointEvent } from '../interfaces';
 import { HttpService } from './http.service';
 import { NotifyService } from './notify.service';
-import { EditPointEvent } from '../interfaces/editPointEvent.type';
 
 @Injectable({
 	providedIn: 'root',

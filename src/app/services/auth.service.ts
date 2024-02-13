@@ -12,8 +12,13 @@ import {
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Constants } from '../enums';
-import { FbAuthResponse } from '../interfaces/fbAuthResponse.interface';
-import { UserPoint } from '../interfaces/user.interface';
+import {
+	FbAuthResponse,
+	UserPoint,
+	Point,
+	UserProfile,
+	UserExtraData,
+} from '../interfaces';
 import {
 	Auth,
 	signInWithEmailAndPassword,
@@ -33,11 +38,8 @@ import {
 	sendPasswordResetEmail,
 } from '@angular/fire/auth';
 import { goOnline, objectVal, query, ref, set } from '@angular/fire/database';
-import { Point } from '../interfaces/point.interface';
 import { NotifyService } from './notify.service';
 import { HttpService } from './http.service';
-import { UserProfile } from '../interfaces/userProfile.interface';
-import { UserExtraData } from '../interfaces/userExtraData.interface';
 import { generateUserpicName, randomHEXColor } from '../helpers';
 
 @Injectable({

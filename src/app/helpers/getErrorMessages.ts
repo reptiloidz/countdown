@@ -1,4 +1,4 @@
-import { ValidationObject } from '../interfaces/validation.interface';
+import { ValidationObject } from '../interfaces';
 
 export const getErrorMessages = (validationObject: ValidationObject) => {
 	let errorMessages: string[] = [];
