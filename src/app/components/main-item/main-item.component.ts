@@ -10,8 +10,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Point } from 'src/app/interfaces';
-import { AuthService } from 'src/app/services/auth.service';
-import { DataService } from 'src/app/services/data.service';
+import { AuthService, DataService } from 'src/app/services';
 
 @Component({
 	selector: '[app-main-item]',

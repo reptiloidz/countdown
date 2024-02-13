@@ -6,9 +6,7 @@ import { EditPointComponent } from './components/edit-point/edit-point.component
 import { CreatePointComponent } from './components/create-point/create-point.component';
 import { AuthComponent } from './personal/components/auth/auth.component';
 import { PrivacyComponent } from './components/privacy/privacy.component';
-import { readGuard } from './services/read.guard';
-import { editGuard } from './services/edit.guard';
-import { authGuard } from './services/auth.guard';
+import { readGuard, editGuard, authGuard } from './guards';
 
 const routes: Routes = [
 	{

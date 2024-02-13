@@ -40,7 +40,7 @@ import {
 	Iteration,
 	Point,
 } from 'src/app/interfaces';
-import { DataService } from 'src/app/services/data.service';
+import { DataService } from 'src/app/services';
 
 @Component({
 	selector: 'app-calendar',

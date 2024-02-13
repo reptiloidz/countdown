@@ -38,8 +38,7 @@ import {
 	sendPasswordResetEmail,
 } from '@angular/fire/auth';
 import { goOnline, objectVal, query, ref, set } from '@angular/fire/database';
-import { NotifyService } from './notify.service';
-import { HttpService } from './http.service';
+import { NotifyService, HttpService } from '.';
 import { generateUserpicName, randomHEXColor } from '../helpers';
 
 @Injectable({

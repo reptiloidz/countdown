@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { CalendarMode, Iteration, Point } from 'src/app/interfaces';
-import { DataService } from 'src/app/services/data.service';
+import { DataService } from 'src/app/services';
 
 @Component({
 	selector: 'app-main-list',

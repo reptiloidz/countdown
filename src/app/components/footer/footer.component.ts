@@ -10,8 +10,7 @@ import { filter, Subscription, EMPTY, mergeMap, combineLatestWith } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
-import { AuthService } from 'src/app/services/auth.service';
-import { DataService } from 'src/app/services/data.service';
+import { AuthService, DataService } from 'src/app/services';
 import { HttpParams } from '@angular/common/http';
 
 @Component({

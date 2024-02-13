@@ -12,7 +12,7 @@ import { EditPointComponent } from './components/edit-point/edit-point.component
 import { CreatePointComponent } from './components/create-point/create-point.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { HttpService } from './services/http.service';
+import { HttpService } from './services';
 import { HttpService as MockHttpService } from './services/http.mock.service';
 import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
 import { SortPipe } from './pipes/sort.pipe';

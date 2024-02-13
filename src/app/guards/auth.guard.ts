@@ -1,16 +1,16 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services';
 
-export const unauthGuard = () => {
+export const authGuard = () => {
 	const auth = inject(AuthService);
 	const router = inject(Router);
 	let hasAccess = false;
 
-	hasAccess = auth.isAuthenticated;
+	hasAccess = !auth.isAuthenticated;
 
 	if (!hasAccess) {
-		router.navigate(['/auth']);
+		router.navigate(['/']);
 	}
 
 	return hasAccess;

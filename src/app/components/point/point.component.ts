@@ -14,7 +14,7 @@ import {
 	mergeMap,
 } from 'rxjs';
 import { Point, CalendarMode, Iteration } from 'src/app/interfaces';
-import { DataService } from 'src/app/services/data.service';
+import { DataService, AuthService } from 'src/app/services';
 import {
 	format,
 	formatDistanceToNow,
@@ -24,7 +24,6 @@ import {
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
 	selector: 'app-point',

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { ActivationStart, Event, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services';
 
 @Component({
 	selector: '[app-header]',

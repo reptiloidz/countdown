@@ -1,8 +1,7 @@
 import { inject } from '@angular/core';
 import { Event, ActivationEnd, Router } from '@angular/router';
 import { filter, switchMap } from 'rxjs';
-import { AuthService } from './auth.service';
-import { DataService } from './data.service';
+import { AuthService, DataService } from '../services';
 
 export const editGuard = () => {
 	const auth = inject(AuthService);

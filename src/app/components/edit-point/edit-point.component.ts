@@ -24,12 +24,11 @@ import {
 	mergeMap,
 } from 'rxjs';
 import { Point, Iteration, EditPointEvent } from 'src/app/interfaces';
-import { DataService } from 'src/app/services/data.service';
+import { DataService, AuthService } from 'src/app/services';
 import { format, parse } from 'date-fns';
 import { getPointDate, isDateValid } from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
 import { SortPipe } from 'src/app/pipes/sort.pipe';
-import { AuthService } from 'src/app/services/auth.service';
 
 export enum EditPointType {
 	Create = 'create',
