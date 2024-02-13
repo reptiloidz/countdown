@@ -60,6 +60,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;
 		mode: CalendarMode;
+		data: Point[] | Iteration[];
 	}>();
 
 	constructor(private cdr: ChangeDetectorRef, private data: DataService) {}
@@ -104,10 +105,21 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	dateClicked(date: Date, activeMode: CalendarMode) {
+	dateClicked(
+		date: Date,
+		activeMode: CalendarMode,
+		points: Point[],
+		iterations: Iteration[]
+	) {
+		let data: Point[] | Iteration[] = [];
+		if (points.length) {
+			data = points;
+		} else if (iterations.length) {
+			data = iterations;
+		}
 		this.selectedDate = date;
 		this.visibleDate = date;
-		this.dateSelected.emit({ date, mode: activeMode });
+		this.dateSelected.emit({ date, mode: activeMode, data });
 	}
 
 	generateCalendar({

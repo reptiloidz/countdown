@@ -25,6 +25,8 @@ import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums/index';
 import { getPointDate } from 'src/app/helpers';
 import { AuthService } from 'src/app/services/auth.service';
+import { CalendarMode } from 'src/app/interfaces/calendarMode.type';
+import { Iteration } from 'src/app/interfaces/iteration.interface';
 
 @Component({
 	selector: 'app-point',
@@ -148,6 +150,31 @@ export class PointComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	get remainText() {
+		const isPast = this.pointDate < new Date();
+		const isForward = this.point?.direction === 'forward';
+
+		return isPast
+			? isForward
+				? DateText.forwardPast
+				: DateText.backwardPast
+			: isForward
+			? DateText.forwardFuture
+			: DateText.backwardFuture;
+	}
+
+	get dates() {
+		return this.point?.dates;
+	}
+
+	get iterationDate() {
+		return format(this.pointDate, Constants.fullDateFormat);
+	}
+
+	get isDatesLengthPlural() {
+		return this.dates && this.dates?.length > 1;
+	}
+
 	zeroPad(num?: number) {
 		return String(num).padStart(2, '0');
 	}
@@ -203,27 +230,6 @@ export class PointComponent implements OnInit, OnDestroy {
 			formatDistanceToNow(this.pointDate, {
 				locale: ru,
 			});
-	}
-
-	get remainText() {
-		const isPast = this.pointDate < new Date();
-		const isForward = this.point?.direction === 'forward';
-
-		return isPast
-			? isForward
-				? DateText.forwardPast
-				: DateText.backwardPast
-			: isForward
-			? DateText.forwardFuture
-			: DateText.backwardFuture;
-	}
-
-	get dates() {
-		return this.point?.dates;
-	}
-
-	get iterationDate() {
-		return format(this.pointDate, Constants.fullDateFormat);
 	}
 
 	switchIteration(i: number = this.currentIterationIndex) {
@@ -295,7 +301,15 @@ export class PointComponent implements OnInit, OnDestroy {
 			})();
 	}
 
-	get isDatesLengthPlural() {
-		return this.dates && this.dates?.length > 1;
+	dateSelected({
+		date,
+		mode,
+		data,
+	}: {
+		date: Date;
+		mode: CalendarMode;
+		data: Iteration[] | Point[];
+	}) {
+		console.log(date, mode, data);
 	}
 }

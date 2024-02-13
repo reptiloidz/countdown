@@ -46,7 +46,7 @@
 						'calendar__button--selected': item.selectedDate,
 						'calendar__button--now': item.nowDate,
 					}"
-					(click)="dateClicked(item.date, activeMode)"
+					(click)="dateClicked(item.date, activeMode, item.points, item.iterations)"
 				>
 					<span
 						*ngIf="item.points.length || item.iterations.length"

@@ -10,6 +10,7 @@
 
 	<app-calendar
 		*ngIf="this.dates?.length"
+		(dateSelected)="dateSelected($event)"
 		[iterations]="point?.dates"
 		class="calendar"
 	></app-calendar>
