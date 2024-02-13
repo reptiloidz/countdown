@@ -18,7 +18,6 @@ import { GenerateIterationsComponent } from './components/generate-iterations/ge
 import { SortPipe } from './pipes/sort.pipe';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
@@ -59,14 +58,9 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 			})
 		),
 		provideAuth(() => getAuth()),
-		provideFirestore(() => getFirestore()),
 		provideDatabase(() => getDatabase()),
 	],
-	providers: [
-		// { provide: HttpService, useClass: MockHttpService },
-		[provideNgxMask()],
-		SortPipe,
-	],
+	providers: [[provideNgxMask()], SortPipe],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

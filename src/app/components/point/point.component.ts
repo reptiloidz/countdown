@@ -314,7 +314,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	}: {
 		date: Date;
 		mode: CalendarMode;
-		data: Iteration[] | Point[];
+		data: Point[] | Iteration[];
 	}) {
 		console.log(date, mode, data);
 	}
