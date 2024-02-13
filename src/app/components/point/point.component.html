@@ -3,10 +3,6 @@
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
-	<h2
-		*ngIf="point?.title"
-		class="description"
-	>{{ remainText }}</h2>
 
 	<app-calendar
 		*ngIf="this.dates?.length"
@@ -69,6 +65,10 @@
 	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
 	<small *ngIf="point?.repeatable">&nbsp;Повторяемое</small>
 	<small *ngIf="point?.public">&nbsp;Публичное</small>
+	<h2
+		*ngIf="point?.title"
+		class="description"
+	>{{ remainTextValue }}</h2>
 	<p
 		*ngIf="!dateLoading; else dateLoader"
 		class="timer"

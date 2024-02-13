@@ -196,9 +196,13 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	setTimer() {
 		const currentInterval = this.interval;
-		this.timer = `${currentInterval.hours || 0}:${this.zeroPad(
-			currentInterval.minutes || 0
-		)}:${this.zeroPad(currentInterval.seconds || 0)}`;
+		this.timer = `${
+			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
+		}:${this.zeroPad(
+			(currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0
+		)}:${this.zeroPad(
+			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
+		)}`;
 	}
 
 	setDateTimer() {
@@ -210,9 +214,14 @@ export class PointComponent implements OnInit, OnDestroy {
 		) {
 			this.dateTimer = formatDuration(
 				{
-					years: currentInterval.years,
-					months: currentInterval.months,
-					days: currentInterval.days,
+					years:
+						currentInterval.years &&
+						Math.abs(currentInterval.years),
+					months:
+						currentInterval.months &&
+						Math.abs(currentInterval.months),
+					days:
+						currentInterval.days && Math.abs(currentInterval.days),
 				},
 				{
 					locale: ru,
