@@ -49,8 +49,6 @@ import { DataService } from 'src/app/services';
 })
 export class CalendarComponent implements OnInit, OnDestroy {
 	private nowDate = new Date();
-	private selectedDate = this.nowDate;
-	private visibleDate = this.nowDate;
 	private lastDateOfCurrentMonth!: Date;
 	private firstMonday!: Date;
 	private subscriptions = new Subscription();
@@ -58,6 +56,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	@Input() points?: Point[] = [];
 	@Input() iterations?: Iteration[] = [];
+	@Input() visibleDate = this.nowDate;
+	@Input() selectedDate = this.nowDate;
 
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;

@@ -9,6 +9,8 @@
 		(dateSelected)="dateSelected($event)"
 		[iterations]="point?.dates"
 		class="calendar"
+		[selectedDate]="selectedIterationDate"
+		[visibleDate]="selectedIterationDate"
 	></app-calendar>
 
 	<ul
@@ -20,7 +22,8 @@
 			*ngFor="let date of this.dates | sort; let i = index"
 			class="tabs__item"
 			[ngClass]="{
-				'tabs__item--active': i == currentIterationIndex
+				'tabs__item--active': i == currentIterationIndex,
+				'tabs__item--day': selectedIterationsNumber && i > currentIterationIndex && i <= selectedIterationsNumber
 			}"
 		>
 			<button

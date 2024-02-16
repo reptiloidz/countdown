@@ -43,6 +43,8 @@ export class PointComponent implements OnInit, OnDestroy {
 	currentIterationIndex!: number;
 	removedIterationIndex = 0;
 	iterationsChecked: Number[] = [];
+	selectedIterationDate = new Date();
+	selectedIterationsNumber = 0;
 
 	private subscriptions = new Subscription();
 
@@ -69,7 +71,8 @@ export class PointComponent implements OnInit, OnDestroy {
 					mergeMap((point: Point | undefined) => {
 						this.point = point;
 						this.hasAccess =
-							point && this.auth.checkAccessEdit(point);
+							this.hasAccess ||
+							(point && this.auth.checkAccessEdit(point));
 
 						if (this.dates?.length) {
 							if (
@@ -185,6 +188,7 @@ export class PointComponent implements OnInit, OnDestroy {
 				tzOffset: this.tzOffset,
 				isGreenwich: this.point?.greenwich,
 			});
+
 			this.setTimer();
 			this.setDateTimer();
 			this.setRemainText();
@@ -246,6 +250,13 @@ export class PointComponent implements OnInit, OnDestroy {
 			},
 			queryParamsHandling: 'merge',
 		});
+		// TODO: циклическая зависимость — выбранная дата меняется при выборе итерации и наоборот
+		this.selectedIterationDate = this.pointDate;
+		// if (this.selectedIterationDate !== this.pointDate) {
+		// } else {
+		// 	this.selectedIterationsNumber = 0;
+		// }
+		// console.log(this.selectedIterationsNumber);
 	}
 
 	removeIteration(i: number) {
@@ -316,6 +327,22 @@ export class PointComponent implements OnInit, OnDestroy {
 		mode: CalendarMode;
 		data: Point[] | Iteration[];
 	}) {
-		console.log(date, mode, data);
+		const iterationIndex = this.point?.dates.findIndex(
+			(item) => item.date === (data[0] as Iteration)?.date
+		);
+		if (
+			iterationIndex &&
+			iterationIndex > 0 &&
+			iterationIndex - 1 !== this.currentIterationIndex
+		) {
+			// console.log(iterationIndex - 1);
+			// TODO: циклическая зависимость — выбранная итерация меняется при выборе даты и наоборот
+			this.switchIteration(iterationIndex - 1);
+			this.selectedIterationsNumber = data.length;
+		} else {
+			this.selectedIterationsNumber = 0;
+		}
+
+		console.log(this.selectedIterationsNumber);
 	}
 }
