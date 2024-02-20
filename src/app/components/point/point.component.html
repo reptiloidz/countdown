@@ -23,7 +23,7 @@
 			class="tabs__item"
 			[ngClass]="{
 				'tabs__item--active': i == currentIterationIndex,
-				'tabs__item--day': selectedIterationsNumber && i > currentIterationIndex && i <= selectedIterationsNumber
+				'tabs__item--day': selectedIterationsNumber && (i > currentIterationIndex) && (i < selectedIterationsNumber + currentIterationIndex)
 			}"
 		>
 			<button

@@ -120,7 +120,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			data = iterations;
 		}
 		this.selectedDate = date;
-		this.visibleDate = date;
 		this.dateSelected.emit({ date, mode: activeMode, data });
 	}
 

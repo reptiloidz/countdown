@@ -12,6 +12,7 @@ import {
 	distinctUntilChanged,
 	tap,
 	mergeMap,
+	filter,
 } from 'rxjs';
 import { Point, CalendarMode, Iteration } from 'src/app/interfaces';
 import { DataService, AuthService } from 'src/app/services';
@@ -23,7 +24,7 @@ import {
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
-import { getPointDate } from 'src/app/helpers';
+import { getPointDate, sortDates } from 'src/app/helpers';
 
 @Component({
 	selector: 'app-point',
@@ -68,8 +69,8 @@ export class PointComponent implements OnInit, OnDestroy {
 					mergeMap((data: any) => {
 						return this.data.fetchPoint(data['id']);
 					}),
-					mergeMap((point: Point | undefined) => {
-						this.point = point;
+					tap((point: Point | undefined) => {
+						this.point = point && sortDates(point);
 						this.hasAccess =
 							this.hasAccess ||
 							(point && this.auth.checkAccessEdit(point));
@@ -88,13 +89,32 @@ export class PointComponent implements OnInit, OnDestroy {
 						} else {
 							this.switchIteration();
 						}
-						return interval(1000);
+					})
+				)
+				.subscribe({
+					next: () => {
+						this.setAllTimers(true);
+						this.dateLoading = false;
+					},
+					error: (err) => {
+						console.error(
+							'Ошибка при обновлении таймеров:\n',
+							err.message
+						);
+					},
+				})
+		);
+
+		this.subscriptions.add(
+			interval(1000)
+				.pipe(
+					filter(() => {
+						return !this.dateLoading;
 					})
 				)
 				.subscribe({
 					next: () => {
 						this.setAllTimers();
-						this.dateLoading = false;
 					},
 					error: (err) => {
 						console.error(
@@ -179,7 +199,7 @@ export class PointComponent implements OnInit, OnDestroy {
 		return String(num).padStart(2, '0');
 	}
 
-	setAllTimers() {
+	setAllTimers(switchCalendarDate = false) {
 		if (this.dates?.[this.currentIterationIndex]) {
 			this.pointDate = getPointDate({
 				pointDate: new Date(
@@ -192,6 +212,10 @@ export class PointComponent implements OnInit, OnDestroy {
 			this.setTimer();
 			this.setDateTimer();
 			this.setRemainText();
+		}
+
+		if (switchCalendarDate) {
+			this.selectedIterationDate = this.pointDate;
 		}
 	}
 
@@ -250,13 +274,8 @@ export class PointComponent implements OnInit, OnDestroy {
 			},
 			queryParamsHandling: 'merge',
 		});
-		// TODO: циклическая зависимость — выбранная дата меняется при выборе итерации и наоборот
-		this.selectedIterationDate = this.pointDate;
-		// if (this.selectedIterationDate !== this.pointDate) {
-		// } else {
-		// 	this.selectedIterationsNumber = 0;
-		// }
-		// console.log(this.selectedIterationsNumber);
+		// TODO: при переключении итераций постараться выделять те, что находятся в одной выбранной дате?
+		this.selectedIterationsNumber = 0;
 	}
 
 	removeIteration(i: number) {
@@ -330,19 +349,11 @@ export class PointComponent implements OnInit, OnDestroy {
 		const iterationIndex = this.point?.dates.findIndex(
 			(item) => item.date === (data[0] as Iteration)?.date
 		);
-		if (
-			iterationIndex &&
-			iterationIndex > 0 &&
-			iterationIndex - 1 !== this.currentIterationIndex
-		) {
-			// console.log(iterationIndex - 1);
-			// TODO: циклическая зависимость — выбранная итерация меняется при выборе даты и наоборот
-			this.switchIteration(iterationIndex - 1);
+		if ((iterationIndex || iterationIndex === 0) && iterationIndex >= 0) {
+			this.switchIteration(iterationIndex);
 			this.selectedIterationsNumber = data.length;
 		} else {
 			this.selectedIterationsNumber = 0;
 		}
-
-		console.log(this.selectedIterationsNumber);
 	}
 }

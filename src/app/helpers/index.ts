@@ -6,3 +6,4 @@ export * from './mergeDeep';
 export * from './isDateValid';
 export * from './randomHEXColor';
 export * from './generateUserpicName';
+export * from './sortDates';
