@@ -20,7 +20,6 @@ import {
 	isSameMinute,
 	isSameMonth,
 	lastDayOfMonth,
-	parse,
 	previousMonday,
 	startOfDay,
 	startOfHour,
@@ -33,7 +32,7 @@ import {
 	subYears,
 } from 'date-fns';
 import { Subscription, filter, interval, tap } from 'rxjs';
-import { Constants } from 'src/app/enums';
+import { filterIterations, filterPoints } from 'src/app/helpers';
 import {
 	CalendarDate,
 	CalendarMode,
@@ -64,6 +63,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		mode: CalendarMode;
 		data: Point[] | Iteration[];
 	}>();
+
+	@Output() modeSelected = new EventEmitter<CalendarMode>();
 
 	constructor(private cdr: ChangeDetectorRef, private data: DataService) {}
 
@@ -101,6 +102,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				)
 				.subscribe()
 		);
+
+		this.modeSelected.emit(this.activeMode);
 	}
 
 	ngOnDestroy(): void {
@@ -199,8 +202,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
-						points: this.filterPoints(thisDate),
-						iterations: this.filterIterations(thisDate),
+						points: filterPoints(
+							thisDate,
+							this.points || [],
+							this.activeMode
+						),
+						iterations: filterIterations(
+							thisDate,
+							this.iterations || [],
+							this.activeMode
+						),
 					});
 					previousDate = thisDate;
 				} else {
@@ -225,8 +236,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
-						points: this.filterPoints(thisDate),
-						iterations: this.filterIterations(thisDate),
+						points: filterPoints(
+							thisDate,
+							this.points || [],
+							this.activeMode
+						),
+						iterations: filterIterations(
+							thisDate,
+							this.iterations || [],
+							this.activeMode
+						),
 					});
 					previousDate = thisDate;
 
@@ -252,43 +271,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		return fullArray;
 	}
 
-	filterPoints(date: Date) {
-		return !this.points
-			? []
-			: this.points?.filter((item) => {
-					return item.dates.some((iteration) =>
-						this.findIterations(iteration, date)
-					);
-			  });
-	}
-
-	filterIterations(date: Date) {
-		return !this.iterations
-			? []
-			: this.iterations?.filter((iteration) =>
-					this.findIterations(iteration, date)
-			  );
-	}
-
-	findIterations(iteration: Iteration, date: Date) {
-		const iterationDate = parse(
-			iteration.date,
-			Constants.fullDateFormat,
-			new Date()
-		);
-
-		switch (this.activeMode) {
-			case 'year':
-				return isSameMonth(iterationDate, date);
-			case 'day':
-				return isSameHour(iterationDate, date);
-			case 'hour':
-				return isSameMinute(iterationDate, date);
-			default:
-				return isSameDay(iterationDate, date);
-		}
-	}
-
 	isDateMatch(date: Date, matchMode: 'visible' | 'selected' | 'now') {
 		switch (this.activeMode) {
 			case 'year':
@@ -304,6 +286,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	switchCalendarMode(mode: CalendarMode) {
 		this.activeMode = mode;
+		this.modeSelected.emit(this.activeMode);
 	}
 
 	switchCalendarToNow() {

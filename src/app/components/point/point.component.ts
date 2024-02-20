@@ -24,7 +24,7 @@ import {
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
-import { getPointDate, sortDates } from 'src/app/helpers';
+import { filterIterations, getPointDate, sortDates } from 'src/app/helpers';
 
 @Component({
 	selector: 'app-point',
@@ -42,10 +42,12 @@ export class PointComponent implements OnInit, OnDestroy {
 	hasAccess: boolean | undefined = false;
 	tzOffset = this.pointDate.getTimezoneOffset();
 	currentIterationIndex!: number;
+	firstIterationIndex = 0;
 	removedIterationIndex = 0;
 	iterationsChecked: Number[] = [];
 	selectedIterationDate = new Date();
 	selectedIterationsNumber = 0;
+	calendarMode!: CalendarMode;
 
 	private subscriptions = new Subscription();
 
@@ -71,6 +73,7 @@ export class PointComponent implements OnInit, OnDestroy {
 					}),
 					tap((point: Point | undefined) => {
 						this.point = point && sortDates(point);
+
 						this.hasAccess =
 							this.hasAccess ||
 							(point && this.auth.checkAccessEdit(point));
@@ -95,6 +98,7 @@ export class PointComponent implements OnInit, OnDestroy {
 					next: () => {
 						this.setAllTimers(true);
 						this.dateLoading = false;
+						this.setIterationsParam();
 					},
 					error: (err) => {
 						console.error(
@@ -148,6 +152,7 @@ export class PointComponent implements OnInit, OnDestroy {
 					}
 					this.switchIteration();
 					this.setAllTimers();
+					this.setIterationsParam();
 				},
 				error: (err) => {
 					console.error(
@@ -193,6 +198,17 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get isDatesLengthPlural() {
 		return this.dates && this.dates?.length > 1;
+	}
+
+	setIterationsParam() {
+		const filteredIterations = filterIterations(
+			this.pointDate,
+			this.point?.dates || [],
+			this.calendarMode
+		);
+		this.firstIterationIndex =
+			this.getFirstIteration(filteredIterations) || 0;
+		this.selectedIterationsNumber = filteredIterations.length;
 	}
 
 	zeroPad(num?: number) {
@@ -274,8 +290,6 @@ export class PointComponent implements OnInit, OnDestroy {
 			},
 			queryParamsHandling: 'merge',
 		});
-		// TODO: при переключении итераций постараться выделять те, что находятся в одной выбранной дате?
-		this.selectedIterationsNumber = 0;
 	}
 
 	removeIteration(i: number) {
@@ -337,23 +351,21 @@ export class PointComponent implements OnInit, OnDestroy {
 			})();
 	}
 
-	dateSelected({
-		date,
-		mode,
-		data,
-	}: {
-		date: Date;
-		mode: CalendarMode;
-		data: Point[] | Iteration[];
-	}) {
-		const iterationIndex = this.point?.dates.findIndex(
-			(item) => item.date === (data[0] as Iteration)?.date
+	getFirstIteration(iterations: Iteration[]) {
+		return this.point?.dates.findIndex(
+			(item) => item.date === iterations[0]?.date
 		);
+	}
+
+	dateSelected({ data }: { data: Point[] | Iteration[] }) {
+		const iterationIndex = this.getFirstIteration(data as Iteration[]);
 		if ((iterationIndex || iterationIndex === 0) && iterationIndex >= 0) {
 			this.switchIteration(iterationIndex);
-			this.selectedIterationsNumber = data.length;
-		} else {
-			this.selectedIterationsNumber = 0;
 		}
+	}
+
+	modeSelected(mode: CalendarMode) {
+		this.calendarMode = mode;
+		this.setIterationsParam();
 	}
 }

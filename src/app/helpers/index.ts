@@ -7,3 +7,4 @@ export * from './isDateValid';
 export * from './randomHEXColor';
 export * from './generateUserpicName';
 export * from './sortDates';
+export * from './filterDates';

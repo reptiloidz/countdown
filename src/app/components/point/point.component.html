@@ -7,6 +7,7 @@
 	<app-calendar
 		*ngIf="this.dates?.length"
 		(dateSelected)="dateSelected($event)"
+		(modeSelected)="modeSelected($event)"
 		[iterations]="point?.dates"
 		class="calendar"
 		[selectedDate]="selectedIterationDate"
@@ -23,7 +24,7 @@
 			class="tabs__item"
 			[ngClass]="{
 				'tabs__item--active': i == currentIterationIndex,
-				'tabs__item--day': selectedIterationsNumber && (i > currentIterationIndex) && (i < selectedIterationsNumber + currentIterationIndex)
+				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex)
 			}"
 		>
 			<button
