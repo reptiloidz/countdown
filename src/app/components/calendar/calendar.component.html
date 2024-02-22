@@ -15,10 +15,22 @@
 	</div>
 
 	<div>
-		<button (click)="switchCalendarMode('year')">Год</button>
-		<button (click)="switchCalendarMode('month')">Месяц</button>
-		<button (click)="switchCalendarMode('day')">День</button>
-		<button (click)="switchCalendarMode('hour')">Час</button>
+		<button
+			type="button"
+			(click)="switchCalendarMode('year')"
+		>Год</button>
+		<button
+			type="button"
+			(click)="switchCalendarMode('month')"
+		>Месяц</button>
+		<button
+			type="button"
+			(click)="switchCalendarMode('day')"
+		>День</button>
+		<button
+			type="button"
+			(click)="switchCalendarMode('hour')"
+		>Час</button>
 	</div>
 </div>
 
@@ -42,6 +54,7 @@
 			>
 				<button
 					class="calendar__button link"
+					type="button"
 					[ngClass]="{
 						'calendar__button--selected': item.selectedDate,
 						'calendar__button--now': item.nowDate,

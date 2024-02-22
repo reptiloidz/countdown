@@ -23,10 +23,20 @@ import {
 	startWith,
 	mergeMap,
 } from 'rxjs';
-import { Point, Iteration, EditPointEvent } from 'src/app/interfaces';
+import {
+	Point,
+	Iteration,
+	EditPointEvent,
+	CalendarMode,
+} from 'src/app/interfaces';
 import { DataService, AuthService } from 'src/app/services';
 import { format, parse } from 'date-fns';
-import { getPointDate, isDateValid } from 'src/app/helpers';
+import {
+	filterIterations,
+	getFirstIteration,
+	getPointDate,
+	isDateValid,
+} from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
 import { SortPipe } from 'src/app/pipes/sort.pipe';
 
@@ -55,15 +65,20 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	@Input() type = EditPointType.Edit;
 	form!: FormGroup;
 	point: Point | undefined;
+	pointDate = new Date();
 	difference = 0;
 	loading = false;
 	validatorDifferenceMaxLength = 8;
 	tzOffset = new Date().getTimezoneOffset();
 	currentIterationIndex!: number;
+	firstIterationIndex = 0;
 	removedIterationIndex = 0;
 	isIterationAdded = false;
 	iterationControls = {};
 	iterationsChecked: Number[] = [];
+	selectedIterationDate = new Date();
+	selectedIterationsNumber = 0;
+	calendarMode!: CalendarMode;
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
@@ -176,6 +191,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						) {
 							this.checking.next(false);
 							this.setValues();
+							this.setIterationsParam();
 						}
 					},
 					error: (err) => {
@@ -279,6 +295,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					}
 					this.sortDates();
 					this.switchIteration();
+					this.setIterationsParam();
 					this.success(point, editPointEvent);
 				},
 			})
@@ -335,7 +352,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		let pointDate = getPointDate({
+		this.pointDate = getPointDate({
 			pointDate: isReset
 				? new Date()
 				: new Date(
@@ -347,13 +364,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				: this.form.controls['greenwich'].value,
 		});
 
-		pointDate = isDateValid(pointDate) ? pointDate : new Date();
+		this.pointDate = isDateValid(this.pointDate)
+			? this.pointDate
+			: new Date();
+
+		this.selectedIterationDate = this.pointDate;
+
 		this.form.patchValue({
-			date: format(pointDate, Constants.shortDateFormat),
-			time: format(pointDate, Constants.timeFormat),
+			date: format(this.pointDate, Constants.shortDateFormat),
+			time: format(this.pointDate, Constants.timeFormat),
 		});
 
-		this.dateChanged(pointDate);
+		this.dateChanged(this.pointDate);
 	}
 
 	dateChanged(date?: Date) {
@@ -513,6 +535,33 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	resetDifference() {
 		this.form.controls['difference'].setValue(0);
+	}
+
+	setIterationsParam() {
+		const filteredIterations = filterIterations({
+			date: this.pointDate,
+			iterations: this.point?.dates || [],
+			activeMode: this.calendarMode,
+			greenwich: this.point?.greenwich || false,
+		});
+		this.firstIterationIndex =
+			getFirstIteration(filteredIterations, this.point) || 0;
+		this.selectedIterationsNumber = filteredIterations.length;
+	}
+
+	dateSelected({ data }: { data: Point[] | Iteration[] }) {
+		const iterationIndex = getFirstIteration(
+			data as Iteration[],
+			this.point
+		);
+		if ((iterationIndex || iterationIndex === 0) && iterationIndex >= 0) {
+			this.switchIteration(iterationIndex);
+		}
+	}
+
+	modeSelected(mode: CalendarMode) {
+		this.calendarMode = mode;
+		this.setIterationsParam();
 	}
 
 	submit(saveIteration = false, repeats: Iteration[] = []) {

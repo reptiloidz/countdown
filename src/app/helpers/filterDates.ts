@@ -12,41 +12,68 @@ export const filterDates = (item: object) => {
 	return item && typeof item === 'object' && !Array.isArray(item);
 };
 
-export const filterPoints = (
-	date: Date,
-	points: Point[],
-	activeMode: CalendarMode
-) => {
+export const filterPoints = ({
+	date,
+	points,
+	activeMode,
+}: {
+	date: Date;
+	points: Point[];
+	activeMode: CalendarMode;
+}) => {
 	return !points
 		? []
 		: points?.filter((item) => {
 				return item.dates.some((iteration) =>
-					findIterations(iteration, date, activeMode)
+					findIterations({
+						iteration,
+						date,
+						activeMode,
+						greenwich: item.greenwich,
+					})
 				);
 		  });
 };
 
-export const filterIterations = (
-	date: Date,
-	iterations: Iteration[],
-	activeMode: CalendarMode
-) => {
+export const filterIterations = ({
+	date,
+	iterations,
+	activeMode,
+	greenwich = false,
+}: {
+	date: Date;
+	iterations: Iteration[];
+	activeMode: CalendarMode;
+	greenwich: boolean;
+}) => {
 	return !iterations
 		? []
 		: iterations?.filter((iteration) =>
-				findIterations(iteration, date, activeMode)
+				findIterations({ iteration, date, activeMode, greenwich })
 		  );
 };
 
-function findIterations(
-	iteration: Iteration,
-	date: Date,
-	activeMode: CalendarMode
-) {
-	const iterationDate = parse(
+function findIterations({
+	iteration,
+	date,
+	activeMode,
+	greenwich = false,
+}: {
+	iteration: Iteration;
+	date: Date;
+	activeMode: CalendarMode;
+	greenwich: boolean;
+}) {
+	let iterationDate = parse(
 		iteration.date,
 		Constants.fullDateFormat,
 		new Date()
+	);
+
+	iterationDate = new Date(
+		+iterationDate -
+			(greenwich ? iterationDate.getTimezoneOffset() : 0) *
+				Constants.msInMinute
 	);
 
 	switch (activeMode) {

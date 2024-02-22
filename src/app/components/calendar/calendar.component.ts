@@ -57,6 +57,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	@Input() iterations?: Iteration[] = [];
 	@Input() visibleDate = this.nowDate;
 	@Input() selectedDate = this.nowDate;
+	@Input() point?: Point;
 
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;
@@ -197,23 +198,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							break;
 					}
 
+					previousDate = thisDate;
+
 					rowArray.push({
 						date: thisDate,
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
-						points: filterPoints(
-							thisDate,
-							this.points || [],
-							this.activeMode
-						),
-						iterations: filterIterations(
-							thisDate,
-							this.iterations || [],
-							this.activeMode
-						),
+						points: filterPoints({
+							date: thisDate,
+							points: this.points || [],
+							activeMode: this.activeMode,
+						}),
+						iterations: filterIterations({
+							date: thisDate,
+							iterations: this.iterations || [],
+							activeMode: this.activeMode,
+							greenwich: this.point?.greenwich || false,
+						}),
 					});
-					previousDate = thisDate;
 				} else {
 					let thisDate = addDays(previousDate, 1);
 
@@ -231,24 +234,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							break;
 					}
 
-					rowArray.push({
-						date: thisDate,
-						visibleDate: this.isDateMatch(thisDate, 'visible'),
-						selectedDate: this.isDateMatch(thisDate, 'selected'),
-						nowDate: this.isDateMatch(thisDate, 'now'),
-						points: filterPoints(
-							thisDate,
-							this.points || [],
-							this.activeMode
-						),
-						iterations: filterIterations(
-							thisDate,
-							this.iterations || [],
-							this.activeMode
-						),
-					});
-					previousDate = thisDate;
-
 					if (
 						(mode === 'month' &&
 							+thisDate === +this.lastDateOfCurrentMonth) ||
@@ -259,6 +244,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					) {
 						loopFinished = true;
 					}
+					previousDate = thisDate;
+
+					rowArray.push({
+						date: thisDate,
+						visibleDate: this.isDateMatch(thisDate, 'visible'),
+						selectedDate: this.isDateMatch(thisDate, 'selected'),
+						nowDate: this.isDateMatch(thisDate, 'now'),
+						points: filterPoints({
+							date: thisDate,
+							points: this.points || [],
+							activeMode: this.activeMode,
+						}),
+						iterations: filterIterations({
+							date: thisDate,
+							iterations: this.iterations || [],
+							activeMode: this.activeMode,
+							greenwich: this.point?.greenwich || false,
+						}),
+					});
 				}
 			}
 
@@ -286,6 +290,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	switchCalendarMode(mode: CalendarMode) {
 		this.activeMode = mode;
+		this.visibleDate = this.selectedDate;
 		this.modeSelected.emit(this.activeMode);
 	}
 

@@ -98,6 +98,17 @@
 		></app-generate-iterations>
 	</div>
 
+	<app-calendar
+		*ngIf="this.dates?.length"
+		(dateSelected)="dateSelected($event)"
+		(modeSelected)="modeSelected($event)"
+		[iterations]="point?.dates"
+		class="calendar"
+		[selectedDate]="selectedIterationDate"
+		[visibleDate]="selectedIterationDate"
+		[point]="point"
+	></app-calendar>
+
 	<ul
 		#iterationsList
 		*ngIf="isRepeatable && !isCreation"
@@ -107,8 +118,9 @@
 			*ngFor="let date of dates | sort; let i = index"
 			class="tabs__item"
 			[ngClass]="{
-					'tabs__item--active': i == currentIterationIndex && !isIterationAdded
-				}"
+				'tabs__item--active': i == currentIterationIndex && !isIterationAdded,
+				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex)
+			}"
 		>
 			<button
 				class="link tabs__btn"

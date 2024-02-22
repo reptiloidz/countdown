@@ -24,7 +24,12 @@ import {
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
-import { filterIterations, getPointDate, sortDates } from 'src/app/helpers';
+import {
+	filterIterations,
+	getFirstIteration,
+	getPointDate,
+	sortDates,
+} from 'src/app/helpers';
 
 @Component({
 	selector: 'app-point',
@@ -201,13 +206,14 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setIterationsParam() {
-		const filteredIterations = filterIterations(
-			this.pointDate,
-			this.point?.dates || [],
-			this.calendarMode
-		);
+		const filteredIterations = filterIterations({
+			date: this.pointDate,
+			iterations: this.point?.dates || [],
+			activeMode: this.calendarMode,
+			greenwich: this.point?.greenwich || false,
+		});
 		this.firstIterationIndex =
-			this.getFirstIteration(filteredIterations) || 0;
+			getFirstIteration(filteredIterations, this.point) || 0;
 		this.selectedIterationsNumber = filteredIterations.length;
 	}
 
@@ -351,14 +357,11 @@ export class PointComponent implements OnInit, OnDestroy {
 			})();
 	}
 
-	getFirstIteration(iterations: Iteration[]) {
-		return this.point?.dates.findIndex(
-			(item) => item.date === iterations[0]?.date
-		);
-	}
-
 	dateSelected({ data }: { data: Point[] | Iteration[] }) {
-		const iterationIndex = this.getFirstIteration(data as Iteration[]);
+		const iterationIndex = getFirstIteration(
+			data as Iteration[],
+			this.point
+		);
 		if ((iterationIndex || iterationIndex === 0) && iterationIndex >= 0) {
 			this.switchIteration(iterationIndex);
 		}
