@@ -59,14 +59,52 @@
 						'calendar__button--selected': item.selectedDate,
 						'calendar__button--now': item.nowDate,
 					}"
-					(click)="dateClicked(item.date, activeMode, item.points, item.iterations)"
+					(click)="dateClicked({
+						date: item.date,
+						activeMode,
+						points: item.points,
+						iterations: item.iterations
+					})"
 				>
-					<span
-						*ngIf="item.points.length || item.iterations.length"
-						class="calendar__counter"
-					>{{ item.points.length || item.iterations.length }}</span>
+					<ng-container *ngIf="item.points.length || item.iterations.length">
+						<span
+							*ngIf="point?.repeatable || item.points.length else mark;"
+							class="calendar__counter"
+						>{{ item.points.length || item.iterations.length }}</span>
+						<ng-template #mark>
+							<span class="calendar__counter">&#10003;</span>
+						</ng-template>
+					</ng-container>
 					{{ item.date | date : "dd.MM.yyyy '—' HH:mm" }}
 				</button>
+				<div
+					class="calendar__check-buttons"
+					*ngIf="item.points.length || item.iterations.length"
+				>
+					<button
+						class="calendar__check"
+						type="button"
+						title="Отметить все итерации даты"
+						(click)="dateIterationsChecked({
+							check: true,
+							date: item.date,
+							activeMode,
+							points: item.points,
+							iterations: item.iterations
+						})"
+					>&#10003;</button>
+					<button
+						class="calendar__check"
+						type="button"
+						title="Снять отметки со всех итераций даты"
+						(click)="dateIterationsChecked({
+							date: item.date,
+							activeMode,
+							points: item.points,
+							iterations: item.iterations
+						})"
+					>&#10006;</button>
+				</div>
 			</td>
 		</tr>
 	</tbody>
