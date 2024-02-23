@@ -36,9 +36,9 @@ import {
 	getFirstIteration,
 	getPointDate,
 	isDateValid,
+	sortDates,
 } from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
-import { SortPipe } from 'src/app/pipes/sort.pipe';
 
 export enum EditPointType {
 	Create = 'create',
@@ -88,7 +88,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private sortPipe: SortPipe,
 		private auth: AuthService
 	) {}
 
@@ -331,7 +330,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	sortDates() {
-		const sortedDates = this.sortPipe.transform(this.dates);
+		const sortedDates = this.point && sortDates(this.point).dates;
 		if (this.point && sortedDates) {
 			this.point.dates = sortedDates;
 		}
@@ -472,20 +471,23 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			.map((item: any) => item.querySelector('input').name);
 	}
 
-	checkAllIterations() {
-		this.iterationsList.nativeElement
-			.querySelectorAll('input')
+	checkAllIterations(check = true, iterations?: Iteration[]) {
+		[...this.iterationsList.nativeElement.querySelectorAll('input')]
+			.filter((item: HTMLInputElement) => {
+				if (!iterations?.length) {
+					return true;
+				} else {
+					return iterations.some(
+						(iteration) =>
+							iteration.date ===
+							this.point?.dates[
+								parseFloat(item.getAttribute('name') || '0')
+							].date
+					);
+				}
+			})
 			.forEach((item: any) => {
-				item.checked = true;
-			});
-		this.checkIteration();
-	}
-
-	uncheckAllIterations() {
-		this.iterationsList.nativeElement
-			.querySelectorAll('input')
-			.forEach((item: any) => {
-				item.checked = false;
+				item.checked = check;
 			});
 		this.checkIteration();
 	}
@@ -562,6 +564,20 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	modeSelected(mode: CalendarMode) {
 		this.calendarMode = mode;
 		this.setIterationsParam();
+	}
+
+	dateChecked({
+		data,
+		check,
+	}: {
+		data: Point[] | Iteration[];
+		check: boolean;
+	}) {
+		if (check) {
+			this.checkAllIterations(true, data as Iteration[]);
+		} else {
+			this.checkAllIterations(false, data as Iteration[]);
+		}
 	}
 
 	submit(saveIteration = false, repeats: Iteration[] = []) {

@@ -101,6 +101,7 @@
 	<app-calendar
 		*ngIf="this.dates?.length"
 		(dateSelected)="dateSelected($event)"
+		(dateChecked)="dateChecked($event)"
 		(modeSelected)="modeSelected($event)"
 		[iterations]="point?.dates"
 		class="calendar"
@@ -164,7 +165,7 @@
 		<ng-container *ngIf="iterationsChecked.length">
 			<button
 				type="button"
-				(click)="uncheckAllIterations()"
+				(click)="checkAllIterations(false)"
 			>Снять выбор</button>
 			<button
 				type="button"
