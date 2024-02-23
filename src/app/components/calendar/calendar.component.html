@@ -12,6 +12,10 @@
 			type="button"
 			(click)="switchCalendarToNow()"
 		>Сейчас</button>
+		<button
+			type="button"
+			(click)="switchCalendarToSelected()"
+		>К активной дате</button>
 	</div>
 
 	<div>
@@ -79,7 +83,7 @@
 				</button>
 				<div
 					class="calendar__check-buttons"
-					*ngIf="item.points.length || item.iterations.length"
+					*ngIf="getAllowedPoints(item).length || (item.iterations.length && point?.repeatable)"
 				>
 					<button
 						class="calendar__check"

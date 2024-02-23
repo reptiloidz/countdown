@@ -322,6 +322,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	getAllowedPoints(item: any) {
+		// Фильтруем доступные события.
+		// Если выводить кнопку попапа, то уже для всех дат с событиями
+		return item.points?.filter((point: Point) => !point.public) || [];
+	}
+
 	switchCalendarMode(mode: CalendarMode) {
 		this.activeMode = mode;
 		this.visibleDate = this.selectedDate;
@@ -330,6 +336,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	switchCalendarToNow() {
 		this.visibleDate = this.nowDate;
+	}
+
+	switchCalendarToSelected() {
+		this.visibleDate = this.selectedDate;
 	}
 
 	switchCalendarPeriod(forward = true) {

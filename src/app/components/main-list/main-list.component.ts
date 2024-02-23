@@ -76,4 +76,14 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}) {
 		console.log(date, mode, data);
 	}
+
+	dateChecked({
+		data,
+		check,
+	}: {
+		data: Point[] | Iteration[];
+		check: boolean;
+	}) {
+		console.log(data, check);
+	}
 }
