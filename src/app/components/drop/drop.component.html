@@ -1,0 +1,17 @@
+<ng-container
+	*ngIf="buttonTemplate else button;"
+	[ngTemplateOutlet]="buttonTemplate"
+></ng-container>
+<ng-template #button>
+	<button
+		type="button"
+		(click)="opened ? close() : open()"
+	>&#709;</button>
+</ng-template>
+
+<div
+	*ngIf="bodyTemplate && opened"
+	class="drop__body"
+>
+	<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
+</div>

@@ -22,6 +22,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('pointsList') private pointsList!: ElementRef;
 	points: Point[] = [];
 	loading = true;
+	dropOpenedDate: Date | undefined;
 	private subscriptions = new Subscription();
 
 	constructor(private data: DataService) {}
@@ -82,13 +83,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 		console.log(date, mode, data);
 	}
 
-	getDateContext({
+	openDate({
 		date,
 		activeMode,
 	}: {
 		date: CalendarDate;
 		activeMode: CalendarMode;
 	}) {
-		console.log(date, activeMode);
+		if (this.dropOpenedDate && +this.dropOpenedDate === +date.date) {
+			this.dropOpenedDate = undefined;
+		} else {
+			this.dropOpenedDate = date.date;
+		}
 	}
 }

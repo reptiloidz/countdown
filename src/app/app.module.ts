@@ -21,6 +21,8 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { PopupComponent } from './components/popup/popup.component';
+import { DropComponent } from './components/drop/drop.component';
 
 @NgModule({
 	declarations: [
@@ -36,6 +38,8 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 		SortPipe,
 		PrivacyComponent,
 		CalendarComponent,
+		PopupComponent,
+		DropComponent,
 	],
 	imports: [
 		BrowserModule,

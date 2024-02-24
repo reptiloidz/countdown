@@ -9,12 +9,28 @@
 			let-date="date"
 			let-mode="mode"
 		>
-			<button
+			<app-drop
 				*ngIf="date.points.length"
-				type="button"
-				class="calendar__btn-nav"
-				(click)="getDateContext({ date, activeMode: mode })"
-			>&#709;</button>
+				[opened]="+date.date === (this.dropOpenedDate && +this.dropOpenedDate)"
+			>
+				<ng-template #buttonTemplate>
+					<button
+						type="button"
+						class="calendar__btn-nav"
+						(click)="openDate({ date, activeMode: mode })"
+					>&#709;</button>
+				</ng-template>
+				<ng-template #bodyTemplate>
+					<ul class="calendar__date-ul">
+						<li
+							*ngFor="let point of date.points"
+							class="calendar__date-li"
+						>
+							<a routerLink="/point/{{ point.id }}">{{ point.title }}</a>
+						</li>
+					</ul>
+				</ng-template>
+			</app-drop>
 		</ng-template>
 	</app-calendar>
 	<ul
