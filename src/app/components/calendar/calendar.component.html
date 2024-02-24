@@ -81,33 +81,12 @@
 					</ng-container>
 					{{ item.date | date : "dd.MM.yyyy '—' HH:mm" }}
 				</button>
-				<div
-					class="calendar__check-buttons"
-					*ngIf="getAllowedPoints(item).length || (item.iterations.length && point?.repeatable)"
-				>
-					<button
-						class="calendar__check"
-						type="button"
-						title="Отметить все итерации даты"
-						(click)="dateIterationsChecked({
-							check: true,
-							date: item.date,
-							activeMode,
-							points: item.points,
-							iterations: item.iterations
-						})"
-					>&#10003;</button>
-					<button
-						class="calendar__check"
-						type="button"
-						title="Снять отметки со всех итераций даты"
-						(click)="dateIterationsChecked({
-							date: item.date,
-							activeMode,
-							points: item.points,
-							iterations: item.iterations
-						})"
-					>&#10006;</button>
+				<div class="calendar__date-nav">
+					<ng-container
+						*ngIf="contentTemplate"
+						[ngTemplateOutlet]="contentTemplate"
+						[ngTemplateOutletContext]="{ date: item, mode: this.activeMode, point: this.point }"
+					></ng-container>
 				</div>
 			</td>
 		</tr>

@@ -1,10 +1,22 @@
 <ng-container *ngIf="!loading; else loader">
 	<app-calendar
 		(dateSelected)="dateSelected($event)"
-		(dateChecked)="dateChecked($event)"
 		[points]="points"
 		class="calendar"
-	></app-calendar>
+	>
+		<ng-template
+			#contentTemplate
+			let-date="date"
+			let-mode="mode"
+		>
+			<button
+				*ngIf="date.points.length"
+				type="button"
+				class="calendar__btn-nav"
+				(click)="getDateContext({ date, activeMode: mode })"
+			>&#709;</button>
+		</ng-template>
+	</app-calendar>
 	<ul
 		#pointsList
 		*ngIf="points.length; else empty"

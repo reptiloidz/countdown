@@ -370,7 +370,7 @@ a,
 	}
 
 	&__counter,
-	&__check-buttons {
+	&__date-nav {
 		position: absolute;
 		top: 0;
 	}
@@ -390,12 +390,12 @@ a,
 		line-height: 20px;
 	}
 
-	&__check-buttons {
+	&__date-nav {
 		right: 0;
 		display: flex;
 	}
 
-	&__check {
+	&__btn-nav {
 		display: block;
 		width: 16px;
 		height: 16px;

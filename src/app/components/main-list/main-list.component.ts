@@ -6,7 +6,12 @@ import {
 	OnInit,
 } from '@angular/core';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
-import { CalendarMode, Iteration, Point } from 'src/app/interfaces';
+import {
+	CalendarDate,
+	CalendarMode,
+	Iteration,
+	Point,
+} from 'src/app/interfaces';
 import { DataService } from 'src/app/services';
 
 @Component({
@@ -77,13 +82,13 @@ export class MainListComponent implements OnInit, OnDestroy {
 		console.log(date, mode, data);
 	}
 
-	dateChecked({
-		data,
-		check,
+	getDateContext({
+		date,
+		activeMode,
 	}: {
-		data: Point[] | Iteration[];
-		check: boolean;
+		date: CalendarDate;
+		activeMode: CalendarMode;
 	}) {
-		console.log(data, check);
+		console.log(date, activeMode);
 	}
 }

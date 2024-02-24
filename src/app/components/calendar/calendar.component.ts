@@ -2,11 +2,13 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	ContentChild,
 	EventEmitter,
 	Input,
 	OnDestroy,
 	OnInit,
 	Output,
+	TemplateRef,
 } from '@angular/core';
 import {
 	addDays,
@@ -65,14 +67,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		data: Point[] | Iteration[];
 	}>();
 
-	@Output() dateChecked = new EventEmitter<{
-		date: Date;
-		mode: CalendarMode;
-		data: Point[] | Iteration[];
-		check: boolean;
-	}>();
-
 	@Output() modeSelected = new EventEmitter<CalendarMode>();
+
+	@ContentChild('contentTemplate') contentTemplate:
+		| TemplateRef<unknown>
+		| undefined;
 
 	constructor(private cdr: ChangeDetectorRef, private data: DataService) {}
 
@@ -137,28 +136,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		}
 		this.selectedDate = date;
 		this.dateSelected.emit({ date, mode: activeMode, data });
-	}
-
-	dateIterationsChecked({
-		date,
-		activeMode,
-		points,
-		iterations,
-		check = false,
-	}: {
-		date: Date;
-		activeMode: CalendarMode;
-		points: Point[];
-		iterations: Iteration[];
-		check?: boolean;
-	}) {
-		let data: Point[] | Iteration[] = [];
-		if (points.length) {
-			data = points;
-		} else if (iterations.length) {
-			data = iterations;
-		}
-		this.dateChecked.emit({ date, mode: activeMode, data, check });
 	}
 
 	generateCalendar({

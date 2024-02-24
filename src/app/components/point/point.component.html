@@ -7,14 +7,41 @@
 	<app-calendar
 		*ngIf="this.dates?.length"
 		(dateSelected)="dateSelected($event)"
-		(dateChecked)="dateChecked($event)"
 		(modeSelected)="modeSelected($event)"
 		[iterations]="point?.dates"
 		class="calendar"
 		[selectedDate]="selectedIterationDate"
 		[visibleDate]="selectedIterationDate"
 		[point]="point"
-	></app-calendar>
+	>
+		<ng-template
+			#contentTemplate
+			let-date="date"
+			let-mode="mode"
+			let-point="point"
+		>
+			<ng-container *ngIf="date.iterations.length && point.repeatable">
+				<button
+					class="calendar__btn-nav"
+					type="button"
+					title="Отметить все итерации даты"
+					(click)="dateChecked({
+						check: true,
+						data: date.iterations
+					})"
+				>&#10003;</button>
+				<button
+					class="calendar__btn-nav"
+					type="button"
+					title="Снять отметки со всех итераций даты"
+					(click)="dateChecked({
+						check: false,
+						data: date.iterations
+					})"
+				>&#10006;</button>
+			</ng-container>
+		</ng-template>
+	</app-calendar>
 
 	<ul
 		#iterationsList
