@@ -69,6 +69,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	@Output() modeSelected = new EventEmitter<CalendarMode>();
 
+	@Output() calendarRegenerated = new EventEmitter<void>();
+
 	@ContentChild('contentTemplate') contentTemplate:
 		| TemplateRef<unknown>
 		| undefined;
@@ -309,14 +311,17 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		this.activeMode = mode;
 		this.visibleDate = this.selectedDate;
 		this.modeSelected.emit(this.activeMode);
+		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarToNow() {
 		this.visibleDate = this.nowDate;
+		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarToSelected() {
 		this.visibleDate = this.selectedDate;
+		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarPeriod(forward = true) {
@@ -342,5 +347,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		this.generateCalendar({
 			date: result[this.activeMode][forward ? 'forward' : 'backward'],
 		});
+		this.calendarRegenerated.emit();
 	}
 }

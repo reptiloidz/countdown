@@ -83,6 +83,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 		console.log(date, mode, data);
 	}
 
+	calendarRegenerated() {
+		this.dropOpenedDate = undefined;
+	}
+
 	openDate({
 		date,
 		activeMode,
