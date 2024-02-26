@@ -23,11 +23,13 @@
 				<ng-template #bodyTemplate>
 					<ul class="calendar__date-ul">
 						<li
-							*ngFor="let point of date.points"
-							class="calendar__date-li"
-						>
-							<a routerLink="/point/{{ point.id }}">{{ point.title }}</a>
-						</li>
+							app-main-item
+							[attr.data-id]="point.id"
+							class="calendar__date-li item item--sm"
+							*ngFor="let point of date.points; let i = index"
+							[point]="point"
+							(pointCheck)="checkPoint()"
+						></li>
 					</ul>
 				</ng-template>
 			</app-drop>

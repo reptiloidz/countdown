@@ -1,4 +1,5 @@
 import {
+	ChangeDetectionStrategy,
 	Component,
 	ContentChild,
 	HostBinding,
@@ -9,6 +10,7 @@ import {
 @Component({
 	selector: 'app-drop',
 	templateUrl: './drop.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DropComponent {
 	@HostBinding('class') class = 'drop';

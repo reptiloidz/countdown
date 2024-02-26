@@ -348,5 +348,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			date: result[this.activeMode][forward ? 'forward' : 'backward'],
 		});
 		this.calendarRegenerated.emit();
+		this.cdr.detectChanges();
 	}
 }

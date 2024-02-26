@@ -2,7 +2,7 @@
 	class="item__inner"
 	[ngClass]="checkAccessEdit(point) ? 'item__inner--available' : ''"
 >
-	<h2>
+	<h2 class="item__title">
 		<a
 			routerLink="/point/{{ point.id }}"
 			[attr.title]="point.description || null"

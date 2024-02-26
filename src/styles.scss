@@ -186,6 +186,18 @@ a,
 	& + & {
 		border-top: 1px solid #CCCCCC;
 	}
+
+	&--sm {
+		.item {
+			&__title {
+				font-size: 16px;
+			}
+
+			&__inner {
+				padding: 8px;
+			}
+		}
+	}
 }
 
 .form-row {
