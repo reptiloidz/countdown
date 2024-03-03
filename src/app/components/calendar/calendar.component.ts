@@ -55,6 +55,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 	activeMode: CalendarMode = 'month';
 
+	calendarArray: CalendarDate[][] = [];
+
 	@Input() points?: Point[] = [];
 	@Input() iterations?: Iteration[] = [];
 	@Input() visibleDate = this.nowDate;
@@ -78,6 +80,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	constructor(private cdr: ChangeDetectorRef, private data: DataService) {}
 
 	ngOnInit() {
+		this.generateCalendar();
+
 		this.subscriptions.add(
 			interval(1000)
 				.pipe(
@@ -137,6 +141,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			data = iterations;
 		}
 		this.selectedDate = date;
+		this.generateCalendar();
 		this.dateSelected.emit({ date, mode: activeMode, data });
 	}
 
@@ -285,7 +290,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 			fullArray.push(rowArray);
 		}
-		return fullArray;
+		this.calendarArray = fullArray;
 	}
 
 	isDateMatch(date: Date, matchMode: 'visible' | 'selected' | 'now') {
@@ -311,16 +316,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		this.activeMode = mode;
 		this.visibleDate = this.selectedDate;
 		this.modeSelected.emit(this.activeMode);
+		this.generateCalendar();
 		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarToNow() {
 		this.visibleDate = this.nowDate;
+		this.generateCalendar();
 		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarToSelected() {
 		this.visibleDate = this.selectedDate;
+		this.generateCalendar();
 		this.calendarRegenerated.emit();
 	}
 
