@@ -7,6 +7,8 @@ import {
 	OnInit,
 	ViewChild,
 	ElementRef,
+	ContentChild,
+	TemplateRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Point } from 'src/app/interfaces';
@@ -22,6 +24,10 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 	@Input() point!: Point;
 	@Output() pointCheck = new EventEmitter();
+
+	@ContentChild('checkboxTemplate') checkboxTemplate:
+		| TemplateRef<unknown>
+		| undefined;
 	loading = false;
 
 	constructor(private data: DataService, private auth: AuthService) {}

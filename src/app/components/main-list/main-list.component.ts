@@ -20,9 +20,13 @@ import { DataService } from 'src/app/services';
 })
 export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('pointsList') private pointsList!: ElementRef;
+	@ViewChild('datePointsList') private datePointsList!: ElementRef;
 	points: Point[] = [];
 	loading = true;
 	dropOpenedDate: Date | undefined;
+	isDatePointsChecked: boolean = false;
+	datePointsChecked: string[] = [];
+	isAllDatesChecked = false;
 	private subscriptions = new Subscription();
 
 	constructor(private data: DataService) {}
@@ -87,17 +91,36 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.dropOpenedDate = undefined;
 	}
 
-	openDate({
-		date,
-		activeMode,
-	}: {
-		date: CalendarDate;
-		activeMode: CalendarMode;
-	}) {
+	openDate({ date }: { date: CalendarDate; activeMode: CalendarMode }) {
 		if (this.dropOpenedDate && +this.dropOpenedDate === +date.date) {
 			this.dropOpenedDate = undefined;
 		} else {
 			this.dropOpenedDate = date.date;
 		}
+
+		this.isDatePointsChecked = false;
+	}
+
+	getCheckedDatePoints() {
+		this.datePointsChecked = Array.from(
+			this.datePointsList.nativeElement.children
+		)
+			.filter((item: any) => item?.querySelector('input')?.checked)
+			.map((item: any) => item.getAttribute('data-id'));
+
+		this.isDatePointsChecked = !!this.datePointsChecked.length;
+	}
+
+	checkDatePoints(check?: boolean) {
+		Array.from(this.datePointsList.nativeElement.children).map(
+			(item: any) =>
+				item?.querySelector('input') &&
+				(item.querySelector('input').checked = check)
+		);
+		this.getCheckedDatePoints();
+	}
+
+	removeDateCheckedPoints() {
+		//  TODO: добавить удаление выбранных событий даты
 	}
 }

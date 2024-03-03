@@ -73,9 +73,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	@Output() calendarRegenerated = new EventEmitter<void>();
 
-	@ContentChild('contentTemplate') contentTemplate:
-		| TemplateRef<unknown>
-		| undefined;
+	@ContentChild('navTemplate') navTemplate: TemplateRef<unknown> | undefined;
 
 	constructor(private cdr: ChangeDetectorRef, private data: DataService) {}
 

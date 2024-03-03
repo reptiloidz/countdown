@@ -11,11 +11,17 @@
 				class="link"
 				(click)="delete(point.id)"
 			>x</button>
-			<input
-				#pointCheckbox
-				type="checkbox"
-				(change)="checkPoint()"
-			>
+			<ng-container
+				*ngIf="checkboxTemplate else defaultCheckbox;"
+				[ngTemplateOutlet]="checkboxTemplate"
+			></ng-container>
+			<ng-template #defaultCheckbox>
+				<input
+					#pointCheckbox
+					type="checkbox"
+					(change)="checkPoint()"
+				>
+			</ng-template>
 		</ng-container>
 	</h2><small
 		*ngIf="point?.greenwich"

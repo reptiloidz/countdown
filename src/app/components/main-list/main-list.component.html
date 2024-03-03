@@ -5,7 +5,7 @@
 		class="calendar"
 	>
 		<ng-template
-			#contentTemplate
+			#navTemplate
 			let-date="date"
 			let-mode="mode"
 		>
@@ -21,16 +21,49 @@
 					>&#709;</button>
 				</ng-template>
 				<ng-template #bodyTemplate>
-					<ul class="calendar__date-ul">
+					<ul
+						class="calendar__date-ul"
+						#datePointsList
+					>
 						<li
 							app-main-item
 							[attr.data-id]="point.id"
 							class="calendar__date-li item item--sm"
 							*ngFor="let point of date.points; let i = index"
 							[point]="point"
-							(pointCheck)="checkPoint()"
-						></li>
+						>
+							<ng-template #checkboxTemplate>
+								<input
+									#datePointCheckbox
+									type="checkbox"
+									(change)="getCheckedDatePoints()"
+								>
+							</ng-template>
+						</li>
 					</ul>
+					<div class="nav">
+						<button
+							type="button"
+							class="nav__item link"
+							(click)="checkDatePoints(true)"
+						>
+							Выбрать все</button>
+						<ng-container *ngIf="isDatePointsChecked">
+							<span class="nav__divider"> | </span>
+							<button
+								type="button"
+								class="nav__item link"
+								(click)="checkDatePoints(false)"
+							>
+								Сбросить все</button><span class="nav__divider"> | </span>
+							<button
+								type="button"
+								class="nav__item link"
+								(click)="removeDateCheckedPoints()"
+							>
+								Удалить выбранные</button>
+						</ng-container>
+					</div>
 				</ng-template>
 			</app-drop>
 		</ng-template>

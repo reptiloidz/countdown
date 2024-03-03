@@ -83,8 +83,8 @@
 				</button>
 				<div class="calendar__date-nav">
 					<ng-container
-						*ngIf="contentTemplate"
-						[ngTemplateOutlet]="contentTemplate"
+						*ngIf="navTemplate"
+						[ngTemplateOutlet]="navTemplate"
 						[ngTemplateOutletContext]="{ date: item, mode: this.activeMode, point: this.point }"
 					></ng-container>
 				</div>
