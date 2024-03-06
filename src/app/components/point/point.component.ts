@@ -15,7 +15,7 @@ import {
 	filter,
 } from 'rxjs';
 import { Point, CalendarMode, Iteration } from 'src/app/interfaces';
-import { DataService, AuthService } from 'src/app/services';
+import { DataService, AuthService, ActionService } from 'src/app/services';
 import {
 	format,
 	formatDistanceToNow,
@@ -60,7 +60,8 @@ export class PointComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private auth: AuthService
+		private auth: AuthService,
+		private action: ActionService
 	) {}
 
 	ngOnInit(): void {
@@ -104,6 +105,7 @@ export class PointComponent implements OnInit, OnDestroy {
 						this.setAllTimers(true);
 						this.dateLoading = false;
 						this.setIterationsParam();
+						this.action.iterationSwitched(this.pointDate);
 					},
 					error: (err) => {
 						console.error(

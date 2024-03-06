@@ -29,7 +29,7 @@ import {
 	EditPointEvent,
 	CalendarMode,
 } from 'src/app/interfaces';
-import { DataService, AuthService } from 'src/app/services';
+import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format, parse } from 'date-fns';
 import {
 	filterIterations,
@@ -88,7 +88,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private auth: AuthService
+		private auth: AuthService,
+		private action: ActionService
 	) {}
 
 	ngOnInit(): void {
@@ -191,6 +192,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.checking.next(false);
 							this.setValues();
 							this.setIterationsParam();
+							this.action.iterationSwitched(this.pointDate);
 						}
 					},
 					error: (err) => {

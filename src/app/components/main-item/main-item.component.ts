@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Point } from 'src/app/interfaces';
-import { AuthService, DataService } from 'src/app/services';
+import { ActionService, AuthService, DataService } from 'src/app/services';
 
 @Component({
 	selector: '[app-main-item]',
@@ -30,7 +30,11 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		| undefined;
 	loading = false;
 
-	constructor(private data: DataService, private auth: AuthService) {}
+	constructor(
+		private data: DataService,
+		private auth: AuthService,
+		private action: ActionService
+	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -58,7 +62,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.data.eventPointsCheckedAll$.subscribe({
+			this.action.eventPointsCheckedAll$.subscribe({
 				next: (check) => {
 					this.pointCheckbox &&
 						(this.pointCheckbox.nativeElement.checked = check);

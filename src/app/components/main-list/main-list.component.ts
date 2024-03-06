@@ -12,7 +12,7 @@ import {
 	Iteration,
 	Point,
 } from 'src/app/interfaces';
-import { DataService } from 'src/app/services';
+import { DataService, ActionService } from 'src/app/services';
 
 @Component({
 	selector: 'app-main-list',
@@ -29,7 +29,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	isAllDatesChecked = false;
 	private subscriptions = new Subscription();
 
-	constructor(private data: DataService) {}
+	constructor(private data: DataService, private action: ActionService) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -72,7 +72,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	checkPoint() {
-		this.data.getCheckedPoints(this.pointsList.nativeElement);
+		this.action.getCheckedPoints(this.pointsList.nativeElement);
 	}
 
 	dateSelected({

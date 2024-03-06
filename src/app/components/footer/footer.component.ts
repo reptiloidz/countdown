@@ -10,7 +10,7 @@ import { filter, Subscription, EMPTY, mergeMap, combineLatestWith } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { getPointDate } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
-import { AuthService, DataService } from 'src/app/services';
+import { AuthService, DataService, ActionService } from 'src/app/services';
 import { HttpParams } from '@angular/common/http';
 
 @Component({
@@ -34,6 +34,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private data: DataService,
+		private action: ActionService,
 		private auth: AuthService
 	) {}
 
@@ -120,7 +121,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.data.eventPointsChecked$.subscribe({
+			this.action.eventPointsChecked$.subscribe({
 				next: (check) => {
 					this.pointsChecked = check;
 				},
@@ -159,11 +160,11 @@ export class FooterComponent implements OnInit, OnDestroy {
 	}
 
 	checkAllPoints() {
-		this.data.checkAllPoints();
+		this.action.checkAllPoints();
 	}
 
 	uncheckAllPoints() {
-		this.data.uncheckAllPoints();
+		this.action.uncheckAllPoints();
 	}
 
 	removeAllCheckedPoints() {

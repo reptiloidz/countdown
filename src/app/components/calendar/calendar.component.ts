@@ -41,7 +41,7 @@ import {
 	Iteration,
 	Point,
 } from 'src/app/interfaces';
-import { DataService } from 'src/app/services';
+import { ActionService, DataService } from 'src/app/services';
 
 @Component({
 	selector: 'app-calendar',
@@ -75,11 +75,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	@ContentChild('navTemplate') navTemplate: TemplateRef<unknown> | undefined;
 
-	constructor(private cdr: ChangeDetectorRef, private data: DataService) {}
+	constructor(
+		private cdr: ChangeDetectorRef,
+		private data: DataService,
+		private action: ActionService
+	) {}
 
 	ngOnInit() {
-		this.generateCalendar();
-
 		this.subscriptions.add(
 			interval(1000)
 				.pipe(
@@ -114,7 +116,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				.subscribe()
 		);
 
+		this.subscriptions.add(
+			this.action.eventIterationSwitched$.subscribe({
+				next: (date) => {
+					this.generateCalendar({ date });
+				},
+			})
+		);
+
 		this.modeSelected.emit(this.activeMode);
+		this.generateCalendar();
 	}
 
 	ngOnDestroy(): void {
@@ -144,12 +155,18 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	generateCalendar({
-		date = this.visibleDate,
+		date,
 		mode = this.activeMode,
 	}: {
 		date?: Date;
 		mode?: CalendarMode;
 	} = {}) {
+		if (!date) {
+			date = this.visibleDate;
+		} else {
+			this.selectedDate = date;
+		}
+
 		switch (this.activeMode) {
 			case 'year':
 				this.visibleDate = startOfMonth(date);
