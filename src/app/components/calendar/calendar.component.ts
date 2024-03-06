@@ -54,7 +54,8 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	private lastDateOfCurrentMonth!: Date;
 	private firstMonday!: Date;
 	private subscriptions = new Subscription();
-	activeMode: CalendarMode = 'month';
+	activeMode: CalendarMode =
+		(localStorage.getItem('calendarMode') as CalendarMode) || 'month';
 
 	calendarArray: CalendarDate[][] = [];
 
@@ -121,7 +122,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		this.subscriptions.add(
 			this.action.eventIterationSwitched$.subscribe({
 				next: (date) => {
-					this.generateCalendar({ date });
+					this.generateCalendar({ date, selectDate: true });
 				},
 			})
 		);
@@ -173,13 +174,14 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	generateCalendar({
 		date,
 		mode = this.activeMode,
+		selectDate = false,
 	}: {
 		date?: Date;
 		mode?: CalendarMode;
+		selectDate?: boolean;
 	} = {}) {
-		if (!date) {
-			date = this.visibleDate;
-		} else {
+		date = date || this.visibleDate;
+		if (selectDate) {
 			this.selectedDate = date;
 		}
 
@@ -345,6 +347,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 	switchCalendarMode(mode: CalendarMode) {
 		this.activeMode = mode;
+		localStorage.setItem('calendarMode', mode);
 		this.visibleDate = this.selectedDate;
 		this.modeSelected.emit(this.activeMode);
 		this.generateCalendar();

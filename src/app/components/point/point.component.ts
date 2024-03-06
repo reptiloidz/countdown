@@ -102,6 +102,7 @@ export class PointComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: () => {
+						this.point && this.data.putPoint(this.point);
 						this.setAllTimers(true);
 						this.dateLoading = false;
 						this.setIterationsParam();

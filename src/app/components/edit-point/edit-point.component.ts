@@ -185,6 +185,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: ({ pointId, access }) => {
+						this.point && this.data.putPoint(this.point);
 						if (
 							access &&
 							(pointId === this.point?.id || !pointId)

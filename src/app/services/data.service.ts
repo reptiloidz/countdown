@@ -129,6 +129,12 @@ export class DataService {
 		return of(this.points.find((item) => item.id === id));
 	}
 
+	putPoint(point: Point) {
+		if (!this.points.find((item) => item.id === point.id)) {
+			this.points.push(point);
+		}
+	}
+
 	addPoint(point: Point | undefined) {
 		if (point && !this._points.find((item) => item.id === point?.id)) {
 			this.http
