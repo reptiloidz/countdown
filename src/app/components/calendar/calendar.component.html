@@ -51,10 +51,10 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let week of calendarArray">
+		<tr *ngFor="let period of calendarArray">
 			<td
 				class="calendar__cell"
-				*ngFor="let item of week"
+				*ngFor="let item of period"
 			>
 				<button
 					class="calendar__button link"

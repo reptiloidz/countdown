@@ -80,7 +80,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	delete(id: string | undefined) {
-		this.data.removePoints(id);
+		this.data.removePoints({ id });
 	}
 
 	checkPoint() {

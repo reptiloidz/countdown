@@ -7,6 +7,7 @@ import {
 	Input,
 	OnDestroy,
 	OnInit,
+	OnChanges,
 	Output,
 	TemplateRef,
 } from '@angular/core';
@@ -33,7 +34,7 @@ import {
 	subMonths,
 	subYears,
 } from 'date-fns';
-import { Subscription, filter, interval, tap } from 'rxjs';
+import { Subscription, concatWith, filter, interval, tap } from 'rxjs';
 import { filterIterations, filterPoints } from 'src/app/helpers';
 import {
 	CalendarDate,
@@ -48,7 +49,7 @@ import { ActionService, DataService } from 'src/app/services';
 	templateUrl: './calendar.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarComponent implements OnInit, OnDestroy {
+export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	private nowDate = new Date();
 	private lastDateOfCurrentMonth!: Date;
 	private firstMonday!: Date;
@@ -101,6 +102,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: () => {
 						this.nowDate = new Date();
+						this.generateCalendar();
 						this.cdr.detectChanges();
 					},
 				})
@@ -124,7 +126,21 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			})
 		);
 
+		this.subscriptions.add(
+			this.data.eventRemovePoint$
+				.pipe(concatWith(this.action.eventFetchedPoints$))
+				.subscribe({
+					next: () => {
+						this.generateCalendar();
+					},
+				})
+		);
+
 		this.modeSelected.emit(this.activeMode);
+		this.generateCalendar();
+	}
+
+	ngOnChanges() {
 		this.generateCalendar();
 	}
 

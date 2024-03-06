@@ -43,6 +43,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (points: Point[]) => {
 						this.points = points;
+						this.action.pointsFetched();
 					},
 					error(err) {
 						console.error(
@@ -121,6 +122,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	removeDateCheckedPoints() {
-		//  TODO: добавить удаление выбранных событий даты
+		this.data.removePoints({
+			list: this.datePointsChecked,
+		});
 	}
 }

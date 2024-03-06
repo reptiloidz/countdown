@@ -175,13 +175,19 @@ export class DataService {
 		}
 	}
 
-	removePoints(id?: string) {
+	removePoints({
+		id,
+		list,
+	}: {
+		id?: string;
+		list?: string[];
+	} = {}) {
 		confirm(`Удалить ${id ? 'событие' : 'выбранные события'}?`) &&
 			(() => {
 				this.loading = true;
 				id && this._eventStartRemovePointSubject.next(id);
 				this.http
-					.deletePoints(id ? [id] : this.pointsChecked)
+					.deletePoints(id ? [id] : list || this.pointsChecked)
 					.then(() => {
 						this._eventRemovePointSubject.next(id);
 					})
