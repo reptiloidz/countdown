@@ -17,6 +17,7 @@ import {
 	addMinutes,
 	addMonths,
 	addYears,
+	format,
 	isMonday,
 	isSameDay,
 	isSameHour,
@@ -147,6 +148,25 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	getItemDate(date: Date) {
+		let result = '';
+		switch (this.activeMode) {
+			case 'day':
+				result = format(date, 'HH');
+				break;
+			case 'hour':
+				result = format(date, 'mm');
+				break;
+			case 'year':
+				result = format(date, 'LLL');
+				break;
+			default:
+				result = format(date, 'd');
+				break;
+		}
+		return result;
 	}
 
 	dateClicked({

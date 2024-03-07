@@ -79,7 +79,7 @@
 							<span class="calendar__counter">&#10003;</span>
 						</ng-template>
 					</ng-container>
-					{{ item.date | date : "dd.MM.yyyy '—' HH:mm" }}
+					{{ getItemDate(item.date) }}
 				</button>
 				<div class="calendar__date-nav">
 					<ng-container
