@@ -150,14 +150,33 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		this.subscriptions.unsubscribe();
 	}
 
+	get visiblePeriod() {
+		let result = '';
+		switch (this.activeMode) {
+			case 'year':
+				result = format(this.visibleDate, 'y');
+				break;
+			case 'day':
+				result = format(this.visibleDate, 'y LLL d');
+				break;
+			case 'hour':
+				result = format(this.visibleDate, 'y LLL d, k') + 'ч';
+				break;
+			default:
+				result = format(this.visibleDate, 'y LLL');
+				break;
+		}
+		return result;
+	}
+
 	getItemDate(date: Date) {
 		let result = '';
 		switch (this.activeMode) {
 			case 'day':
-				result = format(date, 'HH');
+				result = format(date, 'k');
 				break;
 			case 'hour':
-				result = format(date, 'mm');
+				result = format(date, 'm');
 				break;
 			case 'year':
 				result = format(date, 'LLL');
