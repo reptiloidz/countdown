@@ -15,7 +15,6 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { HttpService } from './services';
 import { HttpService as MockHttpService } from './services/http.mock.service';
 import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
-import { SortPipe } from './pipes/sort.pipe';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
@@ -35,7 +34,6 @@ import { DropComponent } from './components/drop/drop.component';
 		EditPointComponent,
 		CreatePointComponent,
 		GenerateIterationsComponent,
-		SortPipe,
 		PrivacyComponent,
 		CalendarComponent,
 		PopupComponent,
@@ -64,7 +62,7 @@ import { DropComponent } from './components/drop/drop.component';
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),
 	],
-	providers: [[provideNgxMask()], SortPipe],
+	providers: [[provideNgxMask()]],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

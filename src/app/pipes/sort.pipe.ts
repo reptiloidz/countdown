@@ -1,3 +1,5 @@
+// TODO: возможно, удаляем (сортировка делается без пайпа)
+
 import { Pipe, PipeTransform } from '@angular/core';
 import { Iteration } from '../interfaces';
 import { compareAsc, parse } from 'date-fns';

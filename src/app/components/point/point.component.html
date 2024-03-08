@@ -49,11 +49,12 @@
 		class="tabs"
 	>
 		<li
-			*ngFor="let date of this.dates | sort; let i = index"
+			*ngFor="let date of this.dates; let i = index"
 			class="tabs__item"
 			[ngClass]="{
 				'tabs__item--active': i == currentIterationIndex,
-				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex)
+				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
+				'tabs__item--copy': checkCopies(i),
 			}"
 		>
 			<button

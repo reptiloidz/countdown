@@ -143,7 +143,7 @@
 		class="tabs"
 	>
 		<li
-			*ngFor="let date of dates | sort; let i = index"
+			*ngFor="let date of dates; let i = index"
 			class="tabs__item"
 			[ngClass]="{
 				'tabs__item--active': i == currentIterationIndex && !isIterationAdded,
