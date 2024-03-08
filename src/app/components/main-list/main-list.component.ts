@@ -27,6 +27,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	isDatePointsChecked: boolean = false;
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
+	sortType = 'title';
 	private subscriptions = new Subscription();
 
 	constructor(private data: DataService, private action: ActionService) {}
@@ -43,6 +44,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (points: Point[]) => {
 						this.points = points;
+						this.sortPoints();
 						this.action.pointsFetched();
 					},
 					error(err) {
@@ -124,6 +126,80 @@ export class MainListComponent implements OnInit, OnDestroy {
 	removeDateCheckedPoints() {
 		this.data.removePoints({
 			list: this.datePointsChecked,
+		});
+	}
+
+	compareTitle(a: Point, b: Point) {
+		if (a.title > b.title) {
+			return 1;
+		} else if (a.title < b.title) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+
+	// compareUser(a: Point, b: Point) {
+	// TODO: доделать, когда будем хранить имя юзера
+	// 	if (a.title > b.title) {
+	// 		return 1;
+	// 	} else if (a.title < b.title) {
+	// 		return -1;
+	// 	} else {
+	// 		return this.compareTitle(a, b);
+	// 	}
+	// }
+
+	compareRepeatable(a: Point, b: Point) {
+		if (!a.repeatable && b.repeatable) {
+			return 1;
+		} else if (a.repeatable && !b.repeatable) {
+			return -1;
+		} else {
+			return this.compareTitle(a, b);
+		}
+	}
+
+	compareGreenwich(a: Point, b: Point) {
+		if (!a.greenwich && b.greenwich) {
+			return 1;
+		} else if (a.greenwich && !b.greenwich) {
+			return -1;
+		} else {
+			return this.compareTitle(a, b);
+		}
+	}
+
+	comparePublic(a: Point, b: Point) {
+		if (!a.public && b.public) {
+			return 1;
+		} else if (a.public && !b.public) {
+			return -1;
+		} else {
+			return this.compareTitle(a, b);
+		}
+	}
+
+	sortPoints(points = this.points, event?: Event) {
+		this.sortType = event
+			? (event.target as HTMLInputElement).value
+			: this.sortType;
+
+		return points.sort((a, b) => {
+			switch (this.sortType) {
+				case 'title':
+					return this.compareTitle(a, b);
+				// case 'user':
+				// 	return this.compareUser(a, b);
+				case 'repeatable':
+					return this.compareRepeatable(a, b);
+				case 'greenwich':
+					return this.compareGreenwich(a, b);
+				case 'public':
+					return this.comparePublic(a, b);
+				default:
+					return 0;
+			}
 		});
 	}
 }

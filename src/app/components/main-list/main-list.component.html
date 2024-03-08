@@ -29,7 +29,7 @@
 							app-main-item
 							[attr.data-id]="point.id"
 							class="calendar__date-li item item--sm"
-							*ngFor="let point of date.points; let i = index"
+							*ngFor="let point of sortPoints(date.points); let i = index"
 							[point]="point"
 						>
 							<ng-template #checkboxTemplate>
@@ -68,6 +68,16 @@
 			</app-drop>
 		</ng-template>
 	</app-calendar>
+	<select
+		name="sort"
+		(change)="sortPoints(points, $event)"
+	>
+		<option value="title">Название</option>
+		<!-- <option value="user">Автор</option> -->
+		<option value="greenwich">Гринвич</option>
+		<option value="repeatable">Повторяемое</option>
+		<option value="public">Публичное</option>
+	</select>
 	<ul
 		#pointsList
 		*ngIf="points.length; else empty"
