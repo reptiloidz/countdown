@@ -32,6 +32,7 @@ import {
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format, parse } from 'date-fns';
 import {
+	checkCopies,
 	filterIterations,
 	getFirstIteration,
 	getPointDate,
@@ -337,6 +338,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		if (this.point && sortedDates) {
 			this.point.dates = sortedDates;
 		}
+	}
+
+	checkCopies(i: number) {
+		return this.point && checkCopies(this.point, this.point?.dates[i]);
 	}
 
 	setValues(isReset = false) {
