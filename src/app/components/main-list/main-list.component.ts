@@ -6,6 +6,7 @@ import {
 	OnInit,
 } from '@angular/core';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
+import { SortTypeNames } from 'src/app/enums';
 import {
 	CalendarDate,
 	CalendarMode,
@@ -24,10 +25,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 	points: Point[] = [];
 	loading = true;
 	dropOpenedDate: Date | undefined;
+	dropOpenSort = false;
 	isDatePointsChecked: boolean = false;
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
-	sortType = 'title';
+	sortType = SortTypeNames.titleAsc;
 	private subscriptions = new Subscription();
 
 	constructor(private data: DataService, private action: ActionService) {}
@@ -72,6 +74,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	public get sortTypeNames() {
+		return SortTypeNames;
 	}
 
 	checkPoint() {
@@ -180,26 +186,46 @@ export class MainListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	sortPoints(points = this.points, event?: Event) {
-		this.sortType = event
-			? (event.target as HTMLInputElement).value
-			: this.sortType;
+	sortPoints(points = this.points, sortType?: SortTypeNames) {
+		this.sortType = sortType
+			? (sortType as SortTypeNames)
+			: (this.sortType as SortTypeNames);
+
+		this.dropOpenSort = false;
 
 		return points.sort((a, b) => {
 			switch (this.sortType) {
-				case 'title':
+				case SortTypeNames.titleAsc:
 					return this.compareTitle(a, b);
-				// case 'user':
+				case SortTypeNames.titleDesc:
+					return this.compareTitle(b, a);
+				// case SortTypeNames.userAsc:
 				// 	return this.compareUser(a, b);
-				case 'repeatable':
+				// case SortTypeNames.userDesc:
+				// 	return this.compareUser(b, a);
+				case SortTypeNames.repeatableAsc:
+					return this.compareRepeatable(b, a);
+				case SortTypeNames.repeatableDesc:
 					return this.compareRepeatable(a, b);
-				case 'greenwich':
+				case SortTypeNames.greenwichAsc:
+					return this.compareGreenwich(b, a);
+				case SortTypeNames.greenwichDesc:
 					return this.compareGreenwich(a, b);
-				case 'public':
+				case SortTypeNames.publicAsc:
+					return this.comparePublic(b, a);
+				case SortTypeNames.publicDesc:
 					return this.comparePublic(a, b);
 				default:
 					return 0;
 			}
 		});
+	}
+
+	sortPointsClick(sort: SortTypeNames) {
+		this.sortPoints(this.points, sort);
+	}
+
+	openSort() {
+		this.dropOpenSort = !this.dropOpenSort;
 	}
 }

@@ -68,16 +68,72 @@
 			</app-drop>
 		</ng-template>
 	</app-calendar>
-	<select
-		name="sort"
-		(change)="sortPoints(points, $event)"
-	>
-		<option value="title">Название</option>
-		<!-- <option value="user">Автор</option> -->
-		<option value="greenwich">Гринвич</option>
-		<option value="repeatable">Повторяемое</option>
-		<option value="public">Публичное</option>
-	</select>
+
+	<app-drop [opened]="dropOpenSort">
+		<ng-template
+			#buttonTemplate
+			let-value="sortType"
+		>
+			<button
+				type="button"
+				[innerHTML]="sortType"
+				(click)="openSort()"
+			></button>
+		</ng-template>
+		<ng-template #bodyTemplate>
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.titleAsc)"
+				[innerHTML]="sortTypeNames.titleAsc"
+			></button>
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.titleDesc)"
+				[innerHTML]="sortTypeNames.titleDesc"
+			></button>
+			<!-- <button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.userAsc)"
+				[innerHTML]="sortTypeNames.userAsc"
+				></button>
+				<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.userDesc)"
+				[innerHTML]="sortTypeNames.userDesc"
+				></button> -->
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.repeatableAsc)"
+				[innerHTML]="sortTypeNames.repeatableAsc"
+			></button>
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.repeatableDesc)"
+				[innerHTML]="sortTypeNames.repeatableDesc"
+			></button>
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.greenwichAsc)"
+				[innerHTML]="sortTypeNames.greenwichAsc"
+			></button>
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.greenwichDesc)"
+				[innerHTML]="sortTypeNames.greenwichDesc"
+			></button>
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.publicAsc)"
+				[innerHTML]="sortTypeNames.publicAsc"
+			></button>
+			<button
+				type="button"
+				(click)="sortPointsClick(sortTypeNames.publicDesc)"
+				[innerHTML]="sortTypeNames.publicDesc"
+			></button>
+		</ng-template>
+	</app-drop>
+
 	<ul
 		#pointsList
 		*ngIf="points.length; else empty"

@@ -1,6 +1,7 @@
 <ng-container
 	*ngIf="buttonTemplate else button;"
 	[ngTemplateOutlet]="buttonTemplate"
+	[ngTemplateOutletContext]="{ value }"
 ></ng-container>
 <ng-template #button>
 	<button

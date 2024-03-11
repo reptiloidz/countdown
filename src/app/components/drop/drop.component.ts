@@ -24,6 +24,8 @@ export class DropComponent {
 
 	@Input() opened = false;
 
+	value = '';
+
 	open() {
 		this.opened = this.opened ? false : true;
 	}
