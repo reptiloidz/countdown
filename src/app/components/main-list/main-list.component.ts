@@ -7,12 +7,7 @@ import {
 } from '@angular/core';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { SortTypeNames } from 'src/app/enums';
-import {
-	CalendarDate,
-	CalendarMode,
-	Iteration,
-	Point,
-} from 'src/app/interfaces';
+import { CalendarDate, CalendarMode, Point } from 'src/app/interfaces';
 import { DataService, ActionService } from 'src/app/services';
 
 @Component({
@@ -76,24 +71,16 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	public get sortTypeNames() {
+	get sortTypeNames() {
 		return SortTypeNames;
+	}
+
+	get sortTypeNamesArray() {
+		return Object.values(SortTypeNames);
 	}
 
 	checkPoint() {
 		this.action.getCheckedPoints(this.pointsList.nativeElement);
-	}
-
-	dateSelected({
-		date,
-		mode,
-		data,
-	}: {
-		date: Date;
-		mode: CalendarMode;
-		data: Point[] | Iteration[];
-	}) {
-		console.log(date, mode, data);
 	}
 
 	calendarRegenerated() {

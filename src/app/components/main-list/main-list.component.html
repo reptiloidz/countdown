@@ -82,54 +82,10 @@
 		</ng-template>
 		<ng-template #bodyTemplate>
 			<button
+				*ngFor="let sortTypeItem of sortTypeNamesArray"
 				type="button"
-				(click)="sortPointsClick(sortTypeNames.titleAsc)"
-				[innerHTML]="sortTypeNames.titleAsc"
-			></button>
-			<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.titleDesc)"
-				[innerHTML]="sortTypeNames.titleDesc"
-			></button>
-			<!-- <button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.userAsc)"
-				[innerHTML]="sortTypeNames.userAsc"
-				></button>
-				<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.userDesc)"
-				[innerHTML]="sortTypeNames.userDesc"
-				></button> -->
-			<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.repeatableAsc)"
-				[innerHTML]="sortTypeNames.repeatableAsc"
-			></button>
-			<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.repeatableDesc)"
-				[innerHTML]="sortTypeNames.repeatableDesc"
-			></button>
-			<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.greenwichAsc)"
-				[innerHTML]="sortTypeNames.greenwichAsc"
-			></button>
-			<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.greenwichDesc)"
-				[innerHTML]="sortTypeNames.greenwichDesc"
-			></button>
-			<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.publicAsc)"
-				[innerHTML]="sortTypeNames.publicAsc"
-			></button>
-			<button
-				type="button"
-				(click)="sortPointsClick(sortTypeNames.publicDesc)"
-				[innerHTML]="sortTypeNames.publicDesc"
+				(click)="sortPointsClick(sortTypeItem)"
+				[innerHTML]="sortTypeItem"
 			></button>
 		</ng-template>
 	</app-drop>
