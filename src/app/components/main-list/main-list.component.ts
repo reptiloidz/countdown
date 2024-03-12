@@ -17,6 +17,10 @@ import { DataService, ActionService } from 'src/app/services';
 export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('pointsList') private pointsList!: ElementRef;
 	@ViewChild('datePointsList') private datePointsList!: ElementRef;
+	@ViewChild('repeatableSelect') private repeatableSelect!: ElementRef;
+	@ViewChild('greenwichSelect') private greenwichSelect!: ElementRef;
+	@ViewChild('publicSelect') private publicSelect!: ElementRef;
+	@ViewChild('searchInput') private searchInput!: ElementRef;
 	points: Point[] = [];
 	loading = true;
 	dropOpenedDate: Date | undefined;
@@ -25,6 +29,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
 	sortType = SortTypeNames.titleAsc;
+	repeatableSelectValue: undefined | boolean = undefined;
+	greenwichSelectValue: undefined | boolean = undefined;
+	publicSelectValue: undefined | boolean = undefined;
+	searchInputValue = '';
+
 	private subscriptions = new Subscription();
 
 	constructor(private data: DataService, private action: ActionService) {}
@@ -77,6 +86,64 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	get sortTypeNamesArray() {
 		return Object.values(SortTypeNames);
+	}
+
+	get filtersFilled() {
+		return (
+			typeof this.repeatableSelectValue !== 'undefined' ||
+			typeof this.greenwichSelectValue !== 'undefined' ||
+			typeof this.publicSelectValue !== 'undefined' ||
+			this.searchInputValue !== ''
+		);
+	}
+
+	changeFilters() {
+		switch (this.repeatableSelect?.nativeElement.value) {
+			case 'true':
+				this.repeatableSelectValue = true;
+				break;
+			case 'false':
+				this.repeatableSelectValue = false;
+				break;
+			default:
+				this.repeatableSelectValue = undefined;
+				break;
+		}
+
+		switch (this.greenwichSelect?.nativeElement.value) {
+			case 'true':
+				this.greenwichSelectValue = true;
+				break;
+			case 'false':
+				this.greenwichSelectValue = false;
+				break;
+			default:
+				this.greenwichSelectValue = undefined;
+				break;
+		}
+
+		switch (this.publicSelect?.nativeElement.value) {
+			case 'true':
+				this.publicSelectValue = true;
+				break;
+			case 'false':
+				this.publicSelectValue = false;
+				break;
+			default:
+				this.publicSelectValue = undefined;
+				break;
+		}
+
+		this.searchInputValue = this.searchInput?.nativeElement.value;
+	}
+
+	clearFilters() {
+		(this.repeatableSelect?.nativeElement as HTMLInputElement).value =
+			'all';
+		(this.greenwichSelect?.nativeElement as HTMLInputElement).value = 'all';
+		(this.publicSelect?.nativeElement as HTMLInputElement).value = 'all';
+		(this.searchInput?.nativeElement as HTMLInputElement).value = '';
+		this.changeFilters();
 	}
 
 	checkPoint() {

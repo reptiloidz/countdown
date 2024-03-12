@@ -69,6 +69,7 @@
 		</ng-template>
 	</app-calendar>
 
+
 	<app-drop [opened]="dropOpenSort">
 		<ng-template
 			#buttonTemplate
@@ -90,20 +91,69 @@
 		</ng-template>
 	</app-drop>
 
-	<ul
-		#pointsList
-		*ngIf="points.length; else empty"
-		class="list"
+	<input
+		placeholder="Поиск"
+		#searchInput
+		type="text"
+		(input)="changeFilters()"
 	>
-		<li
-			app-main-item
-			[attr.data-id]="point.id"
-			class="item"
-			*ngFor="let point of points; let i = index"
-			[point]="point"
-			(pointCheck)="checkPoint()"
-		></li>
-	</ul>
+
+	<select
+		#repeatableSelect
+		(change)="changeFilters()"
+	>
+		<option value="all">Повторяемость</option>
+		<option value="true">Повторяемые</option>
+		<option value="false">Неповторяемые</option>
+	</select>
+
+	<select
+		#greenwichSelect
+		(change)="changeFilters()"
+	>
+		<option value="all">Часовой пояс</option>
+		<option value="true">По Гринвичу</option>
+		<option value="false">По местному</option>
+	</select>
+
+	<select
+		#publicSelect
+		(change)="changeFilters()"
+	>
+		<option value="all">Публичность</option>
+		<option value="true">Публичные</option>
+		<option value="false">Приватные</option>
+	</select>
+
+	<button
+		*ngIf="filtersFilled"
+		type="button"
+		class="link"
+		(click)="clearFilters()"
+	>Очистить</button>
+
+	<ng-container *appLet="points | filter: {
+		search: searchInputValue,
+		isRepeatable: repeatableSelectValue,
+		isGreenwich: greenwichSelectValue,
+		isPublic: publicSelectValue,
+	} as filteredPoints">
+
+		<ul
+			#pointsList
+			*ngIf="filteredPoints.length; else empty"
+			class="list"
+		>
+			<li
+				app-main-item
+				[attr.data-id]="point.id"
+				class="item"
+				*ngFor="let point of filteredPoints; let i = index"
+				[point]="point"
+				(pointCheck)="checkPoint()"
+			></li>
+		</ul>
+	</ng-container>
 </ng-container>
 
 <ng-template #empty>

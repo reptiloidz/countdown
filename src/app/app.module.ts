@@ -22,6 +22,8 @@ import { PrivacyComponent } from './components/privacy/privacy.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { DropComponent } from './components/drop/drop.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { LetDirective } from './directives/let.directive';
 
 @NgModule({
 	declarations: [
@@ -38,6 +40,8 @@ import { DropComponent } from './components/drop/drop.component';
 		CalendarComponent,
 		PopupComponent,
 		DropComponent,
+		FilterPipe,
+		LetDirective,
 	],
 	imports: [
 		BrowserModule,
@@ -64,5 +68,6 @@ import { DropComponent } from './components/drop/drop.component';
 	],
 	providers: [[provideNgxMask()]],
 	bootstrap: [AppComponent],
+	exports: [LetDirective],
 })
 export class AppModule {}
