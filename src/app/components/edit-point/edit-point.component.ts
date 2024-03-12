@@ -23,12 +23,7 @@ import {
 	startWith,
 	mergeMap,
 } from 'rxjs';
-import {
-	Point,
-	Iteration,
-	EditPointEvent,
-	CalendarMode,
-} from 'src/app/interfaces';
+import { Point, Iteration } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format, parse } from 'date-fns';
 import {
@@ -40,6 +35,7 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Constants } from 'src/app/enums';
+import { CalendarMode, EditPointEvent } from 'src/app/types';
 
 export enum EditPointType {
 	Create = 'create',

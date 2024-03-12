@@ -5,8 +5,9 @@ import {
 	isSameMonth,
 	parse,
 } from 'date-fns';
-import { CalendarMode, Iteration, Point } from '../interfaces';
+import { Iteration, Point } from '../interfaces';
 import { Constants } from '../enums';
+import { CalendarMode } from '../types';
 
 export const filterDates = (item: object) => {
 	return item && typeof item === 'object' && !Array.isArray(item);

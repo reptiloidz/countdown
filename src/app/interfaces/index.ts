@@ -1,7 +1,4 @@
 export * from './calendarDate.interface';
-export * from './calendarMode.type';
-export * from './direction.type';
-export * from './editPointEvent.type';
 export * from './fbAuthResponse.interface';
 export * from './http.interface';
 export * from './iteration.interface';

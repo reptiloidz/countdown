@@ -5,10 +5,12 @@ import {
 	OnDestroy,
 	OnInit,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { SortTypeNames } from 'src/app/enums';
-import { CalendarDate, CalendarMode, Point } from 'src/app/interfaces';
+import { CalendarDate, Point } from 'src/app/interfaces';
 import { DataService, ActionService } from 'src/app/services';
+import { CalendarMode, FilterSelected } from 'src/app/types';
 
 @Component({
 	selector: 'app-main-list',
@@ -29,14 +31,19 @@ export class MainListComponent implements OnInit, OnDestroy {
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
 	sortType = SortTypeNames.titleAsc;
-	repeatableSelectValue: undefined | boolean = undefined;
-	greenwichSelectValue: undefined | boolean = undefined;
-	publicSelectValue: undefined | boolean = undefined;
+	repeatableSelectValue: FilterSelected = 'all';
+	greenwichSelectValue: FilterSelected = 'all';
+	publicSelectValue: FilterSelected = 'all';
 	searchInputValue = '';
 
 	private subscriptions = new Subscription();
 
-	constructor(private data: DataService, private action: ActionService) {}
+	constructor(
+		private data: DataService,
+		private action: ActionService,
+		private router: Router,
+		private route: ActivatedRoute
+	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -72,6 +79,38 @@ export class MainListComponent implements OnInit, OnDestroy {
 			})
 		);
 
+		this.subscriptions.add(
+			this.route.queryParams.subscribe({
+				next: (data: any) => {
+					this.searchInputValue = data.search || '';
+
+					if (data.repeat) {
+						this.repeatableSelectValue = data.repeat;
+					} else {
+						this.repeatableSelectValue = 'all';
+					}
+
+					if (data.greenwich) {
+						this.greenwichSelectValue = data.greenwich;
+					} else {
+						this.greenwichSelectValue = 'all';
+					}
+
+					if (data.public) {
+						this.publicSelectValue = data.public;
+					} else {
+						this.publicSelectValue = 'all';
+					}
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при получении параметров:\n',
+						err.message
+					);
+				},
+			})
+		);
+
 		this.data.fetchAllPoints();
 		this.loading = true;
 	}
@@ -90,51 +129,38 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	get filtersFilled() {
 		return (
-			typeof this.repeatableSelectValue !== 'undefined' ||
-			typeof this.greenwichSelectValue !== 'undefined' ||
-			typeof this.publicSelectValue !== 'undefined' ||
+			this.repeatableSelectValue !== 'all' ||
+			this.greenwichSelectValue !== 'all' ||
+			this.publicSelectValue !== 'all' ||
 			this.searchInputValue !== ''
 		);
 	}
 
 	changeFilters() {
-		switch (this.repeatableSelect?.nativeElement.value) {
-			case 'true':
-				this.repeatableSelectValue = true;
-				break;
-			case 'false':
-				this.repeatableSelectValue = false;
-				break;
-			default:
-				this.repeatableSelectValue = undefined;
-				break;
-		}
-
-		switch (this.greenwichSelect?.nativeElement.value) {
-			case 'true':
-				this.greenwichSelectValue = true;
-				break;
-			case 'false':
-				this.greenwichSelectValue = false;
-				break;
-			default:
-				this.greenwichSelectValue = undefined;
-				break;
-		}
-
-		switch (this.publicSelect?.nativeElement.value) {
-			case 'true':
-				this.publicSelectValue = true;
-				break;
-			case 'false':
-				this.publicSelectValue = false;
-				break;
-			default:
-				this.publicSelectValue = undefined;
-				break;
-		}
-
+		this.repeatableSelectValue = this.repeatableSelect?.nativeElement.value;
+		this.greenwichSelectValue = this.greenwichSelect?.nativeElement.value;
+		this.publicSelectValue = this.publicSelect?.nativeElement.value;
 		this.searchInputValue = this.searchInput?.nativeElement.value;
+
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: {
+				repeat:
+					this.repeatableSelectValue === 'all'
+						? null
+						: this.repeatableSelectValue,
+				greenwich:
+					this.greenwichSelectValue === 'all'
+						? null
+						: this.greenwichSelectValue,
+				public:
+					this.publicSelectValue === 'all'
+						? null
+						: this.publicSelectValue,
+				search: this.searchInputValue || null,
+			},
+			queryParamsHandling: 'merge',
+		});
 	}
 
 	clearFilters() {

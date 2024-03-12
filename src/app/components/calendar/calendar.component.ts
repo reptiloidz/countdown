@@ -37,13 +37,9 @@ import {
 } from 'date-fns';
 import { Subscription, concatWith, filter, interval, tap } from 'rxjs';
 import { filterIterations, filterPoints } from 'src/app/helpers';
-import {
-	CalendarDate,
-	CalendarMode,
-	Iteration,
-	Point,
-} from 'src/app/interfaces';
+import { CalendarDate, Iteration, Point } from 'src/app/interfaces';
 import { ActionService, DataService } from 'src/app/services';
+import { CalendarMode } from 'src/app/types';
 
 @Component({
 	selector: 'app-calendar',

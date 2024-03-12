@@ -10,8 +10,8 @@ import { readGuard, editGuard, authGuard } from './guards';
 
 const routes: Routes = [
 	{
-		path: '',
-		redirectTo: '/',
+		path: '**',
+		redirectTo: '',
 		pathMatch: 'full',
 	},
 	{

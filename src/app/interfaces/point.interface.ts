@@ -1,4 +1,5 @@
-import { Direction, Iteration } from '.';
+import { Iteration } from '.';
+import { Direction } from '../types';
 
 export interface Point {
 	title: string;

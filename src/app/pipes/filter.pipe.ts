@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Point } from '../interfaces';
+import { FilterSelected } from '../types';
 
 @Pipe({
 	name: 'filter',
@@ -15,9 +16,9 @@ export class FilterPipe implements PipeTransform {
 			isPublic,
 		}: {
 			search: string;
-			isRepeatable?: boolean | undefined;
-			isGreenwich?: boolean | undefined;
-			isPublic?: boolean | undefined;
+			isRepeatable?: FilterSelected;
+			isGreenwich?: FilterSelected;
+			isPublic?: FilterSelected;
 		}
 	): Point[] {
 		if (
@@ -33,12 +34,12 @@ export class FilterPipe implements PipeTransform {
 					point.title
 						.toLowerCase()
 						.includes(search.toLowerCase().trim()) &&
-					(point.repeatable === isRepeatable ||
-						typeof isRepeatable === 'undefined') &&
-					(point.greenwich === isGreenwich ||
-						typeof isGreenwich === 'undefined') &&
-					(point.public === isPublic ||
-						typeof isPublic === 'undefined')
+					(point.repeatable.toString() === isRepeatable ||
+						isRepeatable === 'all') &&
+					(point.greenwich.toString() === isGreenwich ||
+						isGreenwich === 'all') &&
+					((point.public && point.public.toString() === isPublic) ||
+						isPublic === 'all')
 				);
 			});
 		}

@@ -14,7 +14,7 @@ import {
 	mergeMap,
 	filter,
 } from 'rxjs';
-import { Point, CalendarMode, Iteration } from 'src/app/interfaces';
+import { Point, Iteration } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import {
 	format,
@@ -31,6 +31,7 @@ import {
 	getPointDate,
 	sortDates,
 } from 'src/app/helpers';
+import { CalendarMode } from 'src/app/types';
 
 @Component({
 	selector: 'app-point',
