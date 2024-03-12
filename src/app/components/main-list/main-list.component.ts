@@ -83,6 +83,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			this.route.queryParams.subscribe({
 				next: (data: any) => {
 					this.searchInputValue = data.search || '';
+					data.sort && (this.sortType = data.sort);
 
 					if (data.repeat) {
 						this.repeatableSelectValue = data.repeat;
@@ -272,6 +273,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 			: (this.sortType as SortTypeNames);
 
 		this.dropOpenSort = false;
+
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: {
+				sort:
+					this.sortType !== SortTypeNames.titleAsc
+						? this.sortType
+						: null,
+			},
+			queryParamsHandling: 'merge',
+		});
 
 		return points.sort((a, b) => {
 			switch (this.sortType) {
