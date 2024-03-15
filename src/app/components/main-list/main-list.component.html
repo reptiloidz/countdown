@@ -77,16 +77,16 @@
 		>
 			<button
 				type="button"
-				[innerHTML]="sortType"
+				[innerHTML]="sortTypeNames[sortType]"
 				(click)="openSort()"
 			></button>
 		</ng-template>
 		<ng-template #bodyTemplate>
 			<button
-				*ngFor="let sortTypeItem of sortTypeNamesArray"
+				*ngFor="let sortTypeItem of sortTypeKeysArray"
 				type="button"
 				(click)="sortPointsClick(sortTypeItem)"
-				[innerHTML]="sortTypeItem"
+				[innerHTML]="sortTypeNames[sortTypeItem]"
 			></button>
 		</ng-template>
 	</app-drop>

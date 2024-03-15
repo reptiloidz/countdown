@@ -10,7 +10,7 @@ import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { SortTypeNames } from 'src/app/enums';
 import { CalendarDate, Point } from 'src/app/interfaces';
 import { DataService, ActionService } from 'src/app/services';
-import { CalendarMode, FilterSelected } from 'src/app/types';
+import { CalendarMode, FilterSelected, SortTypes } from 'src/app/types';
 
 @Component({
 	selector: 'app-main-list',
@@ -30,7 +30,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	isDatePointsChecked: boolean = false;
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
-	sortType = SortTypeNames.titleAsc;
+	sortType: SortTypes = 'titleAsc';
 	repeatableSelectValue: FilterSelected = 'all';
 	greenwichSelectValue: FilterSelected = 'all';
 	publicSelectValue: FilterSelected = 'all';
@@ -124,8 +124,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 		return SortTypeNames;
 	}
 
-	get sortTypeNamesArray() {
-		return Object.values(SortTypeNames);
+	get sortTypeKeysArray() {
+		return Object.keys(SortTypeNames) as SortTypes[];
 	}
 
 	get filtersFilled() {
@@ -189,6 +189,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		}
 
 		this.isDatePointsChecked = false;
+		this.dropOpenSort = false;
 	}
 
 	getCheckedDatePoints() {
@@ -274,13 +275,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 			navigate = true,
 		}: {
 			points: Point[];
-			sortType?: SortTypeNames;
+			sortType?: SortTypes;
 			navigate?: boolean;
 		} = { points: this.points }
 	) {
-		this.sortType = sortType
-			? (sortType as SortTypeNames)
-			: (this.sortType as SortTypeNames);
+		this.sortType = sortType ? sortType : this.sortType;
 
 		this.dropOpenSort = false;
 
@@ -288,35 +287,32 @@ export class MainListComponent implements OnInit, OnDestroy {
 			this.router.navigate([], {
 				relativeTo: this.route,
 				queryParams: {
-					sort:
-						this.sortType !== SortTypeNames.titleAsc
-							? this.sortType
-							: null,
+					sort: this.sortType !== 'titleAsc' ? this.sortType : null,
 				},
 				queryParamsHandling: 'merge',
 			});
 
 		return points.sort((a, b) => {
 			switch (this.sortType) {
-				case SortTypeNames.titleAsc:
+				case 'titleAsc':
 					return this.compareTitle(a, b);
-				case SortTypeNames.titleDesc:
+				case 'titleDesc':
 					return this.compareTitle(b, a);
 				// case SortTypeNames.userAsc:
 				// 	return this.compareUser(a, b);
 				// case SortTypeNames.userDesc:
 				// 	return this.compareUser(b, a);
-				case SortTypeNames.repeatableAsc:
+				case 'repeatableAsc':
 					return this.compareRepeatable(b, a);
-				case SortTypeNames.repeatableDesc:
+				case 'repeatableDesc':
 					return this.compareRepeatable(a, b);
-				case SortTypeNames.greenwichAsc:
+				case 'greenwichAsc':
 					return this.compareGreenwich(b, a);
-				case SortTypeNames.greenwichDesc:
+				case 'greenwichDesc':
 					return this.compareGreenwich(a, b);
-				case SortTypeNames.publicAsc:
+				case 'publicAsc':
 					return this.comparePublic(b, a);
-				case SortTypeNames.publicDesc:
+				case 'publicDesc':
 					return this.comparePublic(a, b);
 				default:
 					return 0;
@@ -324,7 +320,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	sortPointsClick(sort: SortTypeNames) {
+	sortPointsClick(sort: SortTypes) {
 		this.sortPoints({
 			points: this.points,
 			sortType: sort,
@@ -333,5 +329,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	openSort() {
 		this.dropOpenSort = !this.dropOpenSort;
+		this.dropOpenedDate = undefined;
 	}
 }
