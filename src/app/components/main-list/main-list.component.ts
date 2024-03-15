@@ -267,23 +267,34 @@ export class MainListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	sortPoints(points = this.points, sortType?: SortTypeNames) {
+	sortPoints(
+		{
+			points,
+			sortType,
+			navigate = true,
+		}: {
+			points: Point[];
+			sortType?: SortTypeNames;
+			navigate?: boolean;
+		} = { points: this.points }
+	) {
 		this.sortType = sortType
 			? (sortType as SortTypeNames)
 			: (this.sortType as SortTypeNames);
 
 		this.dropOpenSort = false;
 
-		this.router.navigate([], {
-			relativeTo: this.route,
-			queryParams: {
-				sort:
-					this.sortType !== SortTypeNames.titleAsc
-						? this.sortType
-						: null,
-			},
-			queryParamsHandling: 'merge',
-		});
+		navigate &&
+			this.router.navigate([], {
+				relativeTo: this.route,
+				queryParams: {
+					sort:
+						this.sortType !== SortTypeNames.titleAsc
+							? this.sortType
+							: null,
+				},
+				queryParamsHandling: 'merge',
+			});
 
 		return points.sort((a, b) => {
 			switch (this.sortType) {
@@ -314,7 +325,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	sortPointsClick(sort: SortTypeNames) {
-		this.sortPoints(this.points, sort);
+		this.sortPoints({
+			points: this.points,
+			sortType: sort,
+		});
 	}
 
 	openSort() {

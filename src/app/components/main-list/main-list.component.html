@@ -29,7 +29,7 @@
 							app-main-item
 							[attr.data-id]="point.id"
 							class="calendar__date-li item item--sm"
-							*ngFor="let point of sortPoints(date.points); let i = index"
+							*ngFor="let point of sortPoints({points: date.points, navigate: false}); let i = index"
 							[point]="point"
 						>
 							<ng-template #checkboxTemplate>
