@@ -57,7 +57,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (points: Point[]) => {
 						this.points = points;
-						this.sortPoints();
+						this.sortPoints({
+							points: this.points,
+							navigate: false,
+						});
 						this.action.pointsFetched();
 					},
 					error(err) {
