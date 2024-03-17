@@ -1,6 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
-import { ActivationStart, Event, Router } from '@angular/router';
+import {
+	ActivatedRoute,
+	ActivationStart,
+	Event,
+	Params,
+	Router,
+} from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services';
 
@@ -9,7 +15,11 @@ import { AuthService } from 'src/app/services';
 	templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-	constructor(private auth: AuthService, private router: Router) {}
+	constructor(
+		private auth: AuthService,
+		private router: Router,
+		private route: ActivatedRoute
+	) {}
 
 	private subscriptions = new Subscription();
 
@@ -17,6 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	isPrivacy = false;
 	isProfile = false;
 	user: User | undefined;
+	mainLinkParams!: Params;
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -34,6 +45,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					},
 				})
 		);
+
+		this.route.queryParams.subscribe({
+			next: () => {
+				this.mainLinkParams = {
+					search: localStorage.getItem('searchInputValue') || null,
+					sort:
+						localStorage.getItem('sort') === 'titleAsc'
+							? null
+							: localStorage.getItem('sort'),
+					repeat:
+						localStorage.getItem('repeatableSelectValue') === 'all'
+							? null
+							: localStorage.getItem('repeatableSelectValue'),
+					greenwich:
+						localStorage.getItem('greenwichSelectValue') === 'all'
+							? null
+							: localStorage.getItem('greenwichSelectValue'),
+					public:
+						localStorage.getItem('publicSelectValue') === 'all'
+							? null
+							: localStorage.getItem('publicSelectValue'),
+				};
+			},
+		});
 
 		this.subscriptions.add(
 			this.auth.currentUser.subscribe({

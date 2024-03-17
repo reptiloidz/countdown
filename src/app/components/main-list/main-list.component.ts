@@ -105,6 +105,24 @@ export class MainListComponent implements OnInit, OnDestroy {
 					} else {
 						this.publicSelectValue = 'all';
 					}
+
+					localStorage.setItem(
+						'searchInputValue',
+						this.searchInputValue
+					);
+					localStorage.setItem('sort', this.sortType);
+					localStorage.setItem(
+						'repeatableSelectValue',
+						this.repeatableSelectValue
+					);
+					localStorage.setItem(
+						'greenwichSelectValue',
+						this.greenwichSelectValue
+					);
+					localStorage.setItem(
+						'publicSelectValue',
+						this.publicSelectValue
+					);
 				},
 				error: (err) => {
 					console.error(
