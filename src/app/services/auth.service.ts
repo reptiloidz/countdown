@@ -37,7 +37,14 @@ import {
 	EmailAuthCredential,
 	sendPasswordResetEmail,
 } from '@angular/fire/auth';
-import { goOnline, objectVal, query, ref, set } from '@angular/fire/database';
+import {
+	goOnline,
+	objectVal,
+	query,
+	ref,
+	set,
+	update,
+} from '@angular/fire/database';
 import { NotifyService, HttpService } from '.';
 import { generateUserpicName, randomHEXColor } from '../helpers';
 
@@ -268,7 +275,12 @@ export class AuthService implements OnDestroy {
 	updateProfile(user: User, data: UserProfile) {
 		updateProfile(user, data)
 			.then(() => {
-				this._eventProfileUpdatedSubject.next(data);
+				update(ref(this.http.db, `users/${user.uid}`), {
+					displayName: data.displayName,
+					photoURL: data.photoURL,
+				} as UserExtraData).then(() => {
+					this._eventProfileUpdatedSubject.next(data);
+				});
 			})
 			.catch(() => {
 				this.notify.add({
