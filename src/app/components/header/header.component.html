@@ -39,7 +39,10 @@
 		>Проверка</button> -->
 </div>
 
-<div class="nav__aside nav__aside--top">
+<div
+	*ngIf="!isMain"
+	class="nav__aside nav__aside--top"
+>
 	<a
 		routerLink="/"
 		[queryParams]="mainLinkParams"
