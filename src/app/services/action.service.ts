@@ -17,7 +17,9 @@ export class ActionService {
 
 	pointsChecked: string[] = [];
 
-	constructor() {}
+	get checkedPoints() {
+		return this.pointsChecked;
+	}
 
 	getCheckedPoints(el: Element) {
 		this.pointsChecked = Array.from(el.children)

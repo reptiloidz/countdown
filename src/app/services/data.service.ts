@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject, BehaviorSubject, Subscription } from 'rxjs';
 import { Point } from '../interfaces';
-import { HttpService, NotifyService } from '.';
+import { ActionService, HttpService, NotifyService } from '.';
 import { EditPointEvent } from '../types';
 
 @Injectable({
@@ -22,8 +22,6 @@ export class DataService {
 	private _eventRemovePointSubject = new Subject<string | undefined>();
 	private _eventStartRemovePointSubject = new Subject<string>();
 
-	pointsChecked: string[] = [];
-
 	eventFetchAllPoints$ = this._eventFetchAllPointsSubject.asObservable();
 	eventAddPoint$ = this._eventAddPointSubject.asObservable();
 	eventEditPoint$ = this._eventEditPointSubject.asObservable();
@@ -31,7 +29,11 @@ export class DataService {
 	eventRemovePoint$ = this._eventRemovePointSubject.asObservable();
 	eventStartRemovePoint$ = this._eventStartRemovePointSubject.asObservable();
 
-	constructor(private http: HttpService, private notify: NotifyService) {
+	constructor(
+		private http: HttpService,
+		private notify: NotifyService,
+		private action: ActionService
+	) {
 		this.subscriptions.add(
 			this.eventFetchAllPoints$.subscribe({
 				next: (points) => {
@@ -194,7 +196,7 @@ export class DataService {
 				this.loading = true;
 				id && this._eventStartRemovePointSubject.next(id);
 				this.http
-					.deletePoints(id ? [id] : list || this.pointsChecked)
+					.deletePoints(id ? [id] : list || this.action.checkedPoints)
 					.then(() => {
 						this._eventRemovePointSubject.next(id);
 					})
