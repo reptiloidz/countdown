@@ -386,7 +386,7 @@ export class AuthService implements OnDestroy {
 			});
 	}
 
-	getUserData(id: string): Observable<UserExtraData> {
+	getUserData(id?: string): Observable<UserExtraData> {
 		return objectVal<any>(query(ref(this.http.db, `users/${id}`)));
 	}
 

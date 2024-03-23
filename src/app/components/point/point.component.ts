@@ -14,7 +14,7 @@ import {
 	mergeMap,
 	filter,
 } from 'rxjs';
-import { Point, Iteration } from 'src/app/interfaces';
+import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import {
 	format,
@@ -55,6 +55,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	selectedIterationDate = new Date();
 	selectedIterationsNumber = 0;
 	calendarMode!: CalendarMode;
+	userData!: UserExtraData;
 
 	private subscriptions = new Subscription();
 
@@ -100,10 +101,12 @@ export class PointComponent implements OnInit, OnDestroy {
 						} else {
 							this.switchIteration();
 						}
-					})
+					}),
+					mergeMap(() => this.auth.getUserData(this.point?.user))
 				)
 				.subscribe({
-					next: () => {
+					next: (userData) => {
+						this.userData = userData;
 						this.point && this.data.putPoint(this.point);
 						this.setAllTimers(true);
 						this.dateLoading = false;

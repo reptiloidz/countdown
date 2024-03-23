@@ -23,7 +23,7 @@ import {
 	startWith,
 	mergeMap,
 } from 'rxjs';
-import { Point, Iteration } from 'src/app/interfaces';
+import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format, parse } from 'date-fns';
 import {
@@ -76,6 +76,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	selectedIterationDate = new Date();
 	selectedIterationsNumber = 0;
 	calendarMode!: CalendarMode;
+	userData!: UserExtraData;
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
@@ -157,7 +158,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							? this.data.fetchPoint(data['id'])
 							: of(undefined);
 					}),
-					mergeMap((point: Point | undefined) => {
+					tap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
 							this.sortDates();
@@ -176,7 +177,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 								this.switchIteration();
 							}
 						}
-
+					}),
+					mergeMap(() => this.auth.getUserData(this.point?.user)),
+					mergeMap((userData) => {
+						this.userData = userData;
 						return this.auth.eventEditAccessCheck$;
 					})
 				)

@@ -99,6 +99,14 @@
 	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
 	<small *ngIf="point?.repeatable">&nbsp;Повторяемое</small>
 	<small *ngIf="point?.public">&nbsp;Публичное</small>
+	<img
+		*ngIf="userData?.photoURL"
+		class="userpic userpic--sm"
+		[src]="userData.photoURL"
+		[alt]="userData.displayName"
+	><ng-container *ngIf="userData?.displayName">
+		{{ userData.displayName }}
+	</ng-container>
 	<h2
 		*ngIf="point?.title"
 		class="description"

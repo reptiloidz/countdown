@@ -10,6 +10,14 @@
 	<div class="form-row">
 		<div class="form">
 			<h3 class="subtitle">Параметры события</h3>
+			<img
+				*ngIf="userData?.photoURL"
+				class="userpic userpic--sm"
+				[src]="userData.photoURL"
+				[alt]="userData.displayName"
+			><ng-container *ngIf="userData?.displayName">
+				{{ userData.displayName }}
+			</ng-container>
 			<input
 				class="control"
 				type="text"
