@@ -9,11 +9,14 @@ export class ActionService {
 	private _eventPointsCheckedSubject = new Subject<boolean>();
 	private _eventIterationSwitchedSubject = new Subject<Date>();
 	private _eventFetchedPointsSubject = new Subject<void>();
+	private _eventHasEditablePointsSubject = new Subject<boolean>();
 	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
 	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
 	eventIterationSwitched$ =
 		this._eventIterationSwitchedSubject.asObservable();
 	eventFetchedPoints$ = this._eventFetchedPointsSubject.asObservable();
+	eventHasEditablePoints$ =
+		this._eventHasEditablePointsSubject.asObservable();
 
 	pointsChecked: string[] = [];
 
@@ -44,5 +47,9 @@ export class ActionService {
 
 	pointsFetched() {
 		this._eventFetchedPointsSubject.next();
+	}
+
+	hasEditablePoints(has: boolean) {
+		this._eventHasEditablePointsSubject.next(has);
 	}
 }

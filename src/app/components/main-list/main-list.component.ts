@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { SortTypeNames } from 'src/app/enums';
 import { CalendarDate, Point } from 'src/app/interfaces';
-import { DataService, ActionService } from 'src/app/services';
+import { DataService, ActionService, AuthService } from 'src/app/services';
 import { CalendarMode, FilterSelected, SortTypes } from 'src/app/types';
 
 @Component({
@@ -42,7 +42,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private action: ActionService,
 		private router: Router,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private auth: AuthService
 	) {}
 
 	ngOnInit(): void {
@@ -62,6 +63,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 							navigate: false,
 						});
 						this.action.pointsFetched();
+						this.action.hasEditablePoints(
+							this.points.some((point) =>
+								this.auth.checkAccessEdit(point)
+							)
+						);
 					},
 					error(err) {
 						console.error(
@@ -351,5 +357,9 @@ export class MainListComponent implements OnInit, OnDestroy {
 	openSort() {
 		this.dropOpenSort = !this.dropOpenSort;
 		this.dropOpenedDate = undefined;
+	}
+
+	hasEditablePoints(points: Point[]) {
+		return points.some((point) => this.auth.checkAccessEdit(point));
 	}
 }

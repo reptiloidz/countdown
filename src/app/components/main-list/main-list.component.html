@@ -41,7 +41,10 @@
 							</ng-template>
 						</li>
 					</ul>
-					<div class="nav">
+					<div
+						class="nav"
+						*ngIf="hasEditablePoints(date.points)"
+					>
 						<button
 							type="button"
 							class="nav__item link"

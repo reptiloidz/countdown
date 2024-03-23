@@ -28,6 +28,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	tzOffset = new Date().getTimezoneOffset();
 	iteration = 0;
 	exportGoogleLink = '';
+	hasEditablePoints = false;
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -125,6 +126,12 @@ export class FooterComponent implements OnInit, OnDestroy {
 				next: (check) => {
 					this.pointsChecked = check;
 				},
+			})
+		);
+
+		this.subscriptions.add(
+			this.action.eventHasEditablePoints$.subscribe({
+				next: (data) => (this.hasEditablePoints = data),
 			})
 		);
 	}
