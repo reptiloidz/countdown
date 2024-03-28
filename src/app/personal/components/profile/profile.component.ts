@@ -410,6 +410,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					repeatable: false,
 					public: false,
 					user: this._user.uid,
+					color: 'yellow',
 				});
 			}
 			this.auth.updateUserBirthDate(this._user.uid, {

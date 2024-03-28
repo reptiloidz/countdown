@@ -1,6 +1,6 @@
 <div
-	class="item__inner"
-	[ngClass]="checkAccessEdit(point) ? 'item__inner--available' : ''"
+	class="item__inner color"
+	[ngClass]="[checkAccessEdit(point) ? 'item__inner--available' : '', point.color ? 'color--' + point.color : '']"
 >
 	<h2 class="item__title">
 		<a

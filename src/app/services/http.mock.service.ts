@@ -31,6 +31,7 @@ export class HttpService implements HttpServiceInterface {
 			greenwich: true,
 			repeatable: true,
 			user: 'aPstQaNqFDfLjCCaRu4iVMTzror2',
+			color: 'red',
 		},
 		{
 			title: 'День без аварии',
@@ -46,6 +47,7 @@ export class HttpService implements HttpServiceInterface {
 			greenwich: false,
 			repeatable: true,
 			user: 'aPstQaNqFDfLjCCaRu4iVMTzror2',
+			color: 'red',
 		},
 		{
 			title: 'Релиз ASAP-PDF',
@@ -62,6 +64,7 @@ export class HttpService implements HttpServiceInterface {
 			greenwich: true,
 			repeatable: false,
 			user: 'aPstQaNqFDfLjCCaRu4iVMTzror2',
+			color: 'red',
 		},
 	];
 

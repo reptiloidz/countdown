@@ -8,7 +8,10 @@
 			class="loader rotating"
 		></span></h1>
 	<div class="form-row">
-		<div class="form">
+		<div
+			class="form color"
+			[ngClass]="point?.color ? 'color--' + point?.color : ''"
+		>
 			<h3 class="subtitle">Параметры события</h3>
 			<img
 				*ngIf="userData?.photoURL"
@@ -75,6 +78,14 @@
 					>
 					Публичное событие
 				</label>
+			</div>
+			<div class="control">
+				<select formControlName="color">
+					<option
+						*ngFor="let color of pointColors"
+						[value]="color"
+					>{{ pointColorNames[color] }}</option>
+				</select>
 			</div>
 			<p
 				class="info"

@@ -1,5 +1,5 @@
 import { Iteration } from '.';
-import { Direction } from '../types';
+import { Direction, PointColorTypes } from '../types';
 
 export interface Point {
 	title: string;
@@ -12,4 +12,5 @@ export interface Point {
 	repeatable: boolean;
 	user?: string;
 	public?: boolean;
+	color: PointColorTypes;
 }

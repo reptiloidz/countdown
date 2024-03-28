@@ -1,5 +1,8 @@
 <div>
-	<h1>{{ point?.title }}<span
+	<h1
+		class="color"
+		[ngClass]="point?.color ? 'color--' + point?.color : ''"
+	>{{ point?.title }}<span
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>

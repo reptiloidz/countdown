@@ -34,8 +34,8 @@ import {
 	isDateValid,
 	sortDates,
 } from 'src/app/helpers';
-import { Constants } from 'src/app/enums';
-import { CalendarMode, EditPointEvent } from 'src/app/types';
+import { Constants, PointColors } from 'src/app/enums';
+import { CalendarMode, EditPointEvent, PointColorTypes } from 'src/app/types';
 
 export enum EditPointType {
 	Create = 'create',
@@ -104,6 +104,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			greenwich: new FormControl(false),
 			repeatable: new FormControl(false),
 			public: new FormControl(false),
+			color: new FormControl('gray'),
 			date: new FormControl(
 				format(new Date(), Constants.shortDateFormat),
 				[Validators.required]
@@ -230,6 +231,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 								this.point.public =
 									this.form.controls['public'].value;
 							}
+							if (prev.color !== curr.color) {
+								this.point.color =
+									this.form.controls['color'].value;
+							}
 						}
 					}),
 					debounce(() => timer(this._debounceTime))
@@ -333,6 +338,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.point?.dates;
 	}
 
+	get pointColorNames() {
+		return PointColors;
+	}
+
+	get pointColors() {
+		return Object.keys(PointColors) as PointColorTypes[];
+	}
+
 	sortDates() {
 		const sortedDates = this.point && sortDates(this.point).dates;
 		if (this.point && sortedDates) {
@@ -353,6 +366,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				greenwich: this.point?.greenwich || false,
 				repeatable: this.point?.repeatable || false,
 				public: this.point?.public || false,
+				color: this.point?.color || 'gray',
 			},
 			{
 				emitEvent: false,
@@ -638,6 +652,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			public: this.form.controls['public'].value,
 			dates: newDatesArray as Iteration[],
 			user: this.auth.uid || '',
+			color: this.form.controls['color'].value,
 		};
 
 		if (this.isCreation) {

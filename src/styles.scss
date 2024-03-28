@@ -113,6 +113,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	width: 400px;
+	padding-left: 4px;
 
 	@media (max-width: 1024px) {
 		width: 100%;
@@ -468,6 +469,48 @@ table {
 .table-wrapper {
 	width: 100%;
 	overflow: auto;
+}
+
+.color {
+	--point-color: gray;
+
+	border-left: 5px solid var(--point-color);
+
+	&--red {
+		--point-color: red;
+	}
+
+	&--green {
+		--point-color: green;
+	}
+
+	&--blue {
+		--point-color: blue;
+	}
+
+	&--purple {
+		--point-color: purple;
+	}
+
+	&--yellow {
+		--point-color: yellow;
+	}
+
+	&--pink {
+		--point-color: pink;
+	}
+
+	&--orange {
+		--point-color: orange;
+	}
+
+	&--brown {
+		--point-color: brown;
+	}
+
+	&--gray {
+		--point-color: gray;
+	}
 }
 
 @keyframes rotating {
