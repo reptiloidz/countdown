@@ -7,10 +7,15 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
-import { SortTypeNames } from 'src/app/enums';
+import { PointColors, SortTypeNames } from 'src/app/enums';
 import { CalendarDate, Point } from 'src/app/interfaces';
 import { DataService, ActionService, AuthService } from 'src/app/services';
-import { CalendarMode, FilterSelected, SortTypes } from 'src/app/types';
+import {
+	CalendarMode,
+	FilterSelected,
+	PointColorTypes,
+	SortTypes,
+} from 'src/app/types';
 
 @Component({
 	selector: 'app-main-list',
@@ -23,14 +28,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('greenwichSelect') private greenwichSelect!: ElementRef;
 	@ViewChild('publicSelect') private publicSelect!: ElementRef;
 	@ViewChild('searchInput') private searchInput!: ElementRef;
+	@ViewChild('colorList') private colorList!: ElementRef;
 	points: Point[] = [];
 	loading = true;
 	dropOpenedDate: Date | undefined;
 	dropOpenSort = false;
+	dropOpenColors = false;
 	isDatePointsChecked: boolean = false;
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
 	sortType: SortTypes = 'titleAsc';
+	colorType: PointColorTypes[] = [];
 	repeatableSelectValue: FilterSelected = 'all';
 	greenwichSelectValue: FilterSelected = 'all';
 	publicSelectValue: FilterSelected = 'all';
@@ -112,6 +120,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 						this.publicSelectValue = 'all';
 					}
 
+					if (data.color) {
+						this.colorType = data.color.split('+');
+					} else {
+						this.colorType = [];
+					}
+
 					localStorage.setItem(
 						'searchInputValue',
 						this.searchInputValue
@@ -128,6 +142,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 					localStorage.setItem(
 						'publicSelectValue',
 						this.publicSelectValue
+					);
+					localStorage.setItem(
+						'colorValue',
+						this.colorType.join('+') || 'all'
 					);
 				},
 				error: (err) => {
@@ -155,12 +173,21 @@ export class MainListComponent implements OnInit, OnDestroy {
 		return Object.keys(SortTypeNames) as SortTypes[];
 	}
 
+	get pointColorNames() {
+		return PointColors;
+	}
+
+	get pointColors() {
+		return Object.keys(PointColors) as PointColorTypes[];
+	}
+
 	get filtersFilled() {
 		return (
 			this.repeatableSelectValue !== 'all' ||
 			this.greenwichSelectValue !== 'all' ||
 			this.publicSelectValue !== 'all' ||
-			this.searchInputValue !== ''
+			this.searchInputValue !== '' ||
+			this.colorType !== undefined
 		);
 	}
 
@@ -169,6 +196,14 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.greenwichSelectValue = this.greenwichSelect?.nativeElement.value;
 		this.publicSelectValue = this.publicSelect?.nativeElement.value;
 		this.searchInputValue = this.searchInput?.nativeElement.value;
+
+		this.colorType = this.colorList
+			? Array.from(this.colorList.nativeElement.children)
+					.filter(
+						(item: any) => item?.querySelector('input')?.checked
+					)
+					.map((item: any) => item.getAttribute('data-color'))
+			: [];
 
 		this.router.navigate([], {
 			relativeTo: this.route,
@@ -186,6 +221,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 						? null
 						: this.publicSelectValue,
 				search: this.searchInputValue || null,
+				color: this.colorType.join('+') || null,
 			},
 			queryParamsHandling: 'merge',
 		});
@@ -197,6 +233,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		(this.greenwichSelect?.nativeElement as HTMLInputElement).value = 'all';
 		(this.publicSelect?.nativeElement as HTMLInputElement).value = 'all';
 		(this.searchInput?.nativeElement as HTMLInputElement).value = '';
+		this.resetColors();
 		this.changeFilters();
 	}
 
@@ -217,6 +254,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 		this.isDatePointsChecked = false;
 		this.dropOpenSort = false;
+		this.dropOpenColors = false;
 	}
 
 	getCheckedDatePoints() {
@@ -357,6 +395,25 @@ export class MainListComponent implements OnInit, OnDestroy {
 	openSort() {
 		this.dropOpenSort = !this.dropOpenSort;
 		this.dropOpenedDate = undefined;
+		this.dropOpenColors = false;
+	}
+
+	resetColors() {
+		if (this.colorList) {
+			Array.from(this.colorList.nativeElement.children).map(
+				(item: any) =>
+					item?.querySelector('input') &&
+					(item.querySelector('input').checked = false)
+			);
+		} else {
+			this.colorType = [];
+		}
+	}
+
+	openColors() {
+		this.dropOpenColors = !this.dropOpenColors;
+		this.dropOpenedDate = undefined;
+		this.dropOpenSort = false;
 	}
 
 	hasEditablePoints(points: Point[]) {

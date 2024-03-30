@@ -66,6 +66,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 						localStorage.getItem('publicSelectValue') === 'all'
 							? null
 							: localStorage.getItem('publicSelectValue'),
+					color:
+						localStorage.getItem('colorValue') === 'all'
+							? null
+							: localStorage.getItem('colorValue'),
 				};
 			},
 		});

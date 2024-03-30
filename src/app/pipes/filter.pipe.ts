@@ -14,18 +14,21 @@ export class FilterPipe implements PipeTransform {
 			isRepeatable,
 			isGreenwich,
 			isPublic,
+			color,
 		}: {
 			search: string;
 			isRepeatable?: FilterSelected;
 			isGreenwich?: FilterSelected;
 			isPublic?: FilterSelected;
+			color?: string;
 		}
 	): Point[] {
 		if (
 			!search.length &&
 			typeof isRepeatable === 'undefined' &&
 			typeof isGreenwich === 'undefined' &&
-			typeof isPublic === 'undefined'
+			typeof isPublic === 'undefined' &&
+			color === ''
 		) {
 			return points;
 		} else {
@@ -39,7 +42,9 @@ export class FilterPipe implements PipeTransform {
 					(point.greenwich.toString() === isGreenwich ||
 						isGreenwich === 'all') &&
 					((point.public && point.public.toString() === isPublic) ||
-						isPublic === 'all')
+						isPublic === 'all') &&
+					(color?.split('+').includes(point.color || 'gray') ||
+						color === '')
 				);
 			});
 		}
