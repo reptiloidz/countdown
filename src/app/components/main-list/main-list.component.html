@@ -108,19 +108,23 @@
 				type="button"
 				(click)="resetColors()"
 			>Сброс</button>
-			<div #colorList>
-				<label
+			<ul #colorList>
+				<li
 					*ngFor="let pointColorsItem of pointColors"
 					[attr.data-color]="pointColorsItem"
+					class="color"
+					[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
 				>
-					<span [innerHTML]="pointColorNames[pointColorsItem]"></span>
-					<input
-						type="checkbox"
-						(change)="changeFilters()"
-						[checked]="colorType.includes(pointColorsItem)"
-					>
-				</label>
-			</div>
+					<label>
+						<span [innerHTML]="pointColorNames[pointColorsItem]"></span>
+						<input
+							type="checkbox"
+							(change)="changeFilters()"
+							[checked]="colorType.includes(pointColorsItem)"
+						>
+					</label>
+				</li>
+			</ul>
 		</ng-template>
 	</app-drop>
 

@@ -405,6 +405,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 					item?.querySelector('input') &&
 					(item.querySelector('input').checked = false)
 			);
+			this.changeFilters();
+			this.dropOpenColors = false;
 		} else {
 			this.colorType = [];
 		}
