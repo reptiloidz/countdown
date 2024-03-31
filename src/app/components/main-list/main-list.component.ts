@@ -187,7 +187,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			this.greenwichSelectValue !== 'all' ||
 			this.publicSelectValue !== 'all' ||
 			this.searchInputValue !== '' ||
-			this.colorType !== undefined
+			this.colorType.length
 		);
 	}
 

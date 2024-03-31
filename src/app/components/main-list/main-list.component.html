@@ -1,178 +1,4 @@
 <ng-container *ngIf="!loading; else loader">
-	<app-calendar
-		(calendarRegenerated)="calendarRegenerated()"
-		[points]="points"
-		class="calendar"
-	>
-		<ng-template
-			#navTemplate
-			let-date="date"
-			let-mode="mode"
-		>
-			<app-drop
-				*ngIf="date.points.length"
-				[opened]="+date.date === (this.dropOpenedDate && +this.dropOpenedDate)"
-			>
-				<ng-template #buttonTemplate>
-					<button
-						type="button"
-						class="calendar__btn-nav"
-						(click)="openDate({ date, activeMode: mode })"
-					>&#709;</button>
-				</ng-template>
-				<ng-template #bodyTemplate>
-					<ul
-						class="calendar__date-ul"
-						#datePointsList
-					>
-						<li
-							app-main-item
-							[attr.data-id]="point.id"
-							class="calendar__date-li item item--sm"
-							*ngFor="let point of sortPoints({points: date.points, navigate: false}); let i = index"
-							[point]="point"
-						>
-							<ng-template #checkboxTemplate>
-								<input
-									#datePointCheckbox
-									type="checkbox"
-									(change)="getCheckedDatePoints()"
-								>
-							</ng-template>
-						</li>
-					</ul>
-					<div
-						class="nav"
-						*ngIf="hasEditablePoints(date.points)"
-					>
-						<button
-							type="button"
-							class="nav__item link"
-							(click)="checkDatePoints(true)"
-						>
-							Выбрать все</button>
-						<ng-container *ngIf="isDatePointsChecked">
-							<span class="nav__divider"> | </span>
-							<button
-								type="button"
-								class="nav__item link"
-								(click)="checkDatePoints(false)"
-							>
-								Сбросить все</button><span class="nav__divider"> | </span>
-							<button
-								type="button"
-								class="nav__item link"
-								(click)="removeDateCheckedPoints()"
-							>
-								Удалить выбранные</button>
-						</ng-container>
-					</div>
-				</ng-template>
-			</app-drop>
-		</ng-template>
-	</app-calendar>
-
-	<app-drop [opened]="dropOpenSort">
-		<ng-template
-			#buttonTemplate
-			let-value="sortType"
-		>
-			<button
-				type="button"
-				[innerHTML]="sortTypeNames[sortType]"
-				(click)="openSort()"
-			></button>
-		</ng-template>
-		<ng-template #bodyTemplate>
-			<button
-				*ngFor="let sortTypeItem of sortTypeKeysArray"
-				type="button"
-				(click)="sortPointsClick(sortTypeItem)"
-				[innerHTML]="sortTypeNames[sortTypeItem]"
-			></button>
-		</ng-template>
-	</app-drop>
-
-	<app-drop [opened]="dropOpenColors">
-		<ng-template
-			#buttonTemplate
-			let-value="colorType"
-		>
-			<button
-				type="button"
-				(click)="openColors()"
-			>Фильтрация по цвету</button>
-		</ng-template>
-		<ng-template #bodyTemplate>
-			<button
-				type="button"
-				(click)="resetColors()"
-			>Сброс</button>
-			<ul #colorList>
-				<li
-					*ngFor="let pointColorsItem of pointColors"
-					[attr.data-color]="pointColorsItem"
-					class="color"
-					[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
-				>
-					<label>
-						<span [innerHTML]="pointColorNames[pointColorsItem]"></span>
-						<input
-							type="checkbox"
-							(change)="changeFilters()"
-							[checked]="colorType.includes(pointColorsItem)"
-						>
-					</label>
-				</li>
-			</ul>
-		</ng-template>
-	</app-drop>
-
-	<input
-		placeholder="Поиск"
-		#searchInput
-		type="text"
-		(input)="changeFilters()"
-		[(ngModel)]="searchInputValue"
-	>
-
-	<select
-		#repeatableSelect
-		(change)="changeFilters()"
-		[(ngModel)]="repeatableSelectValue"
-	>
-		<option value="all">Повторяемость</option>
-		<option value="true">Повторяемые</option>
-		<option value="false">Неповторяемые</option>
-	</select>
-
-	<select
-		#greenwichSelect
-		(change)="changeFilters()"
-		[(ngModel)]="greenwichSelectValue"
-	>
-		<option value="all">Часовой пояс</option>
-		<option value="true">По Гринвичу</option>
-		<option value="false">По местному</option>
-	</select>
-
-	<select
-		#publicSelect
-		(change)="changeFilters()"
-		[(ngModel)]="publicSelectValue"
-	>
-		<option value="all">Публичность</option>
-		<option value="true">Публичные</option>
-		<option value="false">Приватные</option>
-	</select>
-
-	<button
-		*ngIf="filtersFilled"
-		type="button"
-		class="link"
-		(click)="clearFilters()"
-	>Очистить</button>
-
 	<ng-container *appLet="points | filter: {
 		search: searchInputValue,
 		isRepeatable: repeatableSelectValue,
@@ -180,6 +6,179 @@
 		isPublic: publicSelectValue,
 		color: colorType.join('+')
 	} as filteredPoints">
+		<app-calendar
+			(calendarRegenerated)="calendarRegenerated()"
+			[points]="filteredPoints"
+			class="calendar"
+		>
+			<ng-template
+				#navTemplate
+				let-date="date"
+				let-mode="mode"
+			>
+				<app-drop
+					*ngIf="date.points.length"
+					[opened]="+date.date === (this.dropOpenedDate && +this.dropOpenedDate)"
+				>
+					<ng-template #buttonTemplate>
+						<button
+							type="button"
+							class="calendar__btn-nav"
+							(click)="openDate({ date, activeMode: mode })"
+						>&#709;</button>
+					</ng-template>
+					<ng-template #bodyTemplate>
+						<ul
+							class="calendar__date-ul"
+							#datePointsList
+						>
+							<li
+								app-main-item
+								[attr.data-id]="point.id"
+								class="calendar__date-li item item--sm"
+								*ngFor="let point of sortPoints({points: date.points, navigate: false}); let i = index"
+								[point]="point"
+							>
+								<ng-template #checkboxTemplate>
+									<input
+										#datePointCheckbox
+										type="checkbox"
+										(change)="getCheckedDatePoints()"
+									>
+								</ng-template>
+							</li>
+						</ul>
+						<div
+							class="nav"
+							*ngIf="hasEditablePoints(date.points)"
+						>
+							<button
+								type="button"
+								class="nav__item link"
+								(click)="checkDatePoints(true)"
+							>
+								Выбрать все</button>
+							<ng-container *ngIf="isDatePointsChecked">
+								<span class="nav__divider"> | </span>
+								<button
+									type="button"
+									class="nav__item link"
+									(click)="checkDatePoints(false)"
+								>
+									Сбросить все</button><span class="nav__divider"> | </span>
+								<button
+									type="button"
+									class="nav__item link"
+									(click)="removeDateCheckedPoints()"
+								>
+									Удалить выбранные</button>
+							</ng-container>
+						</div>
+					</ng-template>
+				</app-drop>
+			</ng-template>
+		</app-calendar>
+
+		<app-drop [opened]="dropOpenSort">
+			<ng-template
+				#buttonTemplate
+				let-value="sortType"
+			>
+				<button
+					type="button"
+					[innerHTML]="sortTypeNames[sortType]"
+					(click)="openSort()"
+				></button>
+			</ng-template>
+			<ng-template #bodyTemplate>
+				<button
+					*ngFor="let sortTypeItem of sortTypeKeysArray"
+					type="button"
+					(click)="sortPointsClick(sortTypeItem)"
+					[innerHTML]="sortTypeNames[sortTypeItem]"
+				></button>
+			</ng-template>
+		</app-drop>
+
+		<app-drop [opened]="dropOpenColors">
+			<ng-template
+				#buttonTemplate
+				let-value="colorType"
+			>
+				<button
+					type="button"
+					(click)="openColors()"
+				>Фильтрация по цвету</button>
+			</ng-template>
+			<ng-template #bodyTemplate>
+				<button
+					type="button"
+					(click)="resetColors()"
+				>Сброс</button>
+				<ul #colorList>
+					<li
+						*ngFor="let pointColorsItem of pointColors"
+						[attr.data-color]="pointColorsItem"
+						class="color"
+						[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
+					>
+						<label>
+							<span [innerHTML]="pointColorNames[pointColorsItem]"></span>
+							<input
+								type="checkbox"
+								(change)="changeFilters()"
+								[checked]="colorType.includes(pointColorsItem)"
+							>
+						</label>
+					</li>
+				</ul>
+			</ng-template>
+		</app-drop>
+
+		<input
+			placeholder="Поиск"
+			#searchInput
+			type="text"
+			(input)="changeFilters()"
+			[(ngModel)]="searchInputValue"
+		>
+
+		<select
+			#repeatableSelect
+			(change)="changeFilters()"
+			[(ngModel)]="repeatableSelectValue"
+		>
+			<option value="all">Повторяемость</option>
+			<option value="true">Повторяемые</option>
+			<option value="false">Неповторяемые</option>
+		</select>
+
+		<select
+			#greenwichSelect
+			(change)="changeFilters()"
+			[(ngModel)]="greenwichSelectValue"
+		>
+			<option value="all">Часовой пояс</option>
+			<option value="true">По Гринвичу</option>
+			<option value="false">По местному</option>
+		</select>
+
+		<select
+			#publicSelect
+			(change)="changeFilters()"
+			[(ngModel)]="publicSelectValue"
+		>
+			<option value="all">Публичность</option>
+			<option value="true">Публичные</option>
+			<option value="false">Приватные</option>
+		</select>
+
+		<button
+			*ngIf="filtersFilled"
+			type="button"
+			class="link"
+			(click)="clearFilters()"
+		>Очистить</button>
 
 		<ul
 			#pointsList
