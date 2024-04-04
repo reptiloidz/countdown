@@ -491,6 +491,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		confirm('Удалить итерацию?') &&
 			(() => {
 				this.removedIterationIndex = i;
+				this.isIterationSwitched = true;
 				this.data.editPoint(
 					this.point?.id,
 					{
@@ -541,6 +542,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			'Удалить выбранные итерации? Если выбраны все, останется только последняя'
 		) &&
 			(() => {
+				this.isIterationSwitched = true;
 				this.data.editPoint(
 					this.point?.id,
 					{
