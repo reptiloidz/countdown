@@ -77,6 +77,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	selectedIterationsNumber = 0;
 	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
+	isIterationSwitched = false;
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
@@ -302,7 +303,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						this.currentIterationIndex = point.dates.length - 1;
 					}
 					this.sortDates();
-					this.switchIteration();
+					this.switchIteration(
+						this.currentIterationIndex,
+						this.isIterationSwitched
+					);
 					this.setIterationsParam();
 					this.success(point, editPointEvent);
 				},
@@ -358,20 +362,22 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	setValues(isReset = false) {
-		this.form.patchValue(
-			{
-				title: this.point?.title,
-				description: this.point?.description,
-				direction: this.point?.direction || 'backward',
-				greenwich: this.point?.greenwich || false,
-				repeatable: this.point?.repeatable || false,
-				public: this.point?.public || false,
-				color: this.point?.color || 'gray',
-			},
-			{
-				emitEvent: false,
-			}
-		);
+		if (!this.isIterationSwitched) {
+			this.form.patchValue(
+				{
+					title: this.point?.title,
+					description: this.point?.description,
+					direction: this.point?.direction || 'backward',
+					greenwich: this.point?.greenwich || false,
+					repeatable: this.point?.repeatable || false,
+					public: this.point?.public || false,
+					color: this.point?.color || 'gray',
+				},
+				{
+					emitEvent: false,
+				}
+			);
+		}
 
 		this.pointDate = getPointDate({
 			pointDate: isReset
@@ -452,7 +458,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	switchIteration(i: number = this.currentIterationIndex) {
+	switchIteration(
+		i: number = this.currentIterationIndex,
+		isSwitched = false
+	) {
+		this.isIterationSwitched = isSwitched;
 		this.router.navigate([], {
 			relativeTo: this.route,
 			queryParams: {
@@ -643,17 +653,34 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		const result = {
-			title: this.form.controls['title'].value,
-			description: this.form.controls['description'].value || null,
-			direction: this.form.controls['direction'].value,
-			greenwich: this.form.controls['greenwich'].value,
-			repeatable: this.form.controls['repeatable'].value,
-			public: this.form.controls['public'].value,
+		let result = {
 			dates: newDatesArray as Iteration[],
-			user: this.auth.uid || '',
-			color: this.form.controls['color'].value,
-		};
+		} as Point;
+
+		if (!saveIteration) {
+			result = Object.assign(result, {
+				title: this.form.controls['title'].value,
+				description: this.form.controls['description'].value || null,
+				direction: this.form.controls['direction'].value,
+				greenwich: this.form.controls['greenwich'].value,
+				repeatable: this.form.controls['repeatable'].value,
+				public: this.form.controls['public'].value,
+				user: this.auth.uid || '',
+				color: this.form.controls['color'].value,
+			});
+		} else {
+			result = Object.assign(result, {
+				title: this.point?.title,
+				description: this.point?.description || '',
+				direction: this.point?.direction,
+				greenwich: this.point?.greenwich,
+				repeatable: this.point?.repeatable,
+				public: this.point?.public,
+				user: this.point?.user,
+				color: this.point?.color,
+			});
+			this.isIterationSwitched = true;
+		}
 
 		if (this.isCreation) {
 			this.data.addPoint(result);

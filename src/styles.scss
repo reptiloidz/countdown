@@ -33,13 +33,12 @@ body {
 	display: flex;
 	flex-grow: 1;
 	flex-shrink: 1;
-	align-items: center;
 	justify-content: center;
 	margin: 20px 0;
 	overflow: auto;
 
 	&__inner {
-		min-width: 0;
+		min-width: 1000px;
 		max-height: 100%;
 	}
 }
