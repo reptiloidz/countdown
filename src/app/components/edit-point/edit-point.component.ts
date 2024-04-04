@@ -664,7 +664,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			dates: newDatesArray as Iteration[],
 		} as Point;
 
-		if (!saveIteration) {
+		if (!saveIteration && !repeats.length) {
 			result = Object.assign(result, {
 				title: this.form.controls['title'].value,
 				description: this.form.controls['description'].value || null,
