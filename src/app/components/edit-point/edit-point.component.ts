@@ -6,6 +6,7 @@ import {
 	ChangeDetectionStrategy,
 	ViewChild,
 	ElementRef,
+	ChangeDetectorRef,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -88,7 +89,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private router: Router,
 		private auth: AuthService,
-		private action: ActionService
+		private action: ActionService,
+		private cdr: ChangeDetectorRef
 	) {}
 
 	ngOnInit(): void {
@@ -214,30 +216,33 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					startWith(this.form.value),
 					distinctUntilChanged(),
 					pairwise(),
-					tap(([curr, prev]) => {
-						if (this.point) {
-							if (prev.greenwich !== curr.greenwich) {
-								this.point.greenwich =
-									this.form.controls['greenwich'].value;
-							}
-							if (prev.repeatable !== curr.repeatable) {
-								// Было так. Но стало работать неправильно.
-								// Если снова сломается, решить, какой вариант оставить и доделать
-								// this.point.repeatable = !this.point.repeatable;
-								this.point.repeatable =
-									this.form.controls['repeatable'].value;
-								this.switchIteration();
-							}
-							if (prev.public !== curr.public) {
-								this.point.public =
-									this.form.controls['public'].value;
-							}
-							if (prev.color !== curr.color) {
-								this.point.color =
-									this.form.controls['color'].value;
-							}
-						}
-					}),
+					// Выключено, чтобы событие не сохранялось, при сохранении итерации
+					// tap(([curr, prev]) => {
+					// 	this.loading = false;
+
+					// 	if (this.point) {
+					// 		if (prev.greenwich !== curr.greenwich) {
+					// 			this.point.greenwich =
+					// 				this.form.controls['greenwich'].value;
+					// 		}
+					// 		if (prev.repeatable !== curr.repeatable) {
+					// 			// Было так. Но стало работать неправильно.
+					// 			// Если снова сломается, решить, какой вариант оставить и доделать
+					// 			// this.point.repeatable = !this.point.repeatable;
+					// 			this.point.repeatable =
+					// 				this.form.controls['repeatable'].value;
+					// 			this.switchIteration();
+					// 		}
+					// 		if (prev.public !== curr.public) {
+					// 			this.point.public =
+					// 				this.form.controls['public'].value;
+					// 		}
+					// 		if (prev.color !== curr.color) {
+					// 			this.point.color =
+					// 				this.form.controls['color'].value;
+					// 		}
+					// 	}
+					// }),
 					debounce(() => timer(this._debounceTime))
 				)
 				.subscribe({
@@ -254,6 +259,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						) {
 							this.differenceChanged();
 						}
+
+						this.cdr.detectChanges();
 					},
 					error: (err) => {
 						console.error(

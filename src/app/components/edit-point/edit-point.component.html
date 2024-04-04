@@ -10,7 +10,7 @@
 	<div class="form-row">
 		<div
 			class="form color"
-			[ngClass]="point?.color ? 'color--' + point?.color : ''"
+			[ngClass]="'color--' + this.form.controls['color'].value"
 		>
 			<h3 class="subtitle">Параметры события</h3>
 			<img
