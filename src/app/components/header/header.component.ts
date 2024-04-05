@@ -8,7 +8,8 @@ import {
 	Router,
 } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services';
+import { AuthService, PopupService } from 'src/app/services';
+import { PrivacyComponent } from '../privacy/privacy.component';
 
 @Component({
 	selector: '[app-header]',
@@ -18,7 +19,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	constructor(
 		private auth: AuthService,
 		private router: Router,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private popupService: PopupService
 	) {}
 
 	private subscriptions = new Subscription();
@@ -93,6 +95,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	get isAuthorization() {
 		return this.router.url === '/auth';
+	}
+
+	showPrivacy() {
+		this.popupService.show(
+			'Политика в отношении обработки персональных данных',
+			PrivacyComponent
+		);
 	}
 
 	check() {

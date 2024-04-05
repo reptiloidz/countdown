@@ -8,9 +8,10 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { PrivacyComponent } from 'src/app/components/privacy/privacy.component';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
 import { ValidationObject, ValidationObjectField } from 'src/app/interfaces';
-import { AuthService, NotifyService } from 'src/app/services';
+import { AuthService, NotifyService, PopupService } from 'src/app/services';
 import { passwordRepeat } from 'src/app/validators';
 
 @Component({
@@ -77,7 +78,8 @@ export class RegComponent implements OnInit, OnDestroy {
 	constructor(
 		private auth: AuthService,
 		private router: Router,
-		private notify: NotifyService
+		private notify: NotifyService,
+		private popupService: PopupService
 	) {}
 
 	ngOnInit(): void {
@@ -201,6 +203,13 @@ export class RegComponent implements OnInit, OnDestroy {
 	get hasPasswordRepeatErrors() {
 		return hasFieldErrors(
 			this.controlsValidated['passwordRepeat'] as ValidationObjectField
+		);
+	}
+
+	showPrivacy() {
+		this.popupService.show(
+			'Политика в отношении обработки персональных данных',
+			PrivacyComponent
 		);
 	}
 

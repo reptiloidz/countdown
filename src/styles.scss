@@ -13,6 +13,10 @@ body {
 	font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 
+.ov-hidden {
+	overflow: hidden;
+}
+
 .text-page {
 	width: 100%;
 }
@@ -477,6 +481,59 @@ table {
 .table-wrapper {
 	width: 100%;
 	overflow: auto;
+}
+
+.popup {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	display: flex;
+	pointer-events: none;
+
+	&:has(.popup__content) {
+		&::before {
+			content: '';
+		}
+	}
+
+	&::before {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: rgba(153, 153, 153, .5);
+	}
+
+	&__inner {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		width: clamp(600px, 100%, 1000px);
+		margin: 100px auto;
+		overflow: auto;
+		background-color: white;
+		pointer-events: all;
+	}
+
+	&__title {
+		padding: 20px;
+		background-color: #EEEEEE;
+	}
+
+	&__btn {
+		position: relative;
+		z-index: 1;
+		align-self: flex-start;
+	}
+
+	&__content {
+		padding: 20px;
+		overflow: auto;
+	}
 }
 
 .color {

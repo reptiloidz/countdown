@@ -1,1 +1,14 @@
-<p>popup works!</p>
+<ng-container *ngIf="isVisible">
+	<div class="popup__inner">
+
+		<button
+			type="button"
+			class="popup__btn"
+			(click)="close()"
+		>Закрыть</button>
+		<h2 class="popup__title">{{ title }}</h2>
+		<div class="popup__content">
+			<ng-template #popupContent></ng-template>
+		</div>
+	</div>
+</ng-container>

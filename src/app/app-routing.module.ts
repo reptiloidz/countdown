@@ -29,10 +29,6 @@ const routes: Routes = [
 		canActivate: [authGuard],
 	},
 	{
-		path: 'privacy',
-		component: PrivacyComponent,
-	},
-	{
 		path: 'edit/:id',
 		component: EditPointComponent,
 		canActivate: [editGuard],

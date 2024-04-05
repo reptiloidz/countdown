@@ -1,9 +1,10 @@
 <div class="nav__aside nav__aside--top">
 	<ng-container *ngIf="isPrivacy">
-		<a
-			class="nav__item"
-			[routerLink]="'/privacy'"
-		>Политика обработки персональных данных</a><span class="nav__divider"> | </span>
+		<button
+			type="button"
+			class="nav__item link"
+			(click)="showPrivacy()"
+		>Политика обработки персональных данных</button><span class="nav__divider"> | </span>
 	</ng-container>
 	<ng-container *ngIf="isAuthenticated; else unAuth">
 		<ng-container *ngIf="isProfile">

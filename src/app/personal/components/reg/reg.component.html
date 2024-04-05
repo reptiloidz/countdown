@@ -61,11 +61,11 @@
 				type="checkbox"
 				formControlName="privacyAgree"
 			>
-			Принять условия <a
-				class="nav__item"
-				[routerLink]="'/privacy'"
-				target="_blank"
-			>политики обработки персональных данных</a>
+			Принять условия <button
+				class="nav__item link"
+				type="button"
+				(click)="showPrivacy()"
+			>политики обработки персональных данных</button>
 		</label>
 	</div>
 	<ul
