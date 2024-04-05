@@ -38,8 +38,17 @@ body {
 	overflow: auto;
 
 	&__inner {
+		display: flex;
 		min-width: 1000px;
 		max-height: 100%;
+
+		> * {
+			/* stylelint-disable-next-line selector-type-no-unknown */
+			&:not(router-outlet) {
+				margin-right: auto;
+				margin-left: auto;
+			}
+		}
 	}
 }
 
