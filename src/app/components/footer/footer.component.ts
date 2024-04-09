@@ -141,29 +141,30 @@ export class FooterComponent implements OnInit, OnDestroy {
 	}
 
 	setDateNow() {
-		let newDatesArray = this.point?.dates;
-		const lastDate = {
-			date: format(
-				getPointDate({
-					tzOffset: this.tzOffset,
-					isGreenwich: this.point?.greenwich,
-					isInvert: true,
-				}),
-				Constants.fullDateFormat
-			),
-			reason: 'byHand',
-		} as Iteration;
-		if (this.point?.repeatable) {
-			newDatesArray && newDatesArray.push(lastDate);
-		} else {
-			newDatesArray && (newDatesArray = [lastDate]);
-		}
-
 		confirm('Обновить время события?') &&
-			this.data.editPoint(this.point?.id, {
-				...this.point,
-				dates: newDatesArray,
-			} as Point);
+			(() => {
+				let newDatesArray = this.point?.dates;
+				const lastDate = {
+					date: format(
+						getPointDate({
+							tzOffset: this.tzOffset,
+							isGreenwich: this.point?.greenwich,
+							isInvert: true,
+						}),
+						Constants.fullDateFormat
+					),
+					reason: 'byHand',
+				} as Iteration;
+				if (this.point?.repeatable) {
+					newDatesArray && newDatesArray.push(lastDate);
+				} else {
+					newDatesArray && (newDatesArray = [lastDate]);
+				}
+				this.data.editPoint(this.point?.id, {
+					...this.point,
+					dates: newDatesArray,
+				} as Point);
+			})();
 	}
 
 	checkAllPoints() {
