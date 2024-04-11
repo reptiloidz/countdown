@@ -79,6 +79,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
 	isIterationSwitched = false;
+	isFirstValueSetting = true;
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
@@ -369,14 +370,17 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	setValues(isReset = false) {
-		if (!this.isIterationSwitched) {
+		!this.isIterationSwitched &&
 			this.form.patchValue(
 				{
 					title: this.point?.title,
 					description: this.point?.description,
 					direction: this.point?.direction || 'backward',
 					greenwich: this.point?.greenwich || false,
-					repeatable: this.point?.repeatable || false,
+					repeatable:
+						this.point?.repeatable ||
+						this.isIterationAdded ||
+						false,
 					public: this.point?.public || false,
 					color: this.point?.color || 'gray',
 				},
@@ -384,7 +388,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					emitEvent: false,
 				}
 			);
-		}
 
 		this.pointDate = getPointDate({
 			pointDate: isReset
@@ -404,12 +407,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		this.selectedIterationDate = this.pointDate;
 
-		this.form.patchValue({
-			date: format(this.pointDate, Constants.shortDateFormat),
-			time: format(this.pointDate, Constants.timeFormat),
-		});
+		if (this.isIterationSwitched || this.isFirstValueSetting) {
+			this.form.patchValue({
+				date: format(this.pointDate, Constants.shortDateFormat),
+				time: format(this.pointDate, Constants.timeFormat),
+			});
 
-		this.dateChanged(this.pointDate);
+			this.dateChanged(this.pointDate);
+
+			this.isFirstValueSetting = false;
+		}
 	}
 
 	dateChanged(date?: Date) {
@@ -631,26 +638,26 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		let newDatesArray = this.dates?.slice(0);
 		let editPointEvent: EditPointEvent = 'pointEdited';
 
+		const dateTime = format(
+			getPointDate({
+				tzOffset: this.tzOffset,
+				isGreenwich: this.form.controls['greenwich'].value,
+				isInvert: true,
+				datePart: this.form.controls['date'].value,
+				timePart: this.form.controls['time'].value,
+			}),
+			Constants.fullDateFormat
+		);
+
+		const lastDate = {
+			date: dateTime,
+			reason: 'byHand',
+		} as Iteration;
+
 		if (repeats.length) {
 			newDatesArray?.push(...repeats);
 			editPointEvent = 'iterationsGenerated';
-		} else {
-			const dateTime = format(
-				getPointDate({
-					tzOffset: this.tzOffset,
-					isGreenwich: this.form.controls['greenwich'].value,
-					isInvert: true,
-					datePart: this.form.controls['date'].value,
-					timePart: this.form.controls['time'].value,
-				}),
-				Constants.fullDateFormat
-			);
-
-			const lastDate = {
-				date: dateTime,
-				reason: 'byHand',
-			} as Iteration;
-
+		} else if (saveIteration) {
 			if (!this.isRepeatable || this.isCreation) {
 				newDatesArray = [lastDate];
 			} else if (this.isIterationAdded) {
@@ -660,6 +667,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				newDatesArray[this.currentIterationIndex] = lastDate;
 				editPointEvent = 'iterationEdited';
 			}
+		} else if (!this.form.controls['repeatable'].value) {
+			newDatesArray = [lastDate];
 		}
 
 		let result = {
