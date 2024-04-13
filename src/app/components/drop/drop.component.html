@@ -13,6 +13,7 @@
 <div
 	*ngIf="bodyTemplate && opened"
 	class="drop__body"
+	[ngClass]="dropBodyClass"
 >
 	<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
 </div>

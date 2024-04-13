@@ -61,6 +61,8 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() visibleDate = this.nowDate;
 	@Input() selectedDate = this.nowDate;
 	@Input() point?: Point;
+	@Input() hideCurrentPeriod = false;
+	@Input() hideModeSwitch = false;
 
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;

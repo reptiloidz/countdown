@@ -23,6 +23,7 @@ export class DropComponent {
 		| undefined;
 
 	@Input() opened = false;
+	@Input() dropBodyClass: string | string[] | null = null;
 
 	value = '';
 

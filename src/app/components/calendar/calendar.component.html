@@ -18,9 +18,9 @@
 		>К активной дате</button>
 	</div>
 
-	<div>{{ visiblePeriod }}</div>
+	<div *ngIf="!hideCurrentPeriod">{{ visiblePeriod }}</div>
 
-	<div>
+	<div *ngIf="!hideModeSwitch">
 		<button
 			type="button"
 			(click)="switchCalendarMode('year')"

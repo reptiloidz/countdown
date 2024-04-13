@@ -24,6 +24,7 @@ import { PopupComponent } from './components/popup/popup.component';
 import { DropComponent } from './components/drop/drop.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { LetDirective } from './directives/let.directive';
+import { DatepickerComponent } from './components/datepicker/datepicker.component';
 
 @NgModule({
 	declarations: [
@@ -42,6 +43,7 @@ import { LetDirective } from './directives/let.directive';
 		DropComponent,
 		FilterPipe,
 		LetDirective,
+		DatepickerComponent,
 	],
 	imports: [
 		BrowserModule,
