@@ -7,7 +7,7 @@
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
-	<app-datepicker></app-datepicker>
+	<app-datepicker (datePicked)="datePicked($event)"></app-datepicker>
 	<div class="form-row">
 		<div
 			class="form color"

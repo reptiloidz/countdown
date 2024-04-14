@@ -628,6 +628,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	datePicked(date: Date) {
+		console.log(date);
+	}
+
 	submit(saveIteration = false, repeats: Iteration[] = []) {
 		if (this.form.invalid) {
 			return;

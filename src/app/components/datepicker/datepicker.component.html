@@ -1,8 +1,11 @@
 <app-drop [opened]="dropOpen">
-	<ng-template #buttonTemplate>
+	<ng-template
+		#buttonTemplate
+		let-value="dateFormatted"
+	>
 		<button
 			type="button"
-			[innerHTML]="'Дата'"
+			[innerHTML]="dateFormatted"
 			(click)="toggleDate()"
 		></button>
 	</ng-template>
@@ -38,6 +41,7 @@
 				class="calendar"
 				[hideCurrentPeriod]="true"
 				[hideModeSwitch]="true"
+				(dateSelected)="dateSelected($event)"
 			></app-calendar>
 
 		</form>
