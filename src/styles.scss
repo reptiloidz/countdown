@@ -466,6 +466,12 @@ a,
 		min-width: 200px;
 		background-color: #CCCCCC;
 	}
+
+	&--top {
+		.drop__body {
+			bottom: 100%;
+		}
+	}
 }
 
 table {

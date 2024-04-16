@@ -1,4 +1,7 @@
-<app-drop [opened]="dropOpen">
+<app-drop
+	[opened]="dropOpen"
+	class="drop--top"
+>
 	<ng-template
 		#buttonTemplate
 		let-value="dateFormatted"
@@ -44,6 +47,7 @@
 				(dateSelected)="dateSelected($event)"
 				(visibleDateSelected)="visibleDateSelected($event)"
 				[visibleDate]="visibleDate"
+				[selectedDate]="date"
 			></app-calendar>
 
 		</form>

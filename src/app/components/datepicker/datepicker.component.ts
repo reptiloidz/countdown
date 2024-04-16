@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
 	format,
@@ -16,11 +16,12 @@ import { Constants } from 'src/app/enums';
 	templateUrl: './datepicker.component.html',
 })
 export class DatepickerComponent implements OnInit {
+	@Input() date = new Date();
+
 	dateForm!: FormGroup;
 	dropOpen = false;
-	daySelected = new Date();
-	date = new Date();
-	visibleDate = new Date();
+	daySelected = this.date;
+	visibleDate = this.date;
 	private _eventDaySelectedSubject = new Subject<Date>();
 	eventDaySelected$ = this._eventDaySelectedSubject.asObservable();
 	private subscriptions = new Subscription();
@@ -28,11 +29,14 @@ export class DatepickerComponent implements OnInit {
 	@Output() datePicked = new EventEmitter<Date>();
 
 	ngOnInit(): void {
+		this.daySelected = this.date;
+		this.visibleDate = this.date;
+
 		this.dateForm = new FormGroup({
-			year: new FormControl(getYear(new Date())),
-			month: new FormControl(getMonth(new Date())),
-			hour: new FormControl(getHours(new Date())),
-			minute: new FormControl(getMinutes(new Date())),
+			year: new FormControl(getYear(this.visibleDate)),
+			month: new FormControl(getMonth(this.visibleDate)),
+			hour: new FormControl(getHours(this.date)),
+			minute: new FormControl(getMinutes(this.date)),
 		});
 
 		this.subscriptions.add(
