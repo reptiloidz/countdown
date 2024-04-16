@@ -15,7 +15,6 @@ import {
 	interval,
 	debounce,
 	timer,
-	filter,
 	BehaviorSubject,
 	of,
 	distinctUntilChanged,
@@ -26,7 +25,7 @@ import {
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import {
 	checkCopies,
 	filterIterations,
@@ -80,6 +79,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	userData!: UserExtraData;
 	isIterationSwitched = false;
 	isFirstValueSetting = true;
+	datePickerValue = this.pointDate;
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
@@ -109,11 +109,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			repeatable: new FormControl(false),
 			public: new FormControl(false),
 			color: new FormControl('gray'),
-			date: new FormControl(
-				format(new Date(), Constants.shortDateFormat),
-				[Validators.required]
-			),
-			time: new FormControl('00:00', [Validators.required]),
 			iterationsForm: new FormGroup({
 				rangeStartDate: new FormControl(
 					format(new Date(), Constants.shortDateFormat),
@@ -249,12 +244,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: ([curr, prev]) => {
 						if (
-							prev.date !== curr.date ||
-							prev.time !== curr.time
-						) {
-							this.dateChanged();
-						}
-						if (
 							prev.difference !== curr.difference ||
 							prev.direction !== curr.direction
 						) {
@@ -273,23 +262,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			interval(Constants.msInMinute)
-				.pipe(
-					filter(() => {
-						return this.form.controls['date'].valid;
-					})
-				)
-				.subscribe({
-					next: () => {
-						this.dateChanged();
-					},
-					error: (err) => {
-						console.error(
-							'Ошибка при работе таймера:\n',
-							err.message
-						);
-					},
-				})
+			interval(Constants.msInMinute).subscribe({
+				next: () => {
+					this.dateChanged();
+				},
+				error: (err) => {
+					console.error('Ошибка при работе таймера:\n', err.message);
+				},
+			})
 		);
 
 		this.subscriptions.add(
@@ -408,46 +388,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.selectedIterationDate = this.pointDate;
 
 		if (this.isIterationSwitched || this.isFirstValueSetting) {
-			this.form.patchValue({
-				date: format(this.pointDate, Constants.shortDateFormat),
-				time: format(this.pointDate, Constants.timeFormat),
-			});
-
 			this.dateChanged(this.pointDate);
-
 			this.isFirstValueSetting = false;
 		}
 	}
 
 	dateChanged(date?: Date) {
-		const dateParsed = parse(
-			this.form.controls['time'].value,
-			Constants.timeFormat,
-			parse(
-				this.form.controls['date'].value,
-				Constants.shortDateFormat,
-				new Date()
-			)
-		);
 		this.difference = this.convertToMinutes(
-			+(
-				date ||
-				(isDateValid(dateParsed) &&
-					new Date(
-						format(
-							parse(
-								this.form.controls['time'].value,
-								Constants.timeFormat,
-								parse(
-									this.form.controls['date'].value,
-									Constants.shortDateFormat,
-									new Date()
-								)
-							),
-							Constants.fullDateFormat
-						)
-					))
-			) - +new Date()
+			+(date || this.datePickerValue) - +new Date()
 		);
 		this.form.controls['difference'].setValue(this.difference, {
 			emitEvent: false,
@@ -465,11 +413,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
 		// 	: new Date(currentDate.getTime() + diff * Constants.msInMinute);
 
-		isDateValid(targetDate) &&
-			this.form.patchValue({
-				date: format(targetDate, Constants.shortDateFormat),
-				time: format(targetDate, Constants.timeFormat),
-			});
+		isDateValid(targetDate) && (this.pointDate = targetDate);
 	}
 
 	switchIteration(
@@ -629,6 +573,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	datePicked(date: Date) {
+		this.datePickerValue = date;
+		this.dateChanged();
 		console.log(date);
 	}
 
@@ -644,11 +590,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		const dateTime = format(
 			getPointDate({
+				pointDate: this.datePickerValue,
 				tzOffset: this.tzOffset,
 				isGreenwich: this.form.controls['greenwich'].value,
 				isInvert: true,
-				datePart: this.form.controls['date'].value,
-				timePart: this.form.controls['time'].value,
 			}),
 			Constants.fullDateFormat
 		);

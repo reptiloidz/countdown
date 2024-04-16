@@ -7,7 +7,6 @@
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
-	<app-datepicker (datePicked)="datePicked($event)"></app-datepicker>
 	<div class="form-row">
 		<div
 			class="form color"
@@ -242,16 +241,10 @@
 		</div>
 
 		<div class="control">
-			<div>
-				<input
-					type="date"
-					formControlName="date"
-				>
-				<input
-					type="time"
-					formControlName="time"
-				>
-			</div>
+			<app-datepicker
+				(datePicked)="datePicked($event)"
+				[date]="pointDate"
+			></app-datepicker>
 		</div>
 	</div>
 
