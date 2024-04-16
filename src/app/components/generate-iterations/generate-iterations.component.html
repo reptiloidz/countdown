@@ -2,14 +2,11 @@
 	<h3 class="subtitle">Генерация периодичных итераций</h3>
 
 	<p>Начало диапазона</p>
-	<div class="control">
-		<div>
-			<app-datepicker
-				(datePicked)="rangeStartDatePicked($event)"
-				[date]="rangeStartDate"
-			></app-datepicker>
-		</div>
-	</div>
+	<app-datepicker
+		class="control"
+		(datePicked)="rangeStartDatePicked($event)"
+		[date]="rangeStartDate"
+	></app-datepicker>
 
 	<p>Повторять каждые</p>
 	<input
@@ -56,14 +53,11 @@
 
 	<ng-container *ngIf="!isRepeatsAmountSet">
 		<p>Конец диапазона</p>
-		<div class="control">
-			<div>
-				<app-datepicker
-					(datePicked)="rangeEndDatePicked($event)"
-					[date]="rangeEndDate"
-				></app-datepicker>
-			</div>
-		</div>
+		<app-datepicker
+			class="control"
+			(datePicked)="rangeEndDatePicked($event)"
+			[date]="rangeEndDate"
+		></app-datepicker>
 	</ng-container>
 
 	<button

@@ -46,6 +46,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	passwordLoading = false;
 	removeLoading = false;
 	verifyButtonDisabled = false;
+	birthDatePickerValue!: Date;
 	private _user!: User;
 	private _birthDate = '';
 	private _birthDatePointId = '';
@@ -104,7 +105,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.formData = new FormGroup({
 			name: new FormControl(null, [Validators.required]),
-			birthDate: new FormControl(null),
 		});
 
 		this.formEmail = new FormGroup({
@@ -158,22 +158,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							(this._birthDatePointId = user.birthDatePointId);
 						this._birthDate = user?.birthDate || '';
 
-						this.formData.controls['birthDate'].setValue(
-							user?.birthDate
-								? format(
-										parse(
-											'00:00',
-											Constants.timeFormat,
-											parse(
-												user.birthDate,
-												Constants.fullDateFormat,
-												new Date()
-											)
-										),
-										Constants.shortDateFormat
-								  )
-								: ''
-						);
+						if (user.birthDate) {
+							this.birthDatePickerValue = parse(
+								'00:00',
+								Constants.timeFormat,
+								parse(
+									user.birthDate,
+									Constants.fullDateFormat,
+									new Date()
+								)
+							);
+						}
 					},
 				})
 		);
@@ -371,6 +366,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		return this._user?.emailVerified;
 	}
 
+	birthDatePicked(date: Date) {
+		this.birthDatePickerValue = date;
+	}
+
 	updateNameAndPhoto() {
 		this.profileLoading = true;
 		this.auth.updateProfile(this._user, {
@@ -381,17 +380,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	updateProfile() {
 		this.updateNameAndPhoto();
-		const bdValue = this.formData.controls['birthDate'].value;
-		const bdFinalValue = bdValue
-			? format(
-					parse(
-						'00:00',
-						Constants.timeFormat,
-						parse(bdValue, Constants.shortDateFormat, new Date())
-					),
-					Constants.fullDateFormat
-			  )
-			: '';
+		if (!this.birthDatePickerValue) {
+			return;
+		}
+		const bdFinalValue = format(
+			this.birthDatePickerValue,
+			Constants.fullDateFormat
+		);
 
 		if (bdFinalValue == this._birthDate) {
 			this.auth.eventBirthDateAdded();

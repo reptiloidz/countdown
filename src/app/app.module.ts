@@ -19,12 +19,10 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
 import { PopupComponent } from './components/popup/popup.component';
-import { DropComponent } from './components/drop/drop.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { LetDirective } from './directives/let.directive';
-import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
 	declarations: [
@@ -38,12 +36,9 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
 		CreatePointComponent,
 		GenerateIterationsComponent,
 		PrivacyComponent,
-		CalendarComponent,
 		PopupComponent,
-		DropComponent,
 		FilterPipe,
 		LetDirective,
-		DatepickerComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -51,6 +46,7 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
 		FormsModule,
 		ReactiveFormsModule,
 		HttpClientModule,
+		SharedModule,
 		NgxMaskDirective,
 		provideFirebaseApp(() =>
 			initializeApp({

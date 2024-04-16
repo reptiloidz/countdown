@@ -7,6 +7,7 @@ import { AuthComponent } from './components/auth/auth.component';
 import { RegComponent } from './components/reg/reg.component';
 import { authGuard, unauthGuard } from '../guards';
 import { ProfileComponent } from './components/profile/profile.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
 	declarations: [AuthComponent, RegComponent, ProfileComponent],
@@ -14,6 +15,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
+		SharedModule,
 		RouterModule.forChild([
 			{
 				path: 'auth',

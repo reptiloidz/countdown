@@ -240,13 +240,12 @@
 			>X</button>
 		</div>
 
-		<div class="control">
-			<app-datepicker
-				(datePicked)="datePicked($event)"
-				[date]="pointDate"
-				dropClass="drop--top"
-			></app-datepicker>
-		</div>
+		<app-datepicker
+			class="control"
+			dropClass="drop--top"
+			(datePicked)="datePicked($event)"
+			[date]="pointDate"
+		></app-datepicker>
 	</div>
 
 	<button [disabled]="loading || form.invalid">

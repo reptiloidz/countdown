@@ -14,58 +14,87 @@ import { Constants } from 'src/app/enums';
 	templateUrl: './datepicker.component.html',
 })
 export class DatepickerComponent implements OnInit {
-	@Input() date = new Date();
 	@Input() dropClass: string | string[] | null = null;
+	@Input() dateOnly = false;
+	@Input() isNow = true;
+	@Input() date: Date | undefined = this.isNow ? new Date() : undefined;
+	@Input() visibleDate = this.date;
 
+	defaultDate = this.date || new Date();
 	dropOpen = false;
-	visibleDate = this.date;
-	dateYear = '';
-	dateMonth = '';
 
 	@Output() datePicked = new EventEmitter<Date>();
 
 	ngOnInit(): void {
 		this.visibleDate = this.date;
-		this.dateYear = getYear(this.date).toString();
-		this.dateMonth = getMonth(this.date).toString();
 	}
 
 	get dateFormatted() {
-		return format(this.date, Constants.fullDateFormat);
+		return this.date
+			? format(
+					this.date,
+					this.dateOnly
+						? Constants.shortDateFormat
+						: Constants.fullDateFormat
+			  )
+			: 'Выберите дату';
+	}
+
+	get dateYear() {
+		return getYear(this.visibleDate || this.defaultDate).toString();
+	}
+
+	set dateYear(value: string) {
+		this.visibleDate = parse(
+			value + '.' + (+this.dateMonth + 1) + '.' + '1',
+			'y.M.d',
+			this.defaultDate
+		);
+	}
+
+	get dateMonth() {
+		return getMonth(this.visibleDate || this.defaultDate).toString();
+	}
+
+	set dateMonth(value: string) {
+		this.visibleDate = parse(
+			this.dateYear + '.' + (+value + 1) + '.' + '1',
+			'y.M.d',
+			this.defaultDate
+		);
 	}
 
 	get dateHour() {
-		return getHours(this.date).toString();
+		return getHours(this.defaultDate).toString();
 	}
 
 	set dateHour(value: string) {
-		this.date = parse(value + ':' + this.dateMinute, 'H:m', this.date);
+		this.date = parse(
+			value + ':' + this.dateMinute,
+			'H:m',
+			this.defaultDate
+		);
 		this.datePicked.emit(this.date);
 	}
 
 	get dateMinute() {
-		return getMinutes(this.date).toString();
+		return getMinutes(this.defaultDate).toString();
 	}
 
 	set dateMinute(value: string) {
-		this.date = parse(this.dateHour + ':' + value, 'H:m', this.date);
+		this.date = parse(this.dateHour + ':' + value, 'H:m', this.defaultDate);
 		this.datePicked.emit(this.date);
-	}
-
-	monthChanged() {
-		this.visibleDate = parse(
-			this.dateYear + '.' + this.dateMonth + '.' + '1',
-			'y.M.d',
-			new Date()
-		);
 	}
 
 	dateSelected({ date }: { date: Date }) {
-		this.date = parse(this.dateHour + ':' + this.dateMinute, 'H:m', date);
+		this.date = this.dateOnly
+			? parse('0:0', 'H:m', date)
+			: parse(this.dateHour + ':' + this.dateMinute, 'H:m', date);
+		this.visibleDate = this.date;
 		this.datePicked.emit(this.date);
 	}
 
-	visibleDateSelected(date: Date) {
+	visibleDateSelected(date: Date = this.visibleDate || this.defaultDate) {
 		this.dateYear = getYear(date).toString();
 		this.dateMonth = getMonth(date).toString();
 	}

@@ -51,7 +51,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	private lastDateOfCurrentMonth!: Date;
 	private firstMonday!: Date;
 	private subscriptions = new Subscription();
-	activeMode: CalendarMode =
+	@Input() activeMode: CalendarMode =
 		(localStorage.getItem('calendarMode') as CalendarMode) || 'month';
 
 	calendarArray: CalendarDate[][] = [];
@@ -236,6 +236,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 				this.visibleDate = startOfDay(date);
 				break;
 		}
+
 		this.visibleDateSelected.emit(this.visibleDate);
 		this.lastDateOfCurrentMonth = lastDayOfMonth(date);
 		this.firstMonday = isMonday(startOfMonth(date))

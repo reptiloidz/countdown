@@ -14,7 +14,6 @@
 			<div>
 				<select
 					[(ngModel)]="dateYear"
-					(ngModelChange)="monthChanged()"
 					name="year"
 				>
 					<option
@@ -24,7 +23,6 @@
 				</select>
 				<select
 					[(ngModel)]="dateMonth"
-					(ngModelChange)="monthChanged()"
 					name="month"
 				>
 					<option
@@ -32,24 +30,27 @@
 						[value]="month"
 					>{{ month + 1 }}</option>
 				</select>
-				<select
-					[(ngModel)]="dateHour"
-					name="hour"
-				>
-					<option
-						*ngFor="let _ of [].constructor(24), index as hour"
-						[value]="hour"
-					>{{ hour }}</option>
-				</select>
-				<select
-					[(ngModel)]="dateMinute"
-					name="minute"
-				>
-					<option
-						*ngFor="let _ of [].constructor(60), index as minute"
-						[value]="minute"
-					>{{ minute }}</option>
-				</select>
+
+				<ng-container *ngIf="!dateOnly">
+					<select
+						[(ngModel)]="dateHour"
+						name="hour"
+					>
+						<option
+							*ngFor="let _ of [].constructor(24), index as hour"
+							[value]="hour"
+						>{{ hour }}</option>
+					</select>
+					<select
+						[(ngModel)]="dateMinute"
+						name="minute"
+					>
+						<option
+							*ngFor="let _ of [].constructor(60), index as minute"
+							[value]="minute"
+						>{{ minute }}</option>
+					</select>
+				</ng-container>
 			</div>
 			<app-calendar
 				class="calendar"
@@ -57,8 +58,9 @@
 				[hideModeSwitch]="true"
 				(dateSelected)="dateSelected($event)"
 				(visibleDateSelected)="visibleDateSelected($event)"
-				[visibleDate]="visibleDate"
-				[selectedDate]="date"
+				[visibleDate]="visibleDate || defaultDate"
+				[selectedDate]="date || defaultDate"
+				[activeMode]="'month'"
 			></app-calendar>
 
 		</form>

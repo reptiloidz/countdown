@@ -10,13 +10,16 @@
 			placeholder="Имя пользователя"
 		>
 	</div>
-	<div class="control">
-		<input
-			formControlName="birthDate"
-			type="date"
-			placeholder="Дата рождения"
-		>
-	</div>
+
+	<app-datepicker
+		class="control"
+		(datePicked)="birthDatePicked($event)"
+		[date]="birthDatePickerValue"
+		[isNow]="false"
+		[visibleDate]="birthDatePickerValue"
+		[dateOnly]="true"
+	></app-datepicker>
+
 	<div class="userpic-wrapper"><img
 			[src]="userpic"
 			[alt]="name || 'Юзерпик'"
