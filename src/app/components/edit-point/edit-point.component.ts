@@ -22,6 +22,7 @@ import {
 	tap,
 	startWith,
 	mergeMap,
+	filter,
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
@@ -78,7 +79,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
 	isIterationSwitched = false;
-	isFirstValueSetting = true;
 	datePickerValue = this.pointDate;
 
 	private _debounceTime = 500;
@@ -146,6 +146,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.route.queryParams
 				.pipe(
+					filter(() => !this.isIterationAdded),
 					distinctUntilChanged(),
 					tap((data: any) => {
 						data.iteration &&
@@ -387,10 +388,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		this.selectedIterationDate = this.pointDate;
 
-		if (this.isIterationSwitched || this.isFirstValueSetting) {
-			this.dateChanged(this.pointDate);
-			this.isFirstValueSetting = false;
-		}
+		this.dateChanged(this.pointDate);
 	}
 
 	dateChanged(date?: Date) {
@@ -413,7 +411,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
 		// 	: new Date(currentDate.getTime() + diff * Constants.msInMinute);
 
-		isDateValid(targetDate) && (this.pointDate = targetDate);
+		isDateValid(targetDate) &&
+			(this.pointDate = this.datePickerValue = targetDate);
 	}
 
 	switchIteration(
@@ -421,6 +420,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		isSwitched = false
 	) {
 		this.isIterationSwitched = isSwitched;
+		this.isIterationAdded = false;
 		this.router.navigate([], {
 			relativeTo: this.route,
 			queryParams: {
@@ -431,6 +431,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	addIteration() {
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: {
+				iteration: null,
+			},
+			queryParamsHandling: 'merge',
+		});
 		this.isIterationAdded = true;
 		this.setValues(true);
 	}
@@ -575,7 +582,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	datePicked(date: Date) {
 		this.datePickerValue = date;
 		this.dateChanged();
-		console.log(date);
 	}
 
 	submit(saveIteration = false, repeats: Iteration[] = []) {

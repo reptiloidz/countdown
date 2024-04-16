@@ -166,7 +166,7 @@
 			class="tabs__item"
 			[ngClass]="{
 				'tabs__item--active': i == currentIterationIndex && !isIterationAdded,
-				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
+				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex) && !isIterationAdded,
 				'tabs__item--copy': checkCopies(i),
 			}"
 		>
