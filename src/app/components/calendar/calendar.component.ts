@@ -71,7 +71,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	}>();
 
 	@Output() modeSelected = new EventEmitter<CalendarMode>();
-
+	@Output() visibleDateSelected = new EventEmitter<Date>();
 	@Output() calendarRegenerated = new EventEmitter<void>();
 
 	@ContentChild('navTemplate') navTemplate: TemplateRef<unknown> | undefined;
@@ -236,6 +236,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 				this.visibleDate = startOfDay(date);
 				break;
 		}
+		this.visibleDateSelected.emit(this.visibleDate);
 		this.lastDateOfCurrentMonth = lastDayOfMonth(date);
 		this.firstMonday = isMonday(startOfMonth(date))
 			? startOfMonth(date)
