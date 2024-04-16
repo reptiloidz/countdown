@@ -4,14 +4,10 @@
 	<p>Начало диапазона</p>
 	<div class="control">
 		<div>
-			<input
-				type="date"
-				formControlName="rangeStartDate"
-			>
-			<input
-				type="time"
-				formControlName="rangeStartTime"
-			>
+			<app-datepicker
+				(datePicked)="rangeStartDatePicked($event)"
+				[date]="rangeStartDate"
+			></app-datepicker>
 		</div>
 	</div>
 
@@ -62,14 +58,10 @@
 		<p>Конец диапазона</p>
 		<div class="control">
 			<div>
-				<input
-					type="date"
-					formControlName="rangeEndDate"
-				>
-				<input
-					type="time"
-					formControlName="rangeEndTime"
-				>
+				<app-datepicker
+					(datePicked)="rangeEndDatePicked($event)"
+					[date]="rangeEndDate"
+				></app-datepicker>
 			</div>
 		</div>
 	</ng-container>

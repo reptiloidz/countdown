@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { format, parse } from 'date-fns';
 import { Constants } from 'src/app/enums';
@@ -9,15 +9,15 @@ import { Iteration } from 'src/app/interfaces';
 	selector: 'app-generate-iterations',
 	templateUrl: './generate-iterations.component.html',
 })
-export class GenerateIterationsComponent implements OnInit {
+export class GenerateIterationsComponent {
 	@Input() form!: FormGroup;
 	@Input() loading = false;
 	@Output() repeatsIsGenerated = new EventEmitter<Iteration[]>();
 
+	rangeStartDate = new Date();
+	rangeEndDate = new Date(+new Date() + Constants.msInMinute * 10);
 	tzOffset = new Date().getTimezoneOffset();
 	repeats: Iteration[] = [];
-
-	ngOnInit(): void {}
 
 	get iterationsForm() {
 		return this.form.get('iterationsForm') as FormGroup;
@@ -88,24 +88,15 @@ export class GenerateIterationsComponent implements OnInit {
 	}
 
 	getDateTime(k: number) {
-		const date = +parse(
-			this.iterationsForm.controls['rangeStartDate'].value,
-			Constants.shortDateFormat,
-			getPointDate({
-				tzOffset: this.tzOffset,
-				isGreenwich: this.form.controls['greenwich'].value,
-				isInvert: true,
-			})
-		);
-
 		return format(
 			getPointDate({
 				pointDate: new Date(
-					+parse(
-						this.iterationsForm.controls['rangeStartTime'].value,
-						Constants.timeFormat,
-						new Date(date)
-					) +
+					+getPointDate({
+						pointDate: this.rangeStartDate,
+						tzOffset: this.tzOffset,
+						isGreenwich: this.form.controls['greenwich'].value,
+						isInvert: true,
+					}) +
 						this.periodicityValue * k
 				),
 				tzOffset: this.tzOffset,
@@ -116,15 +107,22 @@ export class GenerateIterationsComponent implements OnInit {
 		);
 	}
 
+	rangeStartDatePicked(date: Date) {
+		this.rangeStartDate = date;
+	}
+
+	rangeEndDatePicked(date: Date) {
+		this.rangeEndDate = date;
+	}
+
 	addIterationRecursively(k: number) {
 		const currentDateTime = this.getDateTime(k);
 
 		const dateTime = getPointDate({
+			pointDate: this.rangeEndDate,
 			tzOffset: this.tzOffset,
 			isGreenwich: this.form.controls['greenwich'].value,
 			isInvert: true,
-			datePart: this.iterationsForm.controls['rangeEndDate'].value,
-			timePart: this.iterationsForm.controls['rangeEndTime'].value,
 		});
 
 		if (

@@ -15,6 +15,7 @@ import { Constants } from 'src/app/enums';
 })
 export class DatepickerComponent implements OnInit {
 	@Input() date = new Date();
+	@Input() dropClass: string | string[] | null = null;
 
 	dropOpen = false;
 	visibleDate = this.date;
@@ -39,6 +40,7 @@ export class DatepickerComponent implements OnInit {
 
 	set dateHour(value: string) {
 		this.date = parse(value + ':' + this.dateMinute, 'H:m', this.date);
+		this.datePicked.emit(this.date);
 	}
 
 	get dateMinute() {
@@ -47,6 +49,7 @@ export class DatepickerComponent implements OnInit {
 
 	set dateMinute(value: string) {
 		this.date = parse(this.dateHour + ':' + value, 'H:m', this.date);
+		this.datePicked.emit(this.date);
 	}
 
 	monthChanged() {
@@ -59,7 +62,6 @@ export class DatepickerComponent implements OnInit {
 
 	dateSelected({ date }: { date: Date }) {
 		this.date = parse(this.dateHour + ':' + this.dateMinute, 'H:m', date);
-
 		this.datePicked.emit(this.date);
 	}
 

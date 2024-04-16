@@ -110,14 +110,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			public: new FormControl(false),
 			color: new FormControl('gray'),
 			iterationsForm: new FormGroup({
-				rangeStartDate: new FormControl(
-					format(new Date(), Constants.shortDateFormat),
-					[Validators.required]
-				),
-				rangeStartTime: new FormControl(
-					format(new Date(), Constants.timeFormat),
-					[Validators.required]
-				),
 				rangePeriod: new FormControl(1, [Validators.required]),
 				repeatsMode: new FormControl('setRepeatsAmount', [
 					Validators.required,
@@ -126,20 +118,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				periodicity: new FormControl('perMinutes', [
 					Validators.required,
 				]),
-				rangeEndDate: new FormControl(
-					format(
-						new Date(+new Date() + Constants.msInMinute * 10),
-						Constants.shortDateFormat
-					),
-					[Validators.required]
-				),
-				rangeEndTime: new FormControl(
-					format(
-						new Date(+new Date() + Constants.msInMinute * 10),
-						Constants.timeFormat
-					),
-					[Validators.required]
-				),
 			}),
 		});
 
@@ -286,6 +264,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$.subscribe({
 				next: ([point, editPointEvent]) => {
 					this.point = point;
+					this.cdr.detectChanges();
 					if (
 						this.currentIterationIndex >= this.removedIterationIndex
 					) {
