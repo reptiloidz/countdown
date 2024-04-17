@@ -4,7 +4,6 @@ import { FilterSelected } from '../types';
 
 @Pipe({
 	name: 'filter',
-	pure: false,
 })
 export class FilterPipe implements PipeTransform {
 	transform(
