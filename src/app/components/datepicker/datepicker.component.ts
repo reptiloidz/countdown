@@ -20,13 +20,16 @@ export class DatepickerComponent implements OnInit {
 	@Input() date: Date | undefined = this.isNow ? new Date() : undefined;
 	@Input() visibleDate = this.date;
 
-	defaultDate = this.date || new Date();
 	dropOpen = false;
 
 	@Output() datePicked = new EventEmitter<Date>();
 
 	ngOnInit(): void {
 		this.visibleDate = this.date;
+	}
+
+	get defaultDate() {
+		return this.date || new Date();
 	}
 
 	get dateFormatted() {
