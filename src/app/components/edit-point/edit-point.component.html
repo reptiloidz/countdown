@@ -102,7 +102,7 @@
 
 			<button
 				*ngIf="isRepeatable && !isCreation"
-				[disabled]="loading || form.invalid"
+				[disabled]="loading || !isBaseFormValid"
 				type="button"
 				(click)="submit()"
 			>Сохранить параметры события</button>
@@ -248,7 +248,9 @@
 		></app-datepicker>
 	</div>
 
-	<button [disabled]="loading || form.invalid">
+	<button
+		[disabled]="loading || (isRepeatable && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
+	>
 		{{ isRepeatable && !isCreation ? "Сохранить параметры итерации" :
 		"Сохранить событие"
 		}}

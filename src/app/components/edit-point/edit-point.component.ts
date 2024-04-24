@@ -318,6 +318,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return Object.keys(PointColors) as PointColorTypes[];
 	}
 
+	get isBaseFormValid() {
+		return this.form.controls['title'].valid;
+	}
+
+	get isDateFormValid() {
+		return this.form.controls['difference'].valid;
+	}
+
 	sortDates() {
 		const sortedDates = this.point && sortDates(this.point).dates;
 		if (this.point && sortedDates) {
