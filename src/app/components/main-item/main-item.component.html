@@ -3,10 +3,30 @@
 	[ngClass]="[checkAccessEdit(point) ? 'item__inner--available' : '', point.color ? 'color--' + point.color : '']"
 >
 	<h2 class="item__title">
-		<a
-			routerLink="/point/{{ point.id }}"
-			[attr.title]="point.description || null"
-		>{{ point.title }}</a><ng-container *ngIf="!loading && checkAccessEdit(point); else loader">&nbsp;|&nbsp;<button
+		<span
+			app-tooltip
+			(mouseenter)="loadUserInfo(point.user)"
+		>
+			<a
+				routerLink="/point/{{ point.id }}"
+				[attr.title]="point.description || null"
+			>{{ point.title }}</a>
+			<ng-container *ngIf="point?.userInfo">
+				<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else userEmpty;">
+					<ng-template #tooltipContent>
+						<img
+							*ngIf="point.userInfo?.photoURL"
+							class="userpic userpic--sm"
+							[src]="point.userInfo?.photoURL"
+							[alt]="point.userInfo?.displayName"
+						>{{ point.userInfo?.displayName }}
+					</ng-template>
+				</ng-container>
+				<ng-template #userEmpty>
+					<ng-template #tooltipContent>...</ng-template>
+				</ng-template>
+			</ng-container>
+		</span><ng-container *ngIf="!loading && checkAccessEdit(point); else loader">&nbsp;|&nbsp;<button
 				type="button"
 				class="link"
 				(click)="delete(point.id)"

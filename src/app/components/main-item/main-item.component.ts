@@ -10,8 +10,8 @@ import {
 	ContentChild,
 	TemplateRef,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Point } from 'src/app/interfaces';
+import { Subscription, first } from 'rxjs';
+import { Point, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService } from 'src/app/services';
 
 @Component({
@@ -85,5 +85,18 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	checkPoint() {
 		this.pointCheck.emit();
+	}
+
+	loadUserInfo(id?: string) {
+		if (id && !this.point.userInfo) {
+			this.auth
+				.getUserData(id)
+				.pipe(first())
+				.subscribe({
+					next: (userData: UserExtraData) => {
+						this.point.userInfo = userData;
+					},
+				});
+		}
 	}
 }

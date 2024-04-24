@@ -1,4 +1,4 @@
-import { Iteration } from '.';
+import { Iteration, UserExtraData } from '.';
 import { Direction, PointColorTypes } from '../types';
 
 export interface Point {
@@ -11,6 +11,7 @@ export interface Point {
 	greenwich: boolean;
 	repeatable: boolean;
 	user?: string;
+	userInfo?: UserExtraData;
 	public?: boolean;
 	color: PointColorTypes;
 }
