@@ -23,6 +23,7 @@ import { PopupComponent } from './components/popup/popup.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { LetDirective } from './directives/let.directive';
 import { SharedModule } from './shared/shared.module';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 @NgModule({
 	declarations: [
@@ -39,6 +40,7 @@ import { SharedModule } from './shared/shared.module';
 		PopupComponent,
 		FilterPipe,
 		LetDirective,
+		TooltipComponent,
 	],
 	imports: [
 		BrowserModule,

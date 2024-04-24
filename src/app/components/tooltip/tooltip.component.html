@@ -1,0 +1,13 @@
+<ng-content></ng-content>
+<span class="tooltip__body">
+	<span class="tooltip__content">
+		<ng-container
+			*ngIf="tooltipContent else loader;"
+			[ngTemplateOutlet]="tooltipContent"
+		></ng-container>
+	</span>
+</span>
+
+<ng-template #loader>
+	<span class="loader rotating"></span>
+</ng-template>
