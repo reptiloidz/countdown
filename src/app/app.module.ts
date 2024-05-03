@@ -24,6 +24,11 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { LetDirective } from './directives/let.directive';
 import { SharedModule } from './shared/shared.module';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
+import { CheckCopiesPipe } from './pipes/check-copies.pipe';
+import { CheckAccessEditPipe } from './pipes/check-access-edit.pipe';
+import { SortPointsPipe } from './pipes/sort-points.pipe';
+import { CheckEditablePointsPipe } from './pipes/check-editable-points.pipe';
+import { ColorsCheckPipe } from './pipes/colors-check.pipe';
 
 @NgModule({
 	declarations: [
@@ -41,6 +46,11 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
 		FilterPipe,
 		LetDirective,
 		TooltipComponent,
+		CheckCopiesPipe,
+		CheckAccessEditPipe,
+		SortPointsPipe,
+		CheckEditablePointsPipe,
+		ColorsCheckPipe,
 	],
 	imports: [
 		BrowserModule,

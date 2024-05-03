@@ -25,7 +25,6 @@ import {
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
 import {
-	checkCopies,
 	filterIterations,
 	getFirstIteration,
 	getPointDate,
@@ -347,10 +346,6 @@ export class PointComponent implements OnInit, OnDestroy {
 				item.checked = check;
 			});
 		this.checkIteration();
-	}
-
-	checkCopies(i: number) {
-		return this.point && checkCopies(this.point, this.point?.dates[i]);
 	}
 
 	removeCheckedIterations() {

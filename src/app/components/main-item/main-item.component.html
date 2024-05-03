@@ -1,6 +1,7 @@
 <div
+	*appLet="point | checkAccessEdit as hasAccessEdit"
 	class="item__inner color"
-	[ngClass]="[checkAccessEdit(point) ? 'item__inner--available' : '', point.color ? 'color--' + point.color : '']"
+	[ngClass]="[hasAccessEdit ? 'item__inner--available' : '', point.color ? 'color--' + point.color : '']"
 >
 	<h2 class="item__title">
 		<span
@@ -26,7 +27,7 @@
 					<ng-template #tooltipContent>...</ng-template>
 				</ng-template>
 			</ng-container>
-		</span><ng-container *ngIf="!loading && checkAccessEdit(point); else loader">&nbsp;|&nbsp;<button
+		</span><ng-container *ngIf="!loading && hasAccessEdit; else loader">&nbsp;|&nbsp;<button
 				type="button"
 				class="link"
 				(click)="delete(point.id)"

@@ -89,6 +89,22 @@ export class DatepickerComponent implements OnInit {
 		this.datePicked.emit(this.date);
 	}
 
+	get yearsArray() {
+		return [].constructor(200);
+	}
+
+	get monthsArray() {
+		return [].constructor(12);
+	}
+
+	get hoursArray() {
+		return [].constructor(24);
+	}
+
+	get minutesArray() {
+		return [].constructor(60);
+	}
+
 	dateSelected({ date }: { date: Date }) {
 		this.date = this.dateOnly
 			? parse('0:0', 'H:m', date)

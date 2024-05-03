@@ -57,7 +57,7 @@
 			[ngClass]="{
 				'tabs__item--active': i == currentIterationIndex,
 				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
-				'tabs__item--copy': checkCopies(i),
+				'tabs__item--copy': i | checkCopies : point,
 			}"
 		>
 			<button

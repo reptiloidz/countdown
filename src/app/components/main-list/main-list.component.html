@@ -4,7 +4,7 @@
 		isRepeatable: repeatableSelectValue,
 		isGreenwich: greenwichSelectValue,
 		isPublic: publicSelectValue,
-		color: colorType.join('+')
+		color: colorTypeString
 	} as filteredPoints">
 		<app-calendar
 			(calendarRegenerated)="calendarRegenerated()"
@@ -36,7 +36,7 @@
 								app-main-item
 								[attr.data-id]="point.id"
 								class="calendar__date-li item item--sm"
-								*ngFor="let point of sortPoints({points: date.points, navigate: false}); let i = index"
+								*ngFor="let point of date.points | sortPoints : sortType; let i = index"
 								[point]="point"
 							>
 								<ng-template #checkboxTemplate>
@@ -50,7 +50,7 @@
 						</ul>
 						<div
 							class="nav"
-							*ngIf="hasEditablePoints(date.points)"
+							*ngIf="date.points | checkEditablePoints"
 						>
 							<button
 								type="button"
@@ -127,7 +127,7 @@
 							<input
 								type="checkbox"
 								(change)="changeFilters()"
-								[checked]="colorType.includes(pointColorsItem)"
+								[checked]="colorType | colorsCheck: pointColorsItem"
 							>
 						</label>
 					</li>
@@ -189,7 +189,7 @@
 				app-main-item
 				[attr.data-id]="point.id"
 				class="item"
-				*ngFor="let point of filteredPoints; let i = index"
+				*ngFor="let point of filteredPoints | sortPoints : sortType; let i = index"
 				[point]="point"
 				(pointCheck)="checkPoint()"
 			></li>

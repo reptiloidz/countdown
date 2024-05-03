@@ -28,7 +28,6 @@ import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format } from 'date-fns';
 import {
-	checkCopies,
 	filterIterations,
 	getFirstIteration,
 	getPointDate,
@@ -333,10 +332,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	checkCopies(i: number) {
-		return this.point && checkCopies(this.point, this.point?.dates[i]);
-	}
-
 	setValues(isReset = false) {
 		!this.isIterationSwitched &&
 			this.form.patchValue(
@@ -637,7 +632,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				repeatable: this.point?.repeatable,
 				public: this.point?.public,
 				user: this.point?.user,
-				color: this.point?.color,
+				color: this.point?.color || 'gray',
 			});
 			this.isIterationSwitched = true;
 		}

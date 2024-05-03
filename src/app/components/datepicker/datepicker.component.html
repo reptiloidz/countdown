@@ -17,7 +17,7 @@
 					name="year"
 				>
 					<option
-						*ngFor="let _ of [].constructor(200), index as year"
+						*ngFor="let _ of yearsArray, index as year"
 						[value]="1924 + year"
 					>{{ 1924 + year }}</option>
 				</select>
@@ -26,7 +26,7 @@
 					name="month"
 				>
 					<option
-						*ngFor="let _ of [].constructor(12), index as month"
+						*ngFor="let _ of monthsArray, index as month"
 						[value]="month"
 					>{{ month + 1 }}</option>
 				</select>
@@ -37,7 +37,7 @@
 						name="hour"
 					>
 						<option
-							*ngFor="let _ of [].constructor(24), index as hour"
+							*ngFor="let _ of hoursArray, index as hour"
 							[value]="hour"
 						>{{ hour }}</option>
 					</select>
@@ -46,7 +46,7 @@
 						name="minute"
 					>
 						<option
-							*ngFor="let _ of [].constructor(60), index as minute"
+							*ngFor="let _ of minutesArray, index as minute"
 							[value]="minute"
 						>{{ minute }}</option>
 					</select>

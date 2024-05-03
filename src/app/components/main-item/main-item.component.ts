@@ -75,10 +75,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	checkAccessEdit(point: Point) {
-		return this.auth.checkAccessEdit(point);
-	}
-
 	delete(id: string | undefined) {
 		this.data.removePoints({ id });
 	}
