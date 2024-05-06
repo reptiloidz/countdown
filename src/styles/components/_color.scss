@@ -1,0 +1,41 @@
+.color {
+	--point-color: gray;
+
+	border-left: 5px solid var(--point-color);
+
+	&--red {
+		--point-color: red;
+	}
+
+	&--green {
+		--point-color: green;
+	}
+
+	&--blue {
+		--point-color: blue;
+	}
+
+	&--purple {
+		--point-color: purple;
+	}
+
+	&--yellow {
+		--point-color: yellow;
+	}
+
+	&--pink {
+		--point-color: pink;
+	}
+
+	&--orange {
+		--point-color: orange;
+	}
+
+	&--brown {
+		--point-color: brown;
+	}
+
+	&--gray {
+		--point-color: gray;
+	}
+}

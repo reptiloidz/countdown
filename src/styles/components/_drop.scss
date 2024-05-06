@@ -1,0 +1,17 @@
+.drop {
+	position: relative;
+
+	&__body {
+		position: absolute;
+		right: 0;
+		z-index: 1;
+		min-width: 200px;
+		background-color: #CCCCCC;
+	}
+
+	&--top {
+		.drop__body {
+			bottom: 100%;
+		}
+	}
+}

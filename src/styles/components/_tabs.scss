@@ -1,0 +1,48 @@
+.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-top: 40px;
+	padding: 20px 0 0;
+	border-top: 1px solid gray;
+	list-style-type: none;
+
+	&__item {
+		display: flex;
+		flex-direction: column;
+
+		&--day {
+			.tabs__btn {
+				background-color: beige;
+			}
+		}
+
+		&--active {
+			.tabs__btn {
+				background-color: lightgrey;
+			}
+		}
+
+		&--copy {
+			&.tabs__item--active,
+			&.tabs__item--day {
+				.tabs__btn {
+					/* stylelint-disable-next-line max-nesting-depth */
+					&::before {
+						content: '\2022';
+						position: absolute;
+						top: 3px;
+						left: 3px;
+					}
+				}
+			}
+		}
+	}
+
+	&__btn {
+		position: relative;
+		display: block;
+		padding: 12px;
+		border: 1px solid gray;
+	}
+}

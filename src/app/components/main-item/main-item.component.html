@@ -1,9 +1,9 @@
 <div
 	*appLet="point | checkAccessEdit as hasAccessEdit"
-	class="item__inner color"
-	[ngClass]="[hasAccessEdit ? 'item__inner--available' : '', point.color ? 'color--' + point.color : '']"
+	class="point__inner color"
+	[ngClass]="[hasAccessEdit ? 'point__inner--available' : '', point.color ? 'color--' + point.color : '']"
 >
-	<h2 class="item__title">
+	<h2 class="point__title">
 		<span
 			app-tooltip
 			(mouseenter)="loadUserInfo(point.user)"
@@ -46,15 +46,15 @@
 		</ng-container>
 	</h2><small
 		*ngIf="point?.greenwich"
-		class="item__addon"
+		class="point__addon"
 	>Гринвич</small>
 	<small
 		*ngIf="point?.repeatable"
-		class="item__addon"
+		class="point__addon"
 	>Повторяемое</small>
 	<small
 		*ngIf="point?.public"
-		class="item__addon"
+		class="point__addon"
 	>Публичное</small>
 
 	<ng-template #loader>

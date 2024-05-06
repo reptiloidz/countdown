@@ -1,0 +1,14 @@
+table {
+	border-collapse: collapse;
+	table-layout: fixed;
+
+	td {
+		padding: 10px;
+		border: 1px solid black;
+	}
+}
+
+.table-wrapper {
+	width: 100%;
+	overflow: auto;
+}

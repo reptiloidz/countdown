@@ -4,6 +4,7 @@ import {
 	Component,
 	OnDestroy,
 	OnInit,
+	HostBinding,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
@@ -30,6 +31,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('publicSelect') private publicSelect!: ElementRef;
 	@ViewChild('searchInput') private searchInput!: ElementRef;
 	@ViewChild('colorList') private colorList!: ElementRef;
+	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
 	loading = true;
 	dropOpenedDate: Date | undefined;

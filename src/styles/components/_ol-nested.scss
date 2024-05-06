@@ -1,0 +1,57 @@
+.ol-nested {
+	counter-reset: item;
+	padding: 0;
+	font-size: 16px;
+
+	li {
+		counter-increment: item;
+		margin: 10px 0;
+		list-style-position: inside;
+
+		h2 {
+			margin: 10px 0;
+			font-size: 20px;
+
+			&::before {
+				content: counters(item, '.') '. ';
+			}
+		}
+
+		h2,
+		p {
+			display: inline-block;
+		}
+
+		p {
+			margin-top: 8px;
+		}
+
+		&::marker {
+			content: none;
+		}
+	}
+
+	ol {
+		counter-reset: item 0;
+		padding: 0;
+
+		li {
+			font-size: inherit;
+
+			&::marker {
+				content: counters(item, '.') '. ';
+			}
+		}
+	}
+
+	ul {
+		li {
+			list-style-position: outside;
+			list-style-type: square;
+
+			&::marker {
+				content: unset;
+			}
+		}
+	}
+}

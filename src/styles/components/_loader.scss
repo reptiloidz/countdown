@@ -1,0 +1,11 @@
+.loader {
+	display: inline-flex;
+	justify-content: center;
+	width: 2ch;
+	color: gray;
+	font-family: monospace;
+
+	&::before {
+		content: '+';
+	}
+}

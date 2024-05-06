@@ -1,0 +1,18 @@
+.control {
+	display: flex;
+	flex-direction: column;
+	margin-top: 8px;
+	margin-bottom: 8px;
+
+	&__field {
+		flex-grow: 1;
+	}
+
+	&--row {
+		flex-direction: row;
+	}
+
+	&--error {
+		box-shadow: 0 0 3px red;
+	}
+}

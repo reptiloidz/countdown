@@ -1,0 +1,43 @@
+.point {
+	display: flex;
+	padding: 10px;
+
+	@media (max-width: 1024px) {
+		flex-direction: column;
+	}
+
+	&__addon {
+		margin-top: 6px;
+		margin-left: 10px;
+
+		@media (max-width: 1024px) {
+			margin-left: 0;
+		}
+	}
+
+	&__inner {
+		width: 100%;
+		padding: 10px;
+
+		&--available {
+			background-color: #EEEEEE;
+		}
+	}
+
+	& + & {
+		border-top: 1px solid #CCCCCC;
+	}
+
+	&--sm {
+		.point {
+			&__title {
+				font-size: 16px;
+			}
+
+			&__inner {
+				padding: 8px;
+			}
+		}
+	}
+}
+
