@@ -1,5 +1,5 @@
 .color {
-	--point-color: gray;
+	--point-color: #999999;
 
 	border-left: 5px solid var(--point-color);
 
@@ -36,6 +36,6 @@
 	}
 
 	&--gray {
-		--point-color: gray;
+		--point-color: #999999;
 	}
 }

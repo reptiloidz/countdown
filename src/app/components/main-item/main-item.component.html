@@ -1,61 +1,77 @@
 <div
 	*appLet="point | checkAccessEdit as hasAccessEdit"
-	class="point__inner color"
-	[ngClass]="[hasAccessEdit ? 'point__inner--available' : '', point.color ? 'color--' + point.color : '']"
+	class="point color"
+	[ngClass]="[hasAccessEdit ? 'point--available' : '', point.color ? 'color--' + point.color : '']"
 >
-	<h2 class="point__title">
-		<span
-			app-tooltip
-			(mouseenter)="loadUserInfo(point.user)"
-		>
-			<a
-				routerLink="/point/{{ point.id }}"
-				[attr.title]="point.description || null"
-			>{{ point.title }}</a>
-			<ng-container *ngIf="point?.userInfo">
-				<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else userEmpty;">
-					<ng-template #tooltipContent>
-						<img
-							*ngIf="point.userInfo?.photoURL"
-							class="userpic userpic--sm"
-							[src]="point.userInfo?.photoURL"
-							[alt]="point.userInfo?.displayName"
-						>{{ point.userInfo?.displayName }}
+	<a
+		routerLink="/point/{{ point.id }}"
+		[attr.title]="point.description || null"
+		class="point__main"
+	>
+		<h2 class="point__title">
+			<span
+				app-tooltip
+				(mouseenter)="loadUserInfo(point.user)"
+			>
+				<span>{{ point.title }}</span>
+				<ng-container *ngIf="point?.userInfo">
+					<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else userEmpty;">
+						<ng-template #tooltipContent>
+							<img
+								*ngIf="point.userInfo?.photoURL"
+								class="userpic userpic--sm"
+								[src]="point.userInfo?.photoURL"
+								[alt]="point.userInfo?.displayName"
+							>{{ point.userInfo?.displayName }}
+						</ng-template>
+					</ng-container>
+					<ng-template #userEmpty>
+						<ng-template #tooltipContent>...</ng-template>
 					</ng-template>
 				</ng-container>
-				<ng-template #userEmpty>
-					<ng-template #tooltipContent>...</ng-template>
+			</span>
+		</h2>
+	</a>
+
+	<div class="point__nav-wrapper">
+		<div
+			class="point__nav"
+			*ngIf="loading || hasAccessEdit"
+		>
+			<ng-container *ngIf="!loading && hasAccessEdit; else loader">
+				<button
+					type="button"
+					class="link"
+					(click)="delete(point.id)"
+				>x</button>
+				<ng-container
+					*ngIf="checkboxTemplate else defaultCheckbox;"
+					[ngTemplateOutlet]="checkboxTemplate"
+				></ng-container>
+				<ng-template #defaultCheckbox>
+					<input
+						#pointCheckbox
+						type="checkbox"
+						(change)="checkPoint()"
+					>
 				</ng-template>
 			</ng-container>
-		</span><ng-container *ngIf="!loading && hasAccessEdit; else loader">&nbsp;|&nbsp;<button
-				type="button"
-				class="link"
-				(click)="delete(point.id)"
-			>x</button>
-			<ng-container
-				*ngIf="checkboxTemplate else defaultCheckbox;"
-				[ngTemplateOutlet]="checkboxTemplate"
-			></ng-container>
-			<ng-template #defaultCheckbox>
-				<input
-					#pointCheckbox
-					type="checkbox"
-					(change)="checkPoint()"
-				>
-			</ng-template>
-		</ng-container>
-	</h2><small
-		*ngIf="point?.greenwich"
-		class="point__addon"
-	>Гринвич</small>
-	<small
-		*ngIf="point?.repeatable"
-		class="point__addon"
-	>Повторяемое</small>
-	<small
-		*ngIf="point?.public"
-		class="point__addon"
-	>Публичное</small>
+		</div>
+		<div class="point__nav">
+			<small
+				*ngIf="point?.greenwich"
+				class="point__addon"
+			>Гринвич</small>
+			<small
+				*ngIf="point?.repeatable"
+				class="point__addon"
+			>Повторяемое</small>
+			<small
+				*ngIf="point?.public"
+				class="point__addon"
+			>Публичное</small>
+		</div>
+	</div>
 
 	<ng-template #loader>
 		<span

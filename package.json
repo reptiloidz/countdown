@@ -36,6 +36,7 @@
 		"ngx-mask": "^16.2.9",
 		"ngx-quicklink": "^0.4.2",
 		"rxjs": "~7.8.0",
+		"svg4everybody": "^2.1.9",
 		"tslib": "^2.3.0",
 		"zone.js": "~0.13.0"
 	},
@@ -46,6 +47,7 @@
 		"@html-eslint/eslint-plugin": "^0.19.1",
 		"@html-eslint/parser": "^0.19.1",
 		"@types/jasmine": "~4.3.0",
+		"@types/svg4everybody": "^2.1.5",
 		"eslint": "^8.46.0",
 		"eslint-plugin-html": "^7.1.0",
 		"husky": "4.3.0",

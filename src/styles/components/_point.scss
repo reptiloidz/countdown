@@ -1,9 +1,43 @@
 .point {
 	display: flex;
-	padding: 10px;
+	width: 100%;
+	border: 1px solid var(--point-color);
+	border-right: 0;
+	border-radius: 20px 0 0 20px;
 
 	@media (max-width: 1024px) {
 		flex-direction: column;
+	}
+
+	&__title {
+		color: #999999;
+		font-family: 'Roboto Slab', sans-serif;
+		font-weight: 500;
+	}
+
+	&__main {
+		flex-grow: 1;
+		padding: 20px;
+		text-decoration: none;
+	}
+
+	&__nav-wrapper {
+		display: flex;
+		flex-direction: column;
+		width: 200px;
+		margin-left: auto;
+	}
+
+	&__nav {
+		border-radius: 0 0 10px 10px;
+		background-color: var(--point-color);
+
+		& + &,
+		&:not(:has(+ &)) {
+			flex-grow: 1;
+			margin-top: 4px;
+			border-radius: 10px 10px 0 0;
+		}
 	}
 
 	&__addon {
@@ -15,27 +49,18 @@
 		}
 	}
 
-	&__inner {
-		width: 100%;
-		padding: 10px;
-
-		&--available {
-			background-color: #EEEEEE;
+	&--available {
+		.point__title {
+			color: black;
 		}
-	}
-
-	& + & {
-		border-top: 1px solid #CCCCCC;
 	}
 
 	&--sm {
 		.point {
+			padding: 8px;
+
 			&__title {
 				font-size: 16px;
-			}
-
-			&__inner {
-				padding: 8px;
 			}
 		}
 	}

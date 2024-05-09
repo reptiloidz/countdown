@@ -1,0 +1,234 @@
+// Roboto
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 900;
+	font-style: italic;
+	font-display: swap;
+	src:
+		local('Roboto-BlackItalic'),
+		url('../../assets/fonts/roboto/Roboto-BlackItalic.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-BlackItalic.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('Roboto-Black'),
+		url('../../assets/fonts/roboto/Roboto-Black.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-Black.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+	src:
+		local('Roboto-BoldItalic'),
+		url('../../assets/fonts/roboto/Roboto-BoldItalic.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-BoldItalic.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('Roboto-Bold'),
+		url('../../assets/fonts/roboto/Roboto-Bold.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-Bold.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+	src:
+		local('Roboto-MediumItalic'),
+		url('../../assets/fonts/roboto/Roboto-MediumItalic.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-MediumItalic.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('Roboto-Medium'),
+		url('../../assets/fonts/roboto/Roboto-Medium.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-Medium.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+	src:
+		local('Roboto-Italic'),
+		url('../../assets/fonts/roboto/Roboto-Italic.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-Italic.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('Roboto'),
+		url('../../assets/fonts/roboto/Roboto-Regular.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-Regular.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+	src:
+		local('Roboto-LightItalic'),
+		url('../../assets/fonts/roboto/Roboto-LightItalic.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-LightItalic.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('Roboto-Light'),
+		url('../../assets/fonts/roboto/Roboto-Light.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-Light.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 100;
+	font-style: italic;
+	font-display: swap;
+	src:
+		local('Roboto-ThinItalic'),
+		url('../../assets/fonts/roboto/Roboto-ThinItalic.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-ThinItalic.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('Roboto-Thin'),
+		url('../../assets/fonts/roboto/Roboto-Thin.woff2') format('woff2'),
+		url('../../assets/fonts/roboto/Roboto-Thin.woff') format('woff');
+}
+
+// Roboto Slab
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-Black'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Black.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Black.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-ExtraBold'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-ExtraBold.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-ExtraBold.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-Bold'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Bold.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Bold.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-SemiBold'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-SemiBold.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-SemiBold.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-Medium'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Medium.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Medium.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-Regular'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Regular.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Regular.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-Light'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Light.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Light.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 200;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-ExtraLight'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-ExtraLight.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-ExtraLight.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Roboto Slab';
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+	src:
+		local('RobotoSlab-Thin'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Thin.woff2') format('woff2'),
+		url('../../assets/fonts/roboto-slab/RobotoSlab-Thin.woff') format('woff');
+}
