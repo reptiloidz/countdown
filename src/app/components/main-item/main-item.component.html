@@ -35,18 +35,45 @@
 
 	<div class="point__aside">
 		<div class="point__markers">
-			<small
-				*ngIf="point?.greenwich"
-				class="point__addon"
-			>Гринвич</small>
-			<small
-				*ngIf="point?.repeatable"
-				class="point__addon"
-			>Повторяемое</small>
-			<small
-				*ngIf="point?.public"
-				class="point__addon"
-			>Публичное</small>
+			<div
+				class="marker marker--greenwich"
+				[ngClass]="{
+					'marker--inactive': !point.greenwich
+				}"
+				[title]="point.greenwich ? 'По Гринвичу' : 'По местному времени'"
+			>
+				<svg
+					app-svg
+					name="globe"
+					class="icon marker__inner"
+				></svg>
+			</div>
+			<div
+				class="marker marker--repeatable"
+				[ngClass]="{
+					'marker--inactive': !point.repeatable
+				}"
+				[title]="point.repeatable ? 'Повторяемое' : 'Однократное'"
+			>
+				<svg
+					app-svg
+					name="refresh"
+					class="icon marker__inner"
+				></svg>
+			</div>
+			<div
+				class="marker marker--public"
+				[ngClass]="{
+					'marker--inactive': !point.public
+				}"
+				[title]="point.public ? 'Публичное' : 'Приватное'"
+			>
+				<svg
+					app-svg
+					name="users"
+					class="icon marker__inner"
+				></svg>
+			</div>
 		</div>
 		<div
 			class="point__nav"

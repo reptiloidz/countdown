@@ -1,10 +1,7 @@
 .point {
 	display: flex;
 	width: 100%;
-	// border: 1px solid var(--point-color);
-	// border-right: 0;
 	border-left-color: transparent;
-	// border-radius: 20px 0 0 20px;
 	background-color: rgba(var(--point-color), .1);
 
 	@media (max-width: 1024px) {
@@ -25,37 +22,25 @@
 
 	&__aside {
 		display: flex;
-		// flex-direction: column;
-		width: 200px;
+		width: 220px;
 		margin-left: auto;
 	}
 
 	&__markers {
-		width: 150px;
+		display: flex;
+		gap: 12px;
+		align-items: center;
+		justify-content: center;
+		width: 180px;
 		background-color: rgb(var(--point-color));
 	}
 
 	&__nav {
 		display: flex;
+		flex-grow: 1;
 		flex-direction: column;
-		// border-radius: 0 0 10px 10px;
-		// background-color: rgb(var(--point-color));
-
-		// & + &,
-		// &:not(:has(+ &)) {
-		// 	flex-grow: 1;
-		// 	margin-top: 4px;
-		// 	border-radius: 10px 10px 0 0;
-		// }
-	}
-
-	&__addon {
-		margin-top: 6px;
-		margin-left: 10px;
-
-		@media (max-width: 1024px) {
-			margin-left: 0;
-		}
+		align-items: center;
+		justify-content: center;
 	}
 
 	&--available {
@@ -76,4 +61,3 @@
 		}
 	}
 }
-

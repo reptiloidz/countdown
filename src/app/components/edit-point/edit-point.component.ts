@@ -7,6 +7,7 @@ import {
 	ViewChild,
 	ElementRef,
 	ChangeDetectorRef,
+	HostBinding,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -59,6 +60,7 @@ enum EditPointSuccessMessage {
 })
 export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
+	@HostBinding('class') class = 'content';
 	@Input() type = EditPointType.Edit;
 	form!: FormGroup;
 	point: Point | undefined;

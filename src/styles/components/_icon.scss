@@ -1,0 +1,15 @@
+.icon {
+	display: inline-block;
+	flex-shrink: 0;
+	fill: transparent;
+	stroke: currentColor;
+	stroke-width: 0;
+
+	[stroke] {
+		stroke: currentColor;
+	}
+
+	[fill] {
+		fill: currentColor;
+	}
+}

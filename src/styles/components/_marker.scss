@@ -1,0 +1,46 @@
+.marker {
+	--marker-opacity: 1;
+
+	position: relative;
+	display: flex;
+	padding: 6px;
+	border-radius: 50%;
+	background-color: var(--marker-color);
+	opacity: var(--marker-opacity);
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: -2px;
+		right: -2px;
+		bottom: -2px;
+		left: -2px;
+		border: 1px solid var(--marker-color);
+		border-radius: 50%;
+	}
+
+	&__inner {
+		width: 24px;
+		color: rgb(var(--point-color));
+	}
+
+	&--greenwich {
+		--marker-color: white;
+	}
+
+	&--repeatable {
+		--marker-color: darkslateblue;
+	}
+
+	&--public {
+		--marker-color: bisque;
+	}
+
+	&--inactive {
+		--marker-opacity: .1;
+
+		&::before {
+			display: none;
+		}
+	}
+}
