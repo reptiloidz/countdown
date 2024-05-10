@@ -33,31 +33,8 @@
 		</h2>
 	</a>
 
-	<div class="point__nav-wrapper">
-		<div
-			class="point__nav"
-			*ngIf="loading || hasAccessEdit"
-		>
-			<ng-container *ngIf="!loading && hasAccessEdit; else loader">
-				<button
-					type="button"
-					class="link"
-					(click)="delete(point.id)"
-				>x</button>
-				<ng-container
-					*ngIf="checkboxTemplate else defaultCheckbox;"
-					[ngTemplateOutlet]="checkboxTemplate"
-				></ng-container>
-				<ng-template #defaultCheckbox>
-					<input
-						#pointCheckbox
-						type="checkbox"
-						(change)="checkPoint()"
-					>
-				</ng-template>
-			</ng-container>
-		</div>
-		<div class="point__nav">
+	<div class="point__aside">
+		<div class="point__markers">
 			<small
 				*ngIf="point?.greenwich"
 				class="point__addon"
@@ -70,6 +47,34 @@
 				*ngIf="point?.public"
 				class="point__addon"
 			>Публичное</small>
+		</div>
+		<div
+			class="point__nav"
+			*ngIf="loading || hasAccessEdit"
+		>
+			<ng-container *ngIf="!loading && hasAccessEdit; else loader">
+				<button
+					type="button"
+					class="link"
+					(click)="delete(point.id)"
+				>
+					<svg
+						app-svg
+						name="cross"
+					></svg>
+				</button>
+				<ng-container
+					*ngIf="checkboxTemplate else defaultCheckbox;"
+					[ngTemplateOutlet]="checkboxTemplate"
+				></ng-container>
+				<ng-template #defaultCheckbox>
+					<input
+						#pointCheckbox
+						type="checkbox"
+						(change)="checkPoint()"
+					>
+				</ng-template>
+			</ng-container>
 		</div>
 	</div>
 

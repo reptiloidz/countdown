@@ -1,9 +1,11 @@
 .point {
 	display: flex;
 	width: 100%;
-	border: 1px solid var(--point-color);
-	border-right: 0;
-	border-radius: 20px 0 0 20px;
+	// border: 1px solid var(--point-color);
+	// border-right: 0;
+	border-left-color: transparent;
+	// border-radius: 20px 0 0 20px;
+	background-color: rgba(var(--point-color), .1);
 
 	@media (max-width: 1024px) {
 		flex-direction: column;
@@ -21,23 +23,30 @@
 		text-decoration: none;
 	}
 
-	&__nav-wrapper {
+	&__aside {
 		display: flex;
-		flex-direction: column;
+		// flex-direction: column;
 		width: 200px;
 		margin-left: auto;
 	}
 
-	&__nav {
-		border-radius: 0 0 10px 10px;
-		background-color: var(--point-color);
+	&__markers {
+		width: 150px;
+		background-color: rgb(var(--point-color));
+	}
 
-		& + &,
-		&:not(:has(+ &)) {
-			flex-grow: 1;
-			margin-top: 4px;
-			border-radius: 10px 10px 0 0;
-		}
+	&__nav {
+		display: flex;
+		flex-direction: column;
+		// border-radius: 0 0 10px 10px;
+		// background-color: rgb(var(--point-color));
+
+		// & + &,
+		// &:not(:has(+ &)) {
+		// 	flex-grow: 1;
+		// 	margin-top: 4px;
+		// 	border-radius: 10px 10px 0 0;
+		// }
 	}
 
 	&__addon {
@@ -50,6 +59,8 @@
 	}
 
 	&--available {
+		border-left-color: rgb(var(--point-color));
+
 		.point__title {
 			color: black;
 		}

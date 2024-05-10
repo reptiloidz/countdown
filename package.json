@@ -3,7 +3,9 @@
 	"version": "0.0.0",
 	"scripts": {
 		"ng": "ng",
-		"start": "ng serve -o --host 0.0.0.0",
+		"start": "yarn run svg && ng serve -o --host 0.0.0.0",
+		"svg": "node sprite.js && yarn run svgo",
+		"svgo": "svgo src/assets/sprite.svg --config svgo.config.cjs --pretty",
 		"start-mock": "ng serve -o --host 0.0.0.0 --configuration mock",
 		"build": "ng build --base-href /countdown/",
 		"build-local": "ng build --base-href /dist/cd/",
@@ -50,6 +52,7 @@
 		"@types/svg4everybody": "^2.1.5",
 		"eslint": "^8.46.0",
 		"eslint-plugin-html": "^7.1.0",
+		"glob": "^10.3.14",
 		"husky": "4.3.0",
 		"jasmine-core": "~4.6.0",
 		"karma": "~6.4.0",
@@ -60,9 +63,12 @@
 		"lint-staged": "13.0.3",
 		"postcss-scss": "4.0.2",
 		"prettier": "^2.8.8",
+		"slash": "^5.1.0",
 		"stylelint": "14.11.0",
 		"stylelint-order": "5.0.0",
 		"stylelint-scss": "4.3.0",
+		"svg-sprite": "^2.0.4",
+		"svgo": "^3.3.2",
 		"typescript": "~5.1.3"
 	}
 }

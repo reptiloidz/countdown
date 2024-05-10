@@ -1,41 +1,40 @@
 .color {
-	--point-color: #999999;
+	border-left: 5px solid rgb(var(--point-color));
 
-	border-left: 5px solid var(--point-color);
+	&,
+	&--gray {
+		--point-color: 153, 153, 153;
+	}
 
 	&--red {
-		--point-color: red;
+		--point-color: 255, 0, 0;
 	}
 
 	&--green {
-		--point-color: green;
+		--point-color: 0, 128, 0;
 	}
 
 	&--blue {
-		--point-color: blue;
+		--point-color: 0, 0, 255;
 	}
 
 	&--purple {
-		--point-color: purple;
+		--point-color: 128, 0, 128;
 	}
 
 	&--yellow {
-		--point-color: yellow;
+		--point-color: 255, 255, 0;
 	}
 
 	&--pink {
-		--point-color: pink;
+		--point-color: 255, 192, 203;
 	}
 
 	&--orange {
-		--point-color: orange;
+		--point-color: 255, 165, 0;
 	}
 
 	&--brown {
-		--point-color: brown;
-	}
-
-	&--gray {
-		--point-color: #999999;
+		--point-color: 165, 42, 42;
 	}
 }
