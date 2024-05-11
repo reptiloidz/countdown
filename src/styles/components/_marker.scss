@@ -1,10 +1,11 @@
 .marker {
 	--marker-opacity: 1;
+	--marker-color: white;
 
 	position: relative;
 	display: flex;
 	padding: 6px;
-	border-radius: 50%;
+	border-radius: 6px;
 	background-color: var(--marker-color);
 	opacity: var(--marker-opacity);
 
@@ -16,7 +17,7 @@
 		bottom: -2px;
 		left: -2px;
 		border: 1px solid var(--marker-color);
-		border-radius: 50%;
+		border-radius: 8px;
 	}
 
 	&__inner {
@@ -24,20 +25,8 @@
 		color: rgb(var(--point-color));
 	}
 
-	&--greenwich {
-		--marker-color: white;
-	}
-
-	&--repeatable {
-		--marker-color: darkslateblue;
-	}
-
-	&--public {
-		--marker-color: bisque;
-	}
-
 	&--inactive {
-		--marker-opacity: .1;
+		--marker-opacity: .2;
 
 		&::before {
 			display: none;

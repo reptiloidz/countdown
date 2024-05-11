@@ -1,6 +1,6 @@
 <div
 	*appLet="point | checkAccessEdit as hasAccessEdit"
-	class="point color"
+	class="point point--card color"
 	[ngClass]="[hasAccessEdit ? 'point--available' : '', point.color ? 'color--' + point.color : '']"
 >
 	<a
@@ -31,77 +31,88 @@
 				</ng-container>
 			</span>
 		</h2>
+		<p
+			*ngIf="point.description"
+			class="point__description"
+		>{{ point.description }}</p>
 	</a>
 
-	<div class="point__aside">
-		<div class="point__markers">
-			<div
-				class="marker marker--greenwich"
-				[ngClass]="{
-					'marker--inactive': !point.greenwich
-				}"
-				[title]="point.greenwich ? 'По Гринвичу' : 'По местному времени'"
+	<div
+		class="point__nav"
+		*ngIf="loading || hasAccessEdit"
+	>
+		<ng-container *ngIf="!loading && hasAccessEdit; else loader">
+			<button
+				type="button"
+				class="button button--negative"
+				(click)="delete(point.id)"
 			>
 				<svg
 					app-svg
-					name="globe"
-					class="icon marker__inner"
+					name="cross"
+					class="icon"
 				></svg>
-			</div>
-			<div
-				class="marker marker--repeatable"
-				[ngClass]="{
-					'marker--inactive': !point.repeatable
-				}"
-				[title]="point.repeatable ? 'Повторяемое' : 'Однократное'"
-			>
-				<svg
-					app-svg
-					name="refresh"
-					class="icon marker__inner"
-				></svg>
-			</div>
-			<div
-				class="marker marker--public"
-				[ngClass]="{
-					'marker--inactive': !point.public
-				}"
-				[title]="point.public ? 'Публичное' : 'Приватное'"
-			>
-				<svg
-					app-svg
-					name="users"
-					class="icon marker__inner"
-				></svg>
-			</div>
-		</div>
-		<div
-			class="point__nav"
-			*ngIf="loading || hasAccessEdit"
-		>
-			<ng-container *ngIf="!loading && hasAccessEdit; else loader">
-				<button
-					type="button"
-					class="link"
-					(click)="delete(point.id)"
-				>
+			</button>
+			<ng-container
+				*ngIf="checkboxTemplate else defaultCheckbox;"
+				[ngTemplateOutlet]="checkboxTemplate"
+			></ng-container>
+			<ng-template #defaultCheckbox>
+				<label class="checkbox">
 					<svg
 						app-svg
-						name="cross"
+						name="check"
+						class="icon checkbox__icon"
 					></svg>
-				</button>
-				<ng-container
-					*ngIf="checkboxTemplate else defaultCheckbox;"
-					[ngTemplateOutlet]="checkboxTemplate"
-				></ng-container>
-				<ng-template #defaultCheckbox>
 					<input
 						#pointCheckbox
 						type="checkbox"
+						class="checkbox__input"
 						(change)="checkPoint()"
 					>
-				</ng-template>
-			</ng-container>
+				</label>
+			</ng-template>
+		</ng-container>
+	</div>
+	<div class="point__markers">
+		<div
+			class="marker"
+			[ngClass]="{
+				'marker--inactive': !point.greenwich
+			}"
+			[title]="point.greenwich ? 'По Гринвичу' : 'По местному времени'"
+		>
+			<svg
+				app-svg
+				name="globe"
+				class="icon marker__inner"
+			></svg>
+		</div>
+		<div
+			class="marker"
+			[ngClass]="{
+				'marker--inactive': !point.repeatable
+			}"
+			[title]="point.repeatable ? 'Повторяемое' : 'Однократное'"
+		>
+			<svg
+				app-svg
+				name="refresh"
+				class="icon marker__inner"
+			></svg>
+		</div>
+		<div
+			class="marker"
+			[ngClass]="{
+				'marker--inactive': !point.public
+			}"
+			[title]="point.public ? 'Публичное' : 'Приватное'"
+		>
+			<svg
+				app-svg
+				name="users"
+				class="icon marker__inner"
+			></svg>
 		</div>
 	</div>
 

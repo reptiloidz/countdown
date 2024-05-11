@@ -1,0 +1,28 @@
+.checkbox {
+	--checkbox-cl: transparent;
+	--checkbox-check-cl: rgba(0, 0, 0, .4);
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border: 1px solid var(--checkbox-check-cl);
+	border-radius: 4px;
+	cursor: pointer;
+
+	&:has(:checked) {
+		--checkbox-cl: var(--checkbox-check-cl);
+	}
+
+	&__icon {
+		width: 20px;
+		color: var(--checkbox-cl);
+	}
+
+	&__input {
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+	}
+}

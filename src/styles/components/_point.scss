@@ -1,53 +1,153 @@
 .point {
+	--point-markers-bg-size: 20px;
+	--point-markers-bg-color-1: rgba(var(--point-color), 1);
+	--point-markers-bg-color-2: rgba(var(--point-color), .8);
+	--point-markers-shadow-cl-1: rgba(255, 255, 255, .4);
+	--point-markers-shadow-cl-2: rgba(0, 0, 0, .15);
+	--point-markers-shadow-cl-3: rgba(255, 255, 255, .4);
+
+	position: relative;
 	display: flex;
 	width: 100%;
-	border-left-color: transparent;
+	border-left: 0;
+	border-radius: 2px;
 	background-color: rgba(var(--point-color), .1);
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+
+	&::before {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 6px;
+		height: 100%;
+		background-image:
+			linear-gradient(
+				45deg,
+				var(--point-markers-bg-color-2),
+				var(--point-markers-bg-color-2) 24%,
+				var(--point-markers-bg-color-1) 25%,
+				var(--point-markers-bg-color-1) 49%,
+				var(--point-markers-bg-color-2) 50%
+			),
+			linear-gradient(
+				45deg,
+				transparent,
+				transparent 75%,
+				var(--point-markers-bg-color-1) 75%
+			);
+		background-position: 0 0, var(--point-markers-bg-size) 0;
+		background-size:
+			var(--point-markers-bg-size) var(--point-markers-bg-size),
+			var(--point-markers-bg-size) var(--point-markers-bg-size);
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		background-image:
+			linear-gradient(
+				180deg,
+				transparent,
+				transparent 40%,
+				rgba(black, .03) 90%,
+				transparent
+			);
+		pointer-events: none;
+	}
 
 	@media (max-width: 1024px) {
 		flex-direction: column;
 	}
 
 	&__title {
-		color: #999999;
+		color: rgba(0, 0, 0, .2);
 		font-family: 'Roboto Slab', sans-serif;
 		font-weight: 500;
 	}
 
+	&__description {
+		margin-top: 10px;
+		color: rgba(0, 0, 0, .2);
+		font-size: 14px;
+	}
+
 	&__main {
 		flex-grow: 1;
+		grid-area: main;
 		padding: 20px;
 		text-decoration: none;
 	}
 
-	&__aside {
-		display: flex;
-		width: 220px;
-		margin-left: auto;
-	}
-
 	&__markers {
+		position: relative;
 		display: flex;
+		grid-area: markers;
 		gap: 12px;
 		align-items: center;
 		justify-content: center;
 		width: 180px;
-		background-color: rgb(var(--point-color));
+		border-radius: 2px;
+		background-image:
+			linear-gradient(
+				45deg,
+				var(--point-markers-bg-color-2),
+				var(--point-markers-bg-color-2) 24%,
+				var(--point-markers-bg-color-1) 25%,
+				var(--point-markers-bg-color-1) 49%,
+				var(--point-markers-bg-color-2) 50%
+			),
+			linear-gradient(
+				45deg,
+				transparent,
+				transparent 75%,
+				var(--point-markers-bg-color-1) 75%
+			);
+		background-position: 0 0, var(--point-markers-bg-size) 0;
+		background-size:
+			var(--point-markers-bg-size) var(--point-markers-bg-size),
+			var(--point-markers-bg-size) var(--point-markers-bg-size);
+		background-repeat: repeat;
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			width: 100%;
+			height: 100%;
+			border-radius: inherit;
+			background-image: linear-gradient(0deg, transparent, rgba(255, 255, 255, .1) 100%, transparent);
+			pointer-events: none;
+		}
 	}
 
 	&__nav {
 		display: flex;
-		flex-grow: 1;
-		flex-direction: column;
+		grid-area: nav;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
+		width: 80px;
+		margin-left: auto;
+		padding: 0 8px;
 	}
 
 	&--available {
-		border-left-color: rgb(var(--point-color));
+		&::before {
+			content: '';
+		}
 
 		.point__title {
-			color: black;
+			color: rgba(0, 0, 0, .8);
+		}
+
+		.point__description {
+			color: rgba(0, 0, 0, .4);
 		}
 	}
 
@@ -58,6 +158,28 @@
 			&__title {
 				font-size: 16px;
 			}
+		}
+	}
+
+	&--card {
+		display: grid;
+		grid-template-areas: 'main markers' 'nav markers';
+		grid-template-rows: 1fr;
+		grid-template-columns: 1fr;
+
+		.point__main {
+			padding: 10px 20px;
+		}
+
+		.point__markers {
+			flex-direction: column;
+			width: 60px;
+			padding: 12px 0;
+		}
+
+		.point__nav {
+			height: 40px;
+			margin-left: 6px;
 		}
 	}
 }

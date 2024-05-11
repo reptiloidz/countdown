@@ -1,0 +1,15 @@
+.button {
+	--button-bg-cl: rgba(0, 0, 0, .2);
+
+	display: flex;
+	padding: 6px;
+	border: 0;
+	border-radius: 4px;
+	background-color: var(--button-bg-cl);
+	color: white;
+	cursor: pointer;
+
+	&--negative {
+		--button-bg-cl: rgba(255, 0, 0, .4);
+	}
+}
