@@ -1,39 +1,40 @@
 <div class="nav__aside nav__aside--top">
-	<ng-container *ngIf="isPrivacy">
-		<button
-			type="button"
-			class="nav__item link"
-			(click)="showPrivacy()"
-		>Политика обработки персональных данных</button><span class="nav__divider"> | </span>
-	</ng-container>
 	<ng-container *ngIf="isAuthenticated; else unAuth">
-		<ng-container *ngIf="isProfile">
-			<a
-				class="nav__item"
-				[routerLink]="'/profile'"
-				[title]="user?.email"
-			>
-				<img
-					*ngIf="user?.photoURL"
-					class="userpic userpic--sm"
-					[src]="user?.photoURL"
-					[alt]="user?.displayName"
-				>{{ user?.displayName }}
-			</a>
-			<span class="nav__divider"> | </span>
-		</ng-container>
+		<a
+			*ngIf="isProfile"
+			class="nav__item"
+			[routerLink]="'/profile'"
+			[title]="user?.email"
+		>
+			<img
+				*ngIf="user?.photoURL"
+				class="userpic userpic--sm"
+				[src]="user?.photoURL"
+				[alt]="user?.displayName"
+			>{{ user?.displayName }}
+		</a>
 		<button
-			type="button"
-			class="nav__item link"
+			app-button
+			icon="logout"
+			mode="ghost"
 			(click)="logout()"
-		>Выйти</button>
+			title="Выйти"
+		></button>
 	</ng-container>
 	<ng-template #unAuth>
 		<a
-			class="nav__item"
+			app-button
+			icon="login"
+			mode="ghost"
 			[routerLink]="'/' + (isAuthorization ? 'reg' : 'auth')"
 		>{{isAuthorization ? 'Зарегистрироваться' : 'Войти'}}</a>
 	</ng-template>
+	<button
+		*ngIf="isPrivacy"
+		app-button
+		view="link"
+		(click)="showPrivacy()"
+	>Политика обработки персональных данных</button>
 	<!-- <button
 		(click)="check()"
 		type="button"
@@ -46,11 +47,11 @@
 >
 	<a
 		app-button
-		view="link"
 		icon="home"
 		size="lg"
 		mode="primary"
 		routerLink="/"
 		[queryParams]="mainLinkParams"
+		title="Домой"
 	></a>
 </div>

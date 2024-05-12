@@ -1,13 +1,14 @@
 .checkbox {
 	--checkbox-cl: transparent;
-	--checkbox-check-cl: rgba(var(--c-border-primary), .4);
+	--checkbox-border-cl: rgba(var(--c-border-primary), .4);
+	--checkbox-check-cl: rgba(var(--c-border-primary), .6);
 
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	width: 28px;
 	height: 28px;
-	border: 1px solid var(--checkbox-check-cl);
+	border: 1px solid var(--checkbox-border-cl);
 	border-radius: 4px;
 	cursor: pointer;
 

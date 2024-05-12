@@ -1,6 +1,6 @@
 .nav {
 	display: flex;
-	align-items: flex-end;
+	align-items: flex-start;
 	justify-content: space-between;
 	padding: 0 40px;
 
@@ -10,10 +10,6 @@
 			flex-direction: column;
 		}
 
-		&__divider {
-			display: none;
-		}
-
 		&__item {
 			margin-top: 12px;
 			margin-right: auto;
@@ -21,8 +17,9 @@
 	}
 
 	&__aside {
-		align-items: flex-start;
-		margin-top: auto;
+		display: flex;
+		gap: 8px;
+		align-items: center;
 
 		&--right {
 			margin-left: auto;
@@ -51,6 +48,10 @@
 		&--disabled {
 			color: lightgrey;
 		}
+	}
+
+	&__create {
+		margin-left: 20px;
 	}
 
 	&--right {

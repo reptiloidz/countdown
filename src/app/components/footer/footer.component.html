@@ -3,25 +3,27 @@
 	class="nav__aside"
 >
 	<button
-		type="button"
-		class="nav__item link"
+		app-button
+		size="lg"
+		mode="positive"
+		icon="document-check"
 		(click)="checkAllPoints()"
-	>
-		Выбрать все</button>
+	></button>
 	<ng-container *ngIf="pointsChecked">
-		<span class="nav__divider"> | </span>
 		<button
-			type="button"
-			class="nav__item link"
+			app-button
+			size="lg"
+			mode="ghost"
+			icon="document-cross"
 			(click)="uncheckAllPoints()"
-		>
-			Сбросить все</button><span class="nav__divider"> | </span>
+		></button>
 		<button
-			type="button"
-			class="nav__item link"
+			app-button
+			size="lg"
+			mode="negative"
+			icon="cross"
 			(click)="removeAllCheckedPoints()"
-		>
-			Удалить выбранные</button>
+		></button>
 	</ng-container>
 </div>
 
@@ -29,40 +31,42 @@
 <div class="nav__aside nav__aside--right">
 	<a
 		*ngIf="pointId && hasAccess"
-		class="nav__item"
+		app-button
+		size="lg"
+		icon="pencil"
+		mode="ghost"
 		routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}"
 		[queryParams]="{iteration}"
-	>
-		{{isEdit ? 'Перейти к событию' : 'Редактировать'}}</a>
-	<ng-container *ngIf="pointId && hasAccess && !isEdit">
-		<span class="nav__divider"> | </span>
-		<button
-			(click)="setDateNow()"
-			class="nav__item link"
-		>
-			Сейчас!</button>
-	</ng-container>
-	<span
-		*ngIf="isAuthenticated && !isCreate && pointId && hasAccess"
-		class="nav__divider"
-	> | </span>
-	<ng-container *ngIf="isAuthenticated && !isCreate">
-		<a
-			class="nav__item"
-			[ngClass]="{
-				'nav__item--disabled': !isVerified
-			}"
-			routerLink="/create"
-			[attr.title]="isVerified ? null : 'Подтвердите почту, чтобы иметь доступ к созданию и редактированию'"
-		>Создать</a>
-	</ng-container>
-
-	<ng-container *ngIf="pointId && !isEdit">
-		<span class="nav__divider"> | </span>
-		<a
-			class="nav__item"
-			[href]="exportGoogleLink"
-			target="_blank"
-		>Экспорт в Google Calendar</a>
-	</ng-container>
+		[attr.title]="isEdit ? 'Перейти к событию' : 'Редактировать'"
+	></a>
+	<button
+		*ngIf="pointId && hasAccess && !isEdit"
+		app-button
+		size="lg"
+		icon="warning"
+		mode="primary"
+		(click)="setDateNow()"
+		title="Сейчас!"
+	></button>
+	<a
+		*ngIf="pointId && !isEdit"
+		app-button
+		icon="upload"
+		mode="ghost"
+		size="lg"
+		[href]="exportGoogleLink"
+		target="_blank"
+		title="Экспорт в Google Calendar"
+	></a>
+	<a
+		*ngIf="isAuthenticated && !isCreate"
+		app-button
+		size="lg"
+		mode="positive"
+		icon="plus"
+		[disabled]="!isVerified"
+		routerLink="/create"
+		[attr.title]="isVerified ? 'Создать событие' : 'Подтвердите почту, чтобы иметь доступ к созданию и редактированию'"
+		class="nav__create"
+	></a>
 </div>

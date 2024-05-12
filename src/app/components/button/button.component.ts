@@ -9,22 +9,26 @@ export class ButtonComponent {
 	@Input() type!: string;
 	@Input() loading = false;
 	@Input() view: 'button' | 'link' = 'button';
-	@Input() mode!: 'primary' | 'negative' | 'positive';
+	@Input() mode!: 'primary' | 'negative' | 'positive' | 'ghost';
 	@Input() size!: 'sm' | 'lg';
+	@Input() disabled = false;
 
 	@HostBinding('attr.type') get typeAttr(): string | null {
-		return (
-			this.type ||
-			(this.elementRef.nativeElement.nodeName?.toLowerCase() === 'button'
-				? 'button'
-				: null)
-		);
+		return this.type || (this.tag === 'button' ? 'button' : null);
 	}
 	@HostBinding('class') get componentClass(): string | null {
 		const baseClass = this.view === 'button' ? 'button' : 'link';
 		const modeClass = this.mode && `${baseClass}--${this.mode}`;
 		const sizeClass = this.size && `${baseClass}--${this.size}`;
-		return [baseClass, modeClass, sizeClass].filter((_) => _).join(' ');
+		const disabledClass =
+			this.disabled && this.tag === 'a' && `${baseClass}--disabled`;
+		return [baseClass, modeClass, sizeClass, disabledClass]
+			.filter((_) => _)
+			.join(' ');
+	}
+
+	get tag(): string {
+		return this.elementRef.nativeElement.nodeName?.toLowerCase();
 	}
 
 	constructor(public elementRef: ElementRef) {}

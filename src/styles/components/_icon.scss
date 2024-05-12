@@ -1,13 +1,17 @@
 .icon {
+	--icon-stroke-w: 1px;
+	--icon-w: 16px;
+
 	display: inline-block;
 	flex-shrink: 0;
+	width: var(--icon-w);
 	fill: transparent;
 	stroke: currentColor;
 	stroke-width: 0;
 
 	[stroke] {
 		stroke: currentColor;
-		stroke-width: 1px;
+		stroke-width: var(--icon-stroke-w);
 	}
 
 	[fill] {

@@ -1,5 +1,8 @@
 <svg>
     <defs>
+        <svg id="at-email" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.857 12a3.857 3.857 0 1 1-7.714 0 3.857 3.857 0 0 1 7.714 0m0 0v1.286a2.571 2.571 0 0 0 5.143 0V12a8.98 8.98 0 0 0-3-6.708M12 3a9 9 0 1 0 5.143 16.387"/>
+        </svg>
         <svg id="calendar" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-width="1.5" d="M15 11H4m2-6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3m0-2v4M9 3v4m0-2h3"/>
         </svg>
@@ -26,6 +29,12 @@
         </svg>
         <svg id="cross-circle" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m16 8-8 8m4-4 4 4M8 8l2 2m11 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0"/>
+        </svg>
+        <svg id="document-check" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m15 12-4.2 4L9 14.286M13 3H5v2m8-2h1l5 5v1m-6-6v4c0 1 1 2 2 2h4m0 0v3M5 10v11h14v-5"/>
+        </svg>
+        <svg id="document-cross" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.5 11.5 12 14m0 0-2.5 2.5M12 14l-2.5-2.5M12 14l2.5 2.5M13 3H5v2m8-2h1l5 5v1m-6-6v4c0 1 1 2 2 2h4m0 0v3M5 10v11h14v-5"/>
         </svg>
         <svg id="eye-closed" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 12s-.692 1.332-2 2.834M10 5.236A8.7 8.7 0 0 1 12 5c2.878 0 5.198 1.432 6.876 3M12 9a2.995 2.995 0 0 1 3 3M3 3l18 18m-9-6a3 3 0 0 1-2.959-2.5M4.147 9a17 17 0 0 0-.828 1C2.453 11.128 2 12 2 12s3.636 7 10 7q.512 0 1-.058"/>
@@ -63,6 +72,9 @@
         <svg id="piles" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13.5H3.5v7h7v-7H9M13.5 5V3.5h7v7h-7V9m-10-5.5h7v7h-7zm10 10h7v7h-7z"/>
         </svg>
+        <svg id="plus" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12h5m3 0h8m-8-8v16"/>
+        </svg>
         <svg id="refresh" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3v6m0 0h6M3 9c2.327-2.089 4.483-4.453 7.745-4.912a9 9 0 0 1 9.469 5.234M21 21v-6m0 0h-6m6 0c-2.328 2.089-4.483 4.453-7.745 4.912a9 9 0 0 1-9.469-5.234"/>
         </svg>
@@ -71,6 +83,12 @@
         </svg>
         <svg id="stopwatch" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 3h4m-2 6v4l2 2m-2 6a8 8 0 1 0-5.292-2"/>
+        </svg>
+        <svg id="upload" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4a5 5 0 0 1 5 5v1a4 4 0 0 1 4 4c0 1.48-.804 2.808-2 3.5M7 10V9c0-1.126.372-2.164 1-3m-1 4a4 4 0 0 0-4 4c0 1.48.804 2.808 2 3.5M7 10a4 4 0 0 1 1.24.196M12 12v9m0-9 3 3m-3-3-3 3"/>
+        </svg>
+        <svg id="user-circle" fill="none" viewBox="0 0 24 24">
+            <path fill="#000" d="M3.954 10.166a.75.75 0 1 0-1.462-.332zM5.5 4.733a.75.75 0 0 0 1 1.118zM15 14.25a.75.75 0 0 0 0 1.5zm2.25 4.458a.75.75 0 0 0 1.5 0zm-12 0a.75.75 0 0 0 1.5 0zM9 15v.75zm2 .75a.75.75 0 0 0 0-1.5zm1-12A8.25 8.25 0 0 1 20.25 12h1.5A9.75 9.75 0 0 0 12 2.25zm0 16.5A8.25 8.25 0 0 1 3.75 12h-1.5A9.75 9.75 0 0 0 12 21.75zM20.25 12A8.25 8.25 0 0 1 12 20.25v1.5A9.75 9.75 0 0 0 21.75 12zm-16.5 0q.001-.948.204-1.834l-1.462-.332A9.8 9.8 0 0 0 2.25 12zM6.5 5.85a8.22 8.22 0 0 1 5.5-2.1v-1.5c-2.497 0-4.776.94-6.5 2.483l1 1.118ZM14.25 9A2.25 2.25 0 0 1 12 11.25v1.5A3.75 3.75 0 0 0 15.75 9zM12 11.25A2.25 2.25 0 0 1 9.75 9h-1.5A3.75 3.75 0 0 0 12 12.75zM9.75 9A2.25 2.25 0 0 1 12 6.75v-1.5A3.75 3.75 0 0 0 8.25 9zM12 6.75A2.25 2.25 0 0 1 14.25 9h1.5A3.75 3.75 0 0 0 12 5.25zm3 9c.6 0 1.148.34 1.577.935.432.6.673 1.375.673 2.023h1.5c0-.97-.345-2.05-.956-2.9-.614-.853-1.567-1.558-2.794-1.558zm-8.25 2.958c0-.648.241-1.423.673-2.023.429-.596.976-.935 1.577-.935v-1.5c-1.227 0-2.18.705-2.794 1.559-.611.848-.956 1.928-.956 2.9zM9 15.75h2v-1.5H9z"/>
         </svg>
         <svg id="users" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 19H1v-1a4 4 0 0 1 3-3.874m2-3.297a3.001 3.001 0 0 1 0-5.658M21 19h2v-1a4 4 0 0 0-3-3.874m-2-8.955a3.001 3.001 0 0 1 0 5.658M10 14h4a4 4 0 0 1 4 4v1H6v-1a4 4 0 0 1 4-4m5-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>

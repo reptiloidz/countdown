@@ -14,7 +14,6 @@ a,
 	--link-icon-w: 16px;
 	--link-fz: 16px;
 	--link-gap: 4px;
-	--link-icon-stroke-w: 1px;
 	--link-fw: 400;
 
 	gap: var(--link-gap);
@@ -22,12 +21,11 @@ a,
 	font-weight: var(--link-fw);
 
 	&__icon {
+		--stroke-w: 1px;
+		--icon-w: var(--link-icon-w);
+
 		width: var(--link-icon-w);
 		vertical-align: middle;
-
-		[stroke] {
-			stroke-width: var(--link-icon-stroke-w);
-		}
 	}
 
 	&__text {

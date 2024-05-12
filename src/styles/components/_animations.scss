@@ -1,12 +1,30 @@
 .rotating {
 	animation-name: rotating;
 	animation-duration: 2s;
-	animation-timing-function: linear;
+	animation-timing-function: ease-in-out;
 	animation-iteration-count: infinite;
 }
 
-
 @keyframes rotating {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	20%,
+	30% {
+		transform: rotate(60deg);
+	}
+
+	45%,
+	55% {
+		transform: rotate(120deg);
+	}
+
+	70%,
+	80% {
+		transform: rotate(180deg);
+	}
+
 	100% {
 		transform: rotate(360deg);
 	}
