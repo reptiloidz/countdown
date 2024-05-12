@@ -2,8 +2,8 @@
 	--point-markers-bg-size: 20px;
 	--point-markers-bg-color-1: rgba(var(--point-color), 1);
 	--point-markers-bg-color-2: rgba(var(--point-color), .8);
-	--point-title-opacity: .2;
-	--point-description-opacity: .2;
+	--point-title-opacity: .3;
+	--point-description-opacity: .3;
 
 	position: relative;
 	display: flex;
@@ -139,8 +139,8 @@
 	}
 
 	&--available {
-		--point-title-opacity: .8;
-		--point-description-opacity: .4;
+		--point-title-opacity: 1;
+		--point-description-opacity: .5;
 
 		&::before {
 			content: '';
