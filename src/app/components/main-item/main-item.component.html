@@ -43,16 +43,11 @@
 	>
 		<ng-container *ngIf="!loading && hasAccessEdit; else loader">
 			<button
-				type="button"
-				class="button button--negative"
+				app-button
+				mode="negative"
+				icon="cross"
 				(click)="delete(point.id)"
-			>
-				<svg
-					app-svg
-					name="cross"
-					class="icon"
-				></svg>
-			</button>
+			></button>
 			<ng-container
 				*ngIf="checkboxTemplate else defaultCheckbox;"
 				[ngTemplateOutlet]="checkboxTemplate"

@@ -1,31 +1,11 @@
 @import './styles/reboot';
+@import './styles/variables';
+@import './styles/mixins';
+@import './styles/components';
 
-@import './styles/components/fonts';
-@import './styles/components/layout';
-@import './styles/components/icon';
-@import './styles/components/marker';
-@import './styles/components/button';
-@import './styles/components/checkbox';
-@import './styles/components/content';
-@import './styles/components/link';
-@import './styles/components/color';
-@import './styles/components/dashboard';
-@import './styles/components/tooltip';
-@import './styles/components/nav';
-@import './styles/components/popup';
-@import './styles/components/drop';
-@import './styles/components/calendar';
-@import './styles/components/table';
-@import './styles/components/userpic';
-@import './styles/components/tabs';
-@import './styles/components/ol-nested';
-@import './styles/components/control';
-@import './styles/components/animations';
-@import './styles/components/info';
-@import './styles/components/loader';
-@import './styles/components/timer';
-@import './styles/components/points-list';
-@import './styles/components/point';
+:root {
+	@include get-colors;
+}
 
 .subtitle {
 	margin: 10px 0 20px;

@@ -1,0 +1,7 @@
+@mixin get-colors() {
+	@each $type, $list in $colors {
+		@each $name, $val in $list {
+			#{'--c-' + $type + '-' + $name}: $val;
+		}
+	}
+}

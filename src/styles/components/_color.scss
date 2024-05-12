@@ -1,40 +1,11 @@
 .color {
+	--point-color: var(--c-point-gray);
+
 	border-left: 5px solid rgb(var(--point-color));
 
-	&,
-	&--gray {
-		--point-color: 153, 153, 153;
-	}
-
-	&--red {
-		--point-color: 255, 0, 0;
-	}
-
-	&--green {
-		--point-color: 129, 193, 129;
-	}
-
-	&--blue {
-		--point-color: 0, 0, 255;
-	}
-
-	&--purple {
-		--point-color: 128, 0, 128;
-	}
-
-	&--yellow {
-		--point-color: 255, 255, 0;
-	}
-
-	&--pink {
-		--point-color: 255, 192, 203;
-	}
-
-	&--orange {
-		--point-color: 255, 165, 0;
-	}
-
-	&--brown {
-		--point-color: 165, 42, 42;
+	@each $name, $val in map-get($colors, point) {
+		&--#{$name} {
+			--point-color: var(--c-point-#{$name});
+		}
 	}
 }

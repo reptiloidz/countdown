@@ -1,6 +1,6 @@
 .checkbox {
 	--checkbox-cl: transparent;
-	--checkbox-check-cl: rgba(0, 0, 0, .4);
+	--checkbox-check-cl: rgba(var(--c-border-primary), .4);
 
 	display: flex;
 	align-items: center;

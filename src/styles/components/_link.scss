@@ -1,10 +1,49 @@
 a,
 .link {
+	display: inline-flex;
 	padding: 0;
 	border: none;
 	background-color: transparent;
-	color: blue;
+	color: rgb(var(--c-text-link));
 	text-decoration: underline;
 	overflow-wrap: break-word;
 	cursor: pointer;
+}
+
+.link {
+	--link-icon-w: 16px;
+	--link-fz: 16px;
+	--link-gap: 4px;
+	--link-icon-stroke-w: 1px;
+	--link-fw: 400;
+
+	gap: var(--link-gap);
+	font-size: var(--link-fz);
+	font-weight: var(--link-fw);
+
+	&__icon {
+		width: var(--link-icon-w);
+		vertical-align: middle;
+
+		[stroke] {
+			stroke-width: var(--link-icon-stroke-w);
+		}
+	}
+
+	&__text {
+		&:empty {
+			display: none;
+		}
+	}
+
+	&--lg {
+		--link-icon-w: 48px;
+		--link-gap: 8px;
+		--link-fz: 40px;
+		--link-fw: 300;
+	}
+
+	&--primary {
+		color: rgb(var(--c-bg-primary));
+	}
 }

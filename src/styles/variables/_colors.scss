@@ -1,0 +1,36 @@
+$colors: (
+	point: (
+		gray: (153, 153, 153),
+		red: (255, 0, 0),
+		green: (129, 193, 129),
+		blue: (0, 0, 255),
+		purple: (128, 0, 128),
+		yellow: (255, 255, 0),
+		pink: (255, 192, 203),
+		orange: (255, 165, 0),
+		brown: (165, 42, 42),
+	),
+	bg: (
+		body: (255, 255, 240),
+		primary: (0, 0, 0),
+		positive: (58, 209, 26),
+		negative: (255, 0, 0),
+		icon: (255, 255, 255),
+	),
+	border: (
+		primary: (0, 0, 0),
+		positive: (58, 209, 26),
+		negative: (255, 0, 0),
+	),
+	text: (
+		primary: (0, 0, 0),
+		icon: (255, 255, 255),
+		positive: (58, 209, 26),
+		negative: (255, 0, 0),
+		link: (64, 150, 200),
+	),
+	shadow: (
+		primary: (0, 0, 0),
+		inverse: (255, 255, 255),
+	),
+);

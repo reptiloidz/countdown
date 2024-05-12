@@ -1,15 +1,26 @@
 .button {
-	--button-bg-cl: rgba(0, 0, 0, .2);
+	--button-bg-cl: rgba(var(--c-bg-primary), .2);
+	--button-cl: rgb(var(--c-text-icon));
 
 	display: flex;
 	padding: 6px;
 	border: 0;
 	border-radius: 4px;
 	background-color: var(--button-bg-cl);
-	color: white;
+	color: var(--button-cl);
 	cursor: pointer;
 
+	&__text {
+		&:empty {
+			display: none;
+		}
+	}
+
 	&--negative {
-		--button-bg-cl: rgba(255, 0, 0, .4);
+		--button-bg-cl: rgba(var(--c-bg-negative), .4);
+	}
+
+	&--positive {
+		--button-bg-cl: rgba(var(--c-bg-positive), .4);
 	}
 }

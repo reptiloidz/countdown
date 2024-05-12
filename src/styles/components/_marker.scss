@@ -1,6 +1,6 @@
 .marker {
 	--marker-opacity: 1;
-	--marker-color: white;
+	--marker-color: rgb(var(--c-bg-icon));
 
 	position: relative;
 	display: flex;

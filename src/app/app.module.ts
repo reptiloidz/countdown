@@ -30,6 +30,7 @@ import { SortPointsPipe } from './pipes/sort-points.pipe';
 import { CheckEditablePointsPipe } from './pipes/check-editable-points.pipe';
 import { ColorsCheckPipe } from './pipes/colors-check.pipe';
 import { SvgComponent } from './components/svg/svg.component';
+import { ButtonComponent } from './components/button/button.component';
 
 @NgModule({
 	declarations: [
@@ -53,6 +54,7 @@ import { SvgComponent } from './components/svg/svg.component';
 		CheckEditablePointsPipe,
 		ColorsCheckPipe,
 		SvgComponent,
+		ButtonComponent,
 	],
 	imports: [
 		BrowserModule,
