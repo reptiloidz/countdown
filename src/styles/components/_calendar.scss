@@ -1,7 +1,18 @@
 .calendar {
 	&__nav {
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
+	}
+
+	&__aside {
+		display: flex;
+		gap: 4px;
+	}
+
+	&__status {
+		margin-right: auto;
+		margin-left: 12px;
 	}
 
 	&__cell {

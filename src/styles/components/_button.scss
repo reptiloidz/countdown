@@ -1,7 +1,7 @@
 .button {
 	--button-bg-cl: rgba(var(--c-bg-primary), .6);
 	--button-border-cl: transparent;
-	--button-cl: rgb(var(--c-text-icon));
+	--button-cl: rgb(var(--c-text-button));
 	--button-gap: 4px;
 
 	display: flex;
@@ -39,11 +39,12 @@
 
 	&--positive {
 		--button-bg-cl: rgba(var(--c-bg-positive), .4);
+		--button-cl: rgba(var(--c-text-button-inverse), .4);
 	}
 
 	&--ghost {
 		--button-bg-cl: transparent;
-		--button-cl: rgba(var(--c-text-primary), .4);
+		--button-cl: rgba(var(--c-text-button-inverse), .4);
 		--button-border-cl: rgba(var(--c-border-primary), .2);
 	}
 

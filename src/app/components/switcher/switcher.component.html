@@ -1,0 +1,17 @@
+<label
+	*ngFor="let item of items"
+	class="switcher__item"
+	[ngClass]="{
+		'switcher__item--active' : item?.value === value
+	}"
+>
+	<input
+		[value]="item?.value"
+		type="radio"
+		[checked]="item?.value === value || null"
+		(change)="switchMode($event)"
+		name="switcher"
+		class="switcher__input"
+	>
+	{{ item?.text }}
+</label>

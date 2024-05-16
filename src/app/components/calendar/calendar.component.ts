@@ -36,8 +36,14 @@ import {
 	subYears,
 } from 'date-fns';
 import { Subscription, concatWith, filter, interval, tap } from 'rxjs';
+import { calendarModeNames } from 'src/app/enums';
 import { filterIterations, filterPoints } from 'src/app/helpers';
-import { CalendarDate, Iteration, Point } from 'src/app/interfaces';
+import {
+	CalendarDate,
+	Iteration,
+	Point,
+	SwitcherItem,
+} from 'src/app/interfaces';
 import { ActionService, DataService } from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
 
@@ -53,9 +59,6 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	private subscriptions = new Subscription();
 	@Input() activeMode: CalendarMode =
 		(localStorage.getItem('calendarMode') as CalendarMode) || 'month';
-
-	calendarArray: CalendarDate[][] = [];
-
 	@Input() points?: Point[] = [];
 	@Input() iterations?: Iteration[] = [];
 	@Input() visibleDate = this.nowDate;
@@ -69,6 +72,8 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		mode: CalendarMode;
 		data: Point[] | Iteration[];
 	}>();
+
+	calendarArray: CalendarDate[][] = [];
 
 	@Output() modeSelected = new EventEmitter<CalendarMode>();
 	@Output() visibleDateSelected = new EventEmitter<Date>();
@@ -146,6 +151,15 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	get calendarModes(): SwitcherItem[] {
+		return Object.keys(calendarModeNames).map((item) => {
+			return {
+				text: calendarModeNames[item as CalendarMode],
+				value: item,
+			};
+		});
 	}
 
 	get visiblePeriod() {
@@ -384,8 +398,8 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		return item.points?.filter((point: Point) => !point.public) || [];
 	}
 
-	switchCalendarMode(mode: CalendarMode) {
-		this.activeMode = mode;
+	switchCalendarMode(mode: string) {
+		this.activeMode = mode as CalendarMode;
 		localStorage.setItem('calendarMode', mode);
 		this.visibleDate = this.selectedDate;
 		this.modeSelected.emit(this.activeMode);

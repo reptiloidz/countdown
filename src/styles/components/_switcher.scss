@@ -1,0 +1,25 @@
+.switcher {
+	display: flex;
+	gap: 4px;
+	padding: 4px;
+	border-radius: 8px;
+	background-color: rgba(var(--c-bg-primary), .2);
+
+	&__item {
+		display: flex;
+		padding: 4px;
+		border-radius: 4px;
+		color: rgba(var(--c-text-button), 1);
+		cursor: pointer;
+
+		&--active {
+			background-color: rgba(var(--c-bg-primary), .2);
+		}
+	}
+
+	&__input {
+		width: 0;
+		height: 0;
+		visibility: hidden;
+	}
+}

@@ -10,3 +10,4 @@ export * from './userExtraData.interface';
 export * from './userProfile.interface';
 export * from './validation.interface';
 export * from './environment.interface';
+export * from './switcherItem.interface';

@@ -1,42 +1,44 @@
 <div class="calendar__nav">
-	<div>
+	<div class="calendar__aside">
 		<button
-			type="button"
+			app-button
+			icon="chevron-left"
+			mode="ghost"
 			(click)="switchCalendarPeriod(false)"
-		>&lt;</button>
+		></button>
 		<button
-			type="button"
+			app-button
+			icon="chevron-right"
+			mode="ghost"
 			(click)="switchCalendarPeriod(true)"
-		>&gt;</button>
+		></button>
 		<button
-			type="button"
+			app-button
+			icon="clock"
+			mode="positive"
 			(click)="switchCalendarToNow()"
-		>Сейчас</button>
+		></button>
 		<button
-			type="button"
+			app-button
+			icon="home-2"
 			(click)="switchCalendarToSelected()"
-		>К активной дате</button>
+		></button>
 	</div>
 
-	<div *ngIf="!hideCurrentPeriod">{{ visiblePeriod }}</div>
+	<div
+		class="calendar__status"
+		*ngIf="!hideCurrentPeriod"
+	>{{ visiblePeriod }}</div>
 
-	<div *ngIf="!hideModeSwitch">
-		<button
-			type="button"
-			(click)="switchCalendarMode('year')"
-		>Год</button>
-		<button
-			type="button"
-			(click)="switchCalendarMode('month')"
-		>Месяц</button>
-		<button
-			type="button"
-			(click)="switchCalendarMode('day')"
-		>День</button>
-		<button
-			type="button"
-			(click)="switchCalendarMode('hour')"
-		>Час</button>
+	<div
+		class="calendar__aside"
+		*ngIf="!hideModeSwitch"
+	>
+		<app-switcher
+			[items]="calendarModes"
+			[value]="activeMode"
+			(valueSwitched)="switchCalendarMode($event)"
+		></app-switcher>
 	</div>
 </div>
 
