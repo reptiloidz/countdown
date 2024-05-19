@@ -12,7 +12,14 @@ import {
 	templateUrl: './svg.component.html',
 })
 export class SvgComponent implements OnInit {
-	@Input() name: string | null = null;
+	private _name: string | null = null;
+	@Input() get name(): string | null {
+		return this._name;
+	}
+	set name(value: string | null) {
+		this._name = value;
+		this.appendSvg();
+	}
 	@Input() title?: string;
 	@Input() height: number | null = null;
 	@Input() width: number | null = null;
@@ -44,6 +51,10 @@ export class SvgComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
+		this.appendSvg();
+	}
+
+	appendSvg() {
 		const svgElement: SVGElement = this.elementRef?.nativeElement;
 
 		if (!svgElement) return;

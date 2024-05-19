@@ -46,6 +46,7 @@
 				app-button
 				mode="negative"
 				icon="cross"
+				title="Удалить событие"
 				(click)="delete(point.id)"
 			></button>
 			<ng-container
@@ -80,6 +81,7 @@
 			<svg
 				app-svg
 				name="globe"
+				aria-hidden="false"
 				class="marker__inner"
 			></svg>
 		</div>
@@ -93,6 +95,7 @@
 			<svg
 				app-svg
 				name="refresh"
+				aria-hidden="false"
 				class="marker__inner"
 			></svg>
 		</div>
@@ -106,6 +109,7 @@
 			<svg
 				app-svg
 				name="users"
+				aria-hidden="false"
 				class="marker__inner"
 			></svg>
 		</div>

@@ -3,11 +3,15 @@
 	app-svg
 	[name]="icon"
 	[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
+	[title]="iconTitle || undefined"
+	[attr.aria-label]="iconTitle"
+	[aria-hidden]="iconAriaHidden"
 ></svg><svg
 	*ngIf="loading"
 	app-svg
 	name="hourglass"
 	class="rotating"
+	aria-hidden="false"
 	[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
 ></svg>
 <span [ngClass]="view === 'button' ? 'button__text' : 'link__text'"><ng-content></ng-content></span>

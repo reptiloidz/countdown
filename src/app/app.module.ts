@@ -29,6 +29,7 @@ import { CheckAccessEditPipe } from './pipes/check-access-edit.pipe';
 import { SortPointsPipe } from './pipes/sort-points.pipe';
 import { CheckEditablePointsPipe } from './pipes/check-editable-points.pipe';
 import { ColorsCheckPipe } from './pipes/colors-check.pipe';
+import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 
 @NgModule({
 	declarations: [
@@ -49,6 +50,7 @@ import { ColorsCheckPipe } from './pipes/colors-check.pipe';
 		CheckCopiesPipe,
 		CheckAccessEditPipe,
 		SortPointsPipe,
+		SortTrendingPipe,
 		CheckEditablePointsPipe,
 		ColorsCheckPipe,
 	],
@@ -76,7 +78,7 @@ import { ColorsCheckPipe } from './pipes/colors-check.pipe';
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),
 	],
-	providers: [[provideNgxMask()]],
+	providers: [[provideNgxMask()], SortTrendingPipe],
 	bootstrap: [AppComponent],
 	exports: [LetDirective],
 })

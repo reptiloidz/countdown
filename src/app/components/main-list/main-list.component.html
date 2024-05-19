@@ -27,6 +27,7 @@
 								mode="ghost"
 								size="sm"
 								icon="chevron-down"
+								title="Показать события"
 								class="calendar__btn-nav"
 								(click)="openDate({ date, activeMode: mode })"
 							></button>
@@ -89,18 +90,24 @@
 						let-value="sortType"
 					>
 						<button
-							type="button"
-							[innerHTML]="sortTypeNames[sortType]"
+							app-button
+							mode="ghost"
+							[icon]="(sortType | sortTrending).icon"
+							[iconTitle]="(sortType | sortTrending).title"
+							iconAriaHidden="false"
 							(click)="openSort()"
-						></button>
+						>{{ sortTypeNames[sortType] }}</button>
 					</ng-template>
 					<ng-template #bodyTemplate>
 						<button
 							*ngFor="let sortTypeItem of sortTypeKeysArray"
-							type="button"
+							app-button
+							mode="ghost"
+							[icon]="(sortTypeItem | sortTrending).icon"
+							[iconTitle]="(sortTypeItem | sortTrending).title"
+							iconAriaHidden="false"
 							(click)="sortPointsClick(sortTypeItem)"
-							[innerHTML]="sortTypeNames[sortTypeItem]"
-						></button>
+						>{{ sortTypeNames[sortTypeItem] }}</button>
 					</ng-template>
 				</app-drop>
 
@@ -169,7 +176,7 @@
 					icon="cross-circle"
 					mode="ghost"
 					(click)="clearFilters()"
-					title="Очистить"
+					title="Очистить фильтры"
 				></button>
 			</div>
 		</div>

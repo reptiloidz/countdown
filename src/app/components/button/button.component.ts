@@ -6,6 +6,8 @@ import { Component, ElementRef, HostBinding, Input } from '@angular/core';
 })
 export class ButtonComponent {
 	@Input() icon!: string;
+	@Input() iconTitle!: string;
+	@Input() iconAriaHidden: 'true' | 'false' = 'true';
 	@Input() type!: string;
 	@Input() loading = false;
 	@Input() view: 'button' | 'link' = 'button';
