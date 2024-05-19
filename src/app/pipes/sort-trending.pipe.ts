@@ -5,7 +5,7 @@ import { SortTypes } from '../types';
 	name: 'sortTrending',
 })
 export class SortTrendingPipe implements PipeTransform {
-	transform(sortType: SortTypes) {
+	transform(sortType: SortTypes): { icon: string; title: string } {
 		return sortType.includes('Asc')
 			? {
 					icon: 'trending-up',
