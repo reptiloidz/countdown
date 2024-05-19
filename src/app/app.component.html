@@ -3,7 +3,10 @@
 	class="nav"
 ></header>
 
-<ul class="notify-list">
+<ul
+	class="notify-list"
+	*ngIf="notifyList.length"
+>
 	<li
 		*ngFor="let notify of notifyList"
 		class="notify-list__item info"

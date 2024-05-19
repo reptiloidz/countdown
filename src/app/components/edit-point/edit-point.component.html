@@ -1,8 +1,53 @@
 <form
+	class="main__inner"
 	*ngIf="!(checking | async); else loader"
 	[formGroup]="form"
 	(ngSubmit)="submit(isRepeatable && !isCreation)"
 >
+	<app-calendar
+		*ngIf="this.dates?.length"
+		(dateSelected)="dateSelected($event)"
+		(modeSelected)="modeSelected($event)"
+		[iterations]="point?.dates"
+		class="calendar"
+		[selectedDate]="selectedIterationDate"
+		[visibleDate]="selectedIterationDate"
+		[point]="point"
+	>
+		<ng-template
+			#navTemplate
+			let-date="date"
+			let-mode="mode"
+			let-point="point"
+		>
+			<ng-container *ngIf="date.iterations.length && point.repeatable">
+				<button
+					app-button
+					mode="positive"
+					size="sm"
+					icon="document-check"
+					class="calendar__btn-nav"
+					title="Отметить все итерации даты"
+					(click)="dateChecked({
+						check: true,
+						data: date.iterations
+					})"
+				></button>
+				<button
+					app-button
+					mode="ghost"
+					size="sm"
+					icon="document-cross"
+					class="calendar__btn-nav"
+					title="Снять отметки со всех итераций даты"
+					(click)="dateChecked({
+						check: false,
+						data: date.iterations
+					})"
+				></button>
+			</ng-container>
+		</ng-template>
+	</app-calendar>
 	<h1>{{ isCreation ? "Создание" : "Редактирование" }}<span
 			*ngIf="loading"
 			class="loader rotating"
@@ -116,45 +161,6 @@
 			(repeatsIsGenerated)="getRepeats($event)"
 		></app-generate-iterations>
 	</div>
-
-	<app-calendar
-		*ngIf="this.dates?.length"
-		(dateSelected)="dateSelected($event)"
-		(modeSelected)="modeSelected($event)"
-		[iterations]="point?.dates"
-		class="calendar"
-		[selectedDate]="selectedIterationDate"
-		[visibleDate]="selectedIterationDate"
-		[point]="point"
-	>
-		<ng-template
-			#navTemplate
-			let-date="date"
-			let-mode="mode"
-			let-point="point"
-		>
-			<ng-container *ngIf="date.iterations.length && point.repeatable">
-				<button
-					class="calendar__btn-nav"
-					type="button"
-					title="Отметить все итерации даты"
-					(click)="dateChecked({
-						check: true,
-						data: date.iterations
-					})"
-				>&#10003;</button>
-				<button
-					class="calendar__btn-nav"
-					type="button"
-					title="Снять отметки со всех итераций даты"
-					(click)="dateChecked({
-						check: false,
-						data: date.iterations
-					})"
-				>&#10006;</button>
-			</ng-container>
-		</ng-template>
-	</app-calendar>
 
 	<ul
 		#iterationsList

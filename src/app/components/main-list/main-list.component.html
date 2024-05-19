@@ -23,10 +23,13 @@
 					>
 						<ng-template #buttonTemplate>
 							<button
-								type="button"
+								app-button
+								mode="ghost"
+								size="sm"
+								icon="chevron-down"
 								class="calendar__btn-nav"
 								(click)="openDate({ date, activeMode: mode })"
-							>&#709;</button>
+							></button>
 						</ng-template>
 						<ng-template #bodyTemplate>
 							<ul

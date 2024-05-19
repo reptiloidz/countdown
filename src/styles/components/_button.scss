@@ -6,6 +6,8 @@
 
 	display: flex;
 	gap: var(--button-gap);
+	align-items: center;
+	justify-content: center;
 	padding: 6px;
 	border: 1px solid var(--button-border-cl);
 	border-radius: 4px;
@@ -46,6 +48,15 @@
 		--button-bg-cl: transparent;
 		--button-cl: rgba(var(--c-text-button-inverse), .4);
 		--button-border-cl: rgba(var(--c-border-primary), .2);
+	}
+
+	&--sm {
+		--button-gap: 2px;
+
+		.button__icon {
+			--icon-stroke-w: 1.5px;
+			--icon-w: 16px;
+		}
 	}
 
 	&--lg {

@@ -26,11 +26,6 @@
 	</div>
 
 	<div
-		class="calendar__status"
-		*ngIf="!hideCurrentPeriod"
-	>{{ visiblePeriod }}</div>
-
-	<div
 		class="calendar__aside"
 		*ngIf="!hideModeSwitch"
 	>
@@ -40,59 +35,70 @@
 			(valueSwitched)="switchCalendarMode($event)"
 		></app-switcher>
 	</div>
+
+	<div
+		class="calendar__status"
+		*ngIf="!hideCurrentPeriod"
+	>{{ visiblePeriod }}</div>
 </div>
 
-<table>
-	<thead *ngIf="activeMode === 'month'">
-		<tr>
-			<th>пн</th>
-			<th>вт</th>
-			<th>ср</th>
-			<th>чт</th>
-			<th>пт</th>
-			<th>сб</th>
-			<th>вс</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let period of calendarArray">
-			<td
-				class="calendar__cell"
-				*ngFor="let item of period"
-			>
-				<button
-					class="calendar__button link"
-					type="button"
-					[ngClass]="{
-						'calendar__button--selected': item.selectedDate,
-						'calendar__button--now': item.nowDate,
-					}"
-					(click)="dateClicked({
-						date: item.date,
-						activeMode,
-						points: item.points,
-						iterations: item.iterations
-					})"
+<div class="calendar__table-wrapper">
+	<table class="calendar__table">
+		<thead *ngIf="activeMode === 'month'">
+			<tr>
+				<th>пн</th>
+				<th>вт</th>
+				<th>ср</th>
+				<th>чт</th>
+				<th>пт</th>
+				<th>сб</th>
+				<th>вс</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let period of calendarArray">
+				<td
+					class="calendar__cell"
+					*ngFor="let item of period"
 				>
-					<ng-container *ngIf="item.points.length || item.iterations.length">
-						<span
-							*ngIf="point?.repeatable || item.points.length else mark;"
-							class="calendar__counter"
-						>{{ item.points.length || item.iterations.length }}</span>
-						<ng-template #mark>
-							<span class="calendar__counter">&#10003;</span>
-						</ng-template>
-					</ng-container>
-					{{ getItemDate(item.date) }}
-				</button>
-				<div class="calendar__date-nav">
-					<ng-container
-						*ngIf="navTemplate"
-						[ngTemplateOutlet]="navTemplate"
-						[ngTemplateOutletContext]="{ date: item, mode: this.activeMode, point: this.point }"
-					></ng-container>
-				</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
+					<button
+						class="calendar__button"
+						type="button"
+						[ngClass]="{
+							'calendar__button--selected': item.selectedDate,
+							'calendar__button--now': item.nowDate,
+						}"
+						(click)="dateClicked({
+							date: item.date,
+							activeMode,
+							points: item.points,
+							iterations: item.iterations
+						})"
+					>
+						<ng-container *ngIf="item.points.length || item.iterations.length">
+							<span
+								*ngIf="point?.repeatable || item.points.length else mark;"
+								class="calendar__counter"
+							>{{ item.points.length || item.iterations.length }}</span>
+							<ng-template #mark>
+								<svg
+									app-svg
+									name="check"
+									class="calendar__counter"
+								></svg>
+							</ng-template>
+						</ng-container>
+						{{ getItemDate(item.date) }}
+					</button>
+					<div class="calendar__date-nav">
+						<ng-container
+							*ngIf="navTemplate"
+							[ngTemplateOutlet]="navTemplate"
+							[ngTemplateOutletContext]="{ date: item, mode: this.activeMode, point: this.point }"
+						></ng-container>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

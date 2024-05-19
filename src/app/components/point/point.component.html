@@ -1,129 +1,139 @@
-<div>
-	<h1
-		class="color"
-		[ngClass]="point?.color ? 'color--' + point?.color : ''"
-	>{{ point?.title }}<span
-			*ngIf="loading"
-			class="loader rotating"
-		></span></h1>
-
-	<app-calendar
-		*ngIf="this.dates?.length"
-		(dateSelected)="dateSelected($event)"
-		(modeSelected)="modeSelected($event)"
-		[iterations]="point?.dates"
-		class="calendar"
-		[selectedDate]="selectedIterationDate"
-		[visibleDate]="selectedIterationDate"
-		[point]="point"
-	>
-		<ng-template
-			#navTemplate
-			let-date="date"
-			let-mode="mode"
-			let-point="point"
+<div class="main__inner">
+	<div class="dashboard">
+		<app-calendar
+			*ngIf="this.dates?.length"
+			(dateSelected)="dateSelected($event)"
+			(modeSelected)="modeSelected($event)"
+			[iterations]="point?.dates"
+			class="calendar"
+			[selectedDate]="selectedIterationDate"
+			[visibleDate]="selectedIterationDate"
+			[point]="point"
 		>
-			<ng-container *ngIf="date.iterations.length && point.repeatable">
-				<button
-					class="calendar__btn-nav"
-					type="button"
-					title="Отметить все итерации даты"
-					(click)="dateChecked({
-						check: true,
-						data: date.iterations
-					})"
-				>&#10003;</button>
-				<button
-					class="calendar__btn-nav"
-					type="button"
-					title="Снять отметки со всех итераций даты"
-					(click)="dateChecked({
-						check: false,
-						data: date.iterations
-					})"
-				>&#10006;</button>
-			</ng-container>
-		</ng-template>
-	</app-calendar>
-
-	<ul
-		#iterationsList
-		*ngIf="this.dates?.length && (this.dates?.length != 1)"
-		class="tabs"
-	>
-		<li
-			*ngFor="let date of this.dates; let i = index"
-			class="tabs__item"
-			[ngClass]="{
-				'tabs__item--active': i == currentIterationIndex,
-				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
-				'tabs__item--copy': i | checkCopies : point,
-			}"
-		>
-			<button
-				class="link tabs__btn"
-				(click)="switchIteration(i)"
-				type="button"
-			>{{ i + 1 }}
-				<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
-			</button>
-			<input
-				*ngIf="hasAccess"
-				type="checkbox"
-				[name]="i"
-				(change)="checkIteration()"
+			<ng-template
+				#navTemplate
+				let-date="date"
+				let-mode="mode"
+				let-point="point"
 			>
-			<button
-				*ngIf="hasAccess"
-				class="link"
-				(click)="removeIteration(i)"
-				type="button"
-			>x</button>
-		</li>
-	</ul>
-
-	<div *ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural">
-		<button
-			type="button"
-			(click)="checkAllIterations()"
-		>Выбрать все</button>
-		<ng-container *ngIf="iterationsChecked.length">
-			<button
-				type="button"
-				(click)="checkAllIterations(false)"
-			>Снять выбор</button>
-			<button
-				type="button"
-				(click)="removeCheckedIterations()"
-			>Удалить выбранные итерации</button>
-		</ng-container>
+				<ng-container *ngIf="date.iterations.length && point.repeatable">
+					<button
+						app-button
+						mode="positive"
+						size="sm"
+						icon="document-check"
+						class="calendar__btn-nav"
+						title="Отметить все итерации даты"
+						(click)="dateChecked({
+							check: true,
+							data: date.iterations
+						})"
+					></button>
+					<button
+						app-button
+						mode="ghost"
+						size="sm"
+						icon="document-cross"
+						class="calendar__btn-nav"
+						title="Снять отметки со всех итераций даты"
+						(click)="dateChecked({
+							check: false,
+							data: date.iterations
+						})"
+					></button>
+				</ng-container>
+			</ng-template>
+		</app-calendar>
 	</div>
 
-	<small *ngIf="point?.greenwich">Время по Гринвичу</small>
-	<small *ngIf="point?.repeatable">&nbsp;Повторяемое</small>
-	<small *ngIf="point?.public">&nbsp;Публичное</small>
-	<img
-		*ngIf="userData?.photoURL"
-		class="userpic userpic--sm"
-		[src]="userData.photoURL"
-		[alt]="userData.displayName"
-	><ng-container *ngIf="userData?.displayName">
-		{{ userData.displayName }}
-	</ng-container>
-	<h2
-		*ngIf="point?.title"
-		class="description"
-	>{{ remainTextValue }}</h2>
-	<p
-		*ngIf="!dateLoading; else dateLoader"
-		class="timer"
-		[attr.title]="iterationDate || null"
-	>{{ dateTimer }} {{ timer }}</p>
-	<ng-template #dateLoader>
-		<h2>
-			<div class="loader rotating"></div>
-		</h2>
-	</ng-template>
+	<div class="content">
+		<h1
+			class="color"
+			[ngClass]="point?.color ? 'color--' + point?.color : ''"
+		>{{ point?.title }}<span
+				*ngIf="loading"
+				class="loader rotating"
+			></span></h1>
+
+		<ul
+			#iterationsList
+			*ngIf="this.dates?.length && (this.dates?.length != 1)"
+			class="tabs"
+		>
+			<li
+				*ngFor="let date of this.dates; let i = index"
+				class="tabs__item"
+				[ngClass]="{
+					'tabs__item--active': i == currentIterationIndex,
+					'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
+					'tabs__item--copy': i | checkCopies : point,
+				}"
+			>
+				<button
+					class="link tabs__btn"
+					(click)="switchIteration(i)"
+					type="button"
+				>{{ i + 1 }}
+					<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
+				</button>
+				<input
+					*ngIf="hasAccess"
+					type="checkbox"
+					[name]="i"
+					(change)="checkIteration()"
+				>
+				<button
+					*ngIf="hasAccess"
+					class="link"
+					(click)="removeIteration(i)"
+					type="button"
+				>x</button>
+			</li>
+		</ul>
+
+		<div *ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural">
+			<button
+				type="button"
+				(click)="checkAllIterations()"
+			>Выбрать все</button>
+			<ng-container *ngIf="iterationsChecked.length">
+				<button
+					type="button"
+					(click)="checkAllIterations(false)"
+				>Снять выбор</button>
+				<button
+					type="button"
+					(click)="removeCheckedIterations()"
+				>Удалить выбранные итерации</button>
+			</ng-container>
+		</div>
+
+		<small *ngIf="point?.greenwich">Время по Гринвичу</small>
+		<small *ngIf="point?.repeatable">&nbsp;Повторяемое</small>
+		<small *ngIf="point?.public">&nbsp;Публичное</small>
+		<img
+			*ngIf="userData?.photoURL"
+			class="userpic userpic--sm"
+			[src]="userData.photoURL"
+			[alt]="userData.displayName"
+		><ng-container *ngIf="userData?.displayName">
+			{{ userData.displayName }}
+		</ng-container>
+		<h2
+			*ngIf="point?.title"
+			class="description"
+		>{{ remainTextValue }}</h2>
+		<p
+			*ngIf="!dateLoading; else dateLoader"
+			class="timer"
+			[attr.title]="iterationDate || null"
+		>{{ dateTimer }} {{ timer }}</p>
+		<ng-template #dateLoader>
+			<h2>
+				<div class="loader rotating"></div>
+			</h2>
+		</ng-template>
+		<br>
+		<p>{{ point?.description }}</p>
+	</div>
 </div>
-<br>
-<p>{{ point?.description }}</p>
