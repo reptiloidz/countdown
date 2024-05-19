@@ -3,7 +3,6 @@ import { SortTypes } from '../types';
 
 @Pipe({
 	name: 'sortTrending',
-	pure: false,
 })
 export class SortTrendingPipe implements PipeTransform {
 	transform(sortType: SortTypes) {
