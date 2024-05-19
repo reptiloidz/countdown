@@ -2,13 +2,12 @@
 	*ngIf="icon && !loading"
 	app-svg
 	[name]="icon"
-	class="icon"
 	[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
 ></svg><svg
 	*ngIf="loading"
 	app-svg
 	name="hourglass"
-	class="icon rotating"
+	class="rotating"
 	[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
 ></svg>
 <span [ngClass]="view === 'button' ? 'button__text' : 'link__text'"><ng-content></ng-content></span>

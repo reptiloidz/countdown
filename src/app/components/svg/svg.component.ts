@@ -22,6 +22,8 @@ export class SvgComponent implements OnInit {
 		return this.title ? 'img' : null;
 	}
 
+	@HostBinding('class') class = 'icon';
+
 	@HostBinding('attr.width') get widthAttr(): number | null {
 		return this.height || this.width ? this.width : 16;
 	}

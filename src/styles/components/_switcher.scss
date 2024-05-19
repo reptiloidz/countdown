@@ -1,4 +1,6 @@
 .switcher {
+	--switcher-item-cl: rgb(var(--c-text-button));
+
 	display: flex;
 	gap: 4px;
 	padding: 4px;
@@ -9,11 +11,13 @@
 		display: flex;
 		padding: 4px;
 		border-radius: 4px;
-		color: rgba(var(--c-text-button), 1);
+		color: var(--switcher-item-cl);
 		cursor: pointer;
 
 		&--active {
-			background-color: rgba(var(--c-bg-primary), .2);
+			--switcher-item-cl: rgb(var(--c-text-primary));
+
+			background-color: rgb(var(--c-bg-inverse));
 		}
 	}
 
@@ -21,5 +25,9 @@
 		width: 0;
 		height: 0;
 		visibility: hidden;
+	}
+
+	&__icon {
+		--icon-stroke-w: 2px;
 	}
 }

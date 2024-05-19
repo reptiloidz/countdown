@@ -17,4 +17,16 @@
 	[fill] {
 		fill: currentColor;
 	}
+
+	&--positive {
+		[stroke] {
+			stroke: rgb(var(--c-text-positive));
+		}
+	}
+
+	&--negative {
+		[stroke] {
+			stroke: rgb(var(--c-text-negative));
+		}
+	}
 }

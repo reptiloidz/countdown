@@ -35,6 +35,7 @@ import {
 	subMonths,
 	subYears,
 } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { Subscription, concatWith, filter, interval, tap } from 'rxjs';
 import { calendarModeNames } from 'src/app/enums';
 import { filterIterations, filterPoints } from 'src/app/helpers';
@@ -166,16 +167,25 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		let result = '';
 		switch (this.activeMode) {
 			case 'year':
-				result = format(this.visibleDate, 'y');
+				result = format(this.visibleDate, 'y', {
+					locale: ru,
+				});
 				break;
 			case 'day':
-				result = format(this.visibleDate, 'y LLL d');
+				result = format(this.visibleDate, 'y LLL d', {
+					locale: ru,
+				});
 				break;
 			case 'hour':
-				result = format(this.visibleDate, 'y LLL d, k') + 'ч';
+				result =
+					format(this.visibleDate, 'y LLL d, k', {
+						locale: ru,
+					}) + 'ч';
 				break;
 			default:
-				result = format(this.visibleDate, 'y LLL');
+				result = format(this.visibleDate, 'y LLL', {
+					locale: ru,
+				});
 				break;
 		}
 		return result;
@@ -191,7 +201,9 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 				result = format(date, 'm');
 				break;
 			case 'year':
-				result = format(date, 'LLL');
+				result = format(date, 'LLL', {
+					locale: ru,
+				});
 				break;
 			default:
 				result = format(date, 'd');

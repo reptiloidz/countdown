@@ -4,6 +4,7 @@
 	[ngClass]="{
 		'switcher__item--active' : item?.value === value
 	}"
+	[title]="(item?.icon || item?.boolean !== undefined) && item?.text"
 >
 	<input
 		[value]="item?.value"
@@ -13,5 +14,21 @@
 		name="switcher"
 		class="switcher__input"
 	>
-	{{ item?.text }}
+	<ng-container *ngIf="item?.icon || item?.boolean !== undefined; else textValue;">
+		<svg
+			app-svg
+			class="switcher__icon"
+			[ngClass]="{
+				'icon--positive': item?.boolean,
+				'icon--negative': item?.boolean === false
+			}"
+			[name]="item?.boolean ? 'check' :
+				item?.boolean === false ? 'cross' :
+				item?.icon || 'warning'
+			"
+		></svg>
+	</ng-container>
+	<ng-template #textValue>
+		{{ item?.text }}
+	</ng-template>
 </label>

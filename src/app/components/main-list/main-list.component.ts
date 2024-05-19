@@ -9,7 +9,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { PointColors, SortTypeNames } from 'src/app/enums';
-import { CalendarDate, Point } from 'src/app/interfaces';
+import { CalendarDate, Point, SwitcherItem } from 'src/app/interfaces';
 import { DataService, ActionService, AuthService } from 'src/app/services';
 import { SortService } from 'src/app/services/sort.service';
 import {
@@ -26,7 +26,6 @@ import {
 export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('pointsList') private pointsList!: ElementRef;
 	@ViewChild('datePointsList') private datePointsList!: ElementRef;
-	@ViewChild('repeatableSelect') private repeatableSelect!: ElementRef;
 	@ViewChild('greenwichSelect') private greenwichSelect!: ElementRef;
 	@ViewChild('publicSelect') private publicSelect!: ElementRef;
 	@ViewChild('searchInput') private searchInput!: ElementRef;
@@ -42,10 +41,64 @@ export class MainListComponent implements OnInit, OnDestroy {
 	isAllDatesChecked = false;
 	sortType: SortTypes = 'titleAsc';
 	colorType: PointColorTypes[] = [];
-	repeatableSelectValue: FilterSelected = 'all';
-	greenwichSelectValue: FilterSelected = 'all';
-	publicSelectValue: FilterSelected = 'all';
+	repeatableValue: FilterSelected = 'all';
+	greenwichValue: FilterSelected = 'all';
+	publicValue: FilterSelected = 'all';
 	searchInputValue = '';
+
+	repeatList: SwitcherItem[] = [
+		{
+			text: 'Неповторяемые',
+			value: 'false',
+			boolean: false,
+		},
+		{
+			text: 'Повторяемость',
+			value: 'all',
+			icon: 'refresh',
+		},
+		{
+			text: 'Повторяемые',
+			value: 'true',
+			boolean: true,
+		},
+	];
+
+	greenwichList: SwitcherItem[] = [
+		{
+			text: 'По местному времени',
+			value: 'false',
+			boolean: false,
+		},
+		{
+			text: 'Часовой пояс',
+			value: 'all',
+			icon: 'globe',
+		},
+		{
+			text: 'По Гринвичу',
+			value: 'true',
+			boolean: true,
+		},
+	];
+
+	publicList: SwitcherItem[] = [
+		{
+			text: 'Приватные',
+			value: 'false',
+			boolean: false,
+		},
+		{
+			text: 'Публичность',
+			value: 'all',
+			icon: 'users',
+		},
+		{
+			text: 'Публичные',
+			value: 'true',
+			boolean: true,
+		},
+	];
 
 	private subscriptions = new Subscription();
 
@@ -107,21 +160,21 @@ export class MainListComponent implements OnInit, OnDestroy {
 					data.sort && (this.sortType = data.sort);
 
 					if (data.repeat) {
-						this.repeatableSelectValue = data.repeat;
+						this.repeatableValue = data.repeat;
 					} else {
-						this.repeatableSelectValue = 'all';
+						this.repeatableValue = 'all';
 					}
 
 					if (data.greenwich) {
-						this.greenwichSelectValue = data.greenwich;
+						this.greenwichValue = data.greenwich;
 					} else {
-						this.greenwichSelectValue = 'all';
+						this.greenwichValue = 'all';
 					}
 
 					if (data.public) {
-						this.publicSelectValue = data.public;
+						this.publicValue = data.public;
 					} else {
-						this.publicSelectValue = 'all';
+						this.publicValue = 'all';
 					}
 
 					if (data.color) {
@@ -136,17 +189,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 					);
 					localStorage.setItem('sort', this.sortType);
 					localStorage.setItem(
-						'repeatableSelectValue',
-						this.repeatableSelectValue
+						'repeatableValue',
+						this.repeatableValue
 					);
-					localStorage.setItem(
-						'greenwichSelectValue',
-						this.greenwichSelectValue
-					);
-					localStorage.setItem(
-						'publicSelectValue',
-						this.publicSelectValue
-					);
+					localStorage.setItem('greenwichValue', this.greenwichValue);
+					localStorage.setItem('publicValue', this.publicValue);
 					localStorage.setItem(
 						'colorValue',
 						this.colorType.join('+') || 'all'
@@ -187,9 +234,9 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	get filtersFilled() {
 		return (
-			this.repeatableSelectValue !== 'all' ||
-			this.greenwichSelectValue !== 'all' ||
-			this.publicSelectValue !== 'all' ||
+			this.repeatableValue !== 'all' ||
+			this.greenwichValue !== 'all' ||
+			this.publicValue !== 'all' ||
 			this.searchInputValue !== '' ||
 			this.colorType.length
 		);
@@ -199,10 +246,22 @@ export class MainListComponent implements OnInit, OnDestroy {
 		return this.colorType.join('+');
 	}
 
+	changeRepeatFilter(repeatValue: string) {
+		this.repeatableValue = repeatValue as FilterSelected;
+		this.changeFilters();
+	}
+
+	changeGreenwichFilter(greenwichValue: string) {
+		this.greenwichValue = greenwichValue as FilterSelected;
+		this.changeFilters();
+	}
+
+	changePublicFilter(publicValue: string) {
+		this.publicValue = publicValue as FilterSelected;
+		this.changeFilters();
+	}
+
 	changeFilters() {
-		this.repeatableSelectValue = this.repeatableSelect?.nativeElement.value;
-		this.greenwichSelectValue = this.greenwichSelect?.nativeElement.value;
-		this.publicSelectValue = this.publicSelect?.nativeElement.value;
 		this.searchInputValue = this.searchInput?.nativeElement.value;
 
 		this.colorType = this.colorList
@@ -217,17 +276,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 			relativeTo: this.route,
 			queryParams: {
 				repeat:
-					this.repeatableSelectValue === 'all'
+					this.repeatableValue === 'all'
 						? null
-						: this.repeatableSelectValue,
+						: this.repeatableValue,
 				greenwich:
-					this.greenwichSelectValue === 'all'
-						? null
-						: this.greenwichSelectValue,
-				public:
-					this.publicSelectValue === 'all'
-						? null
-						: this.publicSelectValue,
+					this.greenwichValue === 'all' ? null : this.greenwichValue,
+				public: this.publicValue === 'all' ? null : this.publicValue,
 				search: this.searchInputValue || null,
 				color: this.colorType.join('+') || null,
 			},
@@ -236,10 +290,9 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	clearFilters() {
-		(this.repeatableSelect?.nativeElement as HTMLInputElement).value =
-			'all';
-		(this.greenwichSelect?.nativeElement as HTMLInputElement).value = 'all';
-		(this.publicSelect?.nativeElement as HTMLInputElement).value = 'all';
+		this.repeatableValue = 'all';
+		this.greenwichValue = 'all';
+		this.publicValue = 'all';
 		(this.searchInput?.nativeElement as HTMLInputElement).value = '';
 		this.resetColors();
 		this.changeFilters();
