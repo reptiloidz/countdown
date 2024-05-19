@@ -29,7 +29,7 @@ export class SvgComponent implements OnInit {
 	}
 
 	@HostBinding('attr.height') get heightAttr(): number | null {
-		return this.height || this.width ? this.height : null;
+		return this.height || this.width ? this.height : 16;
 	}
 
 	@HostBinding('attr.aria-hidden') get ariaHidden(): string | null {
