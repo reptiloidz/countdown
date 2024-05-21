@@ -8,6 +8,7 @@ import { ButtonComponent } from '../components/button/button.component';
 import { SvgComponent } from '../components/svg/svg.component';
 import { SwitcherComponent } from '../components/switcher/switcher.component';
 import { InputComponent } from '../components/input/input.component';
+import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 
 @NgModule({
 	declarations: [
@@ -18,6 +19,7 @@ import { InputComponent } from '../components/input/input.component';
 		SvgComponent,
 		SwitcherComponent,
 		InputComponent,
+		CheckboxComponent,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule],
 	exports: [
@@ -28,6 +30,7 @@ import { InputComponent } from '../components/input/input.component';
 		SvgComponent,
 		SwitcherComponent,
 		InputComponent,
+		CheckboxComponent,
 	],
 })
 export class SharedModule {}

@@ -18,6 +18,7 @@ export class InputComponent implements ControlValueAccessor {
 		return ['control', this.invalid ? 'control--error' : null].join(' ');
 	}
 	@Input() placeholder = '';
+	@Input() autocomplete = '';
 	@Input() invalid: boolean | ValidationObjectFieldValue = false;
 	@Input() formControlName!: string;
 	@Input() type = 'text';

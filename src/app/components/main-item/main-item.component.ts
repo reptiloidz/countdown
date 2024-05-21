@@ -6,20 +6,20 @@ import {
 	OnDestroy,
 	OnInit,
 	ViewChild,
-	ElementRef,
 	ContentChild,
 	TemplateRef,
 } from '@angular/core';
 import { Subscription, first } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService } from 'src/app/services';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 
 @Component({
 	selector: '[app-main-item]',
 	templateUrl: './main-item.component.html',
 })
 export class MainItemComponent implements OnInit, OnDestroy {
-	@ViewChild('pointCheckbox') private pointCheckbox!: ElementRef;
+	@ViewChild('pointCheckbox') private pointCheckbox!: CheckboxComponent;
 
 	private subscriptions = new Subscription();
 	@Input() point!: Point;
@@ -65,7 +65,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			this.action.eventPointsCheckedAll$.subscribe({
 				next: (check) => {
 					this.pointCheckbox &&
-						(this.pointCheckbox.nativeElement.checked = check);
+						(this.pointCheckbox.isChecked = check);
 				},
 			})
 		);

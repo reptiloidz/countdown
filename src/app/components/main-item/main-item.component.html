@@ -54,19 +54,11 @@
 				[ngTemplateOutlet]="checkboxTemplate"
 			></ng-container>
 			<ng-template #defaultCheckbox>
-				<label class="checkbox">
-					<svg
-						app-svg
-						name="check"
-						class="checkbox__icon"
-					></svg>
-					<input
-						#pointCheckbox
-						type="checkbox"
-						class="checkbox__input"
-						(change)="checkPoint()"
-					>
-				</label>
+				<label
+					#pointCheckbox
+					app-checkbox
+					(change)="checkPoint()"
+				></label>
 			</ng-template>
 		</ng-container>
 	</div>

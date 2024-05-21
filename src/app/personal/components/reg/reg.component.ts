@@ -1,13 +1,8 @@
-import {
-	Component,
-	ViewChild,
-	ElementRef,
-	OnInit,
-	OnDestroy,
-} from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { InputComponent } from 'src/app/components/input/input.component';
 import { PrivacyComponent } from 'src/app/components/privacy/privacy.component';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
 import { ValidationObject, ValidationObjectField } from 'src/app/interfaces';
@@ -19,9 +14,9 @@ import { passwordRepeat } from 'src/app/validators';
 	templateUrl: './reg.component.html',
 })
 export class RegComponent implements OnInit, OnDestroy {
-	@ViewChild('passwordControl') private passwordControl!: ElementRef;
+	@ViewChild('passwordControl') private passwordControl!: InputComponent;
 	@ViewChild('passwordRepeatControl')
-	private passwordRepeatControl!: ElementRef;
+	private passwordRepeatControl!: InputComponent;
 
 	form!: FormGroup;
 	isLoading = false;
@@ -215,11 +210,8 @@ export class RegComponent implements OnInit, OnDestroy {
 
 	switchPasswordVisibility(event: Event) {
 		const el: HTMLInputElement | null = event.target as HTMLInputElement;
-		(<HTMLInputElement>this.passwordControl.nativeElement).type = el.checked
-			? 'text'
-			: 'password';
-		(<HTMLInputElement>this.passwordRepeatControl.nativeElement).type =
-			el.checked ? 'text' : 'password';
+		this.passwordControl.type = el.checked ? 'text' : 'password';
+		this.passwordRepeatControl.type = el.checked ? 'text' : 'password';
 	}
 
 	submit() {
