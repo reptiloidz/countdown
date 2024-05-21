@@ -1,0 +1,8 @@
+<input
+	[attr.type]="type"
+	class="control__input"
+	[value]="value"
+	[disabled]="isDisabled"
+	(input)="onInput($event)"
+	[attr.name]="formControlName || null"
+>

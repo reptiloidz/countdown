@@ -7,6 +7,7 @@ import { CalendarComponent } from 'src/app/components/calendar/calendar.componen
 import { ButtonComponent } from '../components/button/button.component';
 import { SvgComponent } from '../components/svg/svg.component';
 import { SwitcherComponent } from '../components/switcher/switcher.component';
+import { InputComponent } from '../components/input/input.component';
 
 @NgModule({
 	declarations: [
@@ -16,6 +17,7 @@ import { SwitcherComponent } from '../components/switcher/switcher.component';
 		ButtonComponent,
 		SvgComponent,
 		SwitcherComponent,
+		InputComponent,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule],
 	exports: [
@@ -25,6 +27,7 @@ import { SwitcherComponent } from '../components/switcher/switcher.component';
 		ButtonComponent,
 		SvgComponent,
 		SwitcherComponent,
+		InputComponent,
 	],
 })
 export class SharedModule {}

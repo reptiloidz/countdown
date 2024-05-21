@@ -1,8 +1,9 @@
+export interface ValidationObjectFieldValue {
+	value: boolean;
+	message?: string;
+}
 export interface ValidationObjectField {
-	[key: string]: {
-		value: boolean;
-		message?: string;
-	};
+	[key: string]: ValidationObjectFieldValue;
 }
 
 export interface ValidationObject {

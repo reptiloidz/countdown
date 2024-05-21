@@ -3,30 +3,18 @@
 	(ngSubmit)="submit()"
 	class="form"
 >
-	<div
-		class="control"
-		[ngClass]="{
-			'control--error': hasEmailErrors
-		}"
-	>
-		<input
-			type="text"
-			placeholder="E-mail"
-			formControlName="email"
-		>
-	</div>
-	<div
-		class="control"
-		[ngClass]="{
-				'control--error': hasPasswordErrors
-			}"
-	>
-		<input
-			type="password"
-			placeholder="Пароль"
-			formControlName="password"
-		>
-	</div>
+	<app-input
+		[invalid]="hasEmailErrors"
+		placeholder="E-mail"
+		type="email"
+		formControlName="email"
+	></app-input>
+	<app-input
+		[invalid]="hasPasswordErrors"
+		placeholder="Пароль"
+		type="password"
+		formControlName="password"
+	></app-input>
 	<ul
 		*ngIf="errorMessages.length"
 		class="info info--error"
@@ -36,15 +24,22 @@
 			class="info__item"
 		>{{ errMessage }}</li>
 	</ul>
-	<button [disabled]="form.invalid || isLoading">
-		Войти
-	</button>
-	<button
-		[disabled]="form.invalid || isLoading"
-		type="button"
-		class="link"
-		(click)="resetPassword()"
-	>
-		Сброс пароля
-	</button>
+	<div class="form__nav">
+		<button
+			app-button
+			view="link"
+			(click)="resetPassword()"
+		>
+			Сброс пароля
+		</button>
+		<button
+			app-button
+			type="submit"
+			icon="login"
+			mode="positive"
+			[disabled]="form.invalid || isLoading"
+		>
+			Войти
+		</button>
+	</div>
 </form>
