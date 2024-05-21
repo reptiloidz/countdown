@@ -4,7 +4,7 @@
 	[ngClass]="{
 		'switcher__item--active' : item?.value === value
 	}"
-	[title]="(item?.icon || item?.boolean !== undefined) && item?.text"
+	[attr.title]="(item?.icon || item?.boolean !== undefined) ? item?.text : null"
 >
 	<input
 		[value]="item?.value"

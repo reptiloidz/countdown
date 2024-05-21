@@ -1,4 +1,8 @@
 .filters {
 	display: flex;
 	gap: 8px;
+
+	&__aside {
+		margin-left: auto;
+	}
 }

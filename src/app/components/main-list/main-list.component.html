@@ -178,6 +178,13 @@
 					(click)="clearFilters()"
 					title="Очистить фильтры"
 				></button>
+
+				<app-switcher
+					class="filters__aside"
+					[items]="modesList"
+					[value]="modesValue"
+					(valueSwitched)="changeModes($event)"
+				></app-switcher>
 			</div>
 		</div>
 
@@ -185,7 +192,10 @@
 			<ul
 				#pointsList
 				*ngIf="filteredPoints.length; else empty"
-				class="points-list points-list--cards"
+				class="points-list"
+				[ngClass]="{
+					'points-list--cards': modesValue === 'grid'
+				}"
 			>
 				<li
 					app-main-item

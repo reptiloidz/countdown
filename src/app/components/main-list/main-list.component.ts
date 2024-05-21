@@ -43,6 +43,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	repeatableValue: FilterSelected = 'all';
 	greenwichValue: FilterSelected = 'all';
 	publicValue: FilterSelected = 'all';
+	modesValue: 'list' | 'grid' = 'grid';
 	searchInputValue = '';
 
 	repeatList: SwitcherItem[] = [
@@ -96,6 +97,19 @@ export class MainListComponent implements OnInit, OnDestroy {
 			text: 'Публичные',
 			value: 'true',
 			boolean: true,
+		},
+	];
+
+	modesList: SwitcherItem[] = [
+		{
+			text: 'Список',
+			value: 'list',
+			icon: 'lines',
+		},
+		{
+			text: 'Сетка',
+			value: 'grid',
+			icon: 'piles',
 		},
 	];
 
@@ -245,18 +259,18 @@ export class MainListComponent implements OnInit, OnDestroy {
 		return this.colorType.join('+');
 	}
 
-	changeRepeatFilter(repeatValue: string) {
-		this.repeatableValue = repeatValue as FilterSelected;
+	changeRepeatFilter(value: string) {
+		this.repeatableValue = value as FilterSelected;
 		this.changeFilters();
 	}
 
-	changeGreenwichFilter(greenwichValue: string) {
-		this.greenwichValue = greenwichValue as FilterSelected;
+	changeGreenwichFilter(value: string) {
+		this.greenwichValue = value as FilterSelected;
 		this.changeFilters();
 	}
 
-	changePublicFilter(publicValue: string) {
-		this.publicValue = publicValue as FilterSelected;
+	changePublicFilter(value: string) {
+		this.publicValue = value as FilterSelected;
 		this.changeFilters();
 	}
 
@@ -294,6 +308,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.searchInput.value = '';
 		this.resetColors();
 		this.changeFilters();
+	}
+
+	changeModes(value: string) {
+		this.modesValue = value as 'list' | 'grid';
+		console.log(this.modesValue);
 	}
 
 	checkPoint() {
