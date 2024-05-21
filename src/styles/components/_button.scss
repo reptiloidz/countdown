@@ -46,8 +46,8 @@
 
 	&--ghost {
 		--button-bg-cl: transparent;
-		--button-cl: rgba(var(--c-text-button-inverse), .4);
-		--button-border-cl: rgba(var(--c-border-primary), .2);
+		--button-cl: rgba(var(--c-text-button-inverse), .6);
+		--button-border-cl: rgba(var(--c-border-primary), .4);
 	}
 
 	&--sm {

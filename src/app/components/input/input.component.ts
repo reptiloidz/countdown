@@ -15,7 +15,7 @@ import { ValidationObjectFieldValue } from 'src/app/interfaces';
 })
 export class InputComponent implements ControlValueAccessor {
 	@HostBinding('class') get controlClass() {
-		return ['control', this.invalid && 'control--error'].join(' ');
+		return ['control', this.invalid ? 'control--error' : null].join(' ');
 	}
 	@Input() placeholder = '';
 	@Input() invalid: boolean | ValidationObjectFieldValue = false;

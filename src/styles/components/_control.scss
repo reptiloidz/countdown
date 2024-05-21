@@ -1,11 +1,16 @@
 .control {
 	display: flex;
 	flex-direction: column;
-	margin-top: 8px;
-	margin-bottom: 8px;
+
+	& + & {
+		margin-top: 16px;
+	}
 
 	&__input {
 		flex-grow: 1;
+		padding: 4px;
+		border: 1px solid rgba(var(--c-border-primary), .4);
+		border-radius: 4px;
 	}
 
 	&--row {

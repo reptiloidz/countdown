@@ -117,7 +117,8 @@
 						let-value="colorType"
 					>
 						<button
-							type="button"
+							app-button
+							mode="ghost"
 							(click)="openColors()"
 						>Фильтрация по цвету</button>
 					</ng-template>
@@ -146,13 +147,12 @@
 					</ng-template>
 				</app-drop>
 
-				<input
+				<app-input
 					placeholder="Поиск"
 					#searchInput
-					type="text"
 					(input)="changeFilters()"
 					[(ngModel)]="searchInputValue"
-				>
+				></app-input>
 
 				<app-switcher
 					[items]="greenwichList"

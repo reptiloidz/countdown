@@ -18,6 +18,7 @@ import {
 	PointColorTypes,
 	SortTypes,
 } from 'src/app/types';
+import { InputComponent } from '../input/input.component';
 
 @Component({
 	selector: 'app-main-list',
@@ -26,9 +27,7 @@ import {
 export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('pointsList') private pointsList!: ElementRef;
 	@ViewChild('datePointsList') private datePointsList!: ElementRef;
-	@ViewChild('greenwichSelect') private greenwichSelect!: ElementRef;
-	@ViewChild('publicSelect') private publicSelect!: ElementRef;
-	@ViewChild('searchInput') private searchInput!: ElementRef;
+	@ViewChild('searchInput') private searchInput!: InputComponent;
 	@ViewChild('colorList') private colorList!: ElementRef;
 	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
@@ -262,8 +261,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	changeFilters() {
-		this.searchInputValue = this.searchInput?.nativeElement.value;
-
+		this.searchInputValue = this.searchInput.value;
 		this.colorType = this.colorList
 			? Array.from(this.colorList.nativeElement.children)
 					.filter(
@@ -293,7 +291,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.repeatableValue = 'all';
 		this.greenwichValue = 'all';
 		this.publicValue = 'all';
-		(this.searchInput?.nativeElement as HTMLInputElement).value = '';
+		this.searchInput.value = '';
 		this.resetColors();
 		this.changeFilters();
 	}
