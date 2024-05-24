@@ -9,6 +9,7 @@ import { SvgComponent } from '../components/svg/svg.component';
 import { SwitcherComponent } from '../components/switcher/switcher.component';
 import { InputComponent } from '../components/input/input.component';
 import { CheckboxComponent } from '../components/checkbox/checkbox.component';
+import { LetDirective } from '../directives/let.directive';
 
 @NgModule({
 	declarations: [
@@ -20,6 +21,7 @@ import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 		SwitcherComponent,
 		InputComponent,
 		CheckboxComponent,
+		LetDirective,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule],
 	exports: [
@@ -31,6 +33,7 @@ import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 		SwitcherComponent,
 		InputComponent,
 		CheckboxComponent,
+		LetDirective,
 	],
 })
 export class SharedModule {}

@@ -21,7 +21,6 @@ import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { FilterPipe } from './pipes/filter.pipe';
-import { LetDirective } from './directives/let.directive';
 import { SharedModule } from './shared/shared.module';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { CheckCopiesPipe } from './pipes/check-copies.pipe';
@@ -45,7 +44,6 @@ import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 		PrivacyComponent,
 		PopupComponent,
 		FilterPipe,
-		LetDirective,
 		TooltipComponent,
 		CheckCopiesPipe,
 		CheckAccessEditPipe,
@@ -80,6 +78,5 @@ import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 	],
 	providers: [[provideNgxMask()], SortTrendingPipe],
 	bootstrap: [AppComponent],
-	exports: [LetDirective],
 })
 export class AppModule {}
