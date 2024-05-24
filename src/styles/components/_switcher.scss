@@ -9,7 +9,7 @@
 
 	&__item {
 		display: flex;
-		padding: 4px;
+		padding: 4px 8px;
 		border-radius: 4px;
 		color: var(--switcher-item-cl);
 		cursor: pointer;
@@ -28,6 +28,7 @@
 	}
 
 	&__icon {
-		--icon-stroke-w: 2px;
+		--icon-w: 24px;
+		--icon-stroke-w: 1px;
 	}
 }

@@ -11,7 +11,7 @@ export class ButtonComponent {
 	@Input() type!: string;
 	@Input() loading = false;
 	@Input() view: 'button' | 'link' = 'button';
-	@Input() mode!: 'primary' | 'negative' | 'positive' | 'ghost';
+	@Input() mode!: 'primary' | 'secondary' | 'negative' | 'positive' | 'ghost';
 	@Input() size!: 'sm' | 'lg';
 	@Input() disabled = false;
 
