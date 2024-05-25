@@ -1,5 +1,6 @@
 .nav {
 	display: flex;
+	flex-shrink: 0;
 	align-items: flex-start;
 	justify-content: space-between;
 	height: 60px;
@@ -49,6 +50,12 @@
 		&--disabled {
 			color: lightgrey;
 		}
+	}
+
+	&__item-inner {
+		display: flex;
+		gap: 4px;
+		align-items: center;
 	}
 
 	&__create {

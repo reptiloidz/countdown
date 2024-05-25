@@ -313,7 +313,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	changeModes(value: string) {
 		this.modesValue = value as 'list' | 'grid';
-		console.log(this.modesValue);
 	}
 
 	checkPoint() {

@@ -1,3 +1,15 @@
 .dashboard {
+	display: flex;
 	padding: 0 40px;
+
+	&__filters {
+		margin-right: auto;
+		margin-left: 20px;
+	}
+
+	&__aside {
+		display: flex;
+		gap: 16px;
+		align-items: center;
+	}
 }

@@ -4,7 +4,7 @@ a,
 	padding: 0;
 	border: none;
 	background-color: transparent;
-	color: rgb(var(--c-text-link));
+	color: rgba(var(--c-text-primary), .6);
 	text-decoration: underline;
 	overflow-wrap: break-word;
 	cursor: pointer;
@@ -12,17 +12,19 @@ a,
 
 .link {
 	--link-icon-w: 16px;
+	--link-icon-stroke-w: 2px;
 	--link-fz: 16px;
 	--link-gap: 4px;
 	--link-fw: 400;
+	--icon-w: var(--link-icon-w);
 
 	gap: var(--link-gap);
+	align-items: baseline;
 	font-size: var(--link-fz);
 	font-weight: var(--link-fw);
 
 	&__icon {
-		--icon-stroke-w: 2px;
-		--icon-w: var(--link-icon-w);
+		--icon-stroke-w: var(--link-icon-stroke-w);
 
 		width: var(--link-icon-w);
 		margin: auto;
@@ -36,10 +38,23 @@ a,
 	}
 
 	&--lg {
-		--link-icon-w: 48px;
+		--link-icon-w: 20px;
+		--link-icon-stroke-w: 1px;
+		--link-gap: 6px;
+		--link-fz: 20px;
+	}
+
+	&--lg,
+	&--xl {
+		--link-fw: 300;
+
+		text-decoration: none;
+	}
+
+	&--xl {
+		--link-icon-w: 40px;
 		--link-gap: 8px;
 		--link-fz: 40px;
-		--link-fw: 300;
 	}
 
 	&--primary {

@@ -12,7 +12,7 @@ export class ButtonComponent {
 	@Input() loading = false;
 	@Input() view: 'button' | 'link' = 'button';
 	@Input() mode!: 'primary' | 'secondary' | 'negative' | 'positive' | 'ghost';
-	@Input() size!: 'sm' | 'lg';
+	@Input() size!: 'sm' | 'lg' | 'xl';
 	@Input() disabled = false;
 
 	@HostBinding('attr.type') get typeAttr(): string | null {

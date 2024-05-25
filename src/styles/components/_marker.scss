@@ -1,16 +1,16 @@
 .marker {
 	--marker-opacity: 1;
-	--marker-color: rgb(var(--c-bg-icon));
+	--marker-color: rgb(var(--c-text-primary));
 
 	position: relative;
 	display: flex;
 	padding: 6px;
 	border-radius: 6px;
-	background-color: var(--marker-color);
+	color: var(--marker-color);
 	opacity: var(--marker-opacity);
 
 	&::before {
-		content: '';
+		// content: '';
 		position: absolute;
 		top: -2px;
 		right: -2px;
@@ -22,7 +22,7 @@
 
 	&__inner {
 		width: 24px;
-		color: rgb(var(--point-color));
+		color: rgb(var(--marker-color));
 	}
 
 	&--inactive {

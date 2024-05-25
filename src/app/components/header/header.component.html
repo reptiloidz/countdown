@@ -1,17 +1,21 @@
 <div class="nav__aside nav__aside--top">
 	<ng-container *ngIf="isAuthenticated; else unAuth">
 		<a
+			app-button
+			view="link"
 			*ngIf="isProfile"
 			class="nav__item"
 			[routerLink]="'/profile'"
 			[title]="user?.email"
 		>
-			<img
-				*ngIf="user?.photoURL"
-				class="userpic userpic--sm"
-				[src]="user?.photoURL"
-				[alt]="user?.displayName"
-			>{{ user?.displayName }}
+			<span class="nav__item-inner">
+				<img
+					*ngIf="user?.photoURL"
+					class="userpic userpic--sm"
+					[src]="user?.photoURL"
+					[alt]="user?.displayName"
+				>{{ user?.displayName }}
+			</span>
 		</a>
 		<button
 			app-button
@@ -47,8 +51,9 @@
 >
 	<a
 		app-button
+		view="link"
 		icon="home"
-		size="lg"
+		size="xl"
 		mode="primary"
 		routerLink="/"
 		[queryParams]="mainLinkParams"

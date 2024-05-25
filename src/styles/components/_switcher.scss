@@ -1,23 +1,29 @@
 .switcher {
 	--switcher-item-cl: rgb(var(--c-text-button));
+	--switcher-item-bg-cl: transparent;
+	--switcher-bg-cl: rgba(var(--c-bg-primary), .2);
+	--switcher-item-active-cl: rgb(var(--c-text-primary));
+	--switcher-item-active-bg-cl: rgb(var(--c-bg-inverse));
+	--switcher-border-cl: transparent;
 
 	display: flex;
 	gap: 4px;
 	padding: 4px;
+	border: 1px solid var(--switcher-border-cl);
 	border-radius: 8px;
-	background-color: rgba(var(--c-bg-primary), .2);
+	background-color: var(--switcher-bg-cl);
 
 	&__item {
 		display: flex;
 		padding: 4px 8px;
 		border-radius: 4px;
+		background-color: var(--switcher-item-bg-cl);
 		color: var(--switcher-item-cl);
 		cursor: pointer;
 
 		&--active {
-			--switcher-item-cl: rgb(var(--c-text-primary));
-
-			background-color: rgb(var(--c-bg-inverse));
+			--switcher-item-cl: var(--switcher-item-active-cl);
+			--switcher-item-bg-cl: var(--switcher-item-active-bg-cl);
 		}
 	}
 
@@ -30,5 +36,13 @@
 	&__icon {
 		--icon-w: 24px;
 		--icon-stroke-w: 1px;
+	}
+
+	&--ghost {
+		--switcher-bg-cl: transparent;
+		--switcher-item-cl: rgba(var(--c-text-primary), .4);
+		--switcher-item-active-cl: rgb(var(--c-text-button));
+		--switcher-item-active-bg-cl: rgba(var(--c-bg-primary), .2);
+		// --switcher-border-cl: rgba(var(--c-border-primary), .4);
 	}
 }

@@ -1,8 +1,31 @@
 .filters {
 	display: flex;
 	gap: 8px;
+	align-items: center;
 
 	&__aside {
 		margin-left: auto;
+	}
+
+	&__search {
+		flex-shrink: 1;
+	}
+
+	&__drop {
+		position: relative;
+		flex-shrink: 0;
+
+		& + & {
+			padding-left: 8px;
+
+			&::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				width: 0;
+				height: 100%;
+				border-left: 1px solid rgb(var(--c-border-primary));
+			}
+		}
 	}
 }

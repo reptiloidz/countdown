@@ -3,6 +3,7 @@
 	--button-border-cl: transparent;
 	--button-cl: rgb(var(--c-text-button));
 	--button-gap: 4px;
+	--button-fz: 16px;
 
 	display: flex;
 	gap: var(--button-gap);
@@ -17,6 +18,8 @@
 	cursor: pointer;
 
 	&__text {
+		font-size: var(--button-fz);
+
 		&:empty {
 			display: none;
 		}
@@ -37,7 +40,8 @@
 	}
 
 	&--negative {
-		--button-bg-cl: rgba(var(--c-bg-negative), .4);
+		--button-cl: rgba(var(--c-bg-negative), 1);
+		--button-bg-cl: transparent;
 	}
 
 	&--positive {
@@ -62,6 +66,7 @@
 
 	&--lg {
 		--button-gap: 8px;
+		--button-fz: 20px;
 
 		.button__icon {
 			--icon-stroke-w: 1px;

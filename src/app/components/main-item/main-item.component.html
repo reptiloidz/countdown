@@ -1,7 +1,11 @@
 <div
 	*appLet="point | checkAccessEdit as hasAccessEdit"
-	class="point point--card color"
-	[ngClass]="[hasAccessEdit ? 'point--available' : '', point.color ? 'color--' + point.color : '']"
+	class="point color"
+	[ngClass]="[
+		hasAccessEdit ? 'point--available' : '',
+		point.color ? 'color--' + point.color : '',
+		isCard ? 'point--card' : ''
+	]"
 >
 	<a
 		routerLink="/point/{{ point.id }}"
