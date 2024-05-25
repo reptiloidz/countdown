@@ -22,16 +22,16 @@ export class DropComponent {
 		| TemplateRef<unknown>
 		| undefined;
 
-	@Input() opened = false;
+	@Input() open = false;
 	@Input() dropBodyClass: string | string[] | null = null;
 
 	value = '';
 
-	open() {
-		this.opened = this.opened ? false : true;
+	openHandler() {
+		this.open = this.open ? false : true;
 	}
 
-	close() {
-		this.opened = false;
+	closeHandler() {
+		this.open = false;
 	}
 }

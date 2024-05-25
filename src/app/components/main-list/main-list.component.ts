@@ -32,7 +32,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
 	loading = true;
-	dropOpenedDate: Date | undefined;
+	dropOpenDate: Date | undefined;
 	dropOpenSort = false;
 	dropOpenColors = false;
 	isDatePointsChecked: boolean = false;
@@ -45,6 +45,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	publicValue: FilterSelected = 'all';
 	modesValue: 'list' | 'grid' = 'grid';
 	searchInputValue = '';
+	calendarOpen = false;
 
 	repeatList: SwitcherItem[] = [
 		{
@@ -320,19 +321,23 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	calendarRegenerated() {
-		this.dropOpenedDate = undefined;
+		this.dropOpenDate = undefined;
 	}
 
 	openDate({ date }: { date: CalendarDate; activeMode: CalendarMode }) {
-		if (this.dropOpenedDate && +this.dropOpenedDate === +date.date) {
-			this.dropOpenedDate = undefined;
+		if (this.dropOpenDate && +this.dropOpenDate === +date.date) {
+			this.dropOpenDate = undefined;
 		} else {
-			this.dropOpenedDate = date.date;
+			this.dropOpenDate = date.date;
 		}
 
 		this.isDatePointsChecked = false;
 		this.dropOpenSort = false;
 		this.dropOpenColors = false;
+	}
+
+	toggleCalendarVisibility() {
+		this.calendarOpen = !this.calendarOpen;
 	}
 
 	getCheckedDatePoints() {
@@ -396,7 +401,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	openSort() {
 		this.dropOpenSort = !this.dropOpenSort;
-		this.dropOpenedDate = undefined;
+		this.dropOpenDate = undefined;
 		this.dropOpenColors = false;
 	}
 
@@ -416,7 +421,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	openColors() {
 		this.dropOpenColors = !this.dropOpenColors;
-		this.dropOpenedDate = undefined;
+		this.dropOpenDate = undefined;
 		this.dropOpenSort = false;
 	}
 }

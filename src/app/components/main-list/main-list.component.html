@@ -7,96 +7,190 @@
 		color: colorTypeString
 	} as filteredPoints">
 		<div class="dashboard">
-			<div class="widget widget--drop">
+			<app-drop
+				class="widget widget--drop"
+				[open]="calendarOpen"
+				dropBodyClass="widget__body"
+			>
+				<ng-template #buttonTemplate>
+					<div class="widget__nav">
+						<button
+							app-button
+							view="link"
+							icon="chevron-down"
+							mode="primary"
+							(click)="toggleCalendarVisibility()"
+						>Календарь</button>
+					</div>
+				</ng-template>
+				<ng-template #bodyTemplate>
+					<app-calendar
+						(calendarRegenerated)="calendarRegenerated()"
+						[points]="filteredPoints"
+						class="calendar"
+					>
+						<ng-template
+							#navTemplate
+							let-date="date"
+							let-mode="mode"
+						>
+							<app-drop
+								*ngIf="date.points.length"
+								[open]="+date.date === (this.dropOpenDate && +this.dropOpenDate)"
+							>
+								<ng-template #buttonTemplate>
+									<button
+										app-button
+										mode="ghost"
+										size="sm"
+										icon="chevron-down"
+										title="Показать события"
+										class="calendar__btn-nav"
+										(click)="openDate({ date, activeMode: mode })"
+									></button>
+								</ng-template>
+								<ng-template #bodyTemplate>
+									<ul
+										class="calendar__date-ul"
+										#datePointsList
+									>
+										<li
+											app-main-item
+											[attr.data-id]="point.id"
+											class="calendar__date-li point point--sm"
+											*ngFor="let point of date.points | sortPoints : sortType; let i = index"
+											[point]="point"
+										>
+											<ng-template #checkboxTemplate>
+												<input
+													#datePointCheckbox
+													type="checkbox"
+													(change)="getCheckedDatePoints()"
+												>
+											</ng-template>
+										</li>
+									</ul>
+									<div
+										class="nav"
+										*ngIf="date.points | checkEditablePoints"
+									>
+										<button
+											type="button"
+											class="nav__item link"
+											(click)="checkDatePoints(true)"
+										>
+											Выбрать все</button>
+										<ng-container *ngIf="isDatePointsChecked">
+											<button
+												type="button"
+												class="nav__item link"
+												(click)="checkDatePoints(false)"
+											>
+												Сбросить все</button>
+											<button
+												type="button"
+												class="nav__item link"
+												(click)="removeDateCheckedPoints()"
+											>
+												Удалить выбранные</button>
+										</ng-container>
+									</div>
+								</ng-template>
+							</app-drop>
+						</ng-template>
+					</app-calendar>
+				</ng-template>
+			</app-drop>
+			<!-- <div class="widget widget--drop">
 				<div class="widget__nav">
-					<button
-						app-button
-						view="link"
-						icon="chevron-down"
-						mode="primary"
-					>Календарь</button>
+				<button
+				app-button
+				view="link"
+				icon="chevron-down"
+				mode="primary"
+				>Календарь</button>
 				</div>
 
 				<app-calendar
-					(calendarRegenerated)="calendarRegenerated()"
-					[points]="filteredPoints"
-					class="calendar widget__body"
+				(calendarRegenerated)="calendarRegenerated()"
+				[points]="filteredPoints"
+				class="calendar widget__body"
 				>
-					<ng-template
-						#navTemplate
-						let-date="date"
-						let-mode="mode"
-					>
-						<app-drop
-							*ngIf="date.points.length"
-							[opened]="+date.date === (this.dropOpenedDate && +this.dropOpenedDate)"
-						>
-							<ng-template #buttonTemplate>
-								<button
-									app-button
-									mode="ghost"
-									size="sm"
-									icon="chevron-down"
-									title="Показать события"
-									class="calendar__btn-nav"
-									(click)="openDate({ date, activeMode: mode })"
-								></button>
-							</ng-template>
-							<ng-template #bodyTemplate>
-								<ul
-									class="calendar__date-ul"
-									#datePointsList
-								>
-									<li
-										app-main-item
-										[attr.data-id]="point.id"
-										class="calendar__date-li point point--sm"
-										*ngFor="let point of date.points | sortPoints : sortType; let i = index"
-										[point]="point"
-									>
-										<ng-template #checkboxTemplate>
-											<input
-												#datePointCheckbox
-												type="checkbox"
-												(change)="getCheckedDatePoints()"
-											>
-										</ng-template>
-									</li>
-								</ul>
-								<div
-									class="nav"
-									*ngIf="date.points | checkEditablePoints"
-								>
-									<button
-										type="button"
-										class="nav__item link"
-										(click)="checkDatePoints(true)"
-									>
-										Выбрать все</button>
-									<ng-container *ngIf="isDatePointsChecked">
-										<button
-											type="button"
-											class="nav__item link"
-											(click)="checkDatePoints(false)"
-										>
-											Сбросить все</button>
-										<button
-											type="button"
-											class="nav__item link"
-											(click)="removeDateCheckedPoints()"
-										>
-											Удалить выбранные</button>
-									</ng-container>
-								</div>
-							</ng-template>
-						</app-drop>
-					</ng-template>
+				<ng-template
+				#navTemplate
+				let-date="date"
+				let-mode="mode"
+				>
+				<app-drop
+				*ngIf="date.points.length"
+				[open]="+date.date === (this.dropOpenDate && +this.dropOpenDate)"
+				>
+				<ng-template #buttonTemplate>
+				<button
+				app-button
+				mode="ghost"
+				size="sm"
+				icon="chevron-down"
+				title="Показать события"
+				class="calendar__btn-nav"
+				(click)="openDate({ date, activeMode: mode })"
+				></button>
+				</ng-template>
+				<ng-template #bodyTemplate>
+				<ul
+				class="calendar__date-ul"
+				#datePointsList
+				>
+				<li
+				app-main-item
+				[attr.data-id]="point.id"
+				class="calendar__date-li point point--sm"
+				*ngFor="let point of date.points | sortPoints : sortType; let i = index"
+				[point]="point"
+				>
+				<ng-template #checkboxTemplate>
+				<input
+				#datePointCheckbox
+				type="checkbox"
+				(change)="getCheckedDatePoints()"
+				>
+				</ng-template>
+				</li>
+				</ul>
+				<div
+				class="nav"
+				*ngIf="date.points | checkEditablePoints"
+				>
+				<button
+				type="button"
+				class="nav__item link"
+				(click)="checkDatePoints(true)"
+				>
+				Выбрать все</button>
+				<ng-container *ngIf="isDatePointsChecked">
+				<button
+				type="button"
+				class="nav__item link"
+				(click)="checkDatePoints(false)"
+				>
+				Сбросить все</button>
+				<button
+				type="button"
+				class="nav__item link"
+				(click)="removeDateCheckedPoints()"
+				>
+				Удалить выбранные</button>
+				</ng-container>
+				</div>
+				</ng-template>
+				</app-drop>
+				</ng-template>
 				</app-calendar>
-			</div>
+				</div> -->
 
 			<div class="widget filters">
 				<div class="widget__body">
-					<app-drop [opened]="dropOpenSort">
+					<app-drop [open]="dropOpenSort">
 						<ng-template
 							#buttonTemplate
 							let-value="sortType"
@@ -123,7 +217,7 @@
 						</ng-template>
 					</app-drop>
 
-					<app-drop [opened]="dropOpenColors">
+					<app-drop [open]="dropOpenColors">
 						<ng-template
 							#buttonTemplate
 							let-value="colorType"

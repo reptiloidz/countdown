@@ -1,5 +1,5 @@
 .widget {
-	--widget-bg-cl: rgba(var(--c-bg-primary), .2);
+	--widget-bg-cl: rgba(var(--c-bg-widget), .2);
 	--widget-brs: 8px;
 
 	display: flex;
@@ -16,20 +16,28 @@
 		}
 	}
 
+	&:has(.widget__body) {
+		.widget__nav {
+			border-radius: var(--widget-brs) var(--widget-brs) 0 0;
+		}
+	}
+
 	&__nav {
 		padding: 8px 12px;
-		border-radius: var(--widget-brs) 8px 0 0;
 	}
 
 	&__body {
+		@include glass;
+
 		display: flex;
 		align-self: stretch;
 		padding: 12px;
-		border-radius: var(--widget-brs);
+		box-shadow: 0 1px 1px 0 rgba(var(--c-shadow-primary), .1);
 	}
 
 	&__nav,
 	&__body {
+		border-radius: var(--widget-brs);
 		background-color: var(--widget-bg-cl);
 		backdrop-filter: blur(12px);
 	}
@@ -41,7 +49,7 @@
 		.widget__body {
 			position: absolute;
 			top: 100%;
-			display: none;
+			// display: none;
 			width: 100%;
 		}
 	}

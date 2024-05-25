@@ -6,12 +6,12 @@
 <ng-template #button>
 	<button
 		type="button"
-		(click)="opened ? close() : open()"
+		(click)="open ? closeHandler() : openHandler()"
 	>&#709;</button>
 </ng-template>
 
 <div
-	*ngIf="bodyTemplate && opened"
+	*ngIf="bodyTemplate && open"
 	class="drop__body"
 	[ngClass]="dropBodyClass"
 >
