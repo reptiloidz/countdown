@@ -9,7 +9,6 @@
 	left: 0;
 	z-index: 3;
 	display: flex;
-	pointer-events: none;
 
 	&:has(.popup__content) {
 		&::before {
@@ -43,11 +42,6 @@
 		background-color: rgba(var(--c-bg-primary), .9);
 		color: rgba(var(--c-text-button), 1);
 		font-weight: 300;
-	}
-
-	&__inner,
-	&__btn {
-		pointer-events: all;
 	}
 
 	&__btn {
