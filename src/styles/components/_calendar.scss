@@ -1,29 +1,42 @@
 .calendar {
+	--calendar-nav-shift: 4px;
+
 	display: flex;
 	flex-direction: column;
+
+	&__header {
+		margin-bottom: 12px;
+	}
 
 	&__nav {
 		display: flex;
 		gap: 12px;
 		align-items: center;
-		margin-bottom: 12px;
 	}
 
-	&__aside {
+	&__nav-set {
 		display: flex;
 		gap: 4px;
 	}
 
 	&__status {
-		//
+		margin-left: 12px;
+		font-weight: 300;
+		text-wrap: nowrap;
+	}
+
+	&__switcher {
+		margin-top: 12px;
+		padding: 0;
 	}
 
 	&__table-wrapper {
 		align-self: flex-start;
+		width: 100%;
 	}
 
 	&__table {
-		//
+		min-width: 100%;
 	}
 
 	&__cell {
@@ -38,11 +51,11 @@
 		padding: 16px;
 		border: 1px solid transparent;
 		border-radius: 6px;
-		background-color: rgba(var(--c-bg-primary), .04);
+		background-color: transparent;
 		cursor: pointer;
 
 		&--selected {
-			background-color: rgba(var(--c-bg-primary), .2);
+			background-color: rgba(var(--c-bg-primary), .1);
 		}
 
 		&--now {
@@ -52,16 +65,16 @@
 
 	&__counter {
 		position: absolute;
-		top: 0;
-		left: 0;
+		top: var(--calendar-nav-shift);
+		left: var(--calendar-nav-shift);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		min-width: 18px;
 		height: 18px;
 		border-radius: 4px;
-		background-color: rgb(var(--c-bg-icon));
-		color: rgb(var(--c-text-primary));
+		background-color: rgba(var(--c-bg-icon), .4);
+		color: rgb(var(--c-text-button));
 		font-family: monospace;
 		font-size: 11px;
 		font-weight: 400;
@@ -70,8 +83,8 @@
 
 	&__date-nav {
 		position: absolute;
-		right: 0;
-		bottom: 0;
+		right: var(--calendar-nav-shift);
+		bottom: var(--calendar-nav-shift);
 		display: flex;
 	}
 

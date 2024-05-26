@@ -1,52 +1,50 @@
-<div class="calendar__nav">
-	<div class="calendar__aside">
-		<button
-			app-button
-			icon="chevron-left"
-			title="Пролистать календарь влево"
-			mode="ghost"
-			(click)="switchCalendarPeriod(false)"
-		></button>
-		<button
-			app-button
-			icon="chevron-right"
-			title="Пролистать календарь вправо"
-			mode="ghost"
-			(click)="switchCalendarPeriod(true)"
-		></button>
+<div class="calendar__header">
+	<div class="calendar__nav">
+		<div class="calendar__nav-set">
+			<button
+				app-button
+				icon="chevron-left"
+				title="Пролистать календарь влево"
+				mode="ghost"
+				(click)="switchCalendarPeriod(false)"
+			></button>
+			<button
+				app-button
+				icon="chevron-right"
+				title="Пролистать календарь вправо"
+				mode="ghost"
+				(click)="switchCalendarPeriod(true)"
+			></button>
+		</div>
+
+		<div class="calendar__nav-set">
+			<button
+				app-button
+				icon="clock"
+				title="Перейти к нынешнему моменту"
+				mode="positive"
+				(click)="switchCalendarToNow()"
+			></button>
+			<button
+				app-button
+				icon="home-2"
+				title="Перейти к выбранному моменту"
+				(click)="switchCalendarToSelected()"
+			></button>
+		</div>
+		<span
+			class="calendar__status"
+			*ngIf="!hideCurrentPeriod"
+		>{{ visiblePeriod }}</span>
 	</div>
 
-	<div class="calendar__aside">
-		<button
-			app-button
-			icon="clock"
-			title="Перейти к нынешнему моменту"
-			mode="positive"
-			(click)="switchCalendarToNow()"
-		></button>
-		<button
-			app-button
-			icon="home-2"
-			title="Перейти к выбранному моменту"
-			(click)="switchCalendarToSelected()"
-		></button>
-	</div>
-
-	<div
-		class="calendar__aside"
+	<app-switcher
+		class="calendar__switcher"
 		*ngIf="!hideModeSwitch"
-	>
-		<app-switcher
-			[items]="calendarModes"
-			[value]="activeMode"
-			(valueSwitched)="switchCalendarMode($event)"
-		></app-switcher>
-	</div>
-
-	<div
-		class="calendar__status"
-		*ngIf="!hideCurrentPeriod"
-	>{{ visiblePeriod }}</div>
+		[items]="calendarModes"
+		[value]="activeMode"
+		(valueSwitched)="switchCalendarMode($event)"
+	></app-switcher>
 </div>
 
 <div class="calendar__table-wrapper">

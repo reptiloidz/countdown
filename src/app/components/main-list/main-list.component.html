@@ -152,30 +152,34 @@
 					[(ngModel)]="searchInputValue"
 				></app-input>
 
-				<app-switcher
-					[items]="greenwichList"
-					[value]="greenwichValue"
-					mode="ghost"
-					(valueSwitched)="changeGreenwichFilter($event)"
-				></app-switcher>
-				<app-switcher
-					[items]="repeatList"
-					[value]="repeatableValue"
-					mode="ghost"
-					(valueSwitched)="changeRepeatFilter($event)"
-				></app-switcher>
-				<app-switcher
-					[items]="publicList"
-					[value]="publicValue"
-					mode="ghost"
-					(valueSwitched)="changePublicFilter($event)"
-				></app-switcher>
+				<div class="filters__switcher">
+					<app-switcher
+						[items]="greenwichList"
+						[value]="greenwichValue"
+						(valueSwitched)="changeGreenwichFilter($event)"
+					></app-switcher>
+				</div>
+				<div class="filters__switcher">
+					<app-switcher
+						[items]="repeatList"
+						[value]="repeatableValue"
+						(valueSwitched)="changeRepeatFilter($event)"
+					></app-switcher>
+				</div>
+				<div class="filters__switcher">
+					<app-switcher
+						[items]="publicList"
+						[value]="publicValue"
+						(valueSwitched)="changePublicFilter($event)"
+					></app-switcher>
+				</div>
 
 				<button
 					*ngIf="filtersFilled"
 					app-button
 					icon="cross-circle"
-					mode="ghost"
+					size="sm"
+					mode="negative"
 					(click)="clearFilters()"
 					title="Очистить фильтры"
 				></button>
@@ -214,7 +218,6 @@
 				<app-switcher
 					[items]="modesList"
 					[value]="modesValue"
-					mode="ghost"
 					(valueSwitched)="changeModes($event)"
 				></app-switcher>
 			</div>

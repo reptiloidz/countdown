@@ -1,10 +1,13 @@
 .popup {
+	--popup-w: clamp(600px, 100%, 1000px);
+	--popup-mt: 100px;
+
 	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
-	z-index: 1;
+	z-index: 3;
 	display: flex;
 	pointer-events: none;
 
@@ -20,27 +23,37 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background-color: rgba(153, 153, 153, .5);
+		background-color: rgba(var(--c-bg-primary), .5);
+		backdrop-filter: blur(6px);
 	}
 
 	&__inner {
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		width: clamp(600px, 100%, 1000px);
+		width: var(--popup-w);
 		margin: 100px auto;
+		border-radius: 12px;
 		overflow: auto;
-		background-color: white;
-		pointer-events: all;
+		background-color: rgb(var(--c-bg-inverse));
 	}
 
 	&__title {
 		padding: 20px;
-		background-color: #EEEEEE;
+		background-color: rgba(var(--c-bg-primary), .9);
+		color: rgba(var(--c-text-button), 1);
+		font-weight: 300;
+	}
+
+	&__inner,
+	&__btn {
+		pointer-events: all;
 	}
 
 	&__btn {
-		position: relative;
+		position: absolute;
+		right: calc((var(--popup-w) / 2) + 50%);
+		bottom: calc(100% - var(--popup-mt));
 		z-index: 1;
 		align-self: flex-start;
 	}

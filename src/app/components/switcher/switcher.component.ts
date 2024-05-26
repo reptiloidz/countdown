@@ -14,7 +14,7 @@ import { SwitcherItem } from 'src/app/interfaces';
 export class SwitcherComponent {
 	@Input() items: SwitcherItem[] = [];
 	@Input() value!: string;
-	@Input() mode!: 'ghost';
+	@Input() mode: 'ghost' = 'ghost';
 	@Output() valueSwitched = new EventEmitter<string>();
 	@HostBinding('class') get componentClass(): string | null {
 		const baseClass = 'switcher';

@@ -1,11 +1,12 @@
 <ng-container *ngIf="isVisible">
+	<button
+		app-button
+		icon="cross"
+		mode="ghost"
+		class="popup__btn"
+		(click)="close()"
+	></button>
 	<div class="popup__inner">
-
-		<button
-			type="button"
-			class="popup__btn"
-			(click)="close()"
-		>Закрыть</button>
 		<h2 class="popup__title">{{ title }}</h2>
 		<div class="popup__content">
 			<ng-template #popupContent></ng-template>

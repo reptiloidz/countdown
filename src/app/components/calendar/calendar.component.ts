@@ -167,23 +167,26 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		let result = '';
 		switch (this.activeMode) {
 			case 'year':
-				result = format(this.visibleDate, 'y', {
+				result = format(this.visibleDate, "yyyy 'г.'", {
 					locale: ru,
 				});
 				break;
 			case 'day':
-				result = format(this.visibleDate, 'y LLL d', {
+				result = format(this.visibleDate, "yyyy 'г.', dd MMMM", {
 					locale: ru,
 				});
 				break;
 			case 'hour':
-				result =
-					format(this.visibleDate, 'y LLL d, k', {
+				result = format(
+					this.visibleDate,
+					"yyyy 'г.', dd MMMM, HH 'ч'",
+					{
 						locale: ru,
-					}) + 'ч';
+					}
+				);
 				break;
 			default:
-				result = format(this.visibleDate, 'y LLL', {
+				result = format(this.visibleDate, "yyyy 'г.', LLL", {
 					locale: ru,
 				});
 				break;

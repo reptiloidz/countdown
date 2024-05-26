@@ -13,16 +13,16 @@
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 7-8.5 8.5M4 13l5 5"/>
         </svg>
         <svg id="chevron-down" fill="none" viewBox="0 0 24 24">
-            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.5 12.5 7 10m10 0-5 5m9-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0"/>
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 14 4 9m16 0-8 8"/>
         </svg>
         <svg id="chevron-left" fill="none" viewBox="0 0 24 24">
-            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.5 9.5 14 7m0 10-5-5m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0"/>
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m10 9 5-5m0 16-8-8"/>
         </svg>
         <svg id="chevron-right" fill="none" viewBox="0 0 24 24">
-            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12.5 9.5 10 7m0 10 5-5m6 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0"/>
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 9 9 4m0 16 8-8"/>
         </svg>
         <svg id="chevron-up" fill="none" viewBox="0 0 24 24">
-            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.5 11.5 7 14m10 0-5-5m9 3a9 9 0 1 1-18 0 9 9 0 0 1 18 0"/>
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m9 10-5 5m16 0-8-8"/>
         </svg>
         <svg id="clock" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l2 2M12 3a9 9 0 1 0 7.5 4.023"/>
