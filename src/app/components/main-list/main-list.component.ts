@@ -54,7 +54,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			boolean: false,
 		},
 		{
-			text: 'Повторяемые/однократные',
+			text: 'Однократные/повторяемые',
 			value: 'all',
 			icon: 'refresh',
 		},
@@ -72,7 +72,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			boolean: false,
 		},
 		{
-			text: 'По Гринвичу/по местному',
+			text: 'По местному/по Гринвичу',
 			value: 'all',
 			icon: 'globe',
 		},
@@ -90,7 +90,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			boolean: false,
 		},
 		{
-			text: 'Публичные/приватные',
+			text: 'Приватные/публичные',
 			value: 'all',
 			icon: 'users',
 		},
