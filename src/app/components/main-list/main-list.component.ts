@@ -49,12 +49,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	repeatList: SwitcherItem[] = [
 		{
-			text: 'Неповторяемые',
+			text: 'Однократные',
 			value: 'false',
 			boolean: false,
 		},
 		{
-			text: 'Повторяемость',
+			text: 'Повторяемые/однократные',
 			value: 'all',
 			icon: 'refresh',
 		},
@@ -72,7 +72,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			boolean: false,
 		},
 		{
-			text: 'Часовой пояс',
+			text: 'По Гринвичу/по местному',
 			value: 'all',
 			icon: 'globe',
 		},
@@ -90,7 +90,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			boolean: false,
 		},
 		{
-			text: 'Публичность',
+			text: 'Публичные/приватные',
 			value: 'all',
 			icon: 'users',
 		},

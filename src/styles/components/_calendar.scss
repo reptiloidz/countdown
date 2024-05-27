@@ -10,7 +10,7 @@
 
 	&__nav {
 		display: flex;
-		gap: 12px;
+		gap: 20px;
 		align-items: center;
 	}
 
@@ -22,12 +22,11 @@
 	&__status {
 		margin-left: 12px;
 		font-weight: 300;
-		text-wrap: nowrap;
 	}
 
 	&__switcher {
-		margin-top: 12px;
-		padding: 0;
+		margin-top: 20px;
+		margin-bottom: 10px;
 	}
 
 	&__table-wrapper {

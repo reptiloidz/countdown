@@ -1,34 +1,40 @@
-<label
-	*ngFor="let item of items"
-	class="switcher__item"
-	[ngClass]="{
-		'switcher__item--active' : item?.value === value
-	}"
-	[attr.title]="(item?.icon || item?.boolean !== undefined) ? item?.text : null"
->
-	<input
-		[value]="item?.value"
-		type="radio"
-		[checked]="item?.value === value || null"
-		(change)="switchMode($event)"
-		name="switcher"
-		class="switcher__input"
+<div class="switcher__list">
+	<label
+		*ngFor="let item of items"
+		class="switcher__item"
+		[ngClass]="{
+			'switcher__item--active' : item?.value === value
+		}"
+		[attr.title]="(item?.icon || item?.boolean !== undefined) ? item?.text : null"
 	>
-	<ng-container *ngIf="item?.icon || item?.boolean !== undefined; else textValue;">
-		<svg
-			app-svg
-			class="switcher__icon"
-			[ngClass]="{
-				'icon--positive': item?.boolean,
-				'icon--negative': item?.boolean === false
-			}"
-			[name]="item?.boolean ? 'check' :
-				item?.boolean === false ? 'cross' :
-				item?.icon || 'warning'
-			"
-		></svg>
-	</ng-container>
-	<ng-template #textValue>
-		{{ item?.text }}
-	</ng-template>
-</label>
+		<input
+			[value]="item?.value"
+			type="radio"
+			[checked]="item?.value === value || null"
+			(change)="switchMode($event)"
+			name="switcher"
+			class="switcher__input"
+		>
+		<ng-container *ngIf="item?.icon || item?.boolean !== undefined; else textValue;">
+			<svg
+				app-svg
+				class="switcher__icon"
+				[ngClass]="{
+					'icon--positive': item?.boolean,
+					'icon--negative': item?.boolean === false
+				}"
+				[name]="item?.boolean ? 'check' :
+					item?.boolean === false ? 'cross' :
+					item?.icon || 'warning'
+				"
+			></svg>
+		</ng-container>
+		<ng-template #textValue>
+			{{ item?.text }}
+		</ng-template>
+	</label>
+</div>
+<span
+	*ngIf="showTitle"
+	class="switcher__value"
+>{{ valueName }}</span>

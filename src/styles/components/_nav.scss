@@ -20,7 +20,7 @@
 
 	&__aside {
 		display: flex;
-		gap: 8px;
+		gap: 20px;
 		align-items: center;
 
 		&--right {
@@ -55,7 +55,6 @@
 	&__item-inner {
 		display: flex;
 		gap: 4px;
-		align-items: center;
 	}
 
 	&__create {

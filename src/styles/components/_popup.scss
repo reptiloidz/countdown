@@ -16,6 +16,10 @@
 		}
 	}
 
+	&:empty {
+		display: none;
+	}
+
 	&::before {
 		position: absolute;
 		top: 0;
@@ -41,6 +45,7 @@
 		padding: 20px;
 		background-color: rgba(var(--c-bg-primary), .9);
 		color: rgba(var(--c-text-button), 1);
+		font-family: 'Roboto Slab', sans-serif;
 		font-weight: 300;
 	}
 
@@ -53,7 +58,7 @@
 	}
 
 	&__content {
-		padding: 20px;
+		padding: 20px 32px;
 		overflow: auto;
 	}
 }

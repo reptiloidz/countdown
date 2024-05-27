@@ -1,5 +1,6 @@
 .filters {
-	--filters-gap: 12px;
+	--filters-gap: 20px;
+	--filters-switcher-mt: 16px;
 
 	display: flex;
 	gap: var(--filters-gap);
@@ -26,9 +27,13 @@
 				position: absolute;
 				left: 0;
 				width: 0;
-				height: 100%;
+				height: calc(100% - var(--filters-switcher-mt));
 				border-left: 1px solid rgb(var(--c-border-primary));
 			}
 		}
+	}
+
+	&__switcher {
+		margin-top: var(--filters-switcher-mt);
 	}
 }

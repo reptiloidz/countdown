@@ -39,8 +39,8 @@
 	</div>
 
 	<app-switcher
-		class="calendar__switcher"
 		*ngIf="!hideModeSwitch"
+		class="calendar__switcher"
 		[items]="calendarModes"
 		[value]="activeMode"
 		(valueSwitched)="switchCalendarMode($event)"

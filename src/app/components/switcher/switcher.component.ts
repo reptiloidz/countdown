@@ -15,11 +15,16 @@ export class SwitcherComponent {
 	@Input() items: SwitcherItem[] = [];
 	@Input() value!: string;
 	@Input() mode: 'ghost' = 'ghost';
+	@Input() showTitle = false;
 	@Output() valueSwitched = new EventEmitter<string>();
 	@HostBinding('class') get componentClass(): string | null {
 		const baseClass = 'switcher';
 		const modeClass = this.mode && `${baseClass}--${this.mode}`;
 		return [baseClass, modeClass].filter((_) => _).join(' ');
+	}
+
+	get valueName() {
+		return this.items.find((item) => item.value === this.value)?.text;
 	}
 
 	switchMode(event: Event) {

@@ -13,7 +13,7 @@ body {
 	flex-grow: 1;
 	height: 100%;
 	color: rgb(var(--c-text-primary));
-	font-family: 'Roboto Slab', sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 
 .root {
@@ -38,6 +38,7 @@ body {
 
 	&__inner {
 		display: flex;
+		flex-grow: 1;
 		flex-direction: column;
 		width: 100%;
 		max-height: 100%;

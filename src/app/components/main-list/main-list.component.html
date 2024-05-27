@@ -8,7 +8,7 @@
 	} as filteredPoints">
 		<div class="dashboard">
 			<app-drop
-				class="widget widget--drop"
+				class="dashboard__calendar widget widget--drop"
 				[open]="calendarOpen"
 				dropBodyClass="widget__body"
 			>
@@ -102,7 +102,6 @@
 			</app-drop>
 
 			<div class="dashboard__filters filters">
-				<!-- <div class="widget__body"> -->
 				<app-drop
 					[open]="dropOpenColors"
 					class="filters__drop"
@@ -115,6 +114,7 @@
 							app-button
 							mode="primary"
 							view="link"
+							icon="chevron-down"
 							size="lg"
 							(click)="openColors()"
 						>Цвет</button>
@@ -152,27 +152,27 @@
 					[(ngModel)]="searchInputValue"
 				></app-input>
 
-				<div class="filters__switcher">
-					<app-switcher
-						[items]="greenwichList"
-						[value]="greenwichValue"
-						(valueSwitched)="changeGreenwichFilter($event)"
-					></app-switcher>
-				</div>
-				<div class="filters__switcher">
-					<app-switcher
-						[items]="repeatList"
-						[value]="repeatableValue"
-						(valueSwitched)="changeRepeatFilter($event)"
-					></app-switcher>
-				</div>
-				<div class="filters__switcher">
-					<app-switcher
-						[items]="publicList"
-						[value]="publicValue"
-						(valueSwitched)="changePublicFilter($event)"
-					></app-switcher>
-				</div>
+				<app-switcher
+					class="filters__switcher"
+					[items]="greenwichList"
+					[value]="greenwichValue"
+					[showTitle]="true"
+					(valueSwitched)="changeGreenwichFilter($event)"
+				></app-switcher>
+				<app-switcher
+					class="filters__switcher"
+					[items]="repeatList"
+					[value]="repeatableValue"
+					[showTitle]="true"
+					(valueSwitched)="changeRepeatFilter($event)"
+				></app-switcher>
+				<app-switcher
+					class="filters__switcher"
+					[items]="publicList"
+					[value]="publicValue"
+					[showTitle]="true"
+					(valueSwitched)="changePublicFilter($event)"
+				></app-switcher>
 
 				<button
 					*ngIf="filtersFilled"
@@ -184,7 +184,6 @@
 					title="Очистить фильтры"
 				></button>
 			</div>
-			<!-- </div> -->
 			<div class="dashboard__aside">
 				<app-drop [open]="dropOpenSort">
 					<ng-template
@@ -254,8 +253,11 @@
 
 
 <ng-template #loader>
-	<h2
+	<svg
 		*ngIf="loading"
+		app-svg
+		name="hourglass"
 		class="loader rotating"
-	></h2>
+		aria-hidden="false"
+	></svg>
 </ng-template>
