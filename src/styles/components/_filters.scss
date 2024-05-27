@@ -14,10 +14,10 @@
 		flex-shrink: 1;
 	}
 
-	&__drop,
 	&__switcher {
 		position: relative;
 		flex-shrink: 0;
+		margin-top: var(--filters-switcher-mt);
 
 		& + & {
 			padding-left: var(--filters-gap);
@@ -31,9 +31,5 @@
 				border-left: 1px solid rgb(var(--c-border-primary));
 			}
 		}
-	}
-
-	&__switcher {
-		margin-top: var(--filters-switcher-mt);
 	}
 }

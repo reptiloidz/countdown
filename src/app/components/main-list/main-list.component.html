@@ -144,14 +144,6 @@
 					</ng-template>
 				</app-drop>
 
-				<app-input
-					class="filters__search"
-					placeholder="Поиск"
-					#searchInput
-					(input)="changeFilters()"
-					[(ngModel)]="searchInputValue"
-				></app-input>
-
 				<app-switcher
 					class="filters__switcher"
 					[items]="greenwichList"
@@ -173,6 +165,14 @@
 					[showTitle]="true"
 					(valueSwitched)="changePublicFilter($event)"
 				></app-switcher>
+
+				<app-input
+					class="filters__search"
+					placeholder="Поиск"
+					#searchInput
+					(input)="changeFilters()"
+					[(ngModel)]="searchInputValue"
+				></app-input>
 
 				<button
 					*ngIf="filtersFilled"
