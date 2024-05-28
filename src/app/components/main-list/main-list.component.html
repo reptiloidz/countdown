@@ -103,6 +103,29 @@
 			</app-drop>
 
 			<div class="dashboard__filters filters">
+
+				<app-switcher
+					class="filters__switcher"
+					[items]="greenwichList"
+					[value]="greenwichValue"
+					[showTitle]="true"
+					(valueSwitched)="changeGreenwichFilter($event)"
+				></app-switcher>
+				<app-switcher
+					class="filters__switcher"
+					[items]="repeatList"
+					[value]="repeatableValue"
+					[showTitle]="true"
+					(valueSwitched)="changeRepeatFilter($event)"
+				></app-switcher>
+				<app-switcher
+					class="filters__switcher"
+					[items]="publicList"
+					[value]="publicValue"
+					[showTitle]="true"
+					(valueSwitched)="changePublicFilter($event)"
+				></app-switcher>
+
 				<app-drop class="filters__drop">
 					<ng-template
 						#buttonTemplate
@@ -142,31 +165,10 @@
 					</ng-template>
 				</app-drop>
 
-				<app-switcher
-					class="filters__switcher"
-					[items]="greenwichList"
-					[value]="greenwichValue"
-					[showTitle]="true"
-					(valueSwitched)="changeGreenwichFilter($event)"
-				></app-switcher>
-				<app-switcher
-					class="filters__switcher"
-					[items]="repeatList"
-					[value]="repeatableValue"
-					[showTitle]="true"
-					(valueSwitched)="changeRepeatFilter($event)"
-				></app-switcher>
-				<app-switcher
-					class="filters__switcher"
-					[items]="publicList"
-					[value]="publicValue"
-					[showTitle]="true"
-					(valueSwitched)="changePublicFilter($event)"
-				></app-switcher>
-
 				<app-input
 					class="filters__search"
 					placeholder="Поиск"
+					icon="search"
 					#searchInput
 					(input)="changeFilters()"
 					[(ngModel)]="searchInputValue"

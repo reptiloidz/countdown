@@ -323,7 +323,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	checkDatePoints(check?: boolean) {
 		// Делаем отложенное срабатывание пересчёта "чекнутых" событий,
 		// чтобы кнопка-триггер не исчезла раньше времени и дроп не закрылся
-		requestAnimationFrame(() => {
+		setTimeout(() => {
 			Array.from(this.datePointsList.nativeElement.children).map(
 				(item: any) =>
 					item?.querySelector('input') &&

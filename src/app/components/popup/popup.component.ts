@@ -2,6 +2,7 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	HostListener,
 	OnInit,
 	ViewChild,
 	ViewContainerRef,
@@ -49,5 +50,12 @@ export class PopupComponent implements OnInit {
 	close() {
 		this.isVisible = false;
 		this.popupContent?.clear();
+	}
+
+	@HostListener('document:keydown.escape')
+	onEscapeKeydown() {
+		if (this.isVisible) {
+			this.close();
+		}
 	}
 }

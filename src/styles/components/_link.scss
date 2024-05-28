@@ -64,4 +64,12 @@ a,
 	&--secondary {
 		color: rgb(var(--c-text-button));
 	}
+
+	&--positive {
+		color: rgb(var(--c-text-positive));
+	}
+
+	&--negative {
+		color: rgb(var(--c-text-negative));
+	}
 }

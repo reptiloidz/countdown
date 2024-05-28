@@ -232,8 +232,13 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 			data = iterations;
 		}
 		this.selectedDate = date;
-		this.generateCalendar();
 		this.dateSelected.emit({ date, mode: activeMode, data });
+		// Делаем отложенное срабатывание перерисовки календаря,
+		// чтобы кнопка-триггер не исчезла раньше времени и дроп не закрылся
+		setTimeout(() => {
+			this.generateCalendar();
+			this.cdr.detectChanges();
+		});
 	}
 
 	generateCalendar({

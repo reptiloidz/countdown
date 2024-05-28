@@ -19,6 +19,10 @@
 		gap: 4px;
 	}
 
+	&__nav-button {
+		width: 30px;
+	}
+
 	&__status {
 		margin-left: 12px;
 		font-weight: 300;
@@ -51,10 +55,11 @@
 		border: 1px solid transparent;
 		border-radius: 6px;
 		background-color: transparent;
+		line-height: normal;
 		cursor: pointer;
 
 		&--selected {
-			background-color: rgba(var(--c-bg-primary), .1);
+			background-color: rgba(var(--c-bg-primary), .05);
 		}
 
 		&--now {

@@ -1,6 +1,8 @@
 .control {
 	display: flex;
-	flex-direction: column;
+	height: 40px;
+	border: 1px solid rgba(var(--c-border-primary), .4);
+	border-radius: 6px;
 
 	& + & {
 		margin-top: 16px;
@@ -9,9 +11,22 @@
 	&__input {
 		flex-grow: 1;
 		width: 100%;
-		padding: 4px;
-		border: 1px solid rgba(var(--c-border-primary), .4);
-		border-radius: 4px;
+		padding: 4px 8px;
+		border: 0;
+		border-radius: inherit;
+		outline: 0;
+		font-weight: 300;
+	}
+
+	&__addon {
+		display: flex;
+		justify-content: center;
+		width: 40px;
+		border-left: 1px solid rgba(var(--c-border-primary), .1);
+	}
+
+	&__icon {
+		--icon-w: 20px;
 	}
 
 	&--row {

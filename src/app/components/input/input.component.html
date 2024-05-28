@@ -8,3 +8,13 @@
 	(input)="onInput($event)"
 	[attr.name]="formControlName || null"
 >
+<div
+	*ngIf="icon"
+	class="control__addon"
+>
+	<svg
+		app-svg
+		[name]="icon"
+		class="control__icon"
+	></svg>
+</div>
