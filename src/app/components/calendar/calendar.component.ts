@@ -78,7 +78,6 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 	@Output() modeSelected = new EventEmitter<CalendarMode>();
 	@Output() visibleDateSelected = new EventEmitter<Date>();
-	@Output() calendarRegenerated = new EventEmitter<void>();
 
 	@ContentChild('navTemplate') navTemplate: TemplateRef<unknown> | undefined;
 
@@ -419,19 +418,16 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		this.visibleDate = this.selectedDate;
 		this.modeSelected.emit(this.activeMode);
 		this.generateCalendar();
-		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarToNow() {
 		this.visibleDate = this.nowDate;
 		this.generateCalendar();
-		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarToSelected() {
 		this.visibleDate = this.selectedDate;
 		this.generateCalendar();
-		this.calendarRegenerated.emit();
 	}
 
 	switchCalendarPeriod(forward = true) {
@@ -457,7 +453,6 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		this.generateCalendar({
 			date: result[this.activeMode][forward ? 'forward' : 'backward'],
 		});
-		this.calendarRegenerated.emit();
 		this.cdr.detectChanges();
 	}
 }

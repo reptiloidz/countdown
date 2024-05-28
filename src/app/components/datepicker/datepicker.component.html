@@ -1,12 +1,12 @@
-<app-drop
-	[open]="dropOpen"
-	[ngClass]="dropClass"
->
-	<ng-template #buttonTemplate>
+<app-drop [ngClass]="dropClass">
+	<ng-template
+		#buttonTemplate
+		let-toggle="toggle"
+	>
 		<button
 			type="button"
 			[innerHTML]="dateFormatted"
-			(click)="toggleDate()"
+			(click)="toggle()"
 		></button>
 	</ng-template>
 	<ng-template #bodyTemplate>

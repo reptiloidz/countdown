@@ -26,7 +26,6 @@
 				</ng-template>
 				<ng-template #bodyTemplate>
 					<app-calendar
-						(calendarRegenerated)="calendarRegenerated()"
 						[points]="filteredPoints"
 						class="calendar"
 					>
@@ -35,11 +34,11 @@
 							let-date="date"
 							let-mode="mode"
 						>
-							<app-drop
-								*ngIf="date.points.length"
-								[open]="+date.date === (this.dropOpenDate && +this.dropOpenDate)"
-							>
-								<ng-template #buttonTemplate>
+							<app-drop *ngIf="date.points.length">
+								<ng-template
+									#buttonTemplate
+									let-toggle="toggle"
+								>
 									<button
 										app-button
 										mode="ghost"
@@ -47,7 +46,7 @@
 										icon="chevron-down"
 										title="Показать события"
 										class="calendar__btn-nav"
-										(click)="openDate({ date, activeMode: mode })"
+										(click)="toggle()"
 									></button>
 								</ng-template>
 								<ng-template #bodyTemplate>

@@ -9,15 +9,10 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { PointColors, SortTypeNames } from 'src/app/enums';
-import { CalendarDate, Point, SwitcherItem } from 'src/app/interfaces';
+import { Point, SwitcherItem } from 'src/app/interfaces';
 import { DataService, ActionService, AuthService } from 'src/app/services';
 import { SortService } from 'src/app/services/sort.service';
-import {
-	CalendarMode,
-	FilterSelected,
-	PointColorTypes,
-	SortTypes,
-} from 'src/app/types';
+import { FilterSelected, PointColorTypes, SortTypes } from 'src/app/types';
 import { InputComponent } from '../input/input.component';
 
 @Component({
@@ -32,9 +27,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
 	loading = true;
-	dropOpenDate: Date | undefined;
-	dropOpenSort = false;
-	dropOpenColors = false;
 	isDatePointsChecked: boolean = false;
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
@@ -45,7 +37,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 	publicValue: FilterSelected = 'all';
 	modesValue: 'list' | 'grid' = 'grid';
 	searchInputValue = '';
-	calendarOpen = false;
 
 	repeatList: SwitcherItem[] = [
 		{
@@ -319,20 +310,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.action.getCheckedPoints(this.pointsList.nativeElement);
 	}
 
-	calendarRegenerated() {
-		this.dropOpenDate = undefined;
-	}
-
-	openDate({ date }: { date: CalendarDate; activeMode: CalendarMode }) {
-		if (this.dropOpenDate && +this.dropOpenDate === +date.date) {
-			this.dropOpenDate = undefined;
-		} else {
-			this.dropOpenDate = date.date;
-		}
-
-		this.isDatePointsChecked = false;
-	}
-
 	getCheckedDatePoints() {
 		this.datePointsChecked = Array.from(
 			this.datePointsList.nativeElement.children
@@ -344,12 +321,16 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	checkDatePoints(check?: boolean) {
-		Array.from(this.datePointsList.nativeElement.children).map(
-			(item: any) =>
-				item?.querySelector('input') &&
-				(item.querySelector('input').checked = check)
-		);
-		this.getCheckedDatePoints();
+		// Делаем отложенное срабатывание пересчёта "чекнутых" событий,
+		// чтобы кнопка-триггер не исчезла раньше времени и дроп не закрылся
+		requestAnimationFrame(() => {
+			Array.from(this.datePointsList.nativeElement.children).map(
+				(item: any) =>
+					item?.querySelector('input') &&
+					(item.querySelector('input').checked = check)
+			);
+			this.getCheckedDatePoints();
+		});
 	}
 
 	removeDateCheckedPoints() {

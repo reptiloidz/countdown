@@ -20,8 +20,6 @@ export class DatepickerComponent implements OnInit {
 	@Input() date: Date | undefined = this.isNow ? new Date() : undefined;
 	@Input() visibleDate = this.date;
 
-	dropOpen = false;
-
 	@Output() datePicked = new EventEmitter<Date>();
 
 	ngOnInit(): void {
@@ -116,9 +114,5 @@ export class DatepickerComponent implements OnInit {
 	visibleDateSelected(date: Date = this.visibleDate || this.defaultDate) {
 		this.dateYear = getYear(date).toString();
 		this.dateMonth = getMonth(date).toString();
-	}
-
-	toggleDate() {
-		this.dropOpen = !this.dropOpen;
 	}
 }
