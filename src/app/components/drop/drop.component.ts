@@ -11,6 +11,7 @@ import {
 	Renderer2,
 	TemplateRef,
 } from '@angular/core';
+import { ButtonSize } from 'src/app/types';
 
 @Component({
 	selector: 'app-drop',
@@ -28,6 +29,10 @@ export class DropComponent implements OnInit, OnDestroy {
 		| undefined;
 
 	@Input() open = false;
+	@Input() icon: string = 'chevron-down';
+	@Input() buttonSize!: ButtonSize;
+	@Input() buttonClass = '';
+	@Input() buttonTitle: string | null = null;
 	@Input() dropBodyClass: string | string[] | null = null;
 
 	value = '';

@@ -1,12 +1,63 @@
 .drop {
+	--drop-bg-cl: rgba(var(--c-bg-drop), .2);
+	--drop-brs: 8px;
+
 	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+
+	&:has(> .drop__nav) {
+		> .drop__body {
+			margin-top: -1px;
+			border-radius: 0 var(--drop-brs) var(--drop-brs);
+		}
+	}
+
+	&:has(> .drop__body) {
+		> .drop__nav {
+			position: relative;
+			z-index: 2;
+			border: 1px solid rgba(var(--c-border-primary), .4);
+			border-bottom-color: transparent;
+			border-radius: var(--drop-brs) var(--drop-brs) 0 1px;
+		}
+	}
 
 	&__body {
 		position: absolute;
+		top: 100%;
 		left: 0;
 		z-index: 1;
-		min-width: 200px;
-		background-color: #CCCCCC;
+		padding: 12px;
+		border: 1px solid rgba(var(--c-border-primary), .4);
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: -1;
+			border-radius: inherit;
+			backdrop-filter: blur(12px);
+		}
+	}
+
+	&__nav,
+	&__body {
+		border-radius: var(--drop-brs);
+		background-color: transparent;
+	}
+
+	&__nav {
+		background-color: rgb(var(--c-bg-inverse));
+
+		&--sm {
+			--drop-brs: 4px;
+		}
 	}
 
 	&--top {

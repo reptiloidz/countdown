@@ -8,22 +8,10 @@
 	} as filteredPoints">
 		<div class="dashboard">
 			<app-drop
-				class="dashboard__calendar widget widget--drop"
-				dropBodyClass="widget__body"
+				class="dashboard__calendar"
+				icon="calendar"
+				buttonSize="lg"
 			>
-				<ng-template
-					#buttonTemplate
-					let-toggle="toggle"
-				>
-					<button
-						app-button
-						class="widget__nav"
-						icon="calendar"
-						mode="ghost"
-						size="lg"
-						(click)="toggle()"
-					></button>
-				</ng-template>
 				<ng-template #bodyTemplate>
 					<app-calendar
 						[points]="filteredPoints"
@@ -34,21 +22,12 @@
 							let-date="date"
 							let-mode="mode"
 						>
-							<app-drop *ngIf="date.points.length">
-								<ng-template
-									#buttonTemplate
-									let-toggle="toggle"
-								>
-									<button
-										app-button
-										mode="ghost"
-										size="sm"
-										icon="chevron-down"
-										title="Показать события"
-										class="calendar__btn-nav"
-										(click)="toggle()"
-									></button>
-								</ng-template>
+							<app-drop
+								*ngIf="date.points.length"
+								buttonSize="sm"
+								buttonClass="calendar__btn-nav drop__nav--sm"
+								buttonTitle="Показать события"
+							>
 								<ng-template #bodyTemplate>
 									<ul
 										class="calendar__date-ul"

@@ -1,12 +1,22 @@
 <ng-container
-	*ngIf="buttonTemplate else button;"
+	*ngIf="buttonTemplate else defaultButton"
 	[ngTemplateOutlet]="buttonTemplate"
-	[ngTemplateOutletContext]="{ value, toggle: toggleHandler.bind(this), open: openHandler.bind(this), close: closeHandler.bind(this) }"
+	[ngTemplateOutletContext]="{
+		value,
+		toggle: toggleHandler.bind(this),
+		open: openHandler.bind(this),
+		close: closeHandler.bind(this)
+	}"
 ></ng-container>
-<ng-template #button>
+<ng-template #defaultButton>
 	<button
 		app-button
-		icon="chevron-down"
+		class="drop__nav"
+		[ngClass]="buttonClass"
+		[attr.title]="buttonTitle"
+		mode="ghost"
+		[size]="buttonSize"
+		[icon]="icon"
 		(click)="toggleHandler()"
 	></button>
 </ng-template>

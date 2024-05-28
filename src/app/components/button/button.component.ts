@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { ButtonSize } from 'src/app/types';
 
 @Component({
 	selector: '[app-button]',
@@ -12,7 +13,7 @@ export class ButtonComponent {
 	@Input() loading = false;
 	@Input() view: 'button' | 'link' = 'button';
 	@Input() mode!: 'primary' | 'secondary' | 'negative' | 'positive' | 'ghost';
-	@Input() size!: 'sm' | 'lg' | 'xl';
+	@Input() size!: ButtonSize;
 	@Input() disabled = false;
 
 	@HostBinding('attr.type') get typeAttr(): string | null {

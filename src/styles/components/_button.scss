@@ -27,6 +27,8 @@
 
 	&__icon {
 		--icon-stroke-w: 2px;
+
+		filter: contrast(1);
 	}
 
 	:disabled,
