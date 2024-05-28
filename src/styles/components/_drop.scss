@@ -60,6 +60,14 @@
 		}
 	}
 
+	&__item {
+		--button-bg-cl: transparent;
+		--button-cl: rgb(var(--c-text-primary));
+
+		justify-content: flex-start;
+		width: 100%;
+	}
+
 	&--top {
 		.drop__body {
 			bottom: 100%;
