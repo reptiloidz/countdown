@@ -105,7 +105,7 @@
 					(valueSwitched)="changePublicFilter($event)"
 				></app-switcher>
 
-				<app-drop class="filters__drop">
+				<app-drop [isSelectView]="true">
 					<ng-template
 						#buttonTemplate
 						let-toggle="toggle"
@@ -120,27 +120,28 @@
 						>Цвет</button>
 					</ng-template>
 					<ng-template #bodyTemplate>
-						<button
-							type="button"
-							(click)="resetColors()"
-						>Сброс</button>
-						<ul #colorList>
-							<li
+						<div #colorList>
+							<label
 								*ngFor="let pointColorsItem of pointColors"
+								app-checkbox
+								iconSize="sm"
 								[attr.data-color]="pointColorsItem"
-								class="color"
-								[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
-							>
-								<label>
-									<span [innerHTML]="pointColorNames[pointColorsItem]"></span>
-									<input
-										type="checkbox"
-										(change)="changeFilters()"
-										[checked]="colorType | colorsCheck: pointColorsItem"
-									>
-								</label>
-							</li>
-						</ul>
+								class="drop__item"
+								(change)="changeFilters()"
+								[attr.checked]="colorType | colorsCheck: pointColorsItem"
+							><span
+									[innerHTML]="pointColorNames[pointColorsItem]"
+									class="drop__item-color color"
+									[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
+								></span></label>
+							<button
+								app-button
+								icon="cross-circle"
+								size="sm"
+								mode="negative"
+								(click)="resetColors()"
+							>Сброс</button>
+						</div>
 					</ng-template>
 				</app-drop>
 
@@ -164,7 +165,7 @@
 				></button>
 			</div>
 			<div class="dashboard__aside">
-				<app-drop>
+				<app-drop [isSelectView]="true">
 					<ng-template
 						#buttonTemplate
 						let-toggle="toggle"
@@ -207,12 +208,12 @@
 				*ngIf="filteredPoints.length; else empty"
 				class="points-list"
 				[ngClass]="{
-					'points-list--cards': modesValue === 'grid'
+					'points-list--lines': modesValue === 'list'
 				}"
 			>
 				<li
 					app-main-item
-					[isCard]="modesValue === 'grid'"
+					[isLine]="modesValue === 'list'"
 					[attr.data-id]="point.id"
 					class="points-list__item"
 					*ngFor="let point of filteredPoints | sortPoints : sortType; let i = index"

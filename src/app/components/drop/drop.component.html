@@ -23,7 +23,7 @@
 <div
 	*ngIf="bodyTemplate && open"
 	class="drop__body"
-	[ngClass]="dropBodyClass"
+	[ngClass]="[dropBodyClass, isSelectView ? 'drop__body--list' : '']"
 >
 	<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
 </div>

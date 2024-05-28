@@ -23,7 +23,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	private subscriptions = new Subscription();
 	@Input() point!: Point;
-	@Input() isCard = false;
+	@Input() isLine = false;
 	@Output() pointCheck = new EventEmitter();
 
 	@ContentChild('checkboxTemplate') checkboxTemplate:

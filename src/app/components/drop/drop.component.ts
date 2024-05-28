@@ -33,7 +33,8 @@ export class DropComponent implements OnInit, OnDestroy {
 	@Input() buttonSize!: ButtonSize;
 	@Input() buttonClass = '';
 	@Input() buttonTitle: string | null = null;
-	@Input() dropBodyClass: string | string[] | null = null;
+	@Input() dropBodyClass: string | string[] = '';
+	@Input() isSelectView = false;
 
 	value = '';
 	private documentClickListener: (() => void) | null = null;
