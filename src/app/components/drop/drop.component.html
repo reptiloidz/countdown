@@ -1,15 +1,15 @@
 <ng-container
 	*ngIf="buttonTemplate else button;"
 	[ngTemplateOutlet]="buttonTemplate"
-	[ngTemplateOutletContext]="{ value }"
+	[ngTemplateOutletContext]="{ value, toggle: toggleHandler.bind(this), open: openHandler.bind(this), close: closeHandler.bind(this) }"
 ></ng-container>
 <ng-template #button>
 	<button
-		type="button"
-		(click)="open ? closeHandler() : openHandler()"
-	>&#709;</button>
+		app-button
+		icon="chevron-down"
+		(click)="toggleHandler()"
+	></button>
 </ng-template>
-
 <div
 	*ngIf="bodyTemplate && open"
 	class="drop__body"

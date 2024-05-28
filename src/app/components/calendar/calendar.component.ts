@@ -172,21 +172,21 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 				});
 				break;
 			case 'day':
-				result = format(this.visibleDate, "yyyy 'г.', dd MMMM", {
+				result = format(this.visibleDate, "yyyy 'г.' / dd MMMM", {
 					locale: ru,
 				});
 				break;
 			case 'hour':
 				result = format(
 					this.visibleDate,
-					"yyyy 'г.', dd MMMM, HH 'ч'",
+					"yyyy 'г.' / dd MMMM / HH 'ч'",
 					{
 						locale: ru,
 					}
 				);
 				break;
 			default:
-				result = format(this.visibleDate, "yyyy 'г.', LLL", {
+				result = format(this.visibleDate, "yyyy 'г.' / LLL", {
 					locale: ru,
 				});
 				break;

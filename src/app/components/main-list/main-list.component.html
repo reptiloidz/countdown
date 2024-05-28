@@ -9,17 +9,19 @@
 		<div class="dashboard">
 			<app-drop
 				class="dashboard__calendar widget widget--drop"
-				[open]="calendarOpen"
 				dropBodyClass="widget__body"
 			>
-				<ng-template #buttonTemplate>
+				<ng-template
+					#buttonTemplate
+					let-toggle="toggle"
+				>
 					<button
 						app-button
 						class="widget__nav"
 						icon="calendar"
 						mode="ghost"
 						size="lg"
-						(click)="toggleCalendarVisibility()"
+						(click)="toggle()"
 					></button>
 				</ng-template>
 				<ng-template #bodyTemplate>
@@ -102,13 +104,10 @@
 			</app-drop>
 
 			<div class="dashboard__filters filters">
-				<app-drop
-					[open]="dropOpenColors"
-					class="filters__drop"
-				>
+				<app-drop class="filters__drop">
 					<ng-template
 						#buttonTemplate
-						let-value="colorType"
+						let-toggle="toggle"
 					>
 						<button
 							app-button
@@ -116,7 +115,7 @@
 							view="link"
 							icon="chevron-down"
 							size="lg"
-							(click)="openColors()"
+							(click)="toggle()"
 						>Цвет</button>
 					</ng-template>
 					<ng-template #bodyTemplate>
@@ -185,10 +184,10 @@
 				></button>
 			</div>
 			<div class="dashboard__aside">
-				<app-drop [open]="dropOpenSort">
+				<app-drop>
 					<ng-template
 						#buttonTemplate
-						let-value="sortType"
+						let-toggle="toggle"
 					>
 						<button
 							app-button
@@ -198,7 +197,7 @@
 							[icon]="(sortType | sortTrending).icon"
 							[iconTitle]="(sortType | sortTrending).title"
 							iconAriaHidden="false"
-							(click)="openSort()"
+							(click)="toggle()"
 						>{{ sortTypeNames[sortType] }}</button>
 					</ng-template>
 					<ng-template #bodyTemplate>

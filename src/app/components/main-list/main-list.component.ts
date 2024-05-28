@@ -331,12 +331,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 		}
 
 		this.isDatePointsChecked = false;
-		this.dropOpenSort = false;
-		this.dropOpenColors = false;
-	}
-
-	toggleCalendarVisibility() {
-		this.calendarOpen = !this.calendarOpen;
 	}
 
 	getCheckedDatePoints() {
@@ -377,8 +371,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 	) {
 		this.sortType = sortType ? sortType : this.sortType;
 
-		this.dropOpenSort = false;
-
 		navigate &&
 			this.router.navigate([], {
 				relativeTo: this.route,
@@ -398,12 +390,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	openSort() {
-		this.dropOpenSort = !this.dropOpenSort;
-		this.dropOpenDate = undefined;
-		this.dropOpenColors = false;
-	}
-
 	resetColors() {
 		if (this.colorList) {
 			Array.from(this.colorList.nativeElement.children).map(
@@ -412,15 +398,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 					(item.querySelector('input').checked = false)
 			);
 			this.changeFilters();
-			this.dropOpenColors = false;
 		} else {
 			this.colorType = [];
 		}
-	}
-
-	openColors() {
-		this.dropOpenColors = !this.dropOpenColors;
-		this.dropOpenDate = undefined;
-		this.dropOpenSort = false;
 	}
 }
