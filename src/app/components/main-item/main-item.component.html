@@ -24,23 +24,30 @@
 					<ng-container *ngIf="point?.userInfo">
 						<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else userEmpty">
 							<ng-template #tooltipContent>
-								<img
-									*ngIf="point.userInfo?.photoURL"
-									class="userpic userpic--sm"
-									[src]="point.userInfo?.photoURL"
-									[alt]="point.userInfo?.displayName"
-								>{{ point.userInfo?.displayName }}
+								<div class="point__user">
+									<img
+										*ngIf="point.userInfo?.photoURL"
+										class="userpic userpic--sm"
+										[src]="point.userInfo?.photoURL"
+										[alt]="point.userInfo?.displayName"
+										aria-hidden="true"
+									>{{ point.userInfo?.displayName }}
+								</div>
 							</ng-template>
 						</ng-container>
 						<ng-template #userEmpty>
-							<ng-template #tooltipContent>...</ng-template>
+							<ng-template #tooltipContent>
+								<p class="point__user">...</p>
+							</ng-template>
 						</ng-template>
 					</ng-container>
 				</ng-container>
 
 
 				<ng-template #userUnAuth>
-					<ng-template #tooltipContent>Доступ ограничен</ng-template>
+					<ng-template #tooltipContent>
+						<p class="point__user">Доступ ограничен</p>
+					</ng-template>
 				</ng-template>
 			</span>
 		</h2>

@@ -61,6 +61,12 @@
 		padding: 0 8px;
 	}
 
+	&__user {
+		display: flex;
+		gap: 4px;
+		font-size: 14px;
+	}
+
 	&--available {
 		--point-title-opacity: 1;
 		--point-description-opacity: .5;

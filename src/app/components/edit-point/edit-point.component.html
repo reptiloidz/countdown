@@ -63,6 +63,7 @@
 				class="userpic userpic--sm"
 				[src]="userData.photoURL"
 				[alt]="userData.displayName"
+				aria-hidden="true"
 			><ng-container *ngIf="userData?.displayName">
 				{{ userData.displayName }}
 			</ng-container>
