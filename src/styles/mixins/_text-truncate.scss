@@ -1,0 +1,13 @@
+@mixin text-truncate($stringsNum: null) {
+	overflow: hidden;
+
+	@if ($stringsNum) {
+		display: -webkit-box;
+		word-break: break-word;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: #{$stringsNum};
+	} @else {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}

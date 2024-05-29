@@ -1,4 +1,6 @@
 .tooltip {
+	--tooltip-shift: 10px;
+
 	position: relative;
 
 	&:hover {
@@ -9,10 +11,9 @@
 
 	&__body {
 		position: absolute;
-		bottom: calc(100% + 10px);
-		left: 0;
+		z-index: 1;
 		display: none;
-		box-shadow: 0 0 2px 0 #666666;
+		box-shadow: 0 0 2px 0 rgba(var(--c-shadow-primary));
 		color: initial;
 		font-size: 16px;
 		font-weight: 400;
@@ -21,12 +22,10 @@
 		&::before {
 			content: '';
 			position: absolute;
-			top: 100%;
 			left: 50%;
-			border-top: 10px solid white;
-			border-right: 5px solid transparent;
-			border-left: 5px solid transparent;
-			filter: drop-shadow(0 0 2px #666666);
+			border-right: calc(var(--tooltip-shift) / 2) solid transparent;
+			border-left: calc(var(--tooltip-shift) / 2) solid transparent;
+			filter: drop-shadow(0 0 2px rgba(var(--c-shadow-primary)));
 			transform: translateX(-50%);
 		}
 	}
@@ -37,6 +36,42 @@
 		width: max-content;
 		max-width: 200px;
 		padding: 10px;
-		background-color: white;
+		background-color: rgb(var(--c-bg-inverse));
+	}
+
+	&--top {
+		.tooltip__body {
+			bottom: calc(100% + var(--tooltip-shift));
+
+			&::before {
+				top: 100%;
+				border-top: var(--tooltip-shift) solid rgb(var(--c-border-inverse));
+			}
+		}
+	}
+
+	&--bottom {
+		.tooltip__body {
+			top: calc(100% + var(--tooltip-shift));
+
+			&::before {
+				bottom: 100%;
+				border-bottom: var(--tooltip-shift) solid rgb(var(--c-border-inverse));
+			}
+		}
+	}
+
+	&--left {
+		.tooltip__body {
+			right: auto;
+			left: 0;
+		}
+	}
+
+	&--right {
+		.tooltip__body {
+			right: 0;
+			left: auto;
+		}
 	}
 }

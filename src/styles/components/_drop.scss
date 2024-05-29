@@ -16,6 +16,8 @@
 	}
 
 	&:has(> .drop__body) {
+		z-index: 3;
+
 		> .drop__nav {
 			position: relative;
 			z-index: 2;
@@ -27,8 +29,6 @@
 
 	&__body {
 		position: absolute;
-		top: 100%;
-		left: 0;
 		z-index: 1;
 		padding: 12px;
 		border: 1px solid rgba(var(--c-border-primary), .4);
@@ -48,6 +48,10 @@
 		&--list {
 			margin-top: 10px;
 			padding: 0;
+
+			.drop__footer {
+				padding-top: 0;
+			}
 		}
 	}
 
@@ -70,12 +74,13 @@
 		--button-cl: rgb(var(--c-text-primary));
 		--button-brs: 0;
 
+		align-items: center;
 		justify-content: flex-start;
 		width: 100%;
-		padding: 8px;
+		padding: 10px;
 
 		& + & {
-			border-top: 1px solid rgba(var(--c-border-primary), .2);
+			border-top: 1px solid rgba(var(--c-border-primary), .1);
 		}
 	}
 
@@ -83,21 +88,41 @@
 		display: flex;
 		gap: 8px;
 		align-items: baseline;
+		padding-left: 8px;
+	}
 
-		&::before {
-			position: static;
-			display: block;
-			align-self: center;
-			width: 8px;
-			height: 8px;
-			border-radius: 50%;
-			box-shadow: none;
+	&__footer {
+		display: flex;
+		justify-content: center;
+		padding-top: 8px;
+		border-top: 1px solid rgba(var(--c-border-primary), .1);
+
+		&--left {
+			justify-content: flex-start;
 		}
 	}
 
 	&--top {
 		.drop__body {
 			bottom: 100%;
+		}
+	}
+
+	&--bottom {
+		.drop__body {
+			top: 100%;
+		}
+	}
+
+	&--right {
+		.drop__body {
+			left: 0;
+		}
+	}
+
+	&--left {
+		.drop__body {
+			right: 0;
 		}
 	}
 }

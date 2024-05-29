@@ -5,3 +5,5 @@ export * from './filterSelected.type';
 export * from './sortTypes.type';
 export * from './pointColorTypes.type';
 export * from './buttonSize.type';
+export * from './dropVertical.type';
+export * from './dropHorizontal.type';

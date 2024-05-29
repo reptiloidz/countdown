@@ -35,43 +35,51 @@
 									>
 										<li
 											app-main-item
+											[isLine]="true"
+											[isSm]="true"
 											[attr.data-id]="point.id"
-											class="calendar__date-li point point--sm"
 											*ngFor="let point of date.points | sortPoints : sortType; let i = index"
 											[point]="point"
 										>
 											<ng-template #checkboxTemplate>
-												<input
+												<label
 													#datePointCheckbox
-													type="checkbox"
+													app-checkbox
+													iconSize="sm"
 													(change)="getCheckedDatePoints()"
-												>
+												></label>
 											</ng-template>
 										</li>
 									</ul>
 									<div
-										class="nav"
+										class="drop__footer drop__footer--left"
 										*ngIf="date.points | checkEditablePoints"
 									>
 										<button
-											type="button"
-											class="nav__item link"
+											app-button
+											size="sm"
+											mode="positive"
+											icon="document-check"
+											title="Выбрать все доступные события"
 											(click)="checkDatePoints(true)"
-										>
-											Выбрать все</button>
+										></button>
 										<ng-container *ngIf="isDatePointsChecked">
 											<button
-												type="button"
-												class="nav__item link"
+												app-button
+												size="sm"
+												mode="secondary"
+												icon="document-cross"
+												title="Снять отметки со всех событий"
 												(click)="checkDatePoints(false)"
-											>
-												Сбросить все</button>
+											></button>
 											<button
-												type="button"
-												class="nav__item link"
+												app-button
+												size="sm"
+												mode="negative"
+												icon="cross"
+												title="Удалить выбранные события"
 												(click)="removeDateCheckedPoints()"
-											>
-												Удалить выбранные</button>
+											></button>
 										</ng-container>
 									</div>
 								</ng-template>
@@ -134,13 +142,15 @@
 									class="drop__item-color color"
 									[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
 								></span></label>
-							<button
-								app-button
-								icon="cross-circle"
-								size="sm"
-								mode="negative"
-								(click)="resetColors()"
-							>Сброс</button>
+							<div class="drop__footer">
+								<button
+									app-button
+									icon="cross"
+									mode="secondary"
+									size="sm"
+									(click)="resetColors()"
+								>Очистить</button>
+							</div>
 						</div>
 					</ng-template>
 				</app-drop>
@@ -165,7 +175,10 @@
 				></button>
 			</div>
 			<div class="dashboard__aside">
-				<app-drop [isSelectView]="true">
+				<app-drop
+					[isSelectView]="true"
+					horizontal="left"
+				>
 					<ng-template
 						#buttonTemplate
 						let-toggle="toggle"

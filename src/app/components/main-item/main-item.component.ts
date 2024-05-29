@@ -24,6 +24,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 	@Input() point!: Point;
 	@Input() isLine = false;
+	@Input() isSm = false;
 	@Output() pointCheck = new EventEmitter();
 
 	@ContentChild('checkboxTemplate') checkboxTemplate:
@@ -76,6 +77,10 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
+	get isAuth() {
+		return this.auth.isAuthenticated;
+	}
+
 	delete(id: string | undefined) {
 		this.data.removePoints({ id });
 	}
@@ -92,6 +97,12 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (userData: UserExtraData) => {
 						this.point.userInfo = userData;
+					},
+					error: (err) => {
+						console.error(
+							'Ошибка при получении информации о пользователе:\n',
+							err.message
+						);
 					},
 				});
 		}

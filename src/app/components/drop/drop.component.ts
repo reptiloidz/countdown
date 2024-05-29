@@ -11,7 +11,7 @@ import {
 	Renderer2,
 	TemplateRef,
 } from '@angular/core';
-import { ButtonSize } from 'src/app/types';
+import { ButtonSize, DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
 	selector: 'app-drop',
@@ -19,7 +19,13 @@ import { ButtonSize } from 'src/app/types';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DropComponent implements OnInit, OnDestroy {
-	@HostBinding('class') class = 'drop';
+	@HostBinding('class') get dropClass() {
+		return [
+			'drop',
+			'drop--' + this.vertical,
+			'drop--' + this.horizontal,
+		].join(' ');
+	}
 
 	@ContentChild('buttonTemplate') buttonTemplate:
 		| TemplateRef<unknown>
@@ -29,6 +35,8 @@ export class DropComponent implements OnInit, OnDestroy {
 		| undefined;
 
 	@Input() open = false;
+	@Input() vertical: DropVertical = 'bottom';
+	@Input() horizontal: DropHorizontal = 'right';
 	@Input() icon: string = 'chevron-down';
 	@Input() buttonSize!: ButtonSize;
 	@Input() buttonClass = '';

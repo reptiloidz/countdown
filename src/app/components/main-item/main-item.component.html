@@ -4,12 +4,13 @@
 	[ngClass]="[
 		hasAccessEdit ? 'point--available' : '',
 		point.color ? 'color--' + point.color : '',
-		isLine ? 'point--line' : ''
+		isLine ? 'point--line color--horizontal' : '',
+		isSm ? 'point--sm' : '',
 	]"
 >
 	<a
 		routerLink="/point/{{ point.id }}"
-		[attr.title]="point.description || null"
+		[attr.title]="isSm ? point.title : null"
 		class="point__main"
 	>
 		<h2 class="point__title">
@@ -18,25 +19,33 @@
 				(mouseenter)="loadUserInfo(point.user)"
 			>
 				<span>{{ point.title }}</span>
-				<ng-container *ngIf="point?.userInfo">
-					<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else userEmpty;">
-						<ng-template #tooltipContent>
-							<img
-								*ngIf="point.userInfo?.photoURL"
-								class="userpic userpic--sm"
-								[src]="point.userInfo?.photoURL"
-								[alt]="point.userInfo?.displayName"
-							>{{ point.userInfo?.displayName }}
+
+				<ng-container *ngIf="isAuth else userUnAuth">
+					<ng-container *ngIf="point?.userInfo">
+						<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else userEmpty">
+							<ng-template #tooltipContent>
+								<img
+									*ngIf="point.userInfo?.photoURL"
+									class="userpic userpic--sm"
+									[src]="point.userInfo?.photoURL"
+									[alt]="point.userInfo?.displayName"
+								>{{ point.userInfo?.displayName }}
+							</ng-template>
+						</ng-container>
+						<ng-template #userEmpty>
+							<ng-template #tooltipContent>...</ng-template>
 						</ng-template>
 					</ng-container>
-					<ng-template #userEmpty>
-						<ng-template #tooltipContent>...</ng-template>
-					</ng-template>
 				</ng-container>
+
+
+				<ng-template #userUnAuth>
+					<ng-template #tooltipContent>Доступ ограничен</ng-template>
+				</ng-template>
 			</span>
 		</h2>
 		<p
-			*ngIf="point.description"
+			*ngIf="point.description && !isSm"
 			class="point__description"
 		>{{ point.description }}</p>
 	</a>
@@ -112,10 +121,13 @@
 	</div>
 
 	<ng-template #loader>
-		<span
+		<svg
 			*ngIf="loading"
+			app-svg
+			name="hourglass"
 			class="loader rotating"
-		></span>
+			aria-hidden="false"
+		></svg>
 	</ng-template>
 
 </div>

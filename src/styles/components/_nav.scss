@@ -61,6 +61,14 @@
 		margin-left: 20px;
 	}
 
+	&--footer {
+		padding: 0 20px;
+
+		.nav__aside {
+			gap: 4px;
+		}
+	}
+
 	&--right {
 		.nav__aside {
 			align-items: flex-end;

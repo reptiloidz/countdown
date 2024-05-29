@@ -151,7 +151,7 @@ kbd,
 samp,
 pre {
 	font-family:
-		'ui-monospace',
+		ui-monospace,
 		'SFMono-Regular',
 		'Consolas',
 		'Liberation Mono',
@@ -228,7 +228,7 @@ textarea {
 	margin: 0; /* 1 */
 	font-family: inherit; /* 2 */
 	font-size: 100%; /* 2 */
-	line-height: 1.15; /* 2 */
+	line-height: normal; /* 2 */
 }
 
 /*

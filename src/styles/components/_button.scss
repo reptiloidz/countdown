@@ -44,13 +44,13 @@
 	}
 
 	&--negative {
-		--button-cl: rgba(var(--c-bg-negative), 1);
+		--button-cl: rgba(var(--c-text-negative), 1);
 		--button-bg-cl: transparent;
 	}
 
 	&--positive {
-		--button-bg-cl: rgba(var(--c-bg-positive), .4);
-		--button-cl: rgba(var(--c-text-button-inverse), .6);
+		--button-bg-cl: transparent;
+		--button-cl: rgba(var(--c-text-positive), 1);
 	}
 
 	&--ghost {
@@ -59,8 +59,15 @@
 		--button-border-cl: rgba(var(--c-border-primary), .4);
 	}
 
+	&--secondary {
+		--button-bg-cl: transparent;
+		--button-cl: rgba(var(--c-text-button-inverse), .6);
+		--button-border-cl: transparent;
+	}
+
 	&--sm {
 		--button-gap: 2px;
+		--button-fz: 14px;
 
 		.button__icon {
 			--icon-stroke-w: 1.5px;
