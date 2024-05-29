@@ -18,7 +18,7 @@
 				app-tooltip
 				(mouseenter)="loadUserInfo(point.user)"
 			>
-				<span>{{ point.title }}</span>
+				<span class="point__title-text">{{ point.title }}</span>
 
 				<ng-container *ngIf="isAuth else userUnAuth">
 					<ng-container *ngIf="point?.userInfo">

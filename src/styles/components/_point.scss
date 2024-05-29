@@ -97,11 +97,13 @@
 	&--sm {
 		.point {
 			&__title {
-				@include text-truncate(2);
-
 				min-width: 100px;
 				max-width: min-content;
 				font-size: 16px;
+			}
+
+			&__title-text {
+				@include text-truncate(2);
 			}
 
 			&__nav {
