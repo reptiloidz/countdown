@@ -39,6 +39,7 @@
 		color: rgba(var(--c-bg-primary), .4);
 		animation-name: logo-hue;
 		animation-duration: 1000s;
+		animation-timing-function: linear;
 		animation-iteration-count: infinite;
 	}
 }

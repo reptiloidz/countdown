@@ -1,4 +1,5 @@
 .content {
+	position: relative;
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
@@ -7,4 +8,13 @@
 	border-top: 2px solid rgba(var(--c-border-primary), .1);
 	border-bottom: 2px solid rgba(var(--c-border-primary), .1);
 	overflow: auto;
+
+	&__clock {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 20vh;
+		height: 15vh;
+		overflow: hidden;
+	}
 }

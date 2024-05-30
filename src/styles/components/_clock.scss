@@ -1,0 +1,63 @@
+.clock {
+	--clock-s: 100px;
+	--clock-cl: rgba(var(--c-bg-primary), .05);
+
+	position: relative;
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-width: var(--clock-s);
+	border: 1px solid var(--clock-cl);
+	border-radius: 50%;
+	aspect-ratio: 1/1;
+
+	&__arrow {
+		--clock-current: calc(var(--clock-current-second, 0) * 6);
+
+		position: absolute;
+		bottom: 50%;
+		width: 1%;
+		height: 40%;
+		background-color: var(--clock-cl);
+		transform: rotate(calc((var(--clock) + var(--clock-current, 0)) * 1deg));
+		transform-origin: bottom;
+		animation-name: clock;
+		animation-duration: 60s;
+		animation-timing-function: linear;
+		animation-iteration-count: infinite;
+
+		&--minute {
+			--clock-current: calc(var(--clock-current-minute, 0) * 6);
+
+			width: 2%;
+			height: 33%;
+			animation-duration: calc(60 * 60 * 1s);
+		}
+
+		&--hour {
+			--clock-current: calc(var(--clock-current-hour, 0) * 15);
+
+			width: 6%;
+			height: 20%;
+			animation-duration: calc(24 * 60 * 60 * 1s);
+		}
+	}
+}
+
+@keyframes clock {
+	0% {
+		--clock: 0;
+	}
+
+	100% {
+		--clock: 360;
+	}
+}
+
+@property --clock {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}
