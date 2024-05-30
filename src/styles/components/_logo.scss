@@ -1,0 +1,61 @@
+.logo {
+	--logo-h: 60px;
+	--logo-pb: 2px;
+	--logo-hue-initial: 72;
+
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	justify-content: center;
+	height: var(--logo-h);
+	padding: 0 10px var(--logo-pb);
+	background-color: rgba(var(--c-bg-primary), .4);
+	color: rgb(var(--c-text-inverse));
+	letter-spacing: .5px;
+	text-transform: uppercase;
+
+	&__text {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__row {
+		font-size: 24px;
+
+		&--second {
+			font-size: 13.5px;
+		}
+	}
+
+	&__count {
+		display: flex;
+		font-size: var(--logo-h);
+		line-height: calc(var(--logo-h) - var(--logo-pb));
+	}
+
+	&__zero {
+		margin-bottom: calc(var(--logo-pb) * -1);
+		background-color: hwb(calc(var(--logo-hue) + var(--logo-hue-initial)) 30% 10%);
+		color: rgba(var(--c-bg-primary), .4);
+		animation-name: logo-hue;
+		animation-duration: 1000s;
+		animation-iteration-count: infinite;
+	}
+}
+
+
+@keyframes logo-hue {
+	0% {
+		--logo-hue: 0;
+	}
+
+	100% {
+		--logo-hue: 360;
+	}
+}
+
+@property --logo-hue {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
+}

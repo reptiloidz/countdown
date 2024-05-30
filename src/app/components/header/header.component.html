@@ -37,13 +37,25 @@
 	<button
 		*ngIf="isPrivacy"
 		app-button
-		view="link"
+		icon="shield"
+		mode="positive"
+		title="Политика обработки персональных данных"
 		(click)="showPrivacy()"
-	>Политика обработки персональных данных</button>
+	></button>
 	<!-- <button
+		app-button
 		(click)="check()"
-		type="button"
 		>Проверка</button> -->
+</div>
+
+<div class="nav__logo logo">
+	<span class="logo__text">
+		<span class="logo__row">Дней без</span>
+		<span class="logo__row logo__row--second">происшествий:</span>
+	</span>
+	<span class="logo__count">н
+		<span class="logo__zero">0</span>
+		ль</span>
 </div>
 
 <div

@@ -9,5 +9,9 @@
 		z-index: -1;
 		border-radius: inherit;
 		backdrop-filter: blur(12px);
+
+		@supports not (backdrop-filter: blur(1px)) {
+			background-color: rgba(var(--c-bg-inverse), .8);
+		}
 	}
 }

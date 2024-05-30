@@ -9,8 +9,10 @@
 	grid-template-rows: 1fr;
 	grid-template-columns: 1fr;
 	width: 100%;
+	padding: 12px 0;
 	border-left: 0;
-	border-radius: 2px;
+	border-radius: 10px;
+	background-color: rgba(var(--point-color), .05);
 
 	@media (max-width: 1024px) {
 		flex-direction: column;
@@ -20,12 +22,18 @@
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
 		font-family: 'Roboto Slab', sans-serif;
 		font-weight: 500;
+
+		&::first-letter {
+			padding: 4px 0 4px 4px;
+			background-color: rgb(var(--point-color));
+			color: rgb(var(--c-text-button));
+		}
 	}
 
 	&__description {
 		margin-top: 10px;
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
-		font-size: 14px;
+		font-size: 12px;
 	}
 
 	&__main {
@@ -33,7 +41,7 @@
 		flex-grow: 1;
 		flex-direction: column;
 		grid-area: main;
-		padding: 10px 20px;
+		padding: 16px 20px;
 		text-decoration: none;
 	}
 
@@ -46,7 +54,6 @@
 		align-items: center;
 		justify-content: center;
 		width: 60px;
-		padding: 12px 0;
 		border-radius: 2px;
 	}
 
@@ -74,10 +81,11 @@
 
 	&--line {
 		display: flex;
+		padding: 0;
 
 		.point {
 			&__main {
-				padding: 40px 20px;
+				padding: 16px;
 			}
 
 			&__markers {

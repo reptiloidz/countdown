@@ -1,8 +1,8 @@
 .control {
 	display: flex;
 	height: 40px;
-	border: 1px solid rgba(var(--c-border-primary), .4);
-	border-radius: 6px;
+	border: 1px solid rgba(var(--c-border-primary), .2);
+	border-radius: 12px;
 
 	& + & {
 		margin-top: 16px;

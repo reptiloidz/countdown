@@ -120,7 +120,6 @@
 					>
 						<button
 							app-button
-							mode="primary"
 							view="link"
 							icon="chevron-down"
 							size="lg"
@@ -185,7 +184,6 @@
 					>
 						<button
 							app-button
-							mode="primary"
 							view="link"
 							size="lg"
 							[icon]="(sortType | sortTrending).icon"
@@ -239,7 +237,7 @@
 </ng-container>
 
 <ng-template #empty>
-	<h2>
+	<h2 class="empty">
 		Нет событий для отображения
 	</h2>
 </ng-template>

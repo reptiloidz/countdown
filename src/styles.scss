@@ -15,24 +15,6 @@
 	margin: 12px 0;
 }
 
-.form {
-	display: flex;
-	flex-direction: column;
-	width: 400px;
-	margin: auto;
-	padding-left: 4px;
-
-	@media (max-width: 1024px) {
-		width: 100%;
-	}
-
-	&__nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-}
-
 .form-row {
 	display: flex;
 	gap: 20px;
@@ -40,4 +22,8 @@
 	@media (max-width: 1024px) {
 		flex-direction: column;
 	}
+}
+
+.empty {
+	font-family: 'Roboto Slab', sans-serif;
 }

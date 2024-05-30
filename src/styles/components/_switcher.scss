@@ -2,7 +2,6 @@
 	--switcher-item-cl: rgb(var(--c-text-button));
 	--switcher-item-bg-cl: transparent;
 	--switcher-bg-cl: rgba(var(--c-bg-primary), .2);
-	--switcher-item-active-cl: rgb(var(--c-text-primary));
 	--switcher-item-active-bg-cl: rgb(var(--c-bg-inverse));
 	--switcher-border-cl: transparent;
 	--switcher-border-item-cl: transparent;
@@ -16,7 +15,7 @@
 		gap: 4px;
 		padding: 4px;
 		border: 1px solid var(--switcher-border-cl);
-		border-radius: 8px;
+		border-radius: 12px;
 		background-color: var(--switcher-bg-cl);
 	}
 
@@ -24,13 +23,12 @@
 		display: flex;
 		padding: 4px 8px;
 		border: 1px solid var(--switcher-border-item-cl);
-		border-radius: 4px;
+		border-radius: 12px;
 		background-color: var(--switcher-item-bg-cl);
 		color: var(--switcher-item-cl);
 		cursor: pointer;
 
 		&--active {
-			--switcher-item-cl: var(--switcher-item-active-cl);
 			--switcher-item-bg-cl: var(--switcher-item-active-bg-cl);
 			--switcher-border-item-cl: var(--switcher-border-item-active-cl);
 		}
@@ -38,8 +36,9 @@
 
 	&__value {
 		margin-top: 4px;
-		color: rgba(var(--c-text-primary), .6);
+		color: rgba(var(--c-text-primary), .4);
 		font-size: 10px;
+		font-weight: 500;
 		text-align: center;
 	}
 
@@ -58,6 +57,6 @@
 		--switcher-bg-cl: transparent;
 		--switcher-item-cl: rgba(var(--c-text-primary), .4);
 		--switcher-item-active-bg-cl: transparent;
-		--switcher-border-item-active-cl: rgba(var(--c-border-primary), .4);
+		--switcher-border-item-active-cl: rgba(var(--c-border-primary), .2);
 	}
 }

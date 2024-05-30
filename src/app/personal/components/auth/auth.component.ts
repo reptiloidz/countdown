@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -11,6 +11,8 @@ import { AuthService, NotifyService } from 'src/app/services';
 	templateUrl: './auth.component.html',
 })
 export class AuthComponent implements OnInit, OnDestroy {
+	@HostBinding('class') class = 'main__inner';
+
 	form!: FormGroup;
 	isLoading = false;
 	emailForReset = '';

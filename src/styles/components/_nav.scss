@@ -1,7 +1,7 @@
 .nav {
 	display: flex;
 	flex-shrink: 0;
-	align-items: flex-start;
+	align-items: center;
 	justify-content: space-between;
 	height: 60px;
 	padding: 0 40px;
@@ -55,10 +55,20 @@
 	&__item-inner {
 		display: flex;
 		gap: 4px;
+		align-items: center;
 	}
 
 	&__create {
 		margin-left: 20px;
+	}
+
+	&__logo {
+		margin-right: auto;
+		margin-left: 20px;
+	}
+
+	&--header {
+		margin-bottom: 20px;
 	}
 
 	&--footer {

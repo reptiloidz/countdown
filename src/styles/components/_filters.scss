@@ -28,7 +28,7 @@
 				left: 0;
 				width: 0;
 				height: calc(100% - var(--filters-switcher-mt));
-				border-left: 1px solid rgb(var(--c-border-primary));
+				border-left: 2px solid rgba(var(--c-border-primary), .1);
 			}
 		}
 	}

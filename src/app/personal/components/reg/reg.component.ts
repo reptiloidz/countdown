@@ -1,4 +1,10 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import {
+	Component,
+	ViewChild,
+	OnInit,
+	OnDestroy,
+	HostBinding,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,8 +21,8 @@ import { passwordRepeat } from 'src/app/validators';
 })
 export class RegComponent implements OnInit, OnDestroy {
 	@ViewChild('passwordControl') private passwordControl!: InputComponent;
-	@ViewChild('passwordRepeatControl')
-	private passwordRepeatControl!: InputComponent;
+	@ViewChild('passwordRepeatControl') passwordRepeatControl!: InputComponent;
+	@HostBinding('class') class = 'main__inner';
 
 	form!: FormGroup;
 	isLoading = false;
