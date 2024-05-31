@@ -51,29 +51,15 @@
 </app-panel>
 
 <div class="content">
-	<app-clock class="content__clock"></app-clock>
 	<div class="point-page">
-		<div class="point-page__header">
-			<h1
-				class="point-page__title color"
-				[ngClass]="point?.color ? 'color--' + point?.color : ''"
-			>{{ point?.title }}<span
-					*ngIf="loading"
-					class="loader rotating"
-				></span></h1>
-
-			<div class="point-page__author">
-				<img
-					*ngIf="userData?.photoURL"
-					class="userpic userpic--sm"
-					[src]="userData.photoURL"
-					[alt]="userData.displayName"
-					aria-hidden="true"
-				><ng-container *ngIf="userData?.displayName">
-					{{ userData.displayName }}
-				</ng-container>
-			</div>
-		</div>
+		<app-clock class="point-page__clock"></app-clock>
+		<h1
+			class="point-page__title color"
+			[ngClass]="point?.color ? 'color--' + point?.color : ''"
+		>{{ point?.title }}<span
+				*ngIf="loading"
+				class="loader rotating"
+			></span></h1>
 
 		<ul
 			#iterationsList
@@ -128,48 +114,61 @@
 			</ng-container>
 		</div>
 
-		<div class="point-page__markers">
-			<div
-				class="marker"
-				[ngClass]="{
-									'marker--inactive': !point?.greenwich
-								}"
-				[title]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
-			>
-				<svg
-					app-svg
-					name="globe"
-					aria-hidden="false"
-					class="marker__inner"
-				></svg>
+		<div class="point-page__info">
+			<div class="point-page__markers">
+				<div
+					class="marker"
+					[ngClass]="{
+						'marker--inactive': !point?.greenwich
+					}"
+					[title]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
+				>
+					<svg
+						app-svg
+						name="globe"
+						aria-hidden="false"
+						class="marker__inner"
+					></svg>
+				</div>
+				<div
+					class="marker"
+					[ngClass]="{
+						'marker--inactive': !point?.repeatable
+					}"
+					[title]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
+				>
+					<svg
+						app-svg
+						name="refresh"
+						aria-hidden="false"
+						class="marker__inner"
+					></svg>
+				</div>
+				<div
+					class="marker"
+					[ngClass]="{
+						'marker--inactive': !point?.public
+					}"
+					[title]="point?.public ? 'Публичное' : 'Приватное'"
+				>
+					<svg
+						app-svg
+						name="users"
+						aria-hidden="false"
+						class="marker__inner"
+					></svg>
+				</div>
 			</div>
-			<div
-				class="marker"
-				[ngClass]="{
-									'marker--inactive': !point?.repeatable
-								}"
-				[title]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
-			>
-				<svg
-					app-svg
-					name="refresh"
-					aria-hidden="false"
-					class="marker__inner"
-				></svg>
-			</div>
-			<div
-				class="marker"
-				[ngClass]="{
-									'marker--inactive': !point?.public
-								}"
-				[title]="point?.public ? 'Публичное' : 'Приватное'"
-			>
-				<svg
-					app-svg
-					name="users"
-					aria-hidden="false"
-					class="marker__inner"
-				></svg>
+			<div class="point-page__author">
+				<img
+					*ngIf="userData?.photoURL"
+					class="userpic userpic--sm"
+					[src]="userData.photoURL"
+					[alt]="userData.displayName"
+					aria-hidden="true"
+				><ng-container *ngIf="userData?.displayName">
+					{{ userData.displayName }}
+				</ng-container>
 			</div>
 		</div>
 

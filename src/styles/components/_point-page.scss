@@ -1,8 +1,9 @@
 .point-page {
-	&__header {
+	flex-grow: 1;
+
+	&__info {
 		display: flex;
-		gap: 16px;
-		align-items: baseline;
+		gap: 24px;
 	}
 
 	&__title {
@@ -24,5 +25,15 @@
 		gap: 10px;
 		align-items: center;
 		margin: 30px 0;
+	}
+
+	&__clock {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		z-index: -1;
+		width: 50%;
+		height: 90%;
+		overflow: hidden;
 	}
 }
