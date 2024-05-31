@@ -25,7 +25,7 @@
 		height: calc(var(--clock-arrow-h) * 1%);
 		border-radius: calc(25% * var(--clock-arrow-h)) / calc(25% * var(--clock-arrow-w));
 		background-color: var(--clock-cl);
-		transition: transform .1s;
+		transition: transform .5s;
 		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * 1deg));
 		transform-origin: bottom;
 
