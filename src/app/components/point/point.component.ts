@@ -4,6 +4,7 @@ import {
 	OnDestroy,
 	ViewChild,
 	ElementRef,
+	HostBinding,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -38,6 +39,7 @@ import { CalendarMode } from 'src/app/types';
 })
 export class PointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
+	@HostBinding('class') class = 'main__inner';
 	point!: Point | undefined;
 	pointDate = new Date();
 	remainTextValue = '';

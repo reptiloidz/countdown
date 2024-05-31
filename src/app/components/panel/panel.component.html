@@ -1,0 +1,29 @@
+<ng-template #defaultButton>
+	<button
+		app-button
+		class="panel__button"
+		[ngClass]="buttonClass"
+		[attr.title]="buttonTitle"
+		mode="ghost"
+		[size]="buttonSize"
+		[icon]="icon"
+		(click)="toggleHandler()"
+	></button>
+</ng-template>
+<div class="panel__body">
+	<div
+		*ngIf="bodyTemplate"
+		class="panel__content"
+	>
+		<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
+	</div>
+</div>
+<ng-container
+	*ngIf="buttonTemplate else defaultButton"
+	[ngTemplateOutlet]="buttonTemplate"
+	[ngTemplateOutletContext]="{
+		toggle: toggleHandler.bind(this),
+		open: openHandler.bind(this),
+		close: closeHandler.bind(this)
+	}"
+></ng-container>

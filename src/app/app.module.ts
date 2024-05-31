@@ -30,6 +30,7 @@ import { CheckEditablePointsPipe } from './pipes/check-editable-points.pipe';
 import { ColorsCheckPipe } from './pipes/colors-check.pipe';
 import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 import { ClockComponent } from './components/clock/clock.component';
+import { PanelComponent } from './components/panel/panel.component';
 
 @NgModule({
 	declarations: [
@@ -53,6 +54,7 @@ import { ClockComponent } from './components/clock/clock.component';
 		CheckEditablePointsPipe,
 		ColorsCheckPipe,
 		ClockComponent,
+		PanelComponent,
 	],
 	imports: [
 		BrowserModule,
