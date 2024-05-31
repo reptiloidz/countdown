@@ -10,6 +10,7 @@
 	gap: var(--button-gap);
 	align-items: center;
 	justify-content: center;
+	width: fit-content;
 	padding: 6px;
 	border: 1px solid var(--button-border-cl);
 	border-radius: var(--button-brs);
@@ -78,6 +79,7 @@
 	&--lg {
 		--button-gap: 8px;
 		--button-fz: 20px;
+		--button-brs: 8px;
 
 		.button__icon {
 			--icon-stroke-w: 1px;

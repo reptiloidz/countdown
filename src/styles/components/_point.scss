@@ -1,4 +1,5 @@
 .point {
+	@include glass(3);
 	--point-markers-bg-size: 20px;
 	--point-title-opacity: .3;
 	--point-description-opacity: .3;

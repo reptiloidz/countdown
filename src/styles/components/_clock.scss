@@ -1,6 +1,8 @@
 .clock {
 	--clock-s: 100px;
-	--clock-cl: rgba(var(--c-bg-primary), .05);
+	--clock-cl: rgba(var(--c-bg-primary), .02);
+	--clock-arrow-w: 1;
+	--clock-arrow-h: 40;
 
 	position: relative;
 	display: flex;
@@ -9,55 +11,44 @@
 	justify-content: center;
 	width: 100%;
 	min-width: var(--clock-s);
-	border: 1px solid var(--clock-cl);
+	border: 2px solid var(--clock-cl);
 	border-radius: 50%;
 	aspect-ratio: 1/1;
 
 	&__arrow {
 		--clock-current: calc(var(--clock-current-second, 0) * 6);
+		--clock-arrow-count: calc(var(--count) * 6);
 
 		position: absolute;
 		bottom: 50%;
-		width: 1%;
-		height: 40%;
+		width: calc(var(--clock-arrow-w) * 1%);
+		height: calc(var(--clock-arrow-h) * 1%);
+		border-radius: calc(25% * var(--clock-arrow-h)) / calc(25% * var(--clock-arrow-w));
 		background-color: var(--clock-cl);
-		transform: rotate(calc((var(--clock) + var(--clock-current, 0)) * 1deg));
+		transition: transform .1s;
+		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * 1deg));
 		transform-origin: bottom;
-		animation-name: clock;
-		animation-duration: 60s;
-		animation-timing-function: linear;
-		animation-iteration-count: infinite;
 
 		&--minute {
 			--clock-current: calc(var(--clock-current-minute, 0) * 6);
+			--clock-arrow-w: 2;
+			--clock-arrow-count: calc(var(--count) * 6 / 60);
 
-			width: 2%;
-			height: 33%;
+			--clock-arrow-h: 33;
+
 			animation-duration: calc(60 * 60 * 1s);
+			animation-timing-function: linear;
 		}
 
 		&--hour {
-			--clock-current: calc(var(--clock-current-hour, 0) * 15);
+			--clock-current: calc(var(--clock-current-hour, 0) * 30);
+			--clock-arrow-w: 3;
+			--clock-arrow-count: calc(var(--count) * 6 / (60 * 24));
 
-			width: 6%;
-			height: 20%;
+			--clock-arrow-h: 20;
+
 			animation-duration: calc(24 * 60 * 60 * 1s);
+			animation-timing-function: linear;
 		}
 	}
-}
-
-@keyframes clock {
-	0% {
-		--clock: 0;
-	}
-
-	100% {
-		--clock: 360;
-	}
-}
-
-@property --clock {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 0;
 }

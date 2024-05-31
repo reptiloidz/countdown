@@ -1,4 +1,4 @@
-@mixin glass {
+@mixin glass($blur: 12) {
 	&::after {
 		content: '';
 		position: absolute;
@@ -8,7 +8,7 @@
 		left: 0;
 		z-index: -1;
 		border-radius: inherit;
-		backdrop-filter: blur(12px);
+		backdrop-filter: blur(#{$blur} + px);
 
 		@supports not (backdrop-filter: blur(1px)) {
 			background-color: rgba(var(--c-bg-inverse), .8);

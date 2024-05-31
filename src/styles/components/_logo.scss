@@ -1,7 +1,9 @@
 .logo {
 	--logo-h: 60px;
 	--logo-pb: 2px;
-	--logo-hue-initial: 72;
+	--logo-hue-initial: 50;
+	--logo-zero-duration: 1000;
+	--logo-zero-duration-count: calc(var(--count) / var(--logo-zero-duration) * 360);
 
 	display: flex;
 	gap: 10px;
@@ -35,28 +37,7 @@
 
 	&__zero {
 		margin-bottom: calc(var(--logo-pb) * -1);
-		background-color: hwb(calc(var(--logo-hue) + var(--logo-hue-initial)) 30% 10%);
-		color: rgba(var(--c-bg-primary), .4);
-		animation-name: logo-hue;
-		animation-duration: 1000s;
-		animation-timing-function: linear;
-		animation-iteration-count: infinite;
+		background-color: hwb(calc(var(--logo-zero-duration-count, 0) + var(--logo-hue-initial)) 30% 10%);
+		transition: background-color .1s;
 	}
-}
-
-
-@keyframes logo-hue {
-	0% {
-		--logo-hue: 0;
-	}
-
-	100% {
-		--logo-hue: 360;
-	}
-}
-
-@property --logo-hue {
-	syntax: '<number>';
-	inherits: true;
-	initial-value: 0;
 }

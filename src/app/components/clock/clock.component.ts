@@ -30,7 +30,7 @@ export class ClockComponent implements OnInit {
 
 	setClockVariable(name: string, value: string): void {
 		this.renderer.setStyle(
-			this.el.nativeElement.querySelector('.clock'),
+			this.el.nativeElement,
 			name,
 			value,
 			RendererStyleFlags2.DashCase

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { NotifyService } from './services';
 import { Notification } from './interfaces';
 
@@ -8,6 +8,8 @@ import { Notification } from './interfaces';
 	templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, OnDestroy {
+	count = 0;
+
 	constructor(private notify: NotifyService) {}
 
 	public notifyList: Notification[] = [];
@@ -21,6 +23,15 @@ export class AppComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		interval(1000).subscribe({
+			next: () => {
+				document.documentElement.style.setProperty(
+					'--count',
+					(++this.count).toString()
+				);
+			},
+		});
 	}
 
 	ngOnDestroy(): void {

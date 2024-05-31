@@ -28,7 +28,7 @@
 			z-index: 2;
 			border-right: calc(var(--tooltip-shift) / 2) solid transparent;
 			border-left: calc(var(--tooltip-shift) / 2) solid transparent;
-			filter: drop-shadow(0 0 0 rgba(var(--c-border-primary), .9));
+			filter: drop-shadow(0 var(--tooltip-body-before-shift) 0 rgba(var(--c-border-primary), .3));
 			transform: translateX(-50%);
 		}
 	}
@@ -44,6 +44,8 @@
 	}
 
 	&--top {
+		--tooltip-body-before-shift: 1px;
+
 		.tooltip__body {
 			bottom: calc(100% + var(--tooltip-shift));
 
@@ -56,6 +58,8 @@
 	}
 
 	&--bottom {
+		--tooltip-body-before-shift: -1px;
+
 		.tooltip__body {
 			top: calc(100% + var(--tooltip-shift));
 
