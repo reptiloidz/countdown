@@ -1,25 +1,18 @@
 .content {
 	position: relative;
+	z-index: -1;
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
-	margin: 20px 0;
-	padding: 40px;
-	border-top: 1px solid rgba(var(--c-border-primary), .2);
-	border-bottom: 1px solid rgba(var(--c-border-primary), .2);
-	overflow: auto;
+	padding: 60px 20px;
+	overflow: hidden;
 
 	&__clock {
 		position: absolute;
+		top: 5%;
 		right: 0;
-		bottom: 0;
 		z-index: -1;
 		width: 100vh;
-		height: 80vh;
 		overflow: hidden;
-	}
-
-	.panel + & {
-		border-top: 0;
 	}
 }

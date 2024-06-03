@@ -1,10 +1,11 @@
 .nav {
 	display: flex;
+	flex-grow: 0;
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: space-between;
-	height: 60px;
-	padding: 0 40px;
+	padding: 20px 40px;
+	background-color: rgb(var(--c-bg-body));
 
 	@media (max-width: 1024px) {
 		&__aside {
@@ -46,12 +47,6 @@
 		}
 	}
 
-	&__item {
-		&--disabled {
-			color: lightgrey;
-		}
-	}
-
 	&__item-inner {
 		display: flex;
 		gap: 4px;
@@ -67,12 +62,17 @@
 		margin-left: 20px;
 	}
 
-	&--header {
-		margin-bottom: 20px;
-	}
-
 	&--footer {
-		padding: 0 20px;
+		position: sticky;
+		bottom: 0;
+		z-index: 1;
+		padding-right: 20px;
+		padding-left: 20px;
+		border-top: 1px solid rgba(var(--c-border-primary), .2);
+
+		&:has(.nav__aside:empty) {
+			display: none;
+		}
 
 		.nav__aside {
 			gap: 4px;

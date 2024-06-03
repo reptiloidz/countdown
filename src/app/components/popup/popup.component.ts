@@ -50,6 +50,7 @@ export class PopupComponent implements OnInit {
 	close() {
 		this.isVisible = false;
 		this.popupContent?.clear();
+		this.popupService.hide();
 	}
 
 	@HostListener('document:keydown.escape')

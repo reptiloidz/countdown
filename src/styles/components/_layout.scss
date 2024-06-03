@@ -2,6 +2,8 @@ html {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
+	overflow: auto;
+	scrollbar-gutter: stable;
 }
 
 body {
@@ -11,7 +13,6 @@ body {
 
 	display: flex;
 	flex-grow: 1;
-	height: 100%;
 	color: rgb(var(--c-text-primary));
 	font-family: 'Roboto Slab', sans-serif;
 }
@@ -21,7 +22,6 @@ body {
 	flex-direction: column;
 	width: 100%;
 	height: 100%;
-	padding: 20px 0;
 
 	@media (max-width: 1024px) {
 		height: auto;
@@ -33,9 +33,9 @@ body {
 	flex-grow: 1;
 	flex-shrink: 1;
 	flex-direction: column;
-	overflow: hidden;
 
 	&__inner {
+		z-index: 1;
 		display: flex;
 		flex-grow: 1;
 		flex-direction: column;
