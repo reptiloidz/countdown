@@ -1,6 +1,8 @@
 <app-panel
 	icon="calendar"
 	buttonSize="lg"
+	[open]="isCalendarPanelOpen"
+	(panelVisibilitySwitched)="switchCalendarPanel($event)"
 >
 	<ng-template #bodyTemplate>
 		<app-calendar

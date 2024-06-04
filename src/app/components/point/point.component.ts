@@ -57,6 +57,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	selectedIterationsNumber = 0;
 	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
+	isCalendarPanelOpen = false;
 
 	private subscriptions = new Subscription();
 
@@ -176,6 +177,8 @@ export class PointComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.switchCalendarPanel();
 	}
 
 	ngOnDestroy(): void {
@@ -212,6 +215,18 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get isDatesLengthPlural() {
 		return this.dates && this.dates?.length > 1;
+	}
+
+	switchCalendarPanel(value?: boolean) {
+		if (typeof value !== 'undefined') {
+			this.isCalendarPanelOpen = value;
+			localStorage.setItem('isCalendarPanelOpen', value.toString());
+		} else {
+			this.isCalendarPanelOpen =
+				localStorage.getItem('isCalendarPanelOpen') === 'true'
+					? true
+					: false;
+		}
 	}
 
 	setIterationsParam() {

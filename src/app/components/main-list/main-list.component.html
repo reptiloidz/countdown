@@ -135,7 +135,7 @@
 								[attr.data-color]="pointColorsItem"
 								class="drop__item"
 								(change)="changeFilters()"
-								[attr.checked]="colorType | colorsCheck: pointColorsItem"
+								[isChecked]="colorType | colorsCheck: pointColorsItem"
 							><span
 									[innerHTML]="pointColorNames[pointColorsItem]"
 									class="drop__item-color color"

@@ -215,6 +215,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 		this.data.fetchAllPoints();
 		this.loading = true;
+		this.changeModes();
 	}
 
 	ngOnDestroy(): void {
@@ -302,8 +303,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.changeFilters();
 	}
 
-	changeModes(value: string) {
-		this.modesValue = value as 'list' | 'grid';
+	changeModes(value?: string) {
+		this.modesValue =
+			((value || localStorage.getItem('modesValue')) as
+				| 'list'
+				| 'grid') || 'grid';
+		value && localStorage.setItem('modesValue', value);
 	}
 
 	checkPoint() {

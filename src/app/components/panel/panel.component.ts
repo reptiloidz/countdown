@@ -2,8 +2,10 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ContentChild,
+	EventEmitter,
 	HostBinding,
 	Input,
+	Output,
 	TemplateRef,
 } from '@angular/core';
 import { ButtonSize } from 'src/app/types';
@@ -30,6 +32,7 @@ export class PanelComponent {
 	@Input() buttonSize!: ButtonSize;
 	@Input() buttonClass = '';
 	@Input() buttonTitle: string | null = null;
+	@Output() panelVisibilitySwitched = new EventEmitter<boolean>();
 
 	openHandler() {
 		this.open = true;
@@ -45,5 +48,7 @@ export class PanelComponent {
 		} else {
 			this.openHandler();
 		}
+
+		this.panelVisibilitySwitched.emit(this.open);
 	}
 }

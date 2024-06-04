@@ -26,6 +26,8 @@ export class CheckboxComponent implements ControlValueAccessor {
 	@Input() formControlName!: string;
 	@Input() control!: FormControl;
 	@Input() iconSize: 'sm' | 'md' = 'md';
+	@Input() isChecked = false;
+	@Input() isDisabled = false;
 
 	private _name: string | null = null;
 	@Input() get name() {
@@ -34,9 +36,6 @@ export class CheckboxComponent implements ControlValueAccessor {
 	set name(value: string | null) {
 		this._name = value || this.formControlName;
 	}
-
-	isChecked = false;
-	isDisabled: boolean = false;
 
 	onChange: (value: boolean) => void = () => {};
 	onTouched: () => void = () => {};
