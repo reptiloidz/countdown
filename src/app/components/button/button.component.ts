@@ -15,6 +15,7 @@ export class ButtonComponent {
 	@Input() mode!: 'primary' | 'secondary' | 'negative' | 'positive' | 'ghost';
 	@Input() size!: ButtonSize;
 	@Input() disabled = false;
+	@Input() textClass = '';
 
 	@HostBinding('attr.type') get typeAttr(): string | null {
 		return this.type || (this.tag === 'button' ? 'button' : null);
