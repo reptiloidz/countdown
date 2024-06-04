@@ -1,6 +1,7 @@
 .dashboard {
 	position: sticky;
 	top: 0;
+	z-index: 1;
 	display: flex;
 	padding: 0 40px 20px;
 	border-bottom: 1px solid rgba(var(--c-border-primary), .2);
