@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	OnDestroy,
+	ElementRef,
+	Renderer2,
+	RendererStyleFlags2,
+} from '@angular/core';
 import { User } from '@angular/fire/auth';
 import {
 	ActivatedRoute,
@@ -20,7 +27,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private popupService: PopupService
+		private popupService: PopupService,
+		private el: ElementRef,
+		private renderer: Renderer2
 	) {}
 
 	private subscriptions = new Subscription();
@@ -82,6 +91,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					this.user = data as User;
 				},
 			})
+		);
+
+		this.renderer.setStyle(
+			this.el.nativeElement.querySelector('.logo'),
+			'--logo-hue-initial',
+			localStorage.getItem('count'),
+			RendererStyleFlags2.DashCase
 		);
 	}
 

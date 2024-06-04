@@ -41,6 +41,8 @@ export class AppComponent implements OnInit, OnDestroy {
 					'--count',
 					(++this.count).toString()
 				);
+
+				localStorage.setItem('count', this.count.toString());
 			},
 		});
 	}

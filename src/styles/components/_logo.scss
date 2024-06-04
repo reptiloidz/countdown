@@ -1,8 +1,8 @@
 .logo {
 	--logo-h: 60px;
 	--logo-pb: 2px;
-	--logo-hue-initial: 50;
-	--logo-zero-duration: 1000;
+	--logo-hue-initial: 0;
+	--logo-zero-duration: 100;
 	--logo-zero-duration-count: calc(var(--count) / var(--logo-zero-duration) * 360);
 
 	display: flex;
@@ -13,6 +13,7 @@
 	padding: 0 10px var(--logo-pb);
 	background-color: rgba(var(--c-bg-primary), .4);
 	color: rgb(var(--c-text-inverse));
+	font-weight: 400;
 	letter-spacing: .5px;
 	text-transform: uppercase;
 

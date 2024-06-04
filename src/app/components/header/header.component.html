@@ -48,15 +48,24 @@
 		>Проверка</button> -->
 </div>
 
-<div class="nav__logo logo">
-	<span class="logo__text">
+<h1
+	class="nav__logo logo"
+	aria-label="Дней без происшествий: 0"
+>
+	<span
+		aria-hidden="true"
+		class="logo__text"
+	>
 		<span class="logo__row">Дней без</span>
 		<span class="logo__row logo__row--second">происшествий:</span>
 	</span>
-	<span class="logo__count">н
+	<span
+		aria-hidden="true"
+		class="logo__count"
+	>н
 		<span class="logo__zero">0</span>
 		ль</span>
-</div>
+</h1>
 
 <div
 	*ngIf="!isMain"
