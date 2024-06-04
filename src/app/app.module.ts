@@ -31,6 +31,7 @@ import { ColorsCheckPipe } from './pipes/colors-check.pipe';
 import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 import { ClockComponent } from './components/clock/clock.component';
 import { PanelComponent } from './components/panel/panel.component';
+import { BoardComponent } from './components/board/board.component';
 
 @NgModule({
 	declarations: [
@@ -55,6 +56,7 @@ import { PanelComponent } from './components/panel/panel.component';
 		ColorsCheckPipe,
 		ClockComponent,
 		PanelComponent,
+		BoardComponent,
 	],
 	imports: [
 		BrowserModule,

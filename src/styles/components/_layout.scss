@@ -15,6 +15,11 @@ body {
 	flex-grow: 1;
 	color: rgb(var(--c-text-primary));
 	font-family: 'Roboto Slab', sans-serif;
+
+	::selection {
+		background-color: rgb(var(--c-bg-primary));
+		color: rgb(var(--c-text-inverse));
+	}
 }
 
 .root {
