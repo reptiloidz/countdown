@@ -2,8 +2,12 @@
 	--logo-h: 60px;
 	--logo-pb: 2px;
 	--logo-hue-initial: 0;
+	--logo-hue-initial-old: 0;
 	--logo-zero-duration: 100;
-	--logo-zero-duration-count: calc(var(--count) / var(--logo-zero-duration) * 360);
+	--logo-zero-duration-count:
+		calc(
+			(var(--count) + var(--logo-hue-initial) + var(--logo-hue-initial-old)) / var(--logo-zero-duration) * 360
+		);
 
 	display: flex;
 	gap: 10px;
@@ -38,7 +42,7 @@
 
 	&__zero {
 		margin-bottom: calc(var(--logo-pb) * -1);
-		background-color: hwb(calc(var(--logo-zero-duration-count, 0) + var(--logo-hue-initial)) 30% 10%);
-		transition: background-color .1s;
+		background-color: hwb(var(--logo-zero-duration-count) 30% 10%);
+		transition: background-color .5s;
 	}
 }

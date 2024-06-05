@@ -95,6 +95,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 		this.renderer.setStyle(
 			this.el.nativeElement.querySelector('.logo'),
+			'--logo-hue-initial-old',
+			localStorage.getItem('logo-hue-initial'),
+			RendererStyleFlags2.DashCase
+		);
+
+		localStorage.setItem(
+			'logo-hue-initial',
+			(
+				+(localStorage.getItem('count') || 0) +
+				(+(localStorage.getItem('logo-hue-initial') || 0) % 360)
+			).toString()
+		);
+
+		this.renderer.setStyle(
+			this.el.nativeElement.querySelector('.logo'),
 			'--logo-hue-initial',
 			localStorage.getItem('count'),
 			RendererStyleFlags2.DashCase
