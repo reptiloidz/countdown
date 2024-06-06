@@ -178,13 +178,56 @@
 			*ngIf="point?.title"
 			class="description"
 		>{{ remainTextValue }}</h2>
-		<p
+		<!-- <p
 			*ngIf="!dateLoading; else dateLoader"
 			class="timer"
 			[attr.title]="iterationDate || null"
-		>{{ dateTimer }} {{ timer }}</p>
+			>{{ dateTimer }} {{ timer }}</p> -->
 
-		<app-board></app-board>
+		<div
+			*ngIf="!dateLoading; else dateLoader"
+			class="timers"
+		>
+			<ng-container *ngIf="timerYears">
+				<app-board
+					[value]="timerYears"
+					label="Годы"
+					class="timers__item"
+				></app-board>
+				<span class="timers__divider">/</span>
+			</ng-container>
+			<ng-container *ngIf="timerMonths">
+				<app-board
+					[value]="timerMonths"
+					label="Месяцы"
+					class="timers__item"
+				></app-board>
+				<span class="timers__divider">/</span>
+			</ng-container>
+			<app-board
+				*ngIf="timerDays"
+				[value]="timerDays"
+				label="Дни"
+				class="timers__item timers__item--divided"
+			></app-board>
+			<app-board
+				[value]="timerHours"
+				label="Часы"
+				class="timers__item timers__item--divided"
+			></app-board>
+			<span class="timers__divider">:</span>
+			<app-board
+				[value]="timerMins"
+				label="Минуты"
+				class="timers__item"
+			></app-board>
+			<span class="timers__divider">:</span>
+			<app-board
+				[value]="timerSecs"
+				label="Секунды"
+				class="timers__item"
+			></app-board>
+		</div>
 
 		<ng-template #dateLoader>
 			<h2>
@@ -192,6 +235,8 @@
 			</h2>
 		</ng-template>
 		<br>
+		<br>
+		<br><br>
 		<p>{{ point?.description }}</p>
 	</div>
 </div>

@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import {
+	BrowserAnimationsModule,
+	provideAnimations,
+} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -60,6 +64,7 @@ import { BoardComponent } from './components/board/board.component';
 	],
 	imports: [
 		BrowserModule,
+		BrowserAnimationsModule,
 		AppRoutingModule,
 		FormsModule,
 		ReactiveFormsModule,
@@ -82,7 +87,7 @@ import { BoardComponent } from './components/board/board.component';
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),
 	],
-	providers: [[provideNgxMask()], SortTrendingPipe],
+	providers: [[provideNgxMask()], SortTrendingPipe, provideAnimations()],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

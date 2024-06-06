@@ -58,6 +58,12 @@ export class PointComponent implements OnInit, OnDestroy {
 	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
 	isCalendarPanelOpen = false;
+	timerYears!: number;
+	timerMonths!: number;
+	timerDays!: number;
+	timerHours = '00';
+	timerMins = '00';
+	timerSecs = '00';
 
 	private subscriptions = new Subscription();
 
@@ -274,6 +280,17 @@ export class PointComponent implements OnInit, OnDestroy {
 		)}:${this.zeroPad(
 			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
 		)}`;
+
+		this.timerHours = this.zeroPad(
+			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
+		);
+
+		this.timerMins = this.zeroPad(
+			(currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0
+		);
+		this.timerSecs = this.zeroPad(
+			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
+		);
 	}
 
 	setDateTimer() {
@@ -301,6 +318,13 @@ export class PointComponent implements OnInit, OnDestroy {
 		} else {
 			this.dateTimer = '';
 		}
+
+		currentInterval.years &&
+			(this.timerYears = Math.abs(currentInterval.years));
+		currentInterval.months &&
+			(this.timerMonths = Math.abs(currentInterval.months));
+		currentInterval.days &&
+			(this.timerDays = Math.abs(currentInterval.days));
 	}
 
 	setRemainText() {

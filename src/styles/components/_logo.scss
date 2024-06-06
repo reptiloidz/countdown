@@ -3,7 +3,7 @@
 	--logo-pb: 2px;
 	--logo-hue-initial: 0;
 	--logo-hue-initial-old: 0;
-	--logo-zero-duration: 100;
+	--logo-zero-duration: 1000;
 	--logo-zero-duration-count:
 		calc(
 			(var(--count) + var(--logo-hue-initial) + var(--logo-hue-initial-old)) / var(--logo-zero-duration) * 360

@@ -1,55 +1,64 @@
 .board {
 	--board-h: 120px;
-	--board-px: 40px;
+	--board-px: 20px;
+	--board-brs: 8px;
 	--board-hinge-w: 8px;
 	--board-hinge-h: 32px;
+	--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
 
-	display: block;
-	color: rgb(var(--c-text-inverse));
-	font-size: 80px;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: fit-content;
+	height: var(--board-h);
+	padding: 0 var(--board-hinge-w);
+	border-radius: 6px;
 
-	&__item {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: fit-content;
-		height: var(--board-h);
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		top: calc(50% - (var(--board-hinge-h) / 2) + 1px);
+		z-index: -1;
+		display: block;
+		width: calc(var(--board-hinge-w) - 2px);
+		height: calc(var(--board-hinge-h) - 2px);
+		background-color: rgb(var(--c-bg-board));
+		background-image:
+			linear-gradient(
+				180deg,
+				rgba(var(--c-bg-inverse), 0) 0%,
+				rgba(var(--c-bg-inverse), .5) 10%,
+				rgba(var(--c-bg-inverse), 0) 50%,
+				rgba(var(--c-bg-inverse), .1) 90%,
+				rgba(var(--c-bg-inverse), 0) 100%
+			);
+	}
 
-		&::before,
-		&::after {
-			content: '';
-			position: absolute;
-			top: calc(50% - (var(--board-hinge-h) / 2) + 1px);
-			display: block;
-			width: calc(var(--board-hinge-w) - 2px);
-			height: calc(var(--board-hinge-h) - 2px);
-			background-color: rgb(var(--c-bg-board));
-			background-image:
-				linear-gradient(
-					180deg,
-					rgba(var(--c-bg-inverse), 0) 0%,
-					rgba(var(--c-bg-inverse), .5) 10%,
-					rgba(var(--c-bg-inverse), 0) 50%,
-					rgba(var(--c-bg-inverse), .1) 90%,
-					rgba(var(--c-bg-inverse), 0) 100%
-				);
-		}
+	&::before {
+		left: 0;
+		box-shadow:
+			1px 0 1px 1px rgba(var(--c-bg-primary), .7),
+			1px 0 8px 0 rgba(var(--c-bg-primary), .7);
+	}
 
-		&::before {
-			left: 0;
-			box-shadow: 1px 0 1px 1px rgba(var(--c-bg-primary), .7);
-		}
+	&::after {
+		right: 0;
+		box-shadow:
+			-1px 0 1px 1px rgba(var(--c-bg-primary), .7),
+			-1px 0 8px 0 rgba(var(--c-bg-primary), .7);
+	}
 
-		&::after {
-			right: 0;
-			box-shadow: -1px 0 1px 1px rgba(var(--c-bg-primary), .7);
-		}
+	&__body {
+		display: grid;
+		width: calc(100% + (var(--board-hinge-w) * 2));
 	}
 
 	&__half {
 		position: relative;
 		display: flex;
+		grid-area: 1/1/1/1;
 		justify-content: center;
 		width: calc(100% - (var(--board-hinge-w) * 2));
 		height: calc(var(--board-h) / 2);
@@ -61,9 +70,11 @@
 				rgba(var(--c-bg-inverse), .08) 80%,
 				rgba(var(--c-bg-inverse), .1) 100%
 			);
-		box-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
+		box-shadow: var(--board-half-shadow);
+		color: rgb(var(--c-text-inverse));
+		font-family: monospace;
+		font-size: 80px;
 		transition: transform 1s;
-		transform: rotateX(0deg) matrix3d(1, 0, 0, 0, 0, .75, 0, .001, 1, 1, .1, .1, .1, .1, 0, 1);
 		transform-origin: bottom;
 
 		&::before,
@@ -79,7 +90,7 @@
 			display: block;
 			width: calc(100% + (var(--board-hinge-w) * 2));
 			height: calc(100% - (var(--board-hinge-h) / 2));
-			border-radius: 4px 4px 0 0;
+			border-radius: var(--board-brs) var(--board-brs) 0 0;
 			background-color: inherit;
 			background-image:
 				linear-gradient(
@@ -97,7 +108,13 @@
 			box-shadow: 0 0 0 1px rgba(var(--c-bg-primary), .3);
 		}
 
-		& + & {
+		.board__text-wrapper {
+			align-items: flex-start;
+		}
+
+		&--bottom {
+			grid-row-start: 2;
+			grid-row-end: 2;
 			background-image:
 				linear-gradient(
 					180deg,
@@ -106,13 +123,14 @@
 				);
 			box-shadow: none;
 			transform: none;
+			transform-origin: top;
 
 			&::before {
 				top: auto;
 				bottom: 0;
-				border-radius: 0 0 4px 4px;
+				border-radius: 0 0 var(--board-brs) var(--board-brs);
 				background-image: inherit;
-				box-shadow: inset 0 1px 1px 0 rgba(var(--c-bg-inverse), .2);
+				box-shadow: inset 0 -1px 0 0 rgba(var(--c-bg-primary), .2);
 			}
 
 			&::after {
@@ -126,8 +144,10 @@
 			}
 		}
 
-		.board__text-wrapper {
-			align-items: flex-start;
+		&--animate {
+			&::after {
+				content: none;
+			}
 		}
 	}
 
@@ -144,5 +164,12 @@
 		display: flex;
 		align-items: center;
 		height: var(--board-h);
+	}
+
+	&__label {
+		width: 100%;
+		color: rgb(var(--c-text-inverse));
+		font-size: 20px;
+		text-align: center;
 	}
 }

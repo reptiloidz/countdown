@@ -1,12 +1,31 @@
-<div class="board__item">
+<div class="board__body">
 	<div class="board__half">
 		<div class="board__text-wrapper">
-			<div class="board__text">20</div>
+			<div class="board__text">{{ topStaticValue }}</div>
 		</div>
 	</div>
-	<div class="board__half">
+	<div
+		*ngIf="switchTop"
+		@halfTop
+		class="board__half board__half--animate"
+	>
 		<div class="board__text-wrapper">
-			<div class="board__text">20</div>
+			<div class="board__text">{{ topAnimatedValue }}</div>
+		</div>
+	</div>
+	<div class="board__half board__half--bottom">
+		<div class="board__text-wrapper">
+			<div class="board__text">{{ bottomStaticValue }}</div>
+		</div>
+	</div>
+	<div
+		*ngIf="switchBottom"
+		@halfBottom
+		class="board__half board__half--animate board__half--bottom"
+	>
+		<div class="board__text-wrapper">
+			<div class="board__text">{{ bottomAnimatedValue }}</div>
 		</div>
 	</div>
 </div>
+<p class="board__label">{{ label }}</p>

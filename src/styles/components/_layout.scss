@@ -14,7 +14,7 @@ body {
 	display: flex;
 	flex-grow: 1;
 	color: rgb(var(--c-text-primary));
-	font-family: 'Roboto Slab', sans-serif;
+	font-family: var(--ff-slab);
 
 	::selection {
 		background-color: rgb(var(--c-bg-primary));
