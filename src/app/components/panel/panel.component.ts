@@ -53,6 +53,9 @@ export class PanelComponent {
 	@ContentChild('bodyTemplate') bodyTemplate:
 		| TemplateRef<unknown>
 		| undefined;
+	@ContentChild('extraTemplate') extraTemplate:
+		| TemplateRef<unknown>
+		| undefined;
 
 	@Input() open = false;
 	@Input() icon: string = 'chevron-down';

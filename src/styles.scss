@@ -38,10 +38,8 @@
 	display: flex;
 	gap: 8px;
 	justify-content: center;
-	width: min-content;
 	padding: 20px 20px 40px;
 	border-radius: 10px;
-	background-color: rgb(var(--c-bg-board));
 
 	&__item {
 		z-index: 1;
@@ -56,7 +54,8 @@
 
 	&__divider {
 		margin: 13px 10px 0;
-		color: rgb(var(--c-text-inverse));
+		color: rgb(var(--c-text-primary));
 		font-size: 64px;
+		transform: translateZ(0);
 	}
 }

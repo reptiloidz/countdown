@@ -51,11 +51,67 @@
 			</ng-template>
 		</app-calendar>
 	</ng-template>
+
+	<ng-container *ngIf="this.dates?.length && (this.dates?.length != 1)">
+		<ng-template #extraTemplate>
+			<ul
+				#iterationsList
+				class="tabs"
+			>
+				<li
+					*ngFor="let date of this.dates; let i = index"
+					class="tabs__item"
+					[ngClass]="{
+								'tabs__item--active': i == currentIterationIndex,
+								'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
+								'tabs__item--copy': i | checkCopies : point,
+							}"
+				>
+					<button
+						class="link tabs__btn"
+						(click)="switchIteration(i)"
+						type="button"
+					>{{ i + 1 }}
+						<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
+					</button>
+					<input
+						*ngIf="hasAccess"
+						type="checkbox"
+						[name]="i"
+						(change)="checkIteration()"
+					>
+					<button
+						*ngIf="hasAccess"
+						class="link"
+						(click)="removeIteration(i)"
+						type="button"
+					>x</button>
+				</li>
+			</ul>
+
+			<div *ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural">
+				<button
+					type="button"
+					(click)="checkAllIterations()"
+				>Выбрать все</button>
+				<ng-container *ngIf="iterationsChecked.length">
+					<button
+						type="button"
+						(click)="checkAllIterations(false)"
+					>Снять выбор</button>
+					<button
+						type="button"
+						(click)="removeCheckedIterations()"
+					>Удалить выбранные итерации</button>
+				</ng-container>
+			</div>
+		</ng-template>
+	</ng-container>
 </app-panel>
 
 <div class="content">
 	<div class="point-page">
-		<app-clock class="point-page__clock"></app-clock>
+		<!-- <app-clock class="point-page__clock"></app-clock> -->
 		<h1
 			class="point-page__title color"
 			[ngClass]="point?.color ? 'color--' + point?.color : ''"
@@ -64,57 +120,49 @@
 				class="loader rotating"
 			></span></h1>
 
-		<ul
-			#iterationsList
-			*ngIf="this.dates?.length && (this.dates?.length != 1)"
-			class="tabs"
+		<div
+			*ngIf="!dateLoading; else dateLoader"
+			class="timers"
 		>
-			<li
-				*ngFor="let date of this.dates; let i = index"
-				class="tabs__item"
-				[ngClass]="{
-					'tabs__item--active': i == currentIterationIndex,
-					'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
-					'tabs__item--copy': i | checkCopies : point,
-				}"
-			>
-				<button
-					class="link tabs__btn"
-					(click)="switchIteration(i)"
-					type="button"
-				>{{ i + 1 }}
-					<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
-				</button>
-				<input
-					*ngIf="hasAccess"
-					type="checkbox"
-					[name]="i"
-					(change)="checkIteration()"
-				>
-				<button
-					*ngIf="hasAccess"
-					class="link"
-					(click)="removeIteration(i)"
-					type="button"
-				>x</button>
-			</li>
-		</ul>
-
-		<div *ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural">
-			<button
-				type="button"
-				(click)="checkAllIterations()"
-			>Выбрать все</button>
-			<ng-container *ngIf="iterationsChecked.length">
-				<button
-					type="button"
-					(click)="checkAllIterations(false)"
-				>Снять выбор</button>
-				<button
-					type="button"
-					(click)="removeCheckedIterations()"
-				>Удалить выбранные итерации</button>
+			<ng-container *ngIf="timerYears">
+				<app-board
+					[value]="timerYears"
+					label="Годы"
+					class="timers__item"
+				></app-board>
+				<span class="timers__divider">/</span>
 			</ng-container>
+			<ng-container *ngIf="timerMonths">
+				<app-board
+					[value]="timerMonths"
+					label="Месяцы"
+					class="timers__item"
+				></app-board>
+				<span class="timers__divider">/</span>
+			</ng-container>
+			<app-board
+				*ngIf="timerDays"
+				[value]="timerDays"
+				label="Дни"
+				class="timers__item timers__item--divided"
+			></app-board>
+			<app-board
+				[value]="timerHours"
+				label="Часы"
+				class="timers__item timers__item--divided"
+			></app-board>
+			<span class="timers__divider">:</span>
+			<app-board
+				[value]="timerMins"
+				label="Минуты"
+				class="timers__item"
+			></app-board>
+			<span class="timers__divider">:</span>
+			<app-board
+				[value]="timerSecs"
+				label="Секунды"
+				class="timers__item"
+			></app-board>
 		</div>
 
 		<div class="point-page__info">
@@ -185,59 +233,12 @@
 			[attr.title]="iterationDate || null"
 			>{{ dateTimer }} {{ timer }}</p> -->
 
-		<div
-			*ngIf="!dateLoading; else dateLoader"
-			class="timers"
-		>
-			<ng-container *ngIf="timerYears">
-				<app-board
-					[value]="timerYears"
-					label="Годы"
-					class="timers__item"
-				></app-board>
-				<span class="timers__divider">/</span>
-			</ng-container>
-			<ng-container *ngIf="timerMonths">
-				<app-board
-					[value]="timerMonths"
-					label="Месяцы"
-					class="timers__item"
-				></app-board>
-				<span class="timers__divider">/</span>
-			</ng-container>
-			<app-board
-				*ngIf="timerDays"
-				[value]="timerDays"
-				label="Дни"
-				class="timers__item timers__item--divided"
-			></app-board>
-			<app-board
-				[value]="timerHours"
-				label="Часы"
-				class="timers__item timers__item--divided"
-			></app-board>
-			<span class="timers__divider">:</span>
-			<app-board
-				[value]="timerMins"
-				label="Минуты"
-				class="timers__item"
-			></app-board>
-			<span class="timers__divider">:</span>
-			<app-board
-				[value]="timerSecs"
-				label="Секунды"
-				class="timers__item"
-			></app-board>
-		</div>
 
 		<ng-template #dateLoader>
 			<h2>
 				<div class="loader rotating"></div>
 			</h2>
 		</ng-template>
-		<br>
-		<br>
-		<br><br>
-		<p>{{ point?.description }}</p>
+		<p *ngIf="point?.description">{{ point?.description }}</p>
 	</div>
 </div>

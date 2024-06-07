@@ -13,40 +13,40 @@
 	width: fit-content;
 	height: var(--board-h);
 	padding: 0 var(--board-hinge-w);
-	border-radius: 6px;
+	border-radius: var(--board-brs);
 
 	&::before,
 	&::after {
 		content: '';
 		position: absolute;
-		top: calc(50% - (var(--board-hinge-h) / 2) + 1px);
+		top: calc(50% - (var(--board-hinge-h) / 2) + 2px);
 		z-index: -1;
 		display: block;
-		width: calc(var(--board-hinge-w) - 2px);
-		height: calc(var(--board-hinge-h) - 2px);
+		width: calc(var(--board-hinge-w) - 1px);
+		height: calc(var(--board-hinge-h) - 4px);
 		background-color: rgb(var(--c-bg-board));
 		background-image:
 			linear-gradient(
 				180deg,
-				rgba(var(--c-bg-inverse), 0) 0%,
-				rgba(var(--c-bg-inverse), .5) 10%,
-				rgba(var(--c-bg-inverse), 0) 50%,
-				rgba(var(--c-bg-inverse), .1) 90%,
-				rgba(var(--c-bg-inverse), 0) 100%
+				rgba(var(--c-bg-primary), 0) 0%,
+				rgba(var(--c-bg-primary), .1) 10%,
+				rgba(var(--c-bg-primary), 0) 50%,
+				rgba(var(--c-bg-primary), .3) 90%,
+				rgba(var(--c-bg-primary), 0) 100%
 			);
 	}
 
 	&::before {
 		left: 0;
 		box-shadow:
-			1px 0 1px 1px rgba(var(--c-bg-primary), .7),
+			1px 0 1px 1px rgba(var(--c-bg-primary), .4),
 			1px 0 8px 0 rgba(var(--c-bg-primary), .7);
 	}
 
 	&::after {
 		right: 0;
 		box-shadow:
-			-1px 0 1px 1px rgba(var(--c-bg-primary), .7),
+			-1px 0 1px 1px rgba(var(--c-bg-primary), .4),
 			-1px 0 8px 0 rgba(var(--c-bg-primary), .7);
 	}
 
@@ -66,12 +66,12 @@
 		background-image:
 			linear-gradient(
 				180deg,
-				rgba(var(--c-bg-inverse), 0) 0%,
-				rgba(var(--c-bg-inverse), .08) 80%,
-				rgba(var(--c-bg-inverse), .1) 100%
+				rgba(var(--c-bg-primary), 0) 0%,
+				rgba(var(--c-bg-primary), .03) 80%,
+				rgba(var(--c-bg-primary), .05) 100%
 			);
-		box-shadow: var(--board-half-shadow);
-		color: rgb(var(--c-text-inverse));
+		// box-shadow: var(--board-half-shadow);
+		color: rgb(var(--c-text-primary));
 		font-family: monospace;
 		font-size: 80px;
 		transition: transform 1s;
@@ -86,7 +86,6 @@
 		&::before {
 			top: 0;
 			left: calc(var(--board-hinge-w) * -1);
-			z-index: -1;
 			display: block;
 			width: calc(100% + (var(--board-hinge-w) * 2));
 			height: calc(100% - (var(--board-hinge-h) / 2));
@@ -95,16 +94,16 @@
 			background-image:
 				linear-gradient(
 					180deg,
-					rgba(var(--c-bg-inverse), 0) 0%,
-					rgba(var(--c-bg-inverse), .08) 100%
+					rgba(var(--c-bg-primary), 0) 0%,
+					rgba(var(--c-bg-primary), .03) 100%
 				);
-			box-shadow: inherit;
+			box-shadow: var(--board-half-shadow);
 		}
 
 		&::after {
 			top: 100%;
 			z-index: 1;
-			width: 100%;
+			width: calc(100% - 2px);
 			box-shadow: 0 0 0 1px rgba(var(--c-bg-primary), .3);
 		}
 
@@ -118,8 +117,8 @@
 			background-image:
 				linear-gradient(
 					180deg,
-					rgba(var(--c-bg-inverse), .1) 0%,
-					rgba(var(--c-bg-inverse), .1) 100%
+					rgba(var(--c-bg-primary), .02) 0%,
+					rgba(var(--c-bg-primary), .02) 100%
 				);
 			box-shadow: none;
 			transform: none;
@@ -164,11 +163,12 @@
 		display: flex;
 		align-items: center;
 		height: var(--board-h);
+		transform: translateZ(0);
 	}
 
 	&__label {
 		width: 100%;
-		color: rgb(var(--c-text-inverse));
+		color: rgb(var(--c-text-primary));
 		font-size: 20px;
 		text-align: center;
 		transform: translateZ(0);

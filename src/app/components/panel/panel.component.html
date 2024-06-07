@@ -19,12 +19,18 @@
 		<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
 	</div>
 </div>
-<ng-container
-	*ngIf="buttonTemplate else defaultButton"
-	[ngTemplateOutlet]="buttonTemplate"
-	[ngTemplateOutletContext]="{
-		toggle: toggleHandler.bind(this),
-		open: openHandler.bind(this),
-		close: closeHandler.bind(this)
-	}"
-></ng-container>
+<div class="panel__footer">
+	<ng-container
+		*ngIf="buttonTemplate else defaultButton"
+		[ngTemplateOutlet]="buttonTemplate"
+		[ngTemplateOutletContext]="{
+			toggle: toggleHandler.bind(this),
+			open: openHandler.bind(this),
+			close: closeHandler.bind(this)
+		}"
+	></ng-container>
+	<ng-container
+		*ngIf="extraTemplate"
+		[ngTemplateOutlet]="extraTemplate"
+	></ng-container>
+</div>
