@@ -73,6 +73,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		mode: CalendarMode;
 		data: Point[] | Iteration[];
 	}>();
+	@Output() created = new EventEmitter();
 
 	calendarArray: CalendarDate[][] = [];
 
@@ -143,6 +144,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 		this.modeSelected.emit(this.activeMode);
 		this.generateCalendar();
+		this.created.emit();
 	}
 
 	ngOnChanges() {

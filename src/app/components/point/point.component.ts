@@ -58,6 +58,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
 	isCalendarPanelOpen = false;
+	isCalendarCreated = false;
 	timerYears!: number;
 	timerMonths!: number;
 	timerDays!: number;
@@ -221,6 +222,10 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get isDatesLengthPlural() {
 		return this.dates && this.dates?.length > 1;
+	}
+
+	get calendarOpen() {
+		return this.isCalendarCreated && this.isCalendarPanelOpen;
 	}
 
 	switchCalendarPanel(value?: boolean) {
@@ -435,5 +440,9 @@ export class PointComponent implements OnInit, OnDestroy {
 		} else {
 			this.checkAllIterations(false, data as Iteration[]);
 		}
+	}
+
+	calendarCreated() {
+		this.isCalendarCreated = true;
 	}
 }
