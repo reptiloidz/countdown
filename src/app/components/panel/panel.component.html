@@ -13,6 +13,7 @@
 <div class="panel__body">
 	<div
 		*ngIf="bodyTemplate"
+		[@panelBody]="open ? 'open' : 'closed'"
 		class="panel__content"
 	>
 		<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>

@@ -27,7 +27,7 @@ const ANIMATION_SPEED = 200;
 					})
 				),
 				style({
-					display: 'none',
+					visibility: 'hidden',
 				}),
 			]),
 		]),

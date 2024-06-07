@@ -7,7 +7,9 @@
 	}
 
 	&__content {
-		display: none;
+		&.ng-animating {
+			overflow: hidden;
+		}
 	}
 
 	&__button {
@@ -17,13 +19,5 @@
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
 		background-color: rgb(var(--c-bg-body));
-	}
-
-	&--open {
-		.panel {
-			&__content {
-				display: flex;
-			}
-		}
 	}
 }

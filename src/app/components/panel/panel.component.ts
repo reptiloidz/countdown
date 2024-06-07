@@ -1,4 +1,12 @@
 import {
+	AUTO_STYLE,
+	animate,
+	state,
+	style,
+	transition,
+	trigger,
+} from '@angular/animations';
+import {
 	ChangeDetectionStrategy,
 	Component,
 	ContentChild,
@@ -14,10 +22,29 @@ import { ButtonSize } from 'src/app/types';
 	selector: 'app-panel',
 	templateUrl: './panel.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	animations: [
+		trigger('panelBody', [
+			state(
+				'open',
+				style({
+					height: AUTO_STYLE,
+					visibility: AUTO_STYLE,
+				})
+			),
+			state(
+				'closed',
+				style({
+					height: '0',
+					visibility: 'hidden',
+				})
+			),
+			transition('open <=> closed', animate('.4s ease-out')),
+		]),
+	],
 })
 export class PanelComponent {
 	@HostBinding('class') get dropClass() {
-		return ['panel', this.open ? 'panel--open' : ''].join(' ');
+		return ['panel'].join(' ');
 	}
 
 	@ContentChild('buttonTemplate') buttonTemplate:
