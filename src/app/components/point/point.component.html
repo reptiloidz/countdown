@@ -68,41 +68,63 @@
 							}"
 				>
 					<button
-						class="link tabs__btn"
+						app-button
+						class="tabs__btn"
+						size="sm"
+						mode="secondary"
 						(click)="switchIteration(i)"
-						type="button"
 					>{{ i + 1 }}
 						<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
 					</button>
-					<input
+					<label
+						app-checkbox
 						*ngIf="hasAccess"
-						type="checkbox"
-						[name]="i"
+						[attr.name]="i"
+						iconSize="sm"
 						(change)="checkIteration()"
-					>
+						class="tabs__check"
+					></label>
 					<button
 						*ngIf="hasAccess"
-						class="link"
+						app-button
+						mode="negative"
+						size="sm"
+						icon="cross"
+						class="tabs__remove"
 						(click)="removeIteration(i)"
-						type="button"
-					>x</button>
+					></button>
 				</li>
 			</ul>
 
-			<div *ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural">
+			<div
+				*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
+				class="tabs__nav"
+			>
 				<button
-					type="button"
+					app-button
+					size="sm"
+					mode="positive"
+					icon="document-check"
+					title="Выбрать все итерации"
 					(click)="checkAllIterations()"
-				>Выбрать все</button>
+				></button>
 				<ng-container *ngIf="iterationsChecked.length">
 					<button
-						type="button"
+						app-button
+						size="sm"
+						mode="secondary"
+						icon="document-cross"
+						title="Снять выбор со всех итераций"
 						(click)="checkAllIterations(false)"
-					>Снять выбор</button>
+					></button>
 					<button
-						type="button"
+						app-button
+						size="sm"
+						mode="negative"
+						icon="cross"
+						title="Удалить выбранные итерации"
 						(click)="removeCheckedIterations()"
-					>Удалить выбранные итерации</button>
+					></button>
 				</ng-container>
 			</div>
 		</ng-template>

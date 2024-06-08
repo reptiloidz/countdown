@@ -53,8 +53,9 @@
 	}
 
 	&__divider {
-		margin: 13px 10px 0;
+		margin: 16px 10px 0;
 		color: rgb(var(--c-text-primary));
+		font-family: monospace;
 		font-size: 64px;
 		transform: translateZ(0);
 	}

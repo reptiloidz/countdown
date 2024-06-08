@@ -1,15 +1,15 @@
 .tabs {
 	display: flex;
-	flex-wrap: wrap;
 	gap: 12px;
-	margin-top: 40px;
-	padding: 20px 0 0;
-	border-top: 1px solid gray;
+	margin: 0 16px;
+	padding: 4px 0;
+	overflow: auto;
 	list-style-type: none;
 
 	&__item {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-areas: 'button check' 'button remove';
+		align-self: center;
 
 		&--day {
 			.tabs__btn {
@@ -42,7 +42,22 @@
 	&__btn {
 		position: relative;
 		display: block;
+		grid-area: button;
 		padding: 12px;
 		border: 1px solid gray;
+	}
+
+	&__check {
+		grid-area: check;
+		margin: auto;
+	}
+
+	&__remove {
+		grid-area: remove;
+	}
+
+	&__nav {
+		display: flex;
+		gap: 4px;
 	}
 }
