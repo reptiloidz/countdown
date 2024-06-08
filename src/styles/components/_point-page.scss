@@ -5,32 +5,77 @@
 	justify-content: space-between;
 	padding: 0 20px;
 
-	&__info {
-		display: flex;
-		gap: 24px;
-	}
-
-	&__title {
-		text-align: center;
-
-		&::first-letter {
-			padding: 4px 0 4px 4px;
-			background-color: rgb(var(--point-color));
-			color: rgb(var(--c-text-button));
-		}
+	&__header {
+		display: grid;
+		align-items: center;
 	}
 
 	&__author {
 		display: flex;
 		gap: 4px;
 		align-items: center;
+		justify-self: end;
+		padding-left: 20px;
 	}
 
 	&__markers {
 		display: flex;
 		gap: 10px;
 		align-items: center;
-		margin: 30px 0;
+		justify-self: start;
+		padding-right: 20px;
+	}
+
+	&__author,
+	&__markers {
+		z-index: 1;
+		grid-area: 1/1/1/1;
+		background-color: rgb(var(--c-bg-body));
+	}
+
+	&__title {
+		position: relative;
+		display: flex;
+		grid-area: 1/1/1/1;
+		text-align: center;
+
+		&::before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: 0;
+			left: 0;
+			display: block;
+			flex-grow: 1;
+			height: 1px;
+			margin: 0 10px;
+			background-color: rgb(var(--c-border-primary));
+		}
+	}
+
+	&__title-text {
+		@include text-bg;
+
+		position: relative;
+		z-index: 1;
+		display: block;
+		max-width: 50%;
+		margin: auto;
+		text-wrap: balance;
+
+		&::before {
+			content: attr(data-first-letter);
+			position: absolute;
+			z-index: 1;
+			display: block;
+
+			&::first-letter {
+				padding: 4px 0 4px 4px;
+				background-color: rgb(var(--point-color));
+				color: rgb(var(--c-text-button));
+				text-shadow: none;
+			}
+		}
 	}
 
 	&__clock {
@@ -41,5 +86,19 @@
 		width: 50%;
 		height: 100%;
 		overflow: hidden;
+	}
+
+	&__footer {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	&__remain,
+	&__description {
+		text-wrap: balance;
+	}
+
+	&__description {
+		text-align: right;
 	}
 }

@@ -134,13 +134,80 @@
 <div class="content">
 	<div class="point-page">
 		<!-- <app-clock class="point-page__clock"></app-clock> -->
-		<h1
-			class="point-page__title color"
-			[ngClass]="point?.color ? 'color--' + point?.color : ''"
-		>{{ point?.title }}<span
-				*ngIf="loading"
-				class="loader rotating"
-			></span></h1>
+
+		<div class="point-page__header">
+
+			<div class="point-page__markers">
+				<div
+					class="marker"
+					[ngClass]="{
+						'marker--inactive': !point?.greenwich
+					}"
+					[title]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
+				>
+					<svg
+						app-svg
+						name="globe"
+						aria-hidden="false"
+						class="marker__inner"
+					></svg>
+				</div>
+				<div
+					class="marker"
+					[ngClass]="{
+						'marker--inactive': !point?.repeatable
+					}"
+					[title]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
+				>
+					<svg
+						app-svg
+						name="refresh"
+						aria-hidden="false"
+						class="marker__inner"
+					></svg>
+				</div>
+				<div
+					class="marker"
+					[ngClass]="{
+						'marker--inactive': !point?.public
+					}"
+					[title]="point?.public ? 'Публичное' : 'Приватное'"
+				>
+					<svg
+						app-svg
+						name="users"
+						aria-hidden="false"
+						class="marker__inner"
+					></svg>
+				</div>
+			</div>
+
+			<h1
+				*ngIf="point?.title"
+				class="point-page__title color"
+				[ngClass]="point?.color ? 'color--' + point?.color : ''"
+			>
+				<span
+					class="point-page__title-text"
+					[attr.data-first-letter]="firstLetter"
+				>{{ point?.title }}</span><span
+					*ngIf="loading"
+					class="loader rotating"
+				></span>
+			</h1>
+
+			<div class="point-page__author">
+				<img
+					*ngIf="userData?.photoURL"
+					class="userpic userpic--sm"
+					[src]="userData.photoURL"
+					[alt]="userData.displayName"
+					aria-hidden="true"
+				><ng-container *ngIf="userData?.displayName">
+					{{ userData.displayName }}
+				</ng-container>
+			</div>
+		</div>
 
 		<div
 			*ngIf="!dateLoading; else dateLoader"
@@ -187,68 +254,17 @@
 			></app-board>
 		</div>
 
-		<div class="point-page__info">
-			<div class="point-page__markers">
-				<div
-					class="marker"
-					[ngClass]="{
-						'marker--inactive': !point?.greenwich
-					}"
-					[title]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
-				>
-					<svg
-						app-svg
-						name="globe"
-						aria-hidden="false"
-						class="marker__inner"
-					></svg>
-				</div>
-				<div
-					class="marker"
-					[ngClass]="{
-						'marker--inactive': !point?.repeatable
-					}"
-					[title]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
-				>
-					<svg
-						app-svg
-						name="refresh"
-						aria-hidden="false"
-						class="marker__inner"
-					></svg>
-				</div>
-				<div
-					class="marker"
-					[ngClass]="{
-						'marker--inactive': !point?.public
-					}"
-					[title]="point?.public ? 'Публичное' : 'Приватное'"
-				>
-					<svg
-						app-svg
-						name="users"
-						aria-hidden="false"
-						class="marker__inner"
-					></svg>
-				</div>
-			</div>
-			<div class="point-page__author">
-				<img
-					*ngIf="userData?.photoURL"
-					class="userpic userpic--sm"
-					[src]="userData.photoURL"
-					[alt]="userData.displayName"
-					aria-hidden="true"
-				><ng-container *ngIf="userData?.displayName">
-					{{ userData.displayName }}
-				</ng-container>
-			</div>
-		</div>
+		<div class="point-page__footer">
+			<h2
+				*ngIf="point?.title"
+				class="point-page__remain description"
+			>{{ remainTextValue }}</h2>
 
-		<h2
-			*ngIf="point?.title"
-			class="description"
-		>{{ remainTextValue }}</h2>
+			<p
+				*ngIf="point?.description"
+				class="point-page__description description"
+			>{{ point?.description }}</p>
+		</div>
 		<!-- <p
 			*ngIf="!dateLoading; else dateLoader"
 			class="timer"
@@ -261,6 +277,5 @@
 				<div class="loader rotating"></div>
 			</h2>
 		</ng-template>
-		<p *ngIf="point?.description">{{ point?.description }}</p>
 	</div>
 </div>
