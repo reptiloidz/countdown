@@ -26,7 +26,7 @@
 		&::first-letter {
 			padding: 4px 0 4px 4px;
 			background-color: rgb(var(--point-color));
-			color: rgb(var(--c-text-button));
+			color: rgba(var(--c-text-button), var(--point-title-opacity));
 		}
 	}
 

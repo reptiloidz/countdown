@@ -8,7 +8,9 @@
 
 	&__item {
 		display: grid;
-		grid-template-areas: 'button check' 'button remove';
+		grid-template-areas: 'button button' 'check remove';
+		gap: 4px;
+		align-items: center;
 		align-self: center;
 
 		&--day {
@@ -43,8 +45,8 @@
 		position: relative;
 		display: block;
 		grid-area: button;
-		padding: 12px;
-		border: 1px solid gray;
+		width: 100%;
+		padding: 0 12px;
 	}
 
 	&__check {
@@ -54,6 +56,7 @@
 
 	&__remove {
 		grid-area: remove;
+		padding: 0;
 	}
 
 	&__nav {
