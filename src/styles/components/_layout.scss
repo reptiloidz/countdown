@@ -13,6 +13,7 @@ body {
 
 	display: flex;
 	flex-grow: 1;
+	background-color: rgb(var(--c-bg-body));
 	color: rgb(var(--c-text-primary));
 	font-family: var(--ff-slab);
 

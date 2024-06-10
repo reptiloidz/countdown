@@ -187,14 +187,12 @@
 				class="point-page__title color"
 				[ngClass]="point?.color ? 'color--' + point?.color : ''"
 			>
-				<span
-					class="point-page__title-text point-page__title-text--bg"
-					aria-hidden="true"
-				>{{ point?.title }}</span>
-				<span class="point-page__title-text">{{ point?.title }}</span><span
-					*ngIf="loading"
-					class="loader rotating"
-				></span>
+				<div class="point-page__title-inner">
+					<span class="point-page__title-text">{{ point?.title }}</span><span
+						*ngIf="loading"
+						class="loader rotating"
+					></span>
+				</div>
 			</h1>
 
 			<div class="point-page__author">
