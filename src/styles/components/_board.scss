@@ -168,8 +168,9 @@
 
 	&__label {
 		width: 100%;
-		color: rgb(var(--c-text-primary));
-		font-size: 20px;
+		margin-top: 8px;
+		color: rgba(var(--c-text-primary), .4);
+		font-size: 16px;
 		text-align: center;
 		transform: translateZ(0);
 	}

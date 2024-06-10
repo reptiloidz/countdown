@@ -228,10 +228,6 @@ export class PointComponent implements OnInit, OnDestroy {
 		return this.isCalendarCreated && this.isCalendarPanelOpen;
 	}
 
-	get firstLetter() {
-		return this.point?.title.split('')[0];
-	}
-
 	switchCalendarPanel(value?: boolean) {
 		if (typeof value !== 'undefined') {
 			this.isCalendarPanelOpen = value;

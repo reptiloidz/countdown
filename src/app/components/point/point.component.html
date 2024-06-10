@@ -188,9 +188,10 @@
 				[ngClass]="point?.color ? 'color--' + point?.color : ''"
 			>
 				<span
-					class="point-page__title-text"
-					[attr.data-first-letter]="firstLetter"
-				>{{ point?.title }}</span><span
+					class="point-page__title-text point-page__title-text--bg"
+					aria-hidden="true"
+				>{{ point?.title }}</span>
+				<span class="point-page__title-text">{{ point?.title }}</span><span
 					*ngIf="loading"
 					class="loader rotating"
 				></span>
@@ -255,14 +256,14 @@
 		</div>
 
 		<div class="point-page__footer">
-			<h2
+			<p
 				*ngIf="point?.title"
-				class="point-page__remain description"
-			>{{ remainTextValue }}</h2>
+				class="point-page__remain"
+			>{{ remainTextValue }}</p>
 
 			<p
 				*ngIf="point?.description"
-				class="point-page__description description"
+				class="point-page__description"
 			>{{ point?.description }}</p>
 		</div>
 		<!-- <p
