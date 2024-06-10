@@ -56,7 +56,9 @@ const ANIMATION_SPEED = 200;
 export class BoardComponent {
 	private _value: string | number = '';
 
-	@HostBinding('class') class = 'board';
+	@HostBinding('class') get componentClass() {
+		return ['board', this.size === 'sm' && 'board--sm'].join(' ');
+	}
 	@Input()
 	get value(): string | number {
 		return this._value;
@@ -66,7 +68,7 @@ export class BoardComponent {
 		this._value = val;
 		this.switchBoard();
 	}
-
+	@Input() size: 'md' | 'sm' = 'md';
 	@Input() label = '';
 
 	switchTop = false;

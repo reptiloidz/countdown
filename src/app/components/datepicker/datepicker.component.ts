@@ -8,6 +8,7 @@ import {
 	parse,
 } from 'date-fns';
 import { Constants } from 'src/app/enums';
+import { DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
 	selector: 'app-datepicker',
@@ -19,6 +20,8 @@ export class DatepickerComponent implements OnInit {
 	@Input() isNow = true;
 	@Input() date: Date | undefined = this.isNow ? new Date() : undefined;
 	@Input() visibleDate = this.date;
+	@Input() vertical: DropVertical = 'bottom';
+	@Input() horizontal: DropHorizontal = 'right';
 
 	@Output() datePicked = new EventEmitter<Date>();
 

@@ -1,10 +1,16 @@
 .board {
+	--board-fz: 80px;
 	--board-h: 120px;
 	--board-px: 20px;
 	--board-brs: 8px;
 	--board-hinge-w: 8px;
 	--board-hinge-h: 32px;
+	--board-hinge-shadow-opacity: .4;
 	--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
+	--board-half-after-opacity: .3;
+	--board-label-fz: 16px;
+	--board-label-mt: 8px;
+	--board-shadow-spread: 1px;
 
 	position: relative;
 	display: flex;
@@ -39,14 +45,14 @@
 	&::before {
 		left: 0;
 		box-shadow:
-			1px 0 1px 1px rgba(var(--c-bg-primary), .4),
+			1px 0 1px var(--board-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity)),
 			1px 0 8px 0 rgba(var(--c-bg-primary), .7);
 	}
 
 	&::after {
 		right: 0;
 		box-shadow:
-			-1px 0 1px 1px rgba(var(--c-bg-primary), .4),
+			-1px 0 1px var(--board-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity)),
 			-1px 0 8px 0 rgba(var(--c-bg-primary), .7);
 	}
 
@@ -70,10 +76,9 @@
 				rgba(var(--c-bg-primary), .03) 80%,
 				rgba(var(--c-bg-primary), .05) 100%
 			);
-		// box-shadow: var(--board-half-shadow);
 		color: rgb(var(--c-text-primary));
 		font-family: monospace;
-		font-size: 80px;
+		font-size: var(--board-fz);
 		transition: transform 1s;
 		transform-origin: bottom;
 
@@ -104,7 +109,7 @@
 			top: 100%;
 			z-index: 1;
 			width: calc(100% - 2px);
-			box-shadow: 0 0 0 1px rgba(var(--c-bg-primary), .3);
+			box-shadow: 0 0 0 1px rgba(var(--c-bg-primary), var(--board-half-after-opacity));
 		}
 
 		.board__text-wrapper {
@@ -135,7 +140,7 @@
 			&::after {
 				top: auto;
 				bottom: 100%;
-				box-shadow: 0 1px 0 1px rgba(var(--c-bg-inverse), .3);
+				box-shadow: 0 1px 0 1px rgba(var(--c-bg-inverse), var(--board-half-after-opacity));
 			}
 
 			.board__text-wrapper {
@@ -168,10 +173,24 @@
 
 	&__label {
 		width: 100%;
-		margin-top: 8px;
+		margin-top: var(--board-label-mt);
 		color: rgba(var(--c-text-primary), .4);
-		font-size: 16px;
+		font-size: var(--board-label-fz);
 		text-align: center;
 		transform: translateZ(0);
+	}
+
+	&--sm {
+		--board-h: 30px;
+		--board-px: 4px;
+		--board-brs: 4px;
+		--board-hinge-w: 3px;
+		--board-hinge-h: 12px;
+		--board-fz: 16px;
+		--board-label-fz: 8px;
+		--board-label-mt: 1px;
+		--board-half-after-opacity: .1;
+		--board-hinge-shadow-opacity: .1;
+		--board-shadow-spread: 0;
 	}
 }

@@ -57,6 +57,55 @@
 		>{{ point.description }}</p>
 	</a>
 
+	<div class="point__timers timers timers--sm">
+		<ng-container *ngIf="timerYears">
+			<app-board
+				[value]="timerYears"
+				size="sm"
+				label="Год"
+				class="timers__item"
+			></app-board>
+			<span class="timers__divider">/</span>
+		</ng-container>
+		<ng-container *ngIf="timerMonths">
+			<app-board
+				[value]="timerMonths"
+				size="sm"
+				label="Мес"
+				class="timers__item"
+			></app-board>
+			<span class="timers__divider">/</span>
+		</ng-container>
+		<app-board
+			*ngIf="timerDays"
+			[value]="timerDays"
+			size="sm"
+			label="Ден"
+			class="timers__item timers__item--divided"
+		></app-board>
+		<app-board
+			[value]="timerHours"
+			size="sm"
+			label="Час"
+			class="timers__item timers__item--divided"
+		></app-board>
+		<span class="timers__divider">:</span>
+		<app-board
+			[value]="timerMins"
+			size="sm"
+			label="Мин"
+			class="timers__item"
+		></app-board>
+		<span class="timers__divider">:</span>
+		<app-board
+			[value]="timerSecs"
+			size="sm"
+			label="Сек"
+			class="timers__item"
+		></app-board>
+	</div>
+
+
 	<div
 		class="point__nav"
 		*ngIf="loading || hasAccessEdit"
@@ -82,6 +131,7 @@
 			</ng-template>
 		</ng-container>
 	</div>
+
 	<div class="point__markers">
 		<div
 			class="marker"

@@ -9,10 +9,13 @@ import {
 	ContentChild,
 	TemplateRef,
 } from '@angular/core';
-import { Subscription, first } from 'rxjs';
+import { Subscription, first, interval } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService } from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { getClosestIteration } from 'src/app/helpers';
+import { intervalToDuration, parse } from 'date-fns';
+import { Constants } from 'src/app/enums';
 
 @Component({
 	selector: '[app-main-item]',
@@ -31,6 +34,12 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		| TemplateRef<unknown>
 		| undefined;
 	loading = false;
+	timerYears!: number;
+	timerMonths!: number;
+	timerDays!: number;
+	timerHours = '00';
+	timerMins = '00';
+	timerSecs = '00';
 
 	constructor(
 		private data: DataService,
@@ -71,6 +80,26 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			interval(1000)
+				// .pipe(
+				// 	filter(() => {
+				// 		return !this.dateLoading;
+				// 	})
+				// )
+				.subscribe({
+					next: () => {
+						this.setTimer();
+					},
+					error: (err) => {
+						console.error(
+							'Ошибка при обновлении таймеров:\n',
+							err.message
+						);
+					},
+				})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -79,6 +108,47 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get isAuth() {
 		return this.auth.isAuthenticated;
+	}
+
+	get closestIteration() {
+		return getClosestIteration(this.point);
+	}
+
+	get interval() {
+		return intervalToDuration({
+			start: parse(
+				this.closestIteration,
+				Constants.fullDateFormat,
+				new Date()
+			),
+			end: new Date(),
+		});
+	}
+
+	zeroPad(num?: number) {
+		return String(num).padStart(2, '0');
+	}
+
+	setTimer() {
+		const currentInterval = this.interval;
+
+		this.timerHours = this.zeroPad(
+			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
+		);
+
+		this.timerMins = this.zeroPad(
+			(currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0
+		);
+		this.timerSecs = this.zeroPad(
+			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
+		);
+
+		currentInterval.years &&
+			(this.timerYears = Math.abs(currentInterval.years));
+		currentInterval.months &&
+			(this.timerMonths = Math.abs(currentInterval.months));
+		currentInterval.days &&
+			(this.timerDays = Math.abs(currentInterval.days));
 	}
 
 	delete(id: string | undefined) {

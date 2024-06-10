@@ -10,3 +10,4 @@ export * from './sortDates';
 export * from './filterDates';
 export * from './getFirstIteration';
 export * from './checkCopies';
+export * from './getClosestIteration';

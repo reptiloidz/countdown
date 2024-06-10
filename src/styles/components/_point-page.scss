@@ -3,6 +3,7 @@
 	flex-grow: 1;
 	flex-direction: column;
 	justify-content: space-between;
+	margin: 1% 0 7%;
 	padding: 0 20px;
 
 	&__info {
@@ -89,19 +90,32 @@
 		overflow: hidden;
 	}
 
-	&__footer {
-		display: flex;
-		justify-content: space-between;
+	&__timers {
+		margin: auto;
 	}
 
 	&__remain,
 	&__description {
-		padding: 0 12px;
 		font-size: 12px;
-		text-wrap: balance;
+		text-align: center;
+	}
+
+	&__remain {
+		margin-top: 12px;
 	}
 
 	&__description {
-		text-align: right;
+		width: clamp(400px, 25%, 800px);
+		margin: 12px auto 0;
+		text-wrap: pretty;
+
+		&::before {
+			content: '';
+			display: block;
+			width: clamp(200px, 25%, 400px);
+			height: 1px;
+			margin: 0 auto 8px;
+			background-color: rgb(var(--c-border-primary));
+		}
 	}
 }

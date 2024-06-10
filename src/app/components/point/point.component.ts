@@ -217,7 +217,11 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	get iterationDate() {
-		return format(this.pointDate, Constants.fullDateFormat);
+		return format(this.pointDate, Constants.shortDateFormat);
+	}
+
+	get iterationTime() {
+		return format(this.pointDate, Constants.timeFormat);
 	}
 
 	get isDatesLengthPlural() {
@@ -267,8 +271,6 @@ export class PointComponent implements OnInit, OnDestroy {
 			});
 
 			this.setTimer();
-			this.setDateTimer();
-			this.setRemainText();
 		}
 
 		if (switchCalendarDate) {
@@ -278,13 +280,6 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	setTimer() {
 		const currentInterval = this.interval;
-		this.timer = `${
-			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
-		}:${this.zeroPad(
-			(currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0
-		)}:${this.zeroPad(
-			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
-		)}`;
 
 		this.timerHours = this.zeroPad(
 			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
@@ -296,33 +291,6 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.timerSecs = this.zeroPad(
 			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
 		);
-	}
-
-	setDateTimer() {
-		const currentInterval = this.interval;
-		if (
-			currentInterval.years ||
-			currentInterval.months ||
-			currentInterval.days
-		) {
-			this.dateTimer = formatDuration(
-				{
-					years:
-						currentInterval.years &&
-						Math.abs(currentInterval.years),
-					months:
-						currentInterval.months &&
-						Math.abs(currentInterval.months),
-					days:
-						currentInterval.days && Math.abs(currentInterval.days),
-				},
-				{
-					locale: ru,
-				}
-			);
-		} else {
-			this.dateTimer = '';
-		}
 
 		currentInterval.years &&
 			(this.timerYears = Math.abs(currentInterval.years));
@@ -330,9 +298,7 @@ export class PointComponent implements OnInit, OnDestroy {
 			(this.timerMonths = Math.abs(currentInterval.months));
 		currentInterval.days &&
 			(this.timerDays = Math.abs(currentInterval.days));
-	}
 
-	setRemainText() {
 		this.remainTextValue =
 			this.remainText +
 			' ' +

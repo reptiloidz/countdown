@@ -6,7 +6,7 @@
 
 	position: relative;
 	display: grid;
-	grid-template-areas: 'main markers' 'nav markers';
+	grid-template-areas: 'main markers' 'timers markers' 'nav markers';
 	grid-template-rows: 1fr;
 	grid-template-columns: 1fr;
 	width: 100%;
@@ -37,6 +37,7 @@
 	}
 
 	&__main {
+		z-index: 2;
 		display: flex;
 		flex-grow: 1;
 		flex-direction: column;
@@ -66,6 +67,13 @@
 		height: 40px;
 		margin-left: 6px;
 		padding: 0 8px;
+	}
+
+	&__timers {
+		grid-area: timers;
+		justify-content: flex-start;
+		margin-bottom: 16px;
+		margin-left: 20px;
 	}
 
 	&__user {
@@ -98,6 +106,14 @@
 			&__nav {
 				height: auto;
 				margin-left: auto;
+			}
+
+			&__timers {
+				align-self: center;
+				margin-top: 0;
+				margin-right: 20px;
+				margin-bottom: 0;
+				margin-left: 40px;
 			}
 		}
 	}

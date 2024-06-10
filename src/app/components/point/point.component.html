@@ -206,11 +206,23 @@
 					{{ userData.displayName }}
 				</ng-container>
 			</div>
+
+			<div
+				*ngIf="point?.title"
+				class="point-page__remain"
+			>
+				{{ remainTextValue }} <ng-container *ngIf="iterationDate && iterationTime"> — {{ iterationDate }} {{
+					iterationTime }}</ng-container>
+			</div>
+			<p
+				*ngIf="point?.description"
+				class="point-page__description"
+			>{{ point?.description }}</p>
 		</div>
 
 		<div
 			*ngIf="!dateLoading; else dateLoader"
-			class="timers"
+			class="point-page__timers timers"
 		>
 			<ng-container *ngIf="timerYears">
 				<app-board
@@ -252,25 +264,6 @@
 				class="timers__item"
 			></app-board>
 		</div>
-
-		<div class="point-page__footer">
-			<p
-				*ngIf="point?.title"
-				class="point-page__remain"
-			>{{ remainTextValue }}</p>
-
-			<p
-				*ngIf="point?.description"
-				class="point-page__description"
-			>{{ point?.description }}</p>
-		</div>
-		<!-- <p
-			*ngIf="!dateLoading; else dateLoader"
-			class="timer"
-			[attr.title]="iterationDate || null"
-			>{{ dateTimer }} {{ timer }}</p> -->
-
-
 		<ng-template #dateLoader>
 			<h2>
 				<div class="loader rotating"></div>

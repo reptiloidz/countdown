@@ -1,6 +1,6 @@
 export enum calendarModeNames {
-	year = 'Год',
-	month = 'Месяц',
-	day = 'День',
-	hour = 'Час',
+	year = 'Месяцы',
+	month = 'Дни',
+	day = 'Часы',
+	hour = 'Минуты',
 }

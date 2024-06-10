@@ -33,30 +33,3 @@
 .ov-hidden {
 	overflow: hidden;
 }
-
-.timers {
-	display: flex;
-	gap: 8px;
-	justify-content: center;
-	padding: 20px 20px 40px;
-	border-radius: 10px;
-
-	&__item {
-		z-index: 1;
-		box-shadow: 0 0 1px 2px rgb(var(--c-bg-primary), .5);
-
-		&--divided {
-			& + & {
-				margin-left: 60px;
-			}
-		}
-	}
-
-	&__divider {
-		margin: 16px 10px 0;
-		color: rgb(var(--c-text-primary));
-		font-family: monospace;
-		font-size: 64px;
-		transform: translateZ(0);
-	}
-}
