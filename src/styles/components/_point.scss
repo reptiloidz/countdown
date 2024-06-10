@@ -37,7 +37,6 @@
 	}
 
 	&__main {
-		z-index: 2;
 		display: flex;
 		flex-grow: 1;
 		flex-direction: column;
@@ -70,6 +69,7 @@
 	}
 
 	&__timers {
+		z-index: 0;
 		grid-area: timers;
 		justify-content: flex-start;
 		margin-bottom: 16px;
