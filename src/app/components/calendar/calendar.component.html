@@ -52,13 +52,7 @@
 	<table class="calendar__table">
 		<thead *ngIf="activeMode === 'month'">
 			<tr>
-				<th>пн</th>
-				<th>вт</th>
-				<th>ср</th>
-				<th>чт</th>
-				<th>пт</th>
-				<th>сб</th>
-				<th>вс</th>
+				<th *ngFor="let day of weekDaysArray">{{ day }}</th>
 			</tr>
 		</thead>
 		<tbody>

@@ -67,6 +67,10 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() point?: Point;
 	@Input() hideCurrentPeriod = false;
 	@Input() hideModeSwitch = false;
+	@Input() daysPerWeek: number | string = 7;
+
+	calendarArray: CalendarDate[][] = [];
+	daysOfWeek: string[] = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
 
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;
@@ -74,9 +78,6 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		data: Point[] | Iteration[];
 	}>();
 	@Output() created = new EventEmitter();
-
-	calendarArray: CalendarDate[][] = [];
-
 	@Output() modeSelected = new EventEmitter<CalendarMode>();
 	@Output() visibleDateSelected = new EventEmitter<Date>();
 
@@ -195,6 +196,14 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		return result;
 	}
 
+	get weekDaysArray() {
+		let result: string[] = [];
+		for (let i = 0; i < +this.daysPerWeek; i++) {
+			result.push(this.daysOfWeek[i % 7]);
+		}
+		return result;
+	}
+
 	getItemDate(date: Date) {
 		let result = '';
 		switch (this.activeMode) {
@@ -279,7 +288,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 			: previousMonday(startOfMonth(date));
 
 		let rows = 1;
-		let cols = 7;
+		let cols = +this.daysPerWeek;
 		let rowNumber = 0;
 
 		switch (mode) {
