@@ -53,7 +53,7 @@
 		color: var(--calendar-head-cl);
 
 		&--weekend {
-			--calendar-head-cl: rgb(var(--c-text-negative));
+			--calendar-head-cl: rgb(var(--c-text-weekend));
 		}
 	}
 
@@ -77,7 +77,11 @@
 		}
 
 		&--weekend {
-			--calendar-button-cl: rgb(var(--c-text-negative));
+			--calendar-button-cl: rgb(var(--c-text-weekend));
+		}
+
+		&--other {
+			opacity: .3;
 		}
 	}
 

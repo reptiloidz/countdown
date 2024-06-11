@@ -6,6 +6,7 @@ export interface CalendarDate {
 	visibleDate: boolean;
 	nowDate: boolean;
 	weekendDate?: boolean;
+	otherMonthDate?: boolean;
 	points: Point[];
 	iterations: Iteration[];
 }

@@ -343,6 +343,9 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 						weekendDate:
 							this.weekendDays.includes(i) &&
 							this.activeMode === 'month',
+						otherMonthDate:
+							!isSameMonth(thisDate, this.visibleDate) &&
+							this.activeMode === 'month',
 						points: filterPoints({
 							date: thisDate,
 							points: this.points || [],
@@ -391,6 +394,9 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 						nowDate: this.isDateMatch(thisDate, 'now'),
 						weekendDate:
 							this.weekendDays.includes(i) &&
+							this.activeMode === 'month',
+						otherMonthDate:
+							!isSameMonth(thisDate, this.visibleDate) &&
 							this.activeMode === 'month',
 						points: filterPoints({
 							date: thisDate,
