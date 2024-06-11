@@ -16,6 +16,7 @@
 			[point]="point"
 			(created)="calendarCreated()"
 			daysPerWeek="14"
+			[weekendDays]="[5, 6, 12, 13]"
 		>
 			<ng-template
 				#navTemplate
@@ -23,7 +24,7 @@
 				let-mode="mode"
 				let-point="point"
 			>
-				<ng-container *ngIf="date.iterations.length && point.repeatable">
+				<ng-container *ngIf="date.iterations.length && point.repeatable && hasAccess">
 					<button
 						app-button
 						mode="positive"
@@ -80,7 +81,7 @@
 					<label
 						app-checkbox
 						*ngIf="hasAccess"
-						[attr.name]="i"
+						[name]="i.toString()"
 						iconSize="sm"
 						(change)="checkIteration()"
 						class="tabs__check"

@@ -37,10 +37,6 @@ export class CheckboxComponent implements ControlValueAccessor {
 		this._name = value || this.formControlName;
 	}
 
-	get idDisabled() {
-		return this.isDisabled;
-	}
-
 	onChange: (value: boolean) => void = () => {};
 	onTouched: () => void = () => {};
 

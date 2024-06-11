@@ -52,7 +52,13 @@
 	<table class="calendar__table">
 		<thead *ngIf="activeMode === 'month'">
 			<tr>
-				<th *ngFor="let day of weekDaysArray">{{ day }}</th>
+				<th
+					class="calendar__head"
+					[ngClass]="{
+						'calendar__head--weekend': weekendDays.includes(i)
+					}"
+					*ngFor="let day of weekDaysArray; index as i"
+				>{{ day }}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -67,6 +73,7 @@
 						[ngClass]="{
 							'calendar__button--selected': item.selectedDate,
 							'calendar__button--now': item.nowDate,
+							'calendar__button--weekend': item.weekendDate,
 						}"
 						(click)="dateClicked({
 							date: item.date,

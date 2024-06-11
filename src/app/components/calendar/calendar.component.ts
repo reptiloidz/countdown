@@ -68,6 +68,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() hideCurrentPeriod = false;
 	@Input() hideModeSwitch = false;
 	@Input() daysPerWeek: number | string = 7;
+	@Input() weekendDays = [5, 6];
 
 	calendarArray: CalendarDate[][] = [];
 	daysOfWeek: string[] = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
@@ -339,6 +340,9 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
+						weekendDate:
+							this.weekendDays.includes(i) &&
+							this.activeMode === 'month',
 						points: filterPoints({
 							date: thisDate,
 							points: this.points || [],
@@ -385,6 +389,9 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
+						weekendDate:
+							this.weekendDays.includes(i) &&
+							this.activeMode === 'month',
 						points: filterPoints({
 							date: thisDate,
 							points: this.points || [],

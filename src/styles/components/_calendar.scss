@@ -1,5 +1,7 @@
 .calendar {
 	--calendar-nav-shift: 4px;
+	--calendar-button-cl: rgb(var(--c-text-primary));
+	--calendar-head-cl: rgb(var(--c-text-primary));
 
 	display: flex;
 	flex-direction: column;
@@ -47,6 +49,14 @@
 		border: 0;
 	}
 
+	&__head {
+		color: var(--calendar-head-cl);
+
+		&--weekend {
+			--calendar-head-cl: rgb(var(--c-text-negative));
+		}
+	}
+
 	&__button {
 		width: 100%;
 		height: 100%;
@@ -54,6 +64,7 @@
 		border: 1px solid transparent;
 		border-radius: 6px;
 		background-color: transparent;
+		color: var(--calendar-button-cl);
 		line-height: normal;
 		cursor: pointer;
 
@@ -63,6 +74,10 @@
 
 		&--now {
 			border-color: rgba(var(--c-border-primary), .1);
+		}
+
+		&--weekend {
+			--calendar-button-cl: rgb(var(--c-text-negative));
 		}
 	}
 
