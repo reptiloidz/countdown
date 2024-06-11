@@ -5,6 +5,8 @@ import {
 	ViewChild,
 	ElementRef,
 	HostBinding,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -30,6 +32,7 @@ import { CalendarMode } from 'src/app/types';
 @Component({
 	selector: 'app-point',
 	templateUrl: './point.component.html',
+	changeDetection: ChangeDetectionStrategy.Default,
 })
 export class PointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
@@ -67,7 +70,8 @@ export class PointComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private auth: AuthService,
-		private action: ActionService
+		private action: ActionService,
+		private cdr: ChangeDetectorRef
 	) {}
 
 	ngOnInit(): void {
@@ -404,5 +408,6 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	calendarCreated() {
 		this.isCalendarCreated = true;
+		this.cdr.detectChanges();
 	}
 }
