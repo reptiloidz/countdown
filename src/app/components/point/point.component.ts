@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-	interval,
 	Subscription,
 	distinctUntilChanged,
 	tap,
@@ -17,12 +16,7 @@ import {
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
-import {
-	format,
-	formatDistanceToNow,
-	formatDuration,
-	intervalToDuration,
-} from 'date-fns';
+import { format, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
 import {
@@ -132,7 +126,7 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			interval(1000)
+			this.action.eventIntervalSwitched$
 				.pipe(
 					filter(() => {
 						return !this.dateLoading;

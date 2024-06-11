@@ -106,29 +106,22 @@
 	</div>
 
 
-	<div
-		class="point__nav"
-		*ngIf="loading || hasAccessEdit"
-	>
-		<ng-container *ngIf="!loading && hasAccessEdit; else loader">
+	<div class="point__nav">
+		<ng-container *ngIf="!loading; else loader">
 			<button
 				app-button
 				mode="negative"
+				[attr.disabled]="!hasAccessEdit || null"
 				icon="cross"
 				title="Удалить событие"
 				(click)="delete(point.id)"
 			></button>
-			<ng-container
-				*ngIf="checkboxTemplate else defaultCheckbox;"
-				[ngTemplateOutlet]="checkboxTemplate"
-			></ng-container>
-			<ng-template #defaultCheckbox>
-				<label
-					#pointCheckbox
-					app-checkbox
-					(change)="checkPoint()"
-				></label>
-			</ng-template>
+			<label
+				#pointCheckbox
+				[isDisabled]="!hasAccessEdit"
+				app-checkbox
+				(change)="checkPoint()"
+			></label>
 		</ng-container>
 	</div>
 

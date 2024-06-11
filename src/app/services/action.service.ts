@@ -10,6 +10,7 @@ export class ActionService {
 	private _eventIterationSwitchedSubject = new Subject<Date>();
 	private _eventFetchedPointsSubject = new Subject<void>();
 	private _eventHasEditablePointsSubject = new Subject<boolean>();
+	private _eventIntervalSwitchedSubject = new Subject<void>();
 	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
 	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
 	eventIterationSwitched$ =
@@ -17,6 +18,7 @@ export class ActionService {
 	eventFetchedPoints$ = this._eventFetchedPointsSubject.asObservable();
 	eventHasEditablePoints$ =
 		this._eventHasEditablePointsSubject.asObservable();
+	eventIntervalSwitched$ = this._eventIntervalSwitchedSubject.asObservable();
 
 	pointsChecked: string[] = [];
 
@@ -51,5 +53,9 @@ export class ActionService {
 
 	hasEditablePoints(has: boolean) {
 		this._eventHasEditablePointsSubject.next(has);
+	}
+
+	intervalSwitched() {
+		this._eventIntervalSwitchedSubject.next();
 	}
 }

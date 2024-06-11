@@ -6,10 +6,8 @@ import {
 	OnDestroy,
 	OnInit,
 	ViewChild,
-	ContentChild,
-	TemplateRef,
 } from '@angular/core';
-import { Subscription, first, interval } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService } from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
@@ -30,9 +28,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@Input() isSm = false;
 	@Output() pointCheck = new EventEmitter();
 
-	@ContentChild('checkboxTemplate') checkboxTemplate:
-		| TemplateRef<unknown>
-		| undefined;
 	loading = false;
 	timerYears!: number;
 	timerMonths!: number;
@@ -76,13 +71,14 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			this.action.eventPointsCheckedAll$.subscribe({
 				next: (check) => {
 					this.pointCheckbox &&
+						!this.pointCheckbox.isDisabled &&
 						(this.pointCheckbox.isChecked = check);
 				},
 			})
 		);
 
 		this.subscriptions.add(
-			interval(1000)
+			this.action.eventIntervalSwitched$
 				// .pipe(
 				// 	filter(() => {
 				// 		return !this.dateLoading;

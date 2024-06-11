@@ -36,7 +36,7 @@ import {
 	subYears,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Subscription, concatWith, filter, interval, tap } from 'rxjs';
+import { Subscription, concatWith, filter, tap } from 'rxjs';
 import { calendarModeNames } from 'src/app/enums';
 import { filterIterations, filterPoints } from 'src/app/helpers';
 import {
@@ -90,7 +90,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnInit() {
 		this.subscriptions.add(
-			interval(1000)
+			this.action.eventIntervalSwitched$
 				.pipe(
 					filter(() => {
 						switch (this.activeMode) {

@@ -331,8 +331,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 		setTimeout(() => {
 			Array.from(this.datePointsList.nativeElement.children).map(
 				(item: any) =>
-					item?.querySelector('input') &&
-					(item.querySelector('input').checked = check)
+					item?.querySelector('input:not(:disabled)') &&
+					(item.querySelector('input:not(:disabled)').checked = check)
 			);
 			this.getCheckedDatePoints();
 		});

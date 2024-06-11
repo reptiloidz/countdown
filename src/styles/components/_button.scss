@@ -34,13 +34,13 @@
 		filter: contrast(1);
 	}
 
-	:disabled,
+	&:disabled,
 	&--disabled {
 		filter: grayscale(1);
 		pointer-events: none;
 
 		.button__icon {
-			opacity: .5;
+			opacity: .3;
 		}
 	}
 

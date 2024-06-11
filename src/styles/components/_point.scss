@@ -93,6 +93,7 @@
 
 		.point {
 			&__main {
+				justify-content: center;
 				padding: 16px;
 			}
 
@@ -104,6 +105,7 @@
 			}
 
 			&__nav {
+				flex-shrink: 0;
 				height: auto;
 				margin-left: auto;
 			}
@@ -131,7 +133,8 @@
 			}
 
 			&__nav {
-				width: 70px;
+				width: auto;
+				min-width: 70px;
 			}
 
 			&__main {

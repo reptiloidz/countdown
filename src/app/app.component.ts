@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
-import { NotifyService } from './services';
+import { ActionService, NotifyService } from './services';
 import { Notification } from './interfaces';
 
 @Component({
@@ -11,7 +11,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	count = 0;
 	startTime = new Date();
 
-	constructor(private notify: NotifyService) {}
+	constructor(private notify: NotifyService, private action: ActionService) {}
 
 	public notifyList: Notification[] = [];
 	private subscriptions = new Subscription();
@@ -43,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				);
 
 				localStorage.setItem('count', this.count.toString());
+				this.action.intervalSwitched();
 			},
 		});
 	}
