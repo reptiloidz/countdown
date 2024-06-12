@@ -74,26 +74,32 @@ export class BoardComponent {
 	switchTop = false;
 	switchBottom = false;
 
-	topStaticValue: string | number = '';
-	topAnimatedValue: string | number = '';
-	bottomStaticValue: string | number = '';
-	bottomAnimatedValue: string | number = '';
+	topStaticValue: string | number = '00';
+	topAnimatedValue: string | number = '00';
+	bottomStaticValue: string | number = '00';
+	bottomAnimatedValue: string | number = '00';
+	isFirstValueSwitched = false;
 
 	switchBoard() {
-		this.topStaticValue = this.value;
-		this.switchTop = true;
+		timer(this.isFirstValueSwitched ? 0 : Math.random() * 1000).subscribe(
+			() => {
+				this.topStaticValue = this.value;
+				this.switchTop = true;
+				timer(ANIMATION_SPEED).subscribe(() => {
+					this.topAnimatedValue = this.value;
+					this.switchTop = false;
 
-		timer(ANIMATION_SPEED).subscribe(() => {
-			this.topAnimatedValue = this.value;
-			this.switchTop = false;
+					this.bottomAnimatedValue = this.value;
+					this.switchBottom = true;
 
-			this.bottomAnimatedValue = this.value;
-			this.switchBottom = true;
+					this.isFirstValueSwitched = true;
 
-			timer(ANIMATION_SPEED).subscribe(() => {
-				this.bottomStaticValue = this.value;
-				this.switchBottom = false;
-			});
-		});
+					timer(ANIMATION_SPEED).subscribe(() => {
+						this.bottomStaticValue = this.value;
+						this.switchBottom = false;
+					});
+				});
+			}
+		);
 	}
 }

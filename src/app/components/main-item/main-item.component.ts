@@ -29,12 +29,12 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@Output() pointCheck = new EventEmitter();
 
 	loading = false;
-	timerYears!: number;
-	timerMonths!: number;
-	timerDays!: number;
-	timerHours = '00';
-	timerMins = '00';
-	timerSecs = '00';
+	timerYears!: number | string;
+	timerMonths!: number | string;
+	timerDays!: number | string;
+	timerHours!: number | string;
+	timerMins!: number | string;
+	timerSecs!: number | string;
 
 	constructor(
 		private data: DataService,
@@ -131,7 +131,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.timerHours = this.zeroPad(
 			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
 		);
-
 		this.timerMins = this.zeroPad(
 			(currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0
 		);
@@ -140,11 +139,11 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		);
 
 		currentInterval.years &&
-			(this.timerYears = Math.abs(currentInterval.years));
+			(this.timerYears = this.zeroPad(Math.abs(currentInterval.years)));
 		currentInterval.months &&
-			(this.timerMonths = Math.abs(currentInterval.months));
+			(this.timerMonths = this.zeroPad(Math.abs(currentInterval.months)));
 		currentInterval.days &&
-			(this.timerDays = Math.abs(currentInterval.days));
+			(this.timerDays = this.zeroPad(Math.abs(currentInterval.days)));
 	}
 
 	delete(id: string | undefined) {
