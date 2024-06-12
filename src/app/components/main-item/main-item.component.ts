@@ -29,9 +29,9 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@Output() pointCheck = new EventEmitter();
 
 	loading = false;
-	timerYears!: number | string;
-	timerMonths!: number | string;
-	timerDays!: number | string;
+	timerYears: number | string | undefined;
+	timerMonths: number | string | undefined;
+	timerDays: number | string | undefined;
 	timerHours!: number | string;
 	timerMins!: number | string;
 	timerSecs!: number | string;
@@ -138,12 +138,15 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
 		);
 
-		currentInterval.years &&
-			(this.timerYears = this.zeroPad(Math.abs(currentInterval.years)));
-		currentInterval.months &&
-			(this.timerMonths = this.zeroPad(Math.abs(currentInterval.months)));
-		currentInterval.days &&
-			(this.timerDays = this.zeroPad(Math.abs(currentInterval.days)));
+		this.timerYears = currentInterval.years
+			? this.zeroPad(Math.abs(currentInterval.years))
+			: undefined;
+		this.timerMonths = currentInterval.months
+			? this.zeroPad(Math.abs(currentInterval.months))
+			: undefined;
+		this.timerDays = currentInterval.days
+			? this.zeroPad(Math.abs(currentInterval.days))
+			: undefined;
 	}
 
 	delete(id: string | undefined) {

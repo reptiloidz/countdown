@@ -66,7 +66,7 @@ export class BoardComponent {
 
 	set value(val: string | number) {
 		this._value = val;
-		this.switchBoard();
+		val && this.switchBoard();
 	}
 	@Input() size: 'md' | 'sm' = 'md';
 	@Input() label = '';
