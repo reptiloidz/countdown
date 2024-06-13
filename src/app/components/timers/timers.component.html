@@ -34,7 +34,10 @@
 		class="timers__item timers__item--date"
 	></app-board>
 </div>
-<div class="timers__item-wrapper timers__item-wrapper--time">
+<div
+	@boardVisibility
+	class="timers__item-wrapper timers__item-wrapper--time"
+>
 	<app-board
 		[value]="hours"
 		[size]="size"
@@ -42,7 +45,10 @@
 		class="timers__item timers__item--time"
 	></app-board>
 </div>
-<div class="timers__item-wrapper timers__item-wrapper--time">
+<div
+	@boardVisibility
+	class="timers__item-wrapper timers__item-wrapper--time"
+>
 	<app-board
 		[value]="mins"
 		[size]="size"
@@ -50,7 +56,10 @@
 		class="timers__item timers__item--time"
 	></app-board>
 </div>
-<div class="timers__item-wrapper timers__item-wrapper--time">
+<div
+	@boardVisibility
+	class="timers__item-wrapper timers__item-wrapper--time"
+>
 	<app-board
 		[value]="secs"
 		[size]="size"
