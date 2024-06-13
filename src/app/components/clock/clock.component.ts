@@ -14,17 +14,19 @@ export class ClockComponent implements OnInit {
 	constructor(private el: ElementRef, private renderer: Renderer2) {}
 
 	ngOnInit(): void {
+		const currentDate = new Date();
+
 		this.setClockVariable(
 			'--clock-current-second',
-			new Date().getSeconds().toString()
+			currentDate.getSeconds().toString()
 		);
 		this.setClockVariable(
 			'--clock-current-hour',
-			new Date().getHours().toString()
+			currentDate.getHours().toString()
 		);
 		this.setClockVariable(
 			'--clock-current-minute',
-			new Date().getMinutes().toString()
+			currentDate.getMinutes().toString()
 		);
 	}
 
