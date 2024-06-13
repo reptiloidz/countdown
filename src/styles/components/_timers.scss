@@ -32,9 +32,9 @@
 
 		&--date,
 		&--time {
-			&::before {
+			&::after {
 				position: absolute;
-				right: 100%;
+				left: 100%;
 				display: block;
 				width: var(--timers-gap);
 				margin-top: var(--timers-divider-mt);
@@ -47,16 +47,16 @@
 		}
 
 		&--date {
-			& + & {
-				&::before {
+			&:has(+ &) {
+				&::after {
 					content: '/';
 				}
 			}
 		}
 
 		&--time {
-			& + & {
-				&::before {
+			&:has(+ &) {
+				&::after {
 					content: ':';
 				}
 			}
