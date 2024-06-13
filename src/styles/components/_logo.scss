@@ -1,13 +1,6 @@
 .logo {
 	--logo-h: 60px;
 	--logo-pb: 2px;
-	--logo-hue-initial: 0;
-	--logo-hue-initial-old: 0;
-	--logo-zero-duration: 1000;
-	--logo-zero-duration-count:
-		calc(
-			(var(--count) + var(--logo-hue-initial) + var(--logo-hue-initial-old)) / var(--logo-zero-duration) * 360
-		);
 
 	display: flex;
 	gap: 10px;
@@ -15,8 +8,9 @@
 	justify-content: center;
 	height: var(--logo-h);
 	padding: 0 10px var(--logo-pb);
-	background-color: rgba(var(--c-bg-primary), .4);
-	color: rgb(var(--c-text-inverse));
+	border-radius: 8px;
+	background-color: rgba(var(--c-bg-primary), .2);
+	color: rgb(var(--c-text-primary));
 	font-weight: 400;
 	letter-spacing: .5px;
 	text-transform: uppercase;
@@ -40,9 +34,9 @@
 		line-height: calc(var(--logo-h) - var(--logo-pb));
 	}
 
-	&__zero {
-		margin-bottom: calc(var(--logo-pb) * -1);
-		background-color: hwb(var(--logo-zero-duration-count) 30% 10%);
-		transition: background-color .5s;
+	&__board {
+		align-self: center;
+		margin: var(--logo-pb) 2px 0;
+		box-shadow: 0 0 1px 1px rgb(var(--c-bg-primary), .4);
 	}
 }

@@ -50,7 +50,7 @@ export class TimersComponent {
 	@Input() hours!: number | string;
 	@Input() mins!: number | string;
 	@Input() secs!: number | string;
-	@Input() size: 'md' | 'sm' = 'md';
+	@Input() size: 'base' | 'sm' = 'base';
 	@Input() yearsLabel = 'Годы';
 	@Input() monthsLabel = 'Месяцы';
 	@Input() daysLabel = 'Дни';

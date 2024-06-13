@@ -78,23 +78,17 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.action.eventIntervalSwitched$
-				// .pipe(
-				// 	filter(() => {
-				// 		return !this.dateLoading;
-				// 	})
-				// )
-				.subscribe({
-					next: () => {
-						this.setTimer();
-					},
-					error: (err) => {
-						console.error(
-							'Ошибка при обновлении таймеров:\n',
-							err.message
-						);
-					},
-				})
+			this.action.eventIntervalSwitched$.subscribe({
+				next: () => {
+					this.setTimer();
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при обновлении таймеров:\n',
+						err.message
+					);
+				},
+			})
 		);
 	}
 

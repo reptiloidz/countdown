@@ -5,12 +5,18 @@
 	--board-brs: 8px;
 	--board-hinge-w: 8px;
 	--board-hinge-h: 32px;
-	--board-hinge-shadow-opacity: .4;
+	--board-hinge-shadow-opacity-1: .4;
+	--board-hinge-shadow-opacity-2: .7;
+	--board-hinge-shadow-spread: 1px;
+	--board-hinge-shadow-w-1: 1px;
+	--board-hinge-shadow-w-2: 8px;
+	--board-hinge-before-shadow-x: 1px;
+	--board-hinge-after-shadow-x: -1px;
 	--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
 	--board-half-after-opacity: .3;
 	--board-label-fz: 16px;
 	--board-label-mt: 8px;
-	--board-shadow-spread: 1px;
+	--board-bg-cl: var(--c-bg-board);
 
 	position: relative;
 	display: flex;
@@ -30,7 +36,7 @@
 		display: block;
 		width: calc(var(--board-hinge-w) - 1px);
 		height: calc(var(--board-hinge-h) - 4px);
-		background-color: rgb(var(--c-bg-board));
+		background-color: rgb(var(--board-bg-cl));
 		background-image:
 			linear-gradient(
 				180deg,
@@ -45,15 +51,15 @@
 	&::before {
 		left: 0;
 		box-shadow:
-			1px 0 1px var(--board-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity)),
-			1px 0 8px 0 rgba(var(--c-bg-primary), .7);
+			var(--board-hinge-before-shadow-x) 0 var(--board-hinge-shadow-w-1) var(--board-hinge-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-1)),
+			var(--board-hinge-before-shadow-x) 0 var(--board-hinge-shadow-w-2) 0 rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-2));
 	}
 
 	&::after {
 		right: 0;
 		box-shadow:
-			-1px 0 1px var(--board-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity)),
-			-1px 0 8px 0 rgba(var(--c-bg-primary), .7);
+			var(--board-hinge-after-shadow-x) 0 var(--board-hinge-shadow-w-1) var(--board-hinge-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-1)),
+			var(--board-hinge-after-shadow-x) 0 var(--board-hinge-shadow-w-2) 0 rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-2));
 	}
 
 	&__body {
@@ -68,7 +74,7 @@
 		justify-content: center;
 		width: calc(100% - (var(--board-hinge-w) * 2));
 		height: calc(var(--board-h) / 2);
-		background-color: rgb(var(--c-bg-board));
+		background-color: rgb(var(--board-bg-cl));
 		background-image:
 			linear-gradient(
 				180deg,
@@ -190,7 +196,42 @@
 		--board-label-fz: 8px;
 		--board-label-mt: 1px;
 		--board-half-after-opacity: .1;
-		--board-hinge-shadow-opacity: .1;
-		--board-shadow-spread: 0;
+		--board-hinge-shadow-opacity-1: .1;
+		--board-hinge-shadow-spread: 0;
+	}
+
+	&--logo {
+		--board-h: 52px;
+		--board-px: 0;
+		--board-brs: 6px;
+		--board-hinge-w: 5px;
+		--board-hinge-h: 12px;
+		--board-fz: 55px;
+		--board-label-fz: 8px;
+		--board-label-mt: 1px;
+		--board-half-after-opacity: .4;
+		--board-hinge-shadow-opacity-1: .2;
+		--board-hinge-shadow-opacity-2: .1;
+		--board-hinge-shadow-spread: 1px;
+		--board-hinge-shadow-w-1: 0;
+		--board-hinge-shadow-w-2: 4px;
+		--board-hinge-before-shadow-x: 0;
+		--board-hinge-after-shadow-x: 0;
+		--board-bg-cl: 220, 220, 220;
+		--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
+
+		&::before,
+		&::after {
+			z-index: 0;
+			background-image:
+				linear-gradient(
+					180deg,
+					rgba(var(--c-bg-inverse), 0) 0%,
+					rgba(var(--c-bg-inverse), 1) 10%,
+					rgba(var(--c-bg-inverse), 0) 50%,
+					rgba(var(--c-bg-inverse), .4) 90%,
+					rgba(var(--c-bg-inverse), 0) 100%
+				);
+		}
 	}
 }
