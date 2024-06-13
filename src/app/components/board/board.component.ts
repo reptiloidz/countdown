@@ -98,7 +98,7 @@ export class BoardComponent {
 				this.bottomAnimatedValue = this.value;
 				this.switchBottom = true;
 
-				this.isFirstValueSwitched = true;
+				this.isFirstValueSwitched = false;
 
 				timer(ANIMATION_SPEED).subscribe(() => {
 					this.bottomStaticValue = this.value;
