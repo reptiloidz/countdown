@@ -36,6 +36,7 @@ import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 import { ClockComponent } from './components/clock/clock.component';
 import { PanelComponent } from './components/panel/panel.component';
 import { BoardComponent } from './components/board/board.component';
+import { TimersComponent } from './components/timers/timers.component';
 
 @NgModule({
 	declarations: [
@@ -61,6 +62,7 @@ import { BoardComponent } from './components/board/board.component';
 		ClockComponent,
 		PanelComponent,
 		BoardComponent,
+		TimersComponent,
 	],
 	imports: [
 		BrowserModule,

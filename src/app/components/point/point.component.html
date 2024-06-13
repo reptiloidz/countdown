@@ -222,51 +222,16 @@
 			>{{ point?.description }}</p>
 		</div>
 
-		<div
+		<app-timers
 			*ngIf="!dateLoading; else dateLoader"
 			class="point-page__timers timers"
-		>
-			<ng-container *ngIf="timerYears">
-				<app-board
-					[value]="timerYears"
-					label="Годы"
-					class="timers__item"
-				></app-board>
-				<span class="timers__divider">/</span>
-			</ng-container>
-			<ng-container *ngIf="timerMonths">
-				<app-board
-					[value]="timerMonths"
-					label="Месяцы"
-					class="timers__item"
-				></app-board>
-				<span class="timers__divider">/</span>
-			</ng-container>
-			<app-board
-				*ngIf="timerDays"
-				[value]="timerDays"
-				label="Дни"
-				class="timers__item timers__item--divided"
-			></app-board>
-			<app-board
-				[value]="timerHours"
-				label="Часы"
-				class="timers__item timers__item--divided"
-			></app-board>
-			<span class="timers__divider">:</span>
-			<app-board
-				[value]="timerMins"
-				label="Минуты"
-				class="timers__item"
-			></app-board>
-			<span class="timers__divider">:</span>
-			<app-board
-				[value]="timerSecs"
-				label="Секунды"
-				[delay]="false"
-				class="timers__item"
-			></app-board>
-		</div>
+			[years]="timerYears"
+			[months]="timerMonths"
+			[days]="timerDays"
+			[hours]="timerHours"
+			[mins]="timerMins"
+			[secs]="timerSecs"
+		></app-timers>
 		<ng-template #dateLoader>
 			<h2>
 				<div class="loader rotating"></div>

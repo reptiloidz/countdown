@@ -1,0 +1,61 @@
+<div
+	*ngIf="years"
+	@boardVisibility
+	class="timers__item-wrapper timers__item-wrapper--date"
+>
+	<app-board
+		[value]="years"
+		[size]="size"
+		[label]="yearsLabel"
+		class="timers__item"
+	></app-board>
+</div>
+<div
+	*ngIf="months"
+	@boardVisibility
+	class="timers__item-wrapper timers__item-wrapper--date"
+>
+	<app-board
+		[value]="months"
+		[size]="size"
+		[label]="monthsLabel"
+		class="timers__item timers__item--date"
+	></app-board>
+</div>
+<div
+	*ngIf="days"
+	@boardVisibility
+	class="timers__item-wrapper timers__item-wrapper--date"
+>
+	<app-board
+		[value]="days"
+		[size]="size"
+		[label]="daysLabel"
+		class="timers__item timers__item--date"
+	></app-board>
+</div>
+<div class="timers__item-wrapper timers__item-wrapper--time">
+	<app-board
+		[value]="hours"
+		[size]="size"
+		[label]="hoursLabel"
+		class="timers__item timers__item--time"
+	></app-board>
+</div>
+<div class="timers__item-wrapper timers__item-wrapper--time">
+	<app-board
+		[value]="mins"
+		[size]="size"
+		[label]="minsLabel"
+		class="timers__item timers__item--time"
+	></app-board>
+</div>
+<div class="timers__item-wrapper timers__item-wrapper--time">
+	<app-board
+		[value]="secs"
+		[size]="size"
+		[label]="secsLabel"
+		[delay]="false"
+		class="timers__item timers__item--time"
+	></app-board>
+</div>
