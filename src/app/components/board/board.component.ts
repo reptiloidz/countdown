@@ -16,9 +16,18 @@ const ANIMATION_SPEED = 200;
 	animations: [
 		trigger('halfTop', [
 			state('void', style({ transform: 'rotateX(0)' })),
+			state(
+				'*',
+				style({
+					transform:
+						'rotateX(90deg) matrix3d(1, 0, 0, 0, 0, .75, 0, .001, 1, 1, .1, .1, .1, .1, 0, 1)',
+					boxShadow:
+						'var(--board-half-shadow), 0 calc(var(--board-h) / -4) 20px 0 rgba(var(--c-bg-primary), .1)',
+				})
+			),
 			transition(':enter', [
 				animate(
-					ANIMATION_SPEED,
+					ANIMATION_SPEED + 'ms cubic-bezier(.36,.25,.76,.52)',
 					style({
 						transform:
 							'rotateX(90deg) matrix3d(1, 0, 0, 0, 0, .75, 0, .001, 1, 1, .1, .1, .1, .1, 0, 1)',
@@ -26,9 +35,6 @@ const ANIMATION_SPEED = 200;
 							'var(--board-half-shadow), 0 calc(var(--board-h) / -4) 20px 0 rgba(var(--c-bg-primary), .1)',
 					})
 				),
-				style({
-					visibility: 'hidden',
-				}),
 			]),
 		]),
 		trigger('halfBottom', [
@@ -43,7 +49,7 @@ const ANIMATION_SPEED = 200;
 			),
 			transition(':enter', [
 				animate(
-					ANIMATION_SPEED,
+					ANIMATION_SPEED + 'ms cubic-bezier(.36,.25,.76,.52)',
 					style({
 						transform: 'rotateX(0)',
 						boxShadow: 'none',
@@ -82,28 +88,30 @@ export class BoardComponent {
 	isFirstValueSwitched = true;
 
 	switchBoard() {
-		timer(
-			!this.isFirstValueSwitched
-				? 100
-				: this.delay
-				? Math.random() * 1000
-				: 100
-		).subscribe(() => {
-			this.topStaticValue = this.value;
-			this.switchTop = true;
+		if (this.isFirstValueSwitched || this.delay) {
+			timer(Math.random() * 1000).subscribe(() => {
+				this.animateBoard();
+			});
+		} else {
+			this.animateBoard();
+		}
+	}
+
+	animateBoard() {
+		this.topStaticValue = this.value;
+		this.switchTop = true;
+		timer(ANIMATION_SPEED).subscribe(() => {
+			this.switchTop = false;
+			this.topAnimatedValue = this.value;
+
+			this.bottomAnimatedValue = this.value;
+			this.switchBottom = true;
+
+			this.isFirstValueSwitched = false;
+
 			timer(ANIMATION_SPEED).subscribe(() => {
-				this.topAnimatedValue = this.value;
-				this.switchTop = false;
-
-				this.bottomAnimatedValue = this.value;
-				this.switchBottom = true;
-
-				this.isFirstValueSwitched = false;
-
-				timer(ANIMATION_SPEED).subscribe(() => {
-					this.bottomStaticValue = this.value;
-					this.switchBottom = false;
-				});
+				this.bottomStaticValue = this.value;
+				this.switchBottom = false;
 			});
 		});
 	}

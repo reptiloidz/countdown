@@ -20,7 +20,7 @@ import { Component, Input } from '@angular/core';
 					marginLeft: 0,
 				}),
 				animate(
-					'.2s ease-out',
+					'.4s cubic-bezier(.1, .79, .24, .95)',
 					style({
 						transform: AUTO_STYLE,
 						opacity: AUTO_STYLE,
@@ -31,7 +31,7 @@ import { Component, Input } from '@angular/core';
 			]),
 			transition(':leave', [
 				animate(
-					'.2s ease-out',
+					'.4s cubic-bezier(.1, .79, .24, .95)',
 					style({
 						transform: 'translateX(100%)',
 						opacity: 0,

@@ -38,7 +38,10 @@ import { ButtonSize } from 'src/app/types';
 					visibility: 'hidden',
 				})
 			),
-			transition('open <=> closed', animate('.4s ease-out')),
+			transition(
+				'open <=> closed',
+				animate('.6s cubic-bezier(.1, .79, .24, .95)')
+			),
 		]),
 	],
 })
