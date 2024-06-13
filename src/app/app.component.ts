@@ -1,5 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, filter, first, interval, switchMap } from 'rxjs';
 import { ActionService, NotifyService } from './services';
 import { Notification } from './interfaces';
 
@@ -35,17 +35,23 @@ export class AppComponent implements OnInit, OnDestroy {
 			(+new Date()).toString()
 		);
 
-		interval(1000).subscribe({
-			next: () => {
-				document.documentElement.style.setProperty(
-					'--count',
-					(++this.count).toString()
-				);
+		interval(1)
+			.pipe(
+				filter(() => +new Date() % 1000 < 100),
+				first(),
+				switchMap(() => interval(1000))
+			)
+			.subscribe({
+				next: () => {
+					document.documentElement.style.setProperty(
+						'--count',
+						(++this.count).toString()
+					);
 
-				localStorage.setItem('count', this.count.toString());
-				this.action.intervalSwitched();
-			},
-		});
+					localStorage.setItem('count', this.count.toString());
+					this.action.intervalSwitched();
+				},
+			});
 	}
 
 	ngOnDestroy(): void {

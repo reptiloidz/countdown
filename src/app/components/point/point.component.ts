@@ -267,12 +267,12 @@ export class PointComponent implements OnInit, OnDestroy {
 				tzOffset: this.tzOffset,
 				isGreenwich: this.point?.greenwich,
 			});
-
-			this.setTimer();
 		}
 
 		if (switchCalendarDate) {
 			this.selectedIterationDate = this.pointDate;
+		} else {
+			this.setTimer();
 		}
 	}
 

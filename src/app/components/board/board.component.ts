@@ -70,6 +70,7 @@ export class BoardComponent {
 	}
 	@Input() size: 'md' | 'sm' = 'md';
 	@Input() label = '';
+	@Input() delay = true;
 
 	switchTop = false;
 	switchBottom = false;
@@ -78,28 +79,32 @@ export class BoardComponent {
 	topAnimatedValue: string | number = '00';
 	bottomStaticValue: string | number = '00';
 	bottomAnimatedValue: string | number = '00';
-	isFirstValueSwitched = false;
+	isFirstValueSwitched = true;
 
 	switchBoard() {
-		timer(this.isFirstValueSwitched ? 0 : Math.random() * 1000).subscribe(
-			() => {
-				this.topStaticValue = this.value;
-				this.switchTop = true;
+		timer(
+			!this.isFirstValueSwitched
+				? 0
+				: this.delay
+				? Math.random() * 1000
+				: 1
+		).subscribe(() => {
+			this.topStaticValue = this.value;
+			this.switchTop = true;
+			timer(ANIMATION_SPEED).subscribe(() => {
+				this.topAnimatedValue = this.value;
+				this.switchTop = false;
+
+				this.bottomAnimatedValue = this.value;
+				this.switchBottom = true;
+
+				this.isFirstValueSwitched = true;
+
 				timer(ANIMATION_SPEED).subscribe(() => {
-					this.topAnimatedValue = this.value;
-					this.switchTop = false;
-
-					this.bottomAnimatedValue = this.value;
-					this.switchBottom = true;
-
-					this.isFirstValueSwitched = true;
-
-					timer(ANIMATION_SPEED).subscribe(() => {
-						this.bottomStaticValue = this.value;
-						this.switchBottom = false;
-					});
+					this.bottomStaticValue = this.value;
+					this.switchBottom = false;
 				});
-			}
-		);
+			});
+		});
 	}
 }
