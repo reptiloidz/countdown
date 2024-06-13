@@ -84,10 +84,10 @@ export class BoardComponent {
 	switchBoard() {
 		timer(
 			!this.isFirstValueSwitched
-				? 0
+				? 100
 				: this.delay
 				? Math.random() * 1000
-				: 1
+				: 100
 		).subscribe(() => {
 			this.topStaticValue = this.value;
 			this.switchTop = true;
