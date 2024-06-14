@@ -26,7 +26,7 @@
 		border-radius: calc(25% * var(--clock-arrow-h)) / calc(25% * var(--clock-arrow-w));
 		background-color: var(--clock-cl);
 		transition: transform .4s cubic-bezier(.1, .79, .24, .95);
-		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * 1deg));
+		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * -1deg));
 		transform-origin: bottom;
 
 		&--minute {

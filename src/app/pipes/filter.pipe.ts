@@ -40,7 +40,7 @@ export class FilterPipe implements PipeTransform {
 						isRepeatable === 'all') &&
 					(point.greenwich.toString() === isGreenwich ||
 						isGreenwich === 'all') &&
-					((point.public && point.public.toString() === isPublic) ||
+					(point.public?.toString() === isPublic ||
 						isPublic === 'all') &&
 					(color?.split('+').includes(point.color || 'gray') ||
 						color === '')
