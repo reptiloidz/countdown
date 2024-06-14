@@ -395,7 +395,14 @@ export class PointComponent implements OnInit, OnDestroy {
 	modeSelected(mode: CalendarMode) {
 		this.calendarMode = mode;
 		this.setIterationsParam();
-		this.panelCalendar?.updateHeight();
+
+		if (this.panelCalendar) {
+			this.panelCalendar.updateHeight();
+		} else {
+			requestAnimationFrame(() => {
+				this.panelCalendar?.updateHeight();
+			});
+		}
 	}
 
 	dateChecked({
