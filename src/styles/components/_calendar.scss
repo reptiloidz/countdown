@@ -82,7 +82,7 @@
 		}
 
 		&--other {
-			opacity: .3;
+			--calendar-button-cl: rgba(var(--c-text-primary), .3);
 		}
 	}
 

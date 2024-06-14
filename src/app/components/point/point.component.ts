@@ -304,7 +304,7 @@ export class PointComponent implements OnInit, OnDestroy {
 
 		this.remainTextValue =
 			this.remainText +
-			' ' +
+			': ' +
 			formatDistanceToNow(this.pointDate, {
 				locale: ru,
 			});

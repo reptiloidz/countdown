@@ -214,7 +214,9 @@
 				*ngIf="point?.title"
 				class="point-page__remain"
 			>
-				{{ remainTextValue }} <ng-container *ngIf="iterationDate && iterationTime"> — {{ iterationDate }} {{
+				<ng-container *ngIf="remainTextValue">{{ remainTextValue }}. </ng-container> <ng-container
+					*ngIf="iterationDate && iterationTime"
+				> {{ iterationDate }} {{
 					iterationTime }}</ng-container>
 			</div>
 			<p
