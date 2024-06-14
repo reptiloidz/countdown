@@ -9,4 +9,8 @@ export enum SortTypeNames {
 	greenwichDesc = 'Гринвич',
 	publicAsc = 'Публичное',
 	publicDesc = 'Публичное',
+	closestAsc = 'Ближайшее',
+	closestDesc = 'Ближайшее',
+	directionAsc = 'Направление',
+	directionDesc = 'Направление',
 }

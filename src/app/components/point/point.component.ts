@@ -23,6 +23,7 @@ import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
 import {
 	filterIterations,
+	getClosestIteration,
 	getFirstIteration,
 	getPointDate,
 	sortDates,
@@ -105,7 +106,10 @@ export class PointComponent implements OnInit, OnDestroy {
 								isNaN(this.currentIterationIndex) ||
 								this.currentIterationIndex < 0
 							) {
-								this.switchIteration(this.dates.length - 1);
+								point &&
+									this.switchIteration(
+										getClosestIteration(point).index
+									);
 							}
 						} else {
 							this.switchIteration();

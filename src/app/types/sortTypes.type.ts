@@ -6,4 +6,8 @@ export type SortTypes =
 	| 'greenwichAsc'
 	| 'greenwichDesc'
 	| 'publicAsc'
-	| 'publicDesc';
+	| 'publicDesc'
+	| 'closestAsc'
+	| 'closestDesc'
+	| 'directionAsc'
+	| 'directionDesc';

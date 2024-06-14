@@ -101,7 +101,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	get closestIteration() {
-		return getClosestIteration(this.point);
+		return getClosestIteration(this.point).date;
 	}
 
 	get interval() {
