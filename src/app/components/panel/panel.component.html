@@ -12,8 +12,9 @@
 </ng-template>
 <div class="panel__body">
 	<div
+		#panelContentRef
 		*ngIf="bodyTemplate"
-		[@panelBody]="open ? 'open' : 'closed'"
+		[@panelContent]="open ? 'open' : 'closed'"
 		class="panel__content"
 	>
 		<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>

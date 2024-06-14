@@ -10,12 +10,15 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ContentChild,
+	ElementRef,
 	EventEmitter,
 	HostBinding,
 	Input,
 	Output,
 	TemplateRef,
+	ViewChild,
 } from '@angular/core';
+import { timer } from 'rxjs';
 import { ButtonSize } from 'src/app/types';
 
 @Component({
@@ -23,7 +26,7 @@ import { ButtonSize } from 'src/app/types';
 	templateUrl: './panel.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
-		trigger('panelBody', [
+		trigger('panelContent', [
 			state(
 				'open',
 				style({
@@ -59,6 +62,7 @@ export class PanelComponent {
 	@ContentChild('extraTemplate') extraTemplate:
 		| TemplateRef<unknown>
 		| undefined;
+	@ViewChild('panelContentRef') private panelContentRef!: ElementRef;
 
 	@Input() open = false;
 	@Input() icon: string = 'chevron-down';
@@ -66,6 +70,36 @@ export class PanelComponent {
 	@Input() buttonClass = '';
 	@Input() buttonTitle: string | null = null;
 	@Output() panelVisibilitySwitched = new EventEmitter<boolean>();
+
+	hasFirstUpdateHappened = false;
+
+	updateHeight() {
+		requestAnimationFrame(() => {
+			const el = this.panelContentRef.nativeElement as HTMLElement;
+			if (!this.hasFirstUpdateHappened) {
+				this.hasFirstUpdateHappened = true;
+				const newHeight = el.scrollHeight + 'px';
+				el.setAttribute('data-height', newHeight);
+				return;
+			}
+
+			el.classList.add('panel__content--animating');
+			const prevHeight = el.getAttribute('data-height') || 'auto';
+			el.style.height = 'auto';
+			const newHeight = el.scrollHeight + 'px';
+			el.style.height = prevHeight;
+
+			requestAnimationFrame(() => {
+				el.style.height = newHeight;
+				el.setAttribute('data-height', newHeight);
+
+				timer(600).subscribe(() => {
+					el.classList.remove('panel__content--animating');
+					el.removeAttribute('style');
+				});
+			});
+		});
+	}
 
 	openHandler() {
 		this.open = true;

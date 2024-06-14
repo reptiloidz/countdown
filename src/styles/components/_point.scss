@@ -94,7 +94,9 @@
 
 		.point {
 			&__main {
+				flex-grow: 0;
 				justify-content: center;
+				margin-right: 40px;
 				padding: 16px;
 			}
 
@@ -108,7 +110,6 @@
 			&__nav {
 				flex-shrink: 0;
 				height: auto;
-				margin-left: auto;
 			}
 
 			&__timers {
@@ -116,7 +117,7 @@
 				margin-top: 0;
 				margin-right: 20px;
 				margin-bottom: 0;
-				margin-left: 40px;
+				margin-left: auto;
 			}
 		}
 	}
@@ -125,7 +126,7 @@
 		.point {
 			&__title {
 				min-width: 100px;
-				max-width: min-content;
+				max-width: fit-content;
 				font-size: 16px;
 			}
 

@@ -28,6 +28,7 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { CalendarMode } from 'src/app/types';
+import { PanelComponent } from '../panel/panel.component';
 
 @Component({
 	selector: 'app-point',
@@ -36,6 +37,7 @@ import { CalendarMode } from 'src/app/types';
 })
 export class PointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
+	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 	@HostBinding('class') class = 'main__inner';
 	point!: Point | undefined;
 	pointDate = new Date();
@@ -393,6 +395,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	modeSelected(mode: CalendarMode) {
 		this.calendarMode = mode;
 		this.setIterationsParam();
+		this.panelCalendar?.updateHeight();
 	}
 
 	dateChecked({

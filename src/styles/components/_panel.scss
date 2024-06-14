@@ -7,6 +7,9 @@
 	}
 
 	&__content {
+		transition: height .6s cubic-bezier(.1, .79, .24, .95);
+
+		&--animating,
 		&.ng-animating {
 			overflow: hidden;
 		}
