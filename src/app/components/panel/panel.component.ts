@@ -76,24 +76,22 @@ export class PanelComponent {
 	updateHeight() {
 		requestAnimationFrame(() => {
 			const el = this.panelContentRef.nativeElement as HTMLElement;
+			const newHeight = el.scrollHeight + 'px';
+
 			if (!this.hasFirstUpdateHappened) {
 				this.hasFirstUpdateHappened = true;
-				const newHeight = el.scrollHeight + 'px';
 				el.setAttribute('data-height', newHeight);
 				return;
 			}
 
 			el.classList.add('panel__content--animating');
-			const prevHeight = el.getAttribute('data-height') || 'auto';
-			el.style.height = 'auto';
-			const newHeight = el.scrollHeight + 'px';
-			el.style.height = prevHeight;
+			el.style.height = el.getAttribute('data-height') || 'auto';
 
 			requestAnimationFrame(() => {
 				el.style.height = newHeight;
 				el.setAttribute('data-height', newHeight);
 
-				timer(600).subscribe(() => {
+				timer(300).subscribe(() => {
 					el.classList.remove('panel__content--animating');
 					el.removeAttribute('style');
 				});

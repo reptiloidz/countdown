@@ -26,6 +26,7 @@
 		background-color: var(--switcher-item-bg-cl);
 		color: var(--switcher-item-cl);
 		cursor: pointer;
+		user-select: none;
 
 		&--active {
 			--switcher-item-bg-cl: var(--switcher-item-active-bg-cl);
