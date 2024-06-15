@@ -60,6 +60,7 @@
 			<ul
 				#iterationsList
 				class="tabs"
+				(wheel)="onIterationsScroll($event)"
 			>
 				<li
 					*ngFor="let date of this.dates; let i = index"

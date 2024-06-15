@@ -15,6 +15,9 @@ import {
 	tap,
 	mergeMap,
 	filter,
+	fromEvent,
+	timer,
+	throttle,
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
@@ -114,6 +117,15 @@ export class PointComponent implements OnInit, OnDestroy {
 						} else {
 							this.switchIteration();
 						}
+
+						requestAnimationFrame(() => {
+							(this.iterationsList?.nativeElement as HTMLElement)
+								?.querySelector('.tabs__item--active input')
+								?.scrollIntoView({
+									block: 'nearest',
+									behavior: 'smooth',
+								});
+						});
 					}),
 					mergeMap(() => this.auth.getUserData(this.point?.user))
 				)
@@ -131,6 +143,30 @@ export class PointComponent implements OnInit, OnDestroy {
 							'Ошибка при обновлении таймеров:\n',
 							err.message
 						);
+					},
+				})
+		);
+
+		this.subscriptions.add(
+			fromEvent(document, 'wheel')
+				.pipe(
+					filter((event) => {
+						const eWheel = event as WheelEvent;
+						return this.iterationsList.nativeElement.contains(
+							eWheel.target as HTMLElement
+						);
+					}),
+					throttle(() => timer(100))
+				)
+				.subscribe({
+					next: (event) => {
+						const eWheel = event as WheelEvent;
+						if (eWheel.deltaY !== 0) {
+							if (this.iterationsList.nativeElement) {
+								this.iterationsList.nativeElement.scrollLeft +=
+									eWheel.deltaY;
+							}
+						}
 					},
 				})
 		);
@@ -234,6 +270,10 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get calendarOpen() {
 		return this.isCalendarCreated && this.isCalendarPanelOpen;
+	}
+
+	onIterationsScroll(event: WheelEvent) {
+		event.preventDefault();
 	}
 
 	switchCalendarPanel(value?: boolean) {

@@ -15,14 +15,16 @@ const ANIMATION_SPEED = 200;
 	templateUrl: './board.component.html',
 	animations: [
 		trigger('halfTop', [
-			state('void', style({ transform: 'rotateX(0)' })),
+			state(
+				'void',
+				style({ transform: 'rotateX(0)', boxShadow: 'none' })
+			),
 			state(
 				'*',
 				style({
 					transform:
 						'rotateX(90deg) matrix3d(1, 0, 0, 0, 0, .75, 0, .001, 1, 1, .1, .1, .1, .1, 0, 1)',
-					boxShadow:
-						'var(--board-half-shadow), 0 calc(var(--board-h) / -4) 20px 0 rgba(var(--c-bg-primary), .1)',
+					opacity: 0,
 				})
 			),
 			transition(':enter', [

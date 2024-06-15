@@ -1,21 +1,56 @@
 .tabs {
+	--tabs-gap: 40px;
+	--tabs-item-before-opacity: .2;
+
 	display: flex;
-	gap: 12px;
+	gap: var(--tabs-gap);
 	margin: 0 16px;
-	padding: 4px 0;
+	padding: 4px var(--tabs-gap);
 	overflow: auto;
 	list-style-type: none;
+	scroll-behavior: smooth;
+	scroll-padding: 50%;
 
 	&__item {
-		display: grid;
-		grid-template-areas: 'button button' 'check remove';
+		position: relative;
+		display: flex;
 		gap: 4px;
 		align-items: center;
 		align-self: center;
+		padding: 0 12px;
+
+		&:first-child {
+			&::before {
+				content: '';
+			}
+		}
+
+		&:last-child {
+			&::after {
+				content: '';
+				right: auto;
+				left: 100%;
+			}
+		}
+
+		&::before,
+		&::after {
+			position: absolute;
+			right: 100%;
+			width: var(--tabs-gap);
+			height: 0;
+			border-top: 1px dashed rgba(var(--c-border-primary), var(--tabs-item-before-opacity));
+		}
+
+		& + & {
+			&::before {
+				content: '';
+			}
+		}
 
 		&--day {
-			.tabs__btn {
-				background-color: beige;
+			& + & {
+				--tabs-item-before-opacity: 1;
 			}
 		}
 
@@ -29,13 +64,7 @@
 			&.tabs__item--active,
 			&.tabs__item--day {
 				.tabs__btn {
-					/* stylelint-disable-next-line max-nesting-depth */
-					&::before {
-						content: '\2022';
-						position: absolute;
-						top: 3px;
-						left: 3px;
-					}
+					color: rgb(var(--c-text-negative));
 				}
 			}
 		}
@@ -44,18 +73,14 @@
 	&__btn {
 		position: relative;
 		display: block;
-		grid-area: button;
 		width: 100%;
-		padding: 0 12px;
 	}
 
 	&__check {
-		grid-area: check;
 		margin: auto;
 	}
 
 	&__remove {
-		grid-area: remove;
 		padding: 0;
 	}
 
