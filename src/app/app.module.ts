@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {
 	BrowserAnimationsModule,
@@ -37,6 +37,7 @@ import { ClockComponent } from './components/clock/clock.component';
 import { PanelComponent } from './components/panel/panel.component';
 import { BoardComponent } from './components/board/board.component';
 import { TimersComponent } from './components/timers/timers.component';
+import { FontProvider } from './providers/font.provider';
 
 @NgModule({
 	declarations: [
@@ -89,7 +90,16 @@ import { TimersComponent } from './components/timers/timers.component';
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),
 	],
-	providers: [[provideNgxMask()], SortTrendingPipe, provideAnimations()],
+	providers: [
+		[provideNgxMask()],
+		SortTrendingPipe,
+		provideAnimations(),
+		{
+			provide: APP_INITIALIZER,
+			useFactory: FontProvider,
+			multi: true,
+		},
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
