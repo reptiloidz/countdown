@@ -5,7 +5,13 @@ import {
 	transition,
 	trigger,
 } from '@angular/animations';
-import { Component, HostBinding, Input } from '@angular/core';
+import {
+	Component,
+	HostBinding,
+	Input,
+	OnChanges,
+	SimpleChanges,
+} from '@angular/core';
 import { timer } from 'rxjs';
 
 const ANIMATION_SPEED = 200;
@@ -61,40 +67,19 @@ const ANIMATION_SPEED = 200;
 		]),
 	],
 })
-export class BoardComponent {
-	private _value: string | number = '';
-	private _initialValue: string | number = '00';
-
+export class BoardComponent implements OnChanges {
 	@HostBinding('class') get componentClass() {
 		return ['board', this.mode !== 'base' && `board--${this.mode}`].join(
 			' '
 		);
 	}
-	@Input()
-	get value(): string | number {
-		return this._value;
-	}
-	set value(val: string | number) {
-		this._value = val;
-		val && this.switchBoard();
-	}
 
-	@Input()
-	get initialValue(): string | number {
-		return this._initialValue;
-	}
-	set initialValue(val: string | number) {
-		this._initialValue = val;
-		this.topStaticValue =
-			this.topAnimatedValue =
-			this.bottomStaticValue =
-			this.bottomAnimatedValue =
-				this.initialValue;
-	}
-
+	@Input() value: string | number = '';
+	@Input() initialValue: string | number = '00';
 	@Input() mode: 'base' | 'sm' | 'logo' = 'base';
 	@Input() label = '';
 	@Input() delay = true;
+	@Input() delayValue!: number;
 
 	switchTop = false;
 	switchBottom = false;
@@ -103,11 +88,22 @@ export class BoardComponent {
 	topAnimatedValue: string | number = this.initialValue;
 	bottomStaticValue: string | number = this.initialValue;
 	bottomAnimatedValue: string | number = this.initialValue;
-	isFirstValueSwitched = true;
+	timeInterval = new Date();
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (changes['initialValue']) {
+			this.topStaticValue =
+				this.topAnimatedValue =
+				this.bottomStaticValue =
+				this.bottomAnimatedValue =
+					this.initialValue;
+		}
+		changes['value']?.currentValue && this.switchBoard();
+	}
 
 	switchBoard() {
-		if (this.isFirstValueSwitched || this.delay) {
-			timer(Math.random() * 1000).subscribe(() => {
+		if (this.delay) {
+			timer(this.delayValue || Math.random() * 1000).subscribe(() => {
 				this.animateBoard();
 			});
 		} else {
@@ -124,8 +120,6 @@ export class BoardComponent {
 
 			this.bottomAnimatedValue = this.value;
 			this.switchBottom = true;
-
-			this.isFirstValueSwitched = false;
 
 			timer(ANIMATION_SPEED).subscribe(() => {
 				this.bottomStaticValue = this.value;
