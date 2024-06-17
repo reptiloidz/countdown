@@ -34,6 +34,10 @@
 		margin-top: 10px;
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
 		font-size: 12px;
+
+		& + & {
+			margin-top: 4px;
+		}
 	}
 
 	&__main {

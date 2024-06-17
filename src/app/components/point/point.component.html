@@ -65,7 +65,7 @@
 				<ng-container *ngFor="let date of datesBefore; let i = index">
 					<ng-container
 						[ngTemplateOutlet]="iteration"
-						[ngTemplateOutletContext]="{ $implicit: date, index: i }"
+						[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past' }"
 					></ng-container>
 				</ng-container>
 				<li class="tabs__item">
@@ -73,11 +73,14 @@
 						app-svg
 						name="home-2"
 					></svg>
+					<div class="tabs__label tabs__label--now">
+						<p class="tabs__date">{{ currentTime }}</p>
+					</div>
 				</li>
 				<ng-container *ngFor="let date of datesAfter; let i = index">
 					<ng-container
 						[ngTemplateOutlet]="iteration"
-						[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0) }"
+						[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future'  }"
 					></ng-container>
 				</ng-container>
 			</ul>
@@ -230,6 +233,7 @@
 	#iteration
 	let-date
 	let-i="index"
+	let-time="time"
 >
 	<li
 		class="tabs__item"
@@ -265,5 +269,9 @@
 			class="tabs__remove"
 			(click)="removeIteration(i)"
 		></button>
+		<div class="tabs__label">
+			<p class="tabs__remain">{{ (time === 'past' ? 'Прошло ' : 'Осталось ') + (date.date | timeRemain) }}</p>
+			<p class="tabs__date">{{ date.date }}</p>
+		</div>
 	</li>
 </ng-template>

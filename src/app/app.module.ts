@@ -38,6 +38,7 @@ import { PanelComponent } from './components/panel/panel.component';
 import { BoardComponent } from './components/board/board.component';
 import { TimersComponent } from './components/timers/timers.component';
 import { FontProvider } from './providers/font.provider';
+import { TimeRemainPipe } from './pipes/time-remain.pipe';
 
 @NgModule({
 	declarations: [
@@ -60,6 +61,7 @@ import { FontProvider } from './providers/font.provider';
 		SortTrendingPipe,
 		CheckEditablePointsPipe,
 		ColorsCheckPipe,
+		TimeRemainPipe,
 		ClockComponent,
 		PanelComponent,
 		BoardComponent,

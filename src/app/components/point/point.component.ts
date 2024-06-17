@@ -21,7 +21,12 @@ import {
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
-import { format, formatDistanceToNow, intervalToDuration } from 'date-fns';
+import {
+	format,
+	formatDate,
+	formatDistanceToNow,
+	intervalToDuration,
+} from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
 import {
@@ -279,6 +284,10 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get calendarOpen() {
 		return this.isCalendarCreated && this.isCalendarPanelOpen;
+	}
+
+	get currentTime() {
+		return formatDate(new Date(), Constants.fullDateFormat);
 	}
 
 	onIterationsScroll(event: WheelEvent) {

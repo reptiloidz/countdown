@@ -12,7 +12,8 @@ import { Point, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService } from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { getClosestIteration, parseDate } from 'src/app/helpers';
-import { intervalToDuration } from 'date-fns';
+import { formatDistanceToNow, intervalToDuration } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 @Component({
 	selector: '[app-main-item]',
@@ -101,6 +102,18 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get closestIteration() {
 		return getClosestIteration(this.point).date;
+	}
+
+	get closestIterationRemain() {
+		return (
+			(parseDate(this.closestIteration) < new Date()
+				? 'Прошло'
+				: 'Осталось') +
+			' ' +
+			formatDistanceToNow(parseDate(this.closestIteration), {
+				locale: ru,
+			})
+		);
 	}
 
 	get interval() {
