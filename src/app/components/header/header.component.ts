@@ -57,22 +57,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
 							? null
 							: localStorage.getItem('sort'),
 					repeat:
-						localStorage.getItem('repeatableSelectValue') === 'all'
+						localStorage.getItem('repeatableValue') === 'all'
 							? null
-							: localStorage.getItem('repeatableSelectValue'),
+							: localStorage.getItem('repeatableValue'),
 					greenwich:
-						localStorage.getItem('greenwichSelectValue') === 'all'
+						localStorage.getItem('greenwichValue') === 'all'
 							? null
-							: localStorage.getItem('greenwichSelectValue'),
+							: localStorage.getItem('greenwichValue'),
 					public:
-						localStorage.getItem('publicSelectValue') === 'all'
+						localStorage.getItem('publicValue') === 'all'
 							? null
-							: localStorage.getItem('publicSelectValue'),
+							: localStorage.getItem('publicValue'),
 					color:
 						localStorage.getItem('colorValue') === 'all'
 							? null
 							: localStorage.getItem('colorValue'),
 				};
+				console.log(localStorage.getItem('publicValue'));
 			},
 		});
 
