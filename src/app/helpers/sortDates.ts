@@ -1,13 +1,10 @@
-import { compareAsc, parse } from 'date-fns';
+import { compareAsc } from 'date-fns';
 import { Point } from '../interfaces';
-import { Constants } from '../enums';
+import { parseDate } from './parseDate';
 
 export const sortDates = (point: Point) => {
 	point.dates.sort((a, b) =>
-		compareAsc(
-			parse(a.date, Constants.fullDateFormat, new Date()),
-			parse(b.date, Constants.fullDateFormat, new Date())
-		)
+		compareAsc(parseDate(a.date), parseDate(b.date))
 	);
 
 	return point;

@@ -1,21 +1,12 @@
-import { parse } from 'date-fns';
 import { Point } from '../interfaces';
-import { Constants } from '../enums';
+import { parseDate } from './parseDate';
 
 export const getClosestIteration = (point: Point) => {
 	const datesFuture = point.dates
-		.filter(
-			(iteration) =>
-				parse(iteration.date, Constants.fullDateFormat, new Date()) >
-				new Date()
-		)
+		.filter((iteration) => parseDate(iteration.date) > new Date())
 		.sort();
 	const datesPast = point.dates
-		.filter(
-			(iteration) =>
-				parse(iteration.date, Constants.fullDateFormat, new Date()) <
-				new Date()
-		)
+		.filter((iteration) => parseDate(iteration.date) < new Date())
 		.sort()
 		.reverse();
 

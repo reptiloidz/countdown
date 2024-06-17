@@ -11,9 +11,8 @@ import { Subscription, first } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService } from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { getClosestIteration } from 'src/app/helpers';
-import { intervalToDuration, parse } from 'date-fns';
-import { Constants } from 'src/app/enums';
+import { getClosestIteration, parseDate } from 'src/app/helpers';
+import { intervalToDuration } from 'date-fns';
 
 @Component({
 	selector: '[app-main-item]',
@@ -106,11 +105,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get interval() {
 		return intervalToDuration({
-			start: parse(
-				this.closestIteration,
-				Constants.fullDateFormat,
-				new Date()
-			),
+			start: parseDate(this.closestIteration),
 			end: new Date(),
 		});
 	}

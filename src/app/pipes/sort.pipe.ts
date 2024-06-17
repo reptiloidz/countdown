@@ -2,8 +2,8 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { Iteration } from '../interfaces';
-import { compareAsc, parse } from 'date-fns';
-import { Constants } from '../enums';
+import { compareAsc } from 'date-fns';
+import { parseDate } from '../helpers';
 
 @Pipe({
 	name: 'sort',
@@ -13,10 +13,7 @@ export class SortPipe implements PipeTransform {
 		return (
 			iterations &&
 			iterations.sort((a, b) =>
-				compareAsc(
-					parse(a.date, Constants.fullDateFormat, new Date()),
-					parse(b.date, Constants.fullDateFormat, new Date())
-				)
+				compareAsc(parseDate(a.date), parseDate(b.date))
 			)
 		);
 	}

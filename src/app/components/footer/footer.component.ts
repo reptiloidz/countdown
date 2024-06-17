@@ -5,10 +5,10 @@ import {
 	ActivationStart,
 	ActivatedRoute,
 } from '@angular/router';
-import { format, formatISO, parse } from 'date-fns';
+import { format, formatISO } from 'date-fns';
 import { filter, Subscription, EMPTY, mergeMap, combineLatestWith } from 'rxjs';
 import { Constants } from 'src/app/enums';
-import { getPointDate } from 'src/app/helpers';
+import { getPointDate, parseDate } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
 import { AuthService, DataService, ActionService } from 'src/app/services';
 import { HttpParams } from '@angular/common/http';
@@ -73,10 +73,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 							const googleLinkDate =
 								point?.dates[this.iteration - 1]?.date &&
 								formatISO(
-									parse(
-										point?.dates[this.iteration - 1]?.date,
-										Constants.fullDateFormat,
-										new Date()
+									parseDate(
+										point?.dates[this.iteration - 1]?.date
 									),
 									{ format: 'basic' }
 								) + (point?.greenwich ? 'Z' : '');

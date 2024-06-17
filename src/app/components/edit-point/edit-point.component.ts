@@ -606,7 +606,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				newDatesArray[this.currentIterationIndex] = lastDate;
 				editPointEvent = 'iterationEdited';
 			}
-		} else if (!this.form.controls['repeatable'].value) {
+		} else if (!this.form.controls['repeatable'].value || this.isCreation) {
 			newDatesArray = [lastDate];
 		}
 

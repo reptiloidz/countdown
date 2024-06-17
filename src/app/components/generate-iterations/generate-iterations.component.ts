@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import { Constants } from 'src/app/enums';
-import { getPointDate } from 'src/app/helpers';
+import { getPointDate, parseDate } from 'src/app/helpers';
 import { Iteration } from 'src/app/interfaces';
 
 @Component({
@@ -125,10 +125,7 @@ export class GenerateIterationsComponent {
 			isInvert: true,
 		});
 
-		if (
-			parse(currentDateTime, Constants.fullDateFormat, new Date()) <=
-			dateTime
-		) {
+		if (parseDate(currentDateTime) <= dateTime) {
 			this.repeats.push({
 				date: currentDateTime,
 				reason: 'frequency',

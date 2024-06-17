@@ -29,6 +29,7 @@ import {
 	getClosestIteration,
 	getFirstIteration,
 	getPointDate,
+	parseDate,
 	sortDates,
 } from 'src/app/helpers';
 import { CalendarMode } from 'src/app/types';
@@ -256,6 +257,14 @@ export class PointComponent implements OnInit, OnDestroy {
 		return this.point?.dates;
 	}
 
+	get datesBefore() {
+		return this.dates?.filter((item) => parseDate(item.date) < new Date());
+	}
+
+	get datesAfter() {
+		return this.dates?.filter((item) => parseDate(item.date) > new Date());
+	}
+
 	get iterationDate() {
 		return format(this.pointDate, Constants.shortDateFormat);
 	}
@@ -382,8 +391,8 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.iterationsChecked = Array.from(
 			this.iterationsList.nativeElement.children
 		)
-			.filter((item: any) => item.querySelector('input').checked)
-			.map((item: any) => item.querySelector('input').name);
+			.filter((item: any) => item.querySelector('input')?.checked)
+			.map((item: any) => item.querySelector('input')?.name);
 	}
 
 	checkAllIterations(check = true, iterations?: Iteration[]) {

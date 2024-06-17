@@ -1,13 +1,8 @@
-import {
-	isSameDay,
-	isSameHour,
-	isSameMinute,
-	isSameMonth,
-	parse,
-} from 'date-fns';
+import { isSameDay, isSameHour, isSameMinute, isSameMonth } from 'date-fns';
 import { Iteration, Point } from '../interfaces';
 import { Constants } from '../enums';
 import { CalendarMode } from '../types';
+import { parseDate } from './parseDate';
 
 export const filterDates = (item: object) => {
 	return item && typeof item === 'object' && !Array.isArray(item);
@@ -65,11 +60,7 @@ function findIterations({
 	activeMode: CalendarMode;
 	greenwich: boolean;
 }) {
-	let iterationDate = parse(
-		iteration.date,
-		Constants.fullDateFormat,
-		new Date()
-	);
+	let iterationDate = parseDate(iteration.date);
 
 	iterationDate = new Date(
 		+iterationDate -

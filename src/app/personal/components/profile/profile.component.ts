@@ -17,6 +17,7 @@ import {
 	generateUserpicName,
 	getErrorMessages,
 	mergeDeep,
+	parseDate,
 	randomHEXColor,
 } from 'src/app/helpers';
 import { ValidationObject } from 'src/app/interfaces';
@@ -162,11 +163,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							this.birthDatePickerValue = parse(
 								'00:00',
 								Constants.timeFormat,
-								parse(
-									user.birthDate,
-									Constants.fullDateFormat,
-									new Date()
-								)
+								parseDate(user.birthDate)
 							);
 						}
 					},

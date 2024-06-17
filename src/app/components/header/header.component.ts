@@ -73,7 +73,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 							? null
 							: localStorage.getItem('colorValue'),
 				};
-				console.log(localStorage.getItem('publicValue'));
 			},
 		});
 

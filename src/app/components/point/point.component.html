@@ -62,42 +62,24 @@
 				class="tabs"
 				(wheel)="onIterationsScroll($event)"
 			>
-				<li
-					*ngFor="let date of this.dates; let i = index"
-					class="tabs__item"
-					[ngClass]="{
-								'tabs__item--active': i == currentIterationIndex,
-								'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
-								'tabs__item--copy': i | checkCopies : point,
-							}"
-				>
-					<button
-						app-button
-						class="tabs__btn"
-						size="sm"
-						mode="secondary"
-						(click)="switchIteration(i)"
-					>{{ i + 1 }}
-						<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
-					</button>
-					<label
-						app-checkbox
-						*ngIf="hasAccess"
-						[name]="i.toString()"
-						iconSize="sm"
-						(change)="checkIteration()"
-						class="tabs__check"
-					></label>
-					<button
-						*ngIf="hasAccess"
-						app-button
-						mode="negative"
-						size="sm"
-						icon="cross"
-						class="tabs__remove"
-						(click)="removeIteration(i)"
-					></button>
+				<ng-container *ngFor="let date of datesBefore; let i = index">
+					<ng-container
+						[ngTemplateOutlet]="iteration"
+						[ngTemplateOutletContext]="{ $implicit: date, index: i }"
+					></ng-container>
+				</ng-container>
+				<li class="tabs__item">
+					<svg
+						app-svg
+						name="home-2"
+					></svg>
 				</li>
+				<ng-container *ngFor="let date of datesAfter; let i = index">
+					<ng-container
+						[ngTemplateOutlet]="iteration"
+						[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0) }"
+					></ng-container>
+				</ng-container>
 			</ul>
 
 			<div
@@ -243,3 +225,45 @@
 		</ng-template>
 	</div>
 </div>
+
+<ng-template
+	#iteration
+	let-date
+	let-i="index"
+>
+	<li
+		class="tabs__item"
+		[ngClass]="{
+			'tabs__item--active': i == currentIterationIndex,
+			'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
+			'tabs__item--copy': i | checkCopies : point,
+		}"
+	>
+		<button
+			app-button
+			class="tabs__btn"
+			size="sm"
+			mode="secondary"
+			(click)="switchIteration(i)"
+		>{{ i + 1 }}
+			<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
+		</button>
+		<label
+			app-checkbox
+			*ngIf="hasAccess"
+			[name]="i.toString()"
+			iconSize="sm"
+			(change)="checkIteration()"
+			class="tabs__check"
+		></label>
+		<button
+			*ngIf="hasAccess"
+			app-button
+			mode="negative"
+			size="sm"
+			icon="cross"
+			class="tabs__remove"
+			(click)="removeIteration(i)"
+		></button>
+	</li>
+</ng-template>
