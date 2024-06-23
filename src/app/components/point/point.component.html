@@ -68,7 +68,7 @@
 						[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past' }"
 					></ng-container>
 				</ng-container>
-				<li class="tabs__item">
+				<li class="tabs__item tabs__item--home">
 					<svg
 						app-svg
 						name="home-2"
@@ -243,6 +243,7 @@
 			'tabs__item--active': i == currentIterationIndex,
 			'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
 			'tabs__item--copy': i | checkCopies : point,
+			'tabs__item--after': time === 'future'
 		}"
 	>
 		<label
