@@ -1,12 +1,13 @@
 .tabs {
 	--tabs-gap: 50px;
-	--tabs-item-before-opacity: .2;
+	--tabs-item-before-opacity: .1;
+	--tabs-date-cl: rgba(var(--c-text-primary), .4);
 
 	display: flex;
 	gap: var(--tabs-gap);
 	margin: 0;
 	padding: 4px calc(var(--tabs-gap) + 20px) 120px calc(var(--tabs-gap) + 40px);
-	overflow: auto;
+	overflow: auto hidden;
 	list-style-type: none;
 	scroll-behavior: smooth;
 	scroll-padding: 50%;
@@ -19,7 +20,8 @@
 		align-self: center;
 		padding: 0 12px;
 
-		&:first-child {
+		&:first-child,
+		& + & {
 			&::before {
 				content: '';
 			}
@@ -38,14 +40,12 @@
 			position: absolute;
 			right: 100%;
 			width: var(--tabs-gap);
-			height: 0;
-			border-top: 1px dashed rgba(var(--c-border-primary), var(--tabs-item-before-opacity));
-		}
-
-		& + & {
-			&::before {
-				content: '';
-			}
+			height: 4px;
+			border-top: 1px solid rgba(var(--c-border-primary), var(--tabs-item-before-opacity));
+			background-image:
+				linear-gradient(
+					// TODO
+				);
 		}
 
 		&--day {
@@ -56,7 +56,8 @@
 
 		&--active {
 			.tabs__btn {
-				background-color: lightgrey;
+				--button-bg-cl: rgba(var(--c-bg-primary), .1);
+				--button-border-cl: rgba(var(--c-border-primary), .2);
 			}
 		}
 
@@ -64,16 +65,20 @@
 			&.tabs__item--active,
 			&.tabs__item--day {
 				.tabs__btn {
-					color: rgb(var(--c-text-negative));
+					--button-cl: rgb(var(--c-text-negative));
+					--button-border-cl: rgba(var(--c-border-negative), .2);
+					--button-bg-cl: rgba(var(--c-bg-negative), .1);
 				}
 			}
 		}
 	}
 
 	&__btn {
+		--button-fz: 16px;
+
 		position: relative;
-		display: block;
 		width: 100%;
+		border-radius: 12px;
 	}
 
 	&__check {
@@ -91,30 +96,40 @@
 		height: 42px;
 	}
 
-	&__label {
+	&__label-wrapper {
 		position: absolute;
 		top: 100%;
-		right: 0;
+		left: 50%;
+		writing-mode: vertical-rl;
+		transform: rotate(180deg);
+	}
+
+	&__label {
 		font-size: 10px;
 		text-align: right;
 		text-wrap: nowrap;
-		transform: rotate(-45deg) translate3d(-41px, -57px, 0);
-		transform-origin: top right;
+		transform: rotate(45deg);
+		transform-origin: bottom right;
 
 		&--now {
-			right: auto;
-			left: 0;
-			font-size: 16px;
-			transform: rotate(-45deg) translate3d(-91px, -88px, 0);
+			margin-bottom: 12px;
+
+			.tabs__date {
+				--tabs-date-cl: rgb(var(--c-text-inverse));
+
+				padding: 4px 2px;
+				border-radius: 8px;
+				background-color: rgb(var(--c-bg-positive));
+			}
 		}
 	}
 
 	&__remain {
-		margin-right: 16px;
-		margin-bottom: 4px;
+		margin: 0 0 12px;
 	}
 
 	&__date {
-		color: rgba(var(--c-text-primary), .4);
+		margin: 0;
+		color: var(--tabs-date-cl);
 	}
 }

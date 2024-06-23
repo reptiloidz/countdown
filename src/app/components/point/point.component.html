@@ -73,8 +73,10 @@
 						app-svg
 						name="home-2"
 					></svg>
-					<div class="tabs__label tabs__label--now">
-						<p class="tabs__date">{{ currentTime }}</p>
+					<div class="tabs__label-wrapper">
+						<div class="tabs__label tabs__label--now">
+							<p class="tabs__date">{{ currentTime }}</p>
+						</div>
 					</div>
 				</li>
 				<ng-container *ngFor="let date of datesAfter; let i = index">
@@ -243,15 +245,6 @@
 			'tabs__item--copy': i | checkCopies : point,
 		}"
 	>
-		<button
-			app-button
-			class="tabs__btn"
-			size="sm"
-			mode="secondary"
-			(click)="switchIteration(i)"
-		>{{ i + 1 }}
-			<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
-		</button>
 		<label
 			app-checkbox
 			*ngIf="hasAccess"
@@ -261,6 +254,14 @@
 			class="tabs__check"
 		></label>
 		<button
+			app-button
+			class="tabs__btn"
+			size="sm"
+			mode="secondary"
+			(click)="switchIteration(i)"
+		>{{ i + 1 }}
+		</button>
+		<button
 			*ngIf="hasAccess"
 			app-button
 			mode="negative"
@@ -269,9 +270,20 @@
 			class="tabs__remove"
 			(click)="removeIteration(i)"
 		></button>
-		<div class="tabs__label">
-			<p class="tabs__remain">{{ (time === 'past' ? 'Прошло ' : 'Осталось ') + (date.date | timeRemain) }}</p>
-			<p class="tabs__date">{{ date.date }}</p>
+		<div class="tabs__label-wrapper">
+			<div class="tabs__label">
+				<p class="tabs__remain">{{ (time === 'past' ? 'Прошло: ' : 'Осталось: ') + (date.date | timeRemain) }}
+				</p>
+				<div class="tabs__date">
+					<svg
+						app-svg
+						*ngIf="date.reason === 'frequency'"
+						name="refresh"
+						class="tabs__item-icon"
+					></svg>
+					{{ date.date }}
+				</div>
+			</div>
 		</div>
 	</li>
 </ng-template>
