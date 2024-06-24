@@ -124,14 +124,14 @@ export class PointComponent implements OnInit, OnDestroy {
 							this.switchIteration();
 						}
 
-						requestAnimationFrame(() => {
+						setTimeout(() => {
 							(this.iterationsList?.nativeElement as HTMLElement)
 								?.querySelector('.tabs__item--active input')
 								?.scrollIntoView({
 									block: 'nearest',
 									behavior: 'smooth',
 								});
-						});
+						}, 500);
 					}),
 					mergeMap(() => this.auth.getUserData(this.point?.user))
 				)
