@@ -18,7 +18,9 @@ import {
 })
 export class CheckboxComponent implements ControlValueAccessor {
 	@HostBinding('class') get controlClass() {
-		return ['checkbox'].join(' ');
+		return ['checkbox', this.mode !== 'text' && 'checkbox--' + this.mode]
+			.filter((_) => _)
+			.join(' ');
 	}
 	@HostBinding('attr.for') get for() {
 		return this.name || null;
@@ -26,6 +28,7 @@ export class CheckboxComponent implements ControlValueAccessor {
 	@Input() formControlName!: string;
 	@Input() control!: FormControl;
 	@Input() iconSize: 'sm' | 'md' = 'md';
+	@Input() mode: 'text' | 'icon' = 'text';
 	@Input() isChecked = false;
 	@Input() isDisabled = false;
 

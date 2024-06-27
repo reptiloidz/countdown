@@ -15,14 +15,24 @@
 		}
 	}
 
-	&__button {
+	&__buttons {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		align-self: flex-start;
-		margin-top: -1px;
 		margin-left: var(--panel-px);
+	}
+
+	&__button {
+		margin-top: -1px;
 		border-top-color: transparent;
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
 		background-color: rgb(var(--c-bg-body));
+	}
+
+	&__button-extra {
+		margin-top: 8px;
 	}
 
 	&__footer {

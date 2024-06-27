@@ -52,6 +52,9 @@ export class PanelComponent {
 	@HostBinding('class') get dropClass() {
 		return ['panel'].join(' ');
 	}
+	@HostBinding('attr.data-open') get dataOpen() {
+		return this.open;
+	}
 
 	@ContentChild('buttonTemplate') buttonTemplate:
 		| TemplateRef<unknown>
@@ -62,6 +65,7 @@ export class PanelComponent {
 	@ContentChild('extraTemplate') extraTemplate:
 		| TemplateRef<unknown>
 		| undefined;
+	@ContentChild('extraButton') extraButton: TemplateRef<unknown> | undefined;
 	@ViewChild('panelContentRef') private panelContentRef!: ElementRef;
 
 	@Input() open = false;

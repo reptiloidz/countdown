@@ -56,6 +56,22 @@
 	</ng-template>
 
 	<ng-container *ngIf="this.dates?.length && (this.dates?.length != 1)">
+		<ng-template #extraButton>
+			<label
+				app-checkbox
+				iconSize="sm"
+				mode="icon"
+				title="Отображение данных итераций"
+				[isChecked]="showIterationsInfo"
+				(change)="iterationsInfoSwitch($event)"
+			>
+				<svg
+					app-svg
+					name="info-circle"
+					class="checkbox__label-icon"
+				></svg>
+			</label>
+		</ng-template>
 		<ng-template #extraTemplate>
 			<ul
 				#iterationsList
@@ -73,7 +89,10 @@
 						app-svg
 						name="home-2"
 					></svg>
-					<div class="tabs__label-wrapper">
+					<div
+						*ngIf="showIterationsInfo"
+						class="tabs__label-wrapper"
+					>
 						<div class="tabs__label tabs__label--now">
 							<p class="tabs__date">{{ currentTime }}</p>
 						</div>
@@ -271,7 +290,10 @@
 			class="tabs__remove"
 			(click)="removeIteration(i)"
 		></button>
-		<div class="tabs__label-wrapper">
+		<div
+			*ngIf="showIterationsInfo"
+			class="tabs__label-wrapper"
+		>
 			<div class="tabs__label">
 				<p class="tabs__remain">{{ (time === 'past' ? 'Прошло: ' : 'Осталось: ') + (date.date | timeRemain) }}
 				</p>

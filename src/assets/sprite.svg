@@ -57,6 +57,9 @@
         <svg id="hourglass" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 17.106a2 2 0 0 0-.336-1.11L14.74 13.11a2 2 0 0 1 0-2.218l1.924-2.887A2 2 0 0 0 17 6.894V4m0 0h2m-2 0H5m2 2.894a2 2 0 0 0 .336 1.11L9.26 10.89a2 2 0 0 1 0 2.218l-1.924 2.887A2 2 0 0 0 7 17.106V20m0 0H5m2 0h12"/>
         </svg>
+        <svg id="info-circle" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 7.01V7m0 10v-7m9 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0"/>
+        </svg>
         <svg id="lines" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20.5h3.5v-7h-17v7H12m-6-17H3.5v7h17v-7H11"/>
         </svg>

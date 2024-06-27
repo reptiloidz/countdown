@@ -69,11 +69,11 @@
 		}
 
 		&--day {
-			& + & {
+			[data-open='true'] & + & {
 				--tabs-item-pseudo-opacity: 1;
 			}
 
-			.tabs__btn {
+			[data-open='true'] & .tabs__btn {
 				--button-border-cl: rgba(var(--c-border-primary), .2);
 			}
 		}

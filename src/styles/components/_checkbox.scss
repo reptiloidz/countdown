@@ -49,9 +49,23 @@
 		}
 	}
 
+	&__label-icon {
+		--icon-w: 16px;
+		--icon-stroke-w: 2px;
+	}
+
 	&__input {
 		width: 1px;
 		height: 1px;
 		opacity: 0;
+	}
+
+	&--icon {
+		.checkbox__label {
+			display: flex;
+			margin-top: auto;
+			margin-bottom: auto;
+			margin-left: 4px;
+		}
 	}
 }

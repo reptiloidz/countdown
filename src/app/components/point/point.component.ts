@@ -74,6 +74,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerHours!: number | string;
 	timerMins!: number | string;
 	timerSecs!: number | string;
+	showIterationsInfo = false;
 
 	private subscriptions = new Subscription();
 
@@ -484,5 +485,9 @@ export class PointComponent implements OnInit, OnDestroy {
 	calendarCreated() {
 		this.isCalendarCreated = true;
 		this.cdr.detectChanges();
+	}
+
+	iterationsInfoSwitch(event: Event) {
+		this.showIterationsInfo = (event.target as HTMLInputElement).checked;
 	}
 }
