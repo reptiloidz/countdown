@@ -102,6 +102,9 @@
 	}
 
 	&__remain {
+		display: flex;
+		gap: 4px;
+		justify-self: center;
 		margin-top: 12px;
 	}
 

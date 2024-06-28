@@ -225,6 +225,14 @@
 				*ngIf="point?.title"
 				class="point-page__remain"
 			>
+				<ng-container *ngIf="iterationReason === 'frequency'">
+					<svg
+						app-svg
+						name="refresh"
+						class="point-page__icon"
+					></svg>
+					Сгенерированная итерация.
+				</ng-container>
 				<ng-container *ngIf="remainTextValue">{{ remainTextValue }}. </ng-container> <ng-container
 					*ngIf="iterationDate && iterationTime"
 				> {{ iterationDate }} {{
@@ -233,7 +241,9 @@
 			<p
 				*ngIf="point?.description"
 				class="point-page__description"
-			>{{ point?.description }}</p>
+			>
+				{{ point?.description }}
+			</p>
 		</div>
 
 		<app-timers
@@ -307,6 +317,8 @@
 						app-svg
 						*ngIf="date.reason === 'frequency'"
 						name="refresh"
+						title="Итерация сгенерирована автоматически"
+						aria-hidden="false"
 						class="tabs__item-icon"
 					></svg>
 					{{ date.date }}

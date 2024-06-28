@@ -317,6 +317,10 @@ export class PointComponent implements OnInit, OnDestroy {
 		return format(this.pointDate, Constants.shortDateFormat);
 	}
 
+	get iterationReason() {
+		return this.point?.dates[this.currentIterationIndex].reason;
+	}
+
 	get iterationTime() {
 		return format(this.pointDate, Constants.timeFormat);
 	}

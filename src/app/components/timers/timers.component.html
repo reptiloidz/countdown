@@ -1,6 +1,6 @@
 <div
 	*ngIf="years"
-	@boardVisibility
+	[@boardVisibility]="{value: ':enter', params: {delay: yearEnterValue}}"
 	class="timers__item-wrapper timers__item-wrapper--date"
 >
 	<app-board
@@ -13,7 +13,7 @@
 </div>
 <div
 	*ngIf="months"
-	@boardVisibility
+	[@boardVisibility]="{value: ':enter', params: {delay: monthEnterValue}}"
 	class="timers__item-wrapper timers__item-wrapper--date"
 >
 	<app-board
@@ -26,7 +26,7 @@
 </div>
 <div
 	*ngIf="days"
-	@boardVisibility
+	[@boardVisibility]="{value: ':enter', params: {delay: dayEnterValue}}"
 	class="timers__item-wrapper timers__item-wrapper--date"
 >
 	<app-board
