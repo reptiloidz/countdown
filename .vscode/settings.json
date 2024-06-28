@@ -4,5 +4,8 @@
 		"editor.formatOnSave": true
 	},
 	"html.format.wrapAttributes": "force-expand-multiline",
-	"files.insertFinalNewline": true
+	"files.insertFinalNewline": true,
+	"editor.codeActionsOnSave": {
+		"source.removeUnusedImports": "explicit"
+	}
 }
