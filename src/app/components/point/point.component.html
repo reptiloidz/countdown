@@ -310,7 +310,8 @@
 			class="tabs__label-wrapper"
 		>
 			<div class="tabs__label">
-				<p class="tabs__remain">{{ (time === 'past' ? 'Прошло: ' : 'Осталось: ') + (date.date | timeRemain) }}
+				<p class="tabs__remain">{{ (time === 'past' ? 'Прошло: ' : 'Осталось: ') + (date.date | timeRemainText :
+					point?.greenwich) }}
 				</p>
 				<div class="tabs__date">
 					<svg
@@ -321,7 +322,7 @@
 						aria-hidden="false"
 						class="tabs__item-icon"
 					></svg>
-					{{ date.date }}
+					{{ date.date| timeRemain : point?.greenwich }}
 				</div>
 			</div>
 		</div>

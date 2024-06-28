@@ -35,7 +35,11 @@ export const getClosestIteration = (point: Point) => {
 	).date;
 
 	return {
-		date: parseDate(resultDate),
+		date: getPointDate({
+			pointDate: parseDate(resultDate),
+			tzOffset,
+			isGreenwich: point.greenwich,
+		}),
 		index: point.dates.findIndex((item) => item.date === resultDate),
 	};
 };

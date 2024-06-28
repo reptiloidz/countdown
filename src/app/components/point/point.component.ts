@@ -306,11 +306,25 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	get datesBefore() {
-		return this.dates?.filter((item) => parseDate(item.date) < new Date());
+		return this.dates?.filter(
+			(item) =>
+				getPointDate({
+					pointDate: parseDate(item.date),
+					tzOffset: this.tzOffset,
+					isGreenwich: this.point?.greenwich,
+				}) < new Date()
+		);
 	}
 
 	get datesAfter() {
-		return this.dates?.filter((item) => parseDate(item.date) > new Date());
+		return this.dates?.filter(
+			(item) =>
+				getPointDate({
+					pointDate: parseDate(item.date),
+					tzOffset: this.tzOffset,
+					isGreenwich: this.point?.greenwich,
+				}) > new Date()
+		);
 	}
 
 	get iterationDate() {

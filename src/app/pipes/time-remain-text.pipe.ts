@@ -1,21 +1,23 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { formatDate } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { getPointDate, parseDate } from '../helpers';
-import { Constants } from '../enums';
+import { ru } from 'date-fns/locale';
 
 @Pipe({
-	name: 'timeRemain',
+	name: 'timeRemainText',
 })
-export class TimeRemainPipe implements PipeTransform {
+export class TimeRemainTextPipe implements PipeTransform {
 	transform(time: string, greenwich?: boolean): string {
 		const tzOffset = new Date().getTimezoneOffset();
-		return formatDate(
+		return formatDistanceToNow(
 			getPointDate({
 				pointDate: parseDate(time),
 				tzOffset,
 				isGreenwich: greenwich,
 			}),
-			Constants.fullDateFormat
+			{
+				locale: ru,
+			}
 		);
 	}
 }
