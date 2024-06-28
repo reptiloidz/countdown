@@ -160,7 +160,7 @@
 		&--animate {
 			animation-name: halfTop;
 
-			&:not(.board--visible &) {
+			&:not(.board--visible &, .board--logo &) {
 				animation-name: none;
 			}
 
