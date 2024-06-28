@@ -87,6 +87,9 @@
 		font-size: var(--board-fz);
 		transition: transform 1s;
 		transform-origin: bottom;
+		animation-duration: 200ms;
+		animation-timing-function: 200ms cubic-bezier(.36, .25, .76, .52);
+		animation-fill-mode: forwards;
 
 		&::before,
 		&::after {
@@ -155,8 +158,14 @@
 		}
 
 		&--animate {
+			animation-name: halfTop;
+
 			&::after {
 				content: none;
+			}
+
+			&.board__half--bottom {
+				animation-name: halfBottom;
 			}
 		}
 	}
@@ -233,5 +242,29 @@
 					rgba(var(--c-bg-inverse), 0) 100%
 				);
 		}
+	}
+}
+
+@keyframes halfTop {
+	0% {
+		box-shadow: none;
+		transform: rotateX(0);
+	}
+
+	100% {
+		box-shadow: var(--board-half-shadow), 0 calc(var(--board-h) / -4) 20px 0 rgba(var(--c-bg-primary), .1);
+		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, .75, 0, .001, 1, 1, .1, .1, .1, .1, 0, 1);
+	}
+}
+
+@keyframes halfBottom {
+	0% {
+		box-shadow: 0 calc(var(--board-h) / 4) 20px 1px rgba(var(--c-bg-primary), .4);
+		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, .75, 0, -.001, 1, 1, .1, .1, .1, .1, 0, 1);
+	}
+
+	100% {
+		box-shadow: none;
+		transform: rotateX(0);
 	}
 }
