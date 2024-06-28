@@ -8,6 +8,7 @@
 		[mode]="size"
 		[label]="yearsLabel"
 		class="timers__item"
+		[delayRandomValue]="delayRandomValue"
 	></app-board>
 </div>
 <div
@@ -20,6 +21,7 @@
 		[mode]="size"
 		[label]="monthsLabel"
 		class="timers__item timers__item--date"
+		[delayRandomValue]="delayRandomValue"
 	></app-board>
 </div>
 <div
@@ -32,6 +34,7 @@
 		[mode]="size"
 		[label]="daysLabel"
 		class="timers__item timers__item--date"
+		[delayRandomValue]="delayRandomValue"
 	></app-board>
 </div>
 <div
@@ -43,6 +46,7 @@
 		[mode]="size"
 		[label]="hoursLabel"
 		class="timers__item timers__item--time"
+		[delayRandomValue]="delayRandomValue"
 	></app-board>
 </div>
 <div
@@ -54,10 +58,12 @@
 		[mode]="size"
 		[label]="minsLabel"
 		class="timers__item timers__item--time"
+		[delayRandomValue]="delayRandomValue"
 	></app-board>
 </div>
 <div
 	@boardVisibility
+	*ngIf="showSec"
 	class="timers__item-wrapper timers__item-wrapper--time"
 >
 	<app-board

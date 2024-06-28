@@ -29,15 +29,16 @@
 		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * -1deg));
 		transform-origin: bottom;
 
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+
 		&--minute {
 			--clock-current: calc(var(--clock-current-minute, 0) * 6);
 			--clock-arrow-w: 2;
 			--clock-arrow-count: calc(var(--count) * 6 / 60);
 
 			--clock-arrow-h: 33;
-
-			animation-duration: calc(60 * 60 * 1s);
-			animation-timing-function: linear;
 		}
 
 		&--hour {
@@ -46,9 +47,6 @@
 			--clock-arrow-count: calc(var(--count) * 6 / (60 * 24));
 
 			--clock-arrow-h: 20;
-
-			animation-duration: calc(24 * 60 * 60 * 1s);
-			animation-timing-function: linear;
 		}
 	}
 }

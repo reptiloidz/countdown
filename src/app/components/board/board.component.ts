@@ -1,8 +1,11 @@
 import {
 	Component,
+	ElementRef,
 	HostBinding,
 	Input,
 	OnChanges,
+	OnDestroy,
+	OnInit,
 	SimpleChanges,
 } from '@angular/core';
 import { timer } from 'rxjs';
@@ -13,7 +16,7 @@ const ANIMATION_SPEED = 200;
 	selector: 'app-board',
 	templateUrl: './board.component.html',
 })
-export class BoardComponent implements OnChanges {
+export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 	@HostBinding('class') get componentClass() {
 		return ['board', this.mode !== 'base' && `board--${this.mode}`].join(
 			' '
@@ -26,6 +29,7 @@ export class BoardComponent implements OnChanges {
 	@Input() label = '';
 	@Input() delay = true;
 	@Input() delayValue!: number;
+	@Input() delayRandomValue!: string | number;
 
 	switchTop = false;
 	switchBottom = false;
@@ -35,6 +39,34 @@ export class BoardComponent implements OnChanges {
 	bottomStaticValue: string | number = this.initialValue;
 	bottomAnimatedValue: string | number = this.initialValue;
 	timeInterval = new Date();
+	intersectionCallback!: IntersectionObserverCallback;
+	intersectionObserver!: IntersectionObserver;
+
+	constructor(private el: ElementRef) {}
+
+	ngOnInit(): void {
+		this.intersectionCallback = (entries: IntersectionObserverEntry[]) => {
+			entries.forEach((entry) => {
+				entry.isIntersecting
+					? (entry.target as HTMLElement).classList.add(
+							'board--visible'
+					  )
+					: (entry.target as HTMLElement).classList.remove(
+							'board--visible'
+					  );
+			});
+		};
+
+		this.intersectionObserver = new IntersectionObserver(
+			this.intersectionCallback,
+			{
+				threshold: 0,
+				rootMargin: '-80px 0px -90px 0px',
+			}
+		);
+
+		this.intersectionObserver.observe(this.el.nativeElement);
+	}
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes['initialValue']) {
@@ -47,9 +79,16 @@ export class BoardComponent implements OnChanges {
 		changes['value']?.currentValue && this.switchBoard();
 	}
 
+	ngOnDestroy(): void {
+		this.intersectionObserver.disconnect();
+	}
+
 	switchBoard() {
 		if (this.delay) {
-			timer(this.delayValue || Math.random() * 1000).subscribe(() => {
+			timer(
+				this.delayValue ||
+					Math.random() * (+this.delayRandomValue || 1000)
+			).subscribe(() => {
 				this.animateBoard();
 			});
 		} else {
