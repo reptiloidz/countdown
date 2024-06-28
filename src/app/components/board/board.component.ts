@@ -8,7 +8,7 @@ import {
 	OnInit,
 	SimpleChanges,
 } from '@angular/core';
-import { timer } from 'rxjs';
+import { filter, timer } from 'rxjs';
 
 const ANIMATION_SPEED = 200;
 
@@ -33,7 +33,7 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 
 	switchTop = false;
 	switchBottom = false;
-
+	hasInitialSwitched = false;
 	topStaticValue: string | number = this.initialValue;
 	topAnimatedValue: string | number = this.initialValue;
 	bottomStaticValue: string | number = this.initialValue;
@@ -88,15 +88,24 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 			timer(
 				this.delayValue ||
 					Math.random() * (+this.delayRandomValue || 1000)
-			).subscribe(() => {
-				this.animateBoard();
-			});
+			)
+				.pipe(
+					filter(
+						() =>
+							this.hasInitialSwitched ||
+							this.initialValue !== this.value
+					)
+				)
+				.subscribe(() => {
+					this.animateBoard();
+				});
 		} else {
 			this.animateBoard();
 		}
 	}
 
 	animateBoard() {
+		this.hasInitialSwitched = true;
 		this.topStaticValue = this.value;
 		this.switchTop = true;
 		timer(ANIMATION_SPEED).subscribe(() => {

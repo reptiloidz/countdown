@@ -1,12 +1,30 @@
 import { Point } from '../interfaces';
+import { getPointDate } from './getPointDate';
 import { parseDate } from './parseDate';
 
 export const getClosestIteration = (point: Point) => {
+	const currentDate = new Date();
+	const tzOffset = currentDate.getTimezoneOffset();
+
 	const datesFuture = point.dates
-		.filter((iteration) => parseDate(iteration.date) > new Date())
+		.filter(
+			(iteration) =>
+				getPointDate({
+					pointDate: parseDate(iteration.date),
+					tzOffset,
+					isGreenwich: point.greenwich,
+				}) > new Date()
+		)
 		.sort();
 	const datesPast = point.dates
-		.filter((iteration) => parseDate(iteration.date) < new Date())
+		.filter(
+			(iteration) =>
+				getPointDate({
+					pointDate: parseDate(iteration.date),
+					tzOffset,
+					isGreenwich: point.greenwich,
+				}) < new Date()
+		)
 		.sort()
 		.reverse();
 
@@ -17,7 +35,7 @@ export const getClosestIteration = (point: Point) => {
 	).date;
 
 	return {
-		date: resultDate,
+		date: parseDate(resultDate),
 		index: point.dates.findIndex((item) => item.date === resultDate),
 	};
 };

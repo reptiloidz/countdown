@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Point } from '../interfaces';
 import { SortTypes } from '../types';
-import { parse } from 'date-fns';
-import { Constants } from '../enums';
 import { getClosestIteration } from '../helpers';
 
 @Injectable({
@@ -100,15 +98,9 @@ export class SortService {
 	compareDirection(a: Point, b: Point) {
 		const currentDate = new Date();
 
-		if (
-			this.getDate(getClosestIteration(a).date, currentDate) <
-			this.getDate(getClosestIteration(b).date, currentDate)
-		) {
+		if (getClosestIteration(a).date < getClosestIteration(b).date) {
 			return 1;
-		} else if (
-			this.getDate(getClosestIteration(a).date, currentDate) >
-			this.getDate(getClosestIteration(b).date, currentDate)
-		) {
+		} else if (getClosestIteration(a).date > getClosestIteration(b).date) {
 			return -1;
 		} else {
 			return this.compareTitle(a, b);
@@ -133,14 +125,7 @@ export class SortService {
 		}
 	}
 
-	getDate(dateString: string, currentDate: Date) {
-		return parse(dateString, Constants.fullDateFormat, currentDate);
-	}
-
-	getDateAbs(dateString: string, currentDate: Date) {
-		return Math.abs(
-			+parse(dateString, Constants.fullDateFormat, currentDate) -
-				+currentDate
-		);
+	getDateAbs(date: Date, currentDate: Date) {
+		return Math.abs(+date - +currentDate);
 	}
 }

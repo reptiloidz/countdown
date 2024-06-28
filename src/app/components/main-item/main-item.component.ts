@@ -11,7 +11,7 @@ import { Subscription, first } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService } from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { getClosestIteration, parseDate } from 'src/app/helpers';
+import { getClosestIteration } from 'src/app/helpers';
 import { formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
@@ -107,11 +107,9 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get closestIterationRemain() {
 		return (
-			(parseDate(this.closestIteration) < new Date()
-				? 'Прошло'
-				: 'Осталось') +
+			(this.closestIteration < new Date() ? 'Прошло' : 'Осталось') +
 			' ' +
-			formatDistanceToNow(parseDate(this.closestIteration), {
+			formatDistanceToNow(this.closestIteration, {
 				locale: ru,
 			})
 		);
@@ -119,7 +117,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get interval() {
 		return intervalToDuration({
-			start: parseDate(this.closestIteration),
+			start: this.closestIteration,
 			end: new Date(),
 		});
 	}
