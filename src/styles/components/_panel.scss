@@ -19,7 +19,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		align-self: flex-start;
 		margin-left: var(--panel-px);
 	}
 
@@ -37,6 +36,6 @@
 
 	&__footer {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 	}
 }

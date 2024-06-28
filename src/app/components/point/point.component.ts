@@ -39,11 +39,51 @@ import {
 } from 'src/app/helpers';
 import { CalendarMode } from 'src/app/types';
 import { PanelComponent } from '../panel/panel.component';
+import {
+	animate,
+	query,
+	style,
+	transition,
+	trigger,
+} from '@angular/animations';
 
 @Component({
 	selector: 'app-point',
 	templateUrl: './point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,
+	animations: [
+		trigger('iterationsInfo', [
+			transition(
+				':enter',
+				query('.tabs__label', [
+					style({
+						transform: 'rotate(90deg)',
+						opacity: 0,
+					}),
+					animate(
+						'.4s .1s cubic-bezier(.1, .79, .24, .95)',
+						style({
+							transform: 'rotate(45deg)',
+							opacity: 1,
+						})
+					),
+				])
+			),
+			transition(
+				':leave',
+				query(
+					'.tabs__label',
+					animate(
+						'.4s cubic-bezier(.1, .79, .24, .95)',
+						style({
+							transform: 'rotate(90deg)',
+							opacity: 0,
+						})
+					)
+				)
+			),
+		]),
+	],
 })
 export class PointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
@@ -233,6 +273,8 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 
 		this.switchCalendarPanel();
+
+		this.showIterationsInfo = !!localStorage.getItem('showIterationsInfo');
 	}
 
 	ngOnDestroy(): void {
@@ -489,5 +531,9 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	iterationsInfoSwitch(event: Event) {
 		this.showIterationsInfo = (event.target as HTMLInputElement).checked;
+		localStorage.setItem(
+			'showIterationsInfo',
+			this.showIterationsInfo ? 'true' : ''
+		);
 	}
 }

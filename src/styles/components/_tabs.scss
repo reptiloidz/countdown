@@ -4,15 +4,23 @@
 	--tabs-date-cl: rgba(var(--c-text-primary), .4);
 	--tabs-item-pseudo-bg-color: var(--c-bg-primary);
 	--tabs-item-pseudo-bg-size: 20px;
+	--tabs-pb: 20px;
 
 	display: flex;
 	gap: var(--tabs-gap);
 	margin: 0;
-	padding: 4px calc(var(--tabs-gap) + 20px) 120px calc(var(--tabs-gap) + 40px);
+	padding: 4px calc(var(--tabs-gap) + 20px) var(--tabs-pb) calc(var(--tabs-gap) + 40px);
 	overflow: auto hidden;
 	list-style-type: none;
+	transition: padding .2s .1s;
 	scroll-behavior: smooth;
 	scroll-padding: 50%;
+
+	&--expanded {
+		--tabs-pb: 120px;
+
+		transition-delay: 0s;
+	}
 
 	&__item {
 		position: relative;
@@ -93,6 +101,10 @@
 				.tabs__btn {
 					--button-cl: rgb(var(--c-text-negative));
 					--button-border-cl: rgba(var(--c-border-negative), .2);
+				}
+
+				& + & {
+					--tabs-item-pseudo-opacity: 1;
 				}
 			}
 

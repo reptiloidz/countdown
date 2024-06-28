@@ -61,7 +61,7 @@
 				app-checkbox
 				iconSize="sm"
 				mode="icon"
-				title="Отображение данных итераций"
+				title="Отображение информации об итерациях"
 				[isChecked]="showIterationsInfo"
 				(change)="iterationsInfoSwitch($event)"
 			>
@@ -76,6 +76,9 @@
 			<ul
 				#iterationsList
 				class="tabs"
+				[ngClass]="{
+					'tabs--expanded': showIterationsInfo
+				}"
 				(wheel)="onIterationsScroll($event)"
 			>
 				<ng-container *ngFor="let date of datesBefore; let i = index">
@@ -91,6 +94,7 @@
 					></svg>
 					<div
 						*ngIf="showIterationsInfo"
+						@iterationsInfo
 						class="tabs__label-wrapper"
 					>
 						<div class="tabs__label tabs__label--now">
@@ -292,6 +296,7 @@
 		></button>
 		<div
 			*ngIf="showIterationsInfo"
+			@iterationsInfo
 			class="tabs__label-wrapper"
 		>
 			<div class="tabs__label">
