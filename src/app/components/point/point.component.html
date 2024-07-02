@@ -194,6 +194,20 @@
 						class="marker__inner"
 					></svg>
 				</div>
+
+				<div class="point-page__direction">
+					<svg
+						app-svg
+						[name]="point?.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
+						[attr.aria-label]="directionTitle"
+						class="direction-icon"
+						aria-hidden="false"
+						[ngClass]="[
+							isDirectionCorrect ? 'direction-icon--correct' : '',
+							point?.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
+						]"
+					></svg>
+				</div>
 			</div>
 
 			<h1

@@ -122,4 +122,9 @@
 			background-color: rgb(var(--c-border-primary));
 		}
 	}
+
+	&__direction {
+		display: flex;
+		margin-left: 12px;
+	}
 }

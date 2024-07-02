@@ -80,11 +80,11 @@
 			app-svg
 			[name]="point.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
 			[attr.aria-label]="directionTitle"
-			class="point__direction"
+			class="direction-icon"
 			aria-hidden="false"
 			[ngClass]="[
-				isDirectionCorrect ? 'point__direction--correct' : '',
-				point.direction === 'forward' ? 'point__direction--forward' : 'point__direction--backward'
+				isDirectionCorrect ? 'direction-icon--correct' : '',
+				point.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
 			]"
 		></svg>
 	</div>

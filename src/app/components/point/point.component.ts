@@ -351,6 +351,30 @@ export class PointComponent implements OnInit, OnDestroy {
 		return formatDate(new Date(), Constants.fullDateFormat);
 	}
 
+	get isDirectionCorrect() {
+		const currentDate = new Date();
+
+		return (
+			this.point &&
+			((getClosestIteration(this.point).date < currentDate &&
+				this.point?.direction === 'forward') ||
+				(getClosestIteration(this.point).date > currentDate &&
+					this.point?.direction === 'backward'))
+		);
+	}
+
+	get directionTitle() {
+		return `${
+			this.point?.direction === 'forward'
+				? 'Прямой отсчёт'
+				: 'Обратный отсчёт'
+		}${
+			this.isDirectionCorrect
+				? ''
+				: '. Но есть нюанс. Подробнее в описании'
+		}`;
+	}
+
 	onIterationsScroll(event: WheelEvent) {
 		event.preventDefault();
 	}

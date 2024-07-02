@@ -91,28 +91,6 @@
 		font-size: 14px;
 	}
 
-	&__direction {
-		--icon-stroke-w: 2px;
-		--point-direction-cl: rgb(var(--c-text-negative));
-
-		color: var(--point-direction-cl);
-		animation-duration: 6s;
-		animation-timing-function: linear;
-		animation-iteration-count: infinite;
-
-		&--correct {
-			--point-direction-cl: rgb(var(--c-text-primary));
-		}
-
-		&--forward {
-			animation-name: rotatingForward;
-		}
-
-		&--backward {
-			animation-name: rotatingBackward;
-		}
-	}
-
 	&--available {
 		--point-title-opacity: 1;
 		--point-description-opacity: .5;
