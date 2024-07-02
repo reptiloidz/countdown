@@ -97,7 +97,6 @@ export class PointComponent implements OnInit, OnDestroy {
 	loading = false;
 	dateLoading = true;
 	hasAccess: boolean | undefined = false;
-	tzOffset = this.pointDate.getTimezoneOffset();
 	currentIterationIndex!: number;
 	firstIterationIndex = 0;
 	removedIterationIndex = 0;
@@ -310,7 +309,6 @@ export class PointComponent implements OnInit, OnDestroy {
 			(item) =>
 				getPointDate({
 					pointDate: parseDate(item.date),
-					tzOffset: this.tzOffset,
 					isGreenwich: this.point?.greenwich,
 				}) < new Date()
 		);
@@ -321,7 +319,6 @@ export class PointComponent implements OnInit, OnDestroy {
 			(item) =>
 				getPointDate({
 					pointDate: parseDate(item.date),
-					tzOffset: this.tzOffset,
 					isGreenwich: this.point?.greenwich,
 				}) > new Date()
 		);
@@ -413,7 +410,6 @@ export class PointComponent implements OnInit, OnDestroy {
 				pointDate: new Date(
 					this.dates?.[this.currentIterationIndex].date || ''
 				),
-				tzOffset: this.tzOffset,
 				isGreenwich: this.point?.greenwich,
 			});
 		}

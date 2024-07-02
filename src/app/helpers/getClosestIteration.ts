@@ -4,14 +4,12 @@ import { parseDate } from './parseDate';
 
 export const getClosestIteration = (point: Point) => {
 	const currentDate = new Date();
-	const tzOffset = currentDate.getTimezoneOffset();
 
 	const datesFuture = point.dates
 		.filter(
 			(iteration) =>
 				getPointDate({
 					pointDate: parseDate(iteration.date),
-					tzOffset,
 					isGreenwich: point.greenwich,
 				}) > new Date()
 		)
@@ -21,7 +19,6 @@ export const getClosestIteration = (point: Point) => {
 			(iteration) =>
 				getPointDate({
 					pointDate: parseDate(iteration.date),
-					tzOffset,
 					isGreenwich: point.greenwich,
 				}) < new Date()
 		)
@@ -37,7 +34,6 @@ export const getClosestIteration = (point: Point) => {
 	return {
 		date: getPointDate({
 			pointDate: parseDate(resultDate),
-			tzOffset,
 			isGreenwich: point.greenwich,
 		}),
 		index: point.dates.findIndex((item) => item.date === resultDate),

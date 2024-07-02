@@ -68,7 +68,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	difference = 0;
 	loading = false;
 	validatorDifferenceMaxLength = 8;
-	tzOffset = new Date().getTimezoneOffset();
 	currentIterationIndex!: number;
 	firstIterationIndex = 0;
 	removedIterationIndex = 0;
@@ -360,7 +359,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				: new Date(
 						this.dates?.[this.currentIterationIndex]?.date || ''
 				  ),
-			tzOffset: this.tzOffset,
 			isGreenwich: this.isIterationAdded
 				? false
 				: this.form.controls['greenwich'].value,
@@ -581,7 +579,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		const dateTime = format(
 			getPointDate({
 				pointDate: this.datePickerValue,
-				tzOffset: this.tzOffset,
 				isGreenwich: this.form.controls['greenwich'].value,
 				isInvert: true,
 			}),

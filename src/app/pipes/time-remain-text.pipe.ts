@@ -8,11 +8,9 @@ import { ru } from 'date-fns/locale';
 })
 export class TimeRemainTextPipe implements PipeTransform {
 	transform(time: string, greenwich?: boolean): string {
-		const tzOffset = new Date().getTimezoneOffset();
 		return formatDistanceToNow(
 			getPointDate({
 				pointDate: parseDate(time),
-				tzOffset,
 				isGreenwich: greenwich,
 			}),
 			{

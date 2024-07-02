@@ -25,7 +25,6 @@ export class FooterComponent implements OnInit, OnDestroy {
 	isMain = false;
 	hasAccess: boolean | undefined = false;
 	pointsChecked: boolean = false;
-	tzOffset = new Date().getTimezoneOffset();
 	iteration = 0;
 	exportGoogleLink = '';
 	hasEditablePoints = false;
@@ -145,7 +144,6 @@ export class FooterComponent implements OnInit, OnDestroy {
 				const lastDate = {
 					date: format(
 						getPointDate({
-							tzOffset: this.tzOffset,
 							isGreenwich: this.point?.greenwich,
 							isInvert: true,
 						}),

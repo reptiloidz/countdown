@@ -8,11 +8,9 @@ import { Constants } from '../enums';
 })
 export class TimeRemainPipe implements PipeTransform {
 	transform(time: string, greenwich?: boolean): string {
-		const tzOffset = new Date().getTimezoneOffset();
 		return formatDate(
 			getPointDate({
 				pointDate: parseDate(time),
-				tzOffset,
 				isGreenwich: greenwich,
 			}),
 			Constants.fullDateFormat

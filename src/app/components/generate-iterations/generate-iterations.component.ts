@@ -16,7 +16,6 @@ export class GenerateIterationsComponent {
 
 	rangeStartDate = new Date();
 	rangeEndDate = new Date(+new Date() + Constants.msInMinute * 10);
-	tzOffset = new Date().getTimezoneOffset();
 	repeats: Iteration[] = [];
 
 	get iterationsForm() {
@@ -93,13 +92,11 @@ export class GenerateIterationsComponent {
 				pointDate: new Date(
 					+getPointDate({
 						pointDate: this.rangeStartDate,
-						tzOffset: this.tzOffset,
 						isGreenwich: this.form.controls['greenwich'].value,
 						isInvert: true,
 					}) +
 						this.periodicityValue * k
 				),
-				tzOffset: this.tzOffset,
 				isGreenwich: this.form.controls['greenwich'].value,
 				isInvert: true,
 			}),
@@ -120,7 +117,6 @@ export class GenerateIterationsComponent {
 
 		const dateTime = getPointDate({
 			pointDate: this.rangeEndDate,
-			tzOffset: this.tzOffset,
 			isGreenwich: this.form.controls['greenwich'].value,
 			isInvert: true,
 		});

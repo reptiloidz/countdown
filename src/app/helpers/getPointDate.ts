@@ -3,7 +3,7 @@ import { Constants } from '../enums';
 
 export const getPointDate = ({
 	pointDate = new Date(),
-	tzOffset = 0,
+	tzOffset = new Date().getTimezoneOffset(),
 	isGreenwich = false,
 	isInvert = false,
 	datePart,
