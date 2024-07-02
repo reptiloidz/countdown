@@ -111,7 +111,12 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			' ' +
 			formatDistanceToNow(this.closestIteration, {
 				locale: ru,
-			})
+			}) +
+			(this.isDirectionCorrect
+				? ''
+				: this.point.direction === 'forward'
+				? '. Прямой отсчёт, но событие ещё не наступило'
+				: '. Обратный отсчёт, но событие уже в прошлом')
 		);
 	}
 
@@ -120,6 +125,29 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			start: this.closestIteration,
 			end: new Date(),
 		});
+	}
+
+	get isDirectionCorrect() {
+		const currentDate = new Date();
+
+		return (
+			(this.closestIteration < currentDate &&
+				this.point.direction === 'forward') ||
+			(this.closestIteration > currentDate &&
+				this.point.direction === 'backward')
+		);
+	}
+
+	get directionTitle() {
+		return `${
+			this.point.direction === 'forward'
+				? 'Прямой отсчёт'
+				: 'Обратный отсчёт'
+		}${
+			this.isDirectionCorrect
+				? ''
+				: '. Но есть нюанс. Подробнее в описании'
+		}`;
 	}
 
 	zeroPad(num?: number) {

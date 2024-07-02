@@ -11,6 +11,6 @@ export enum SortTypeNames {
 	publicDesc = 'Публичное',
 	closestAsc = 'Ближайшее',
 	closestDesc = 'Ближайшее',
-	directionAsc = 'Направление',
-	directionDesc = 'Направление',
+	directionAsc = 'Прошлое',
+	directionDesc = 'Будущее',
 }

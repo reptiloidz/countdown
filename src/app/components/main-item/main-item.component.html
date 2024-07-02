@@ -57,24 +57,37 @@
 		<p class="point__description">{{ closestIterationRemain }}</p>
 	</a>
 
-	<app-timers
-		class="point__timers timers timers--sm timers--left"
-		size="sm"
-		[years]="timerYears"
-		[months]="timerMonths"
-		[days]="timerDays"
-		[hours]="timerHours"
-		[mins]="timerMins"
-		[secs]="timerSecs"
-		[showSec]="showSec"
-		yearsLabel="Год"
-		monthsLabel="Мес"
-		daysLabel="Ден"
-		hoursLabel="Час"
-		minsLabel="Мин"
-		secsLabel="Сек"
-		delayRandomValue="3000"
-	></app-timers>
+	<div class="point__timers-wrapper">
+		<app-timers
+			class="point__timers timers timers--sm timers--left"
+			size="sm"
+			[years]="timerYears"
+			[months]="timerMonths"
+			[days]="timerDays"
+			[hours]="timerHours"
+			[mins]="timerMins"
+			[secs]="timerSecs"
+			[showSec]="showSec"
+			yearsLabel="Год"
+			monthsLabel="Мес"
+			daysLabel="Ден"
+			hoursLabel="Час"
+			minsLabel="Мин"
+			secsLabel="Сек"
+			delayRandomValue="3000"
+		></app-timers>
+		<svg
+			app-svg
+			[name]="point.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
+			[attr.aria-label]="directionTitle"
+			class="point__direction"
+			aria-hidden="false"
+			[ngClass]="[
+				isDirectionCorrect ? 'point__direction--correct' : '',
+				point.direction === 'forward' ? 'point__direction--forward' : 'point__direction--backward'
+			]"
+		></svg>
+	</div>
 
 	<div class="point__nav">
 		<ng-container *ngIf="!loading; else loader">
@@ -101,11 +114,11 @@
 			[ngClass]="{
 				'marker--inactive': !point.greenwich
 			}"
-			[title]="point.greenwich ? 'По Гринвичу' : 'По местному времени'"
 		>
 			<svg
 				app-svg
 				name="globe"
+				[attr.aria-label]="point.greenwich ? 'По Гринвичу' : 'По местному времени'"
 				aria-hidden="false"
 				class="marker__inner"
 			></svg>
@@ -115,12 +128,12 @@
 			[ngClass]="{
 				'marker--inactive': !point.repeatable
 			}"
-			[title]="point.repeatable ? 'Повторяемое' : 'Однократное'"
 		>
 			<svg
 				app-svg
 				name="refresh"
 				aria-hidden="false"
+				[attr.aria-label]="point.repeatable ? 'Повторяемое' : 'Однократное'"
 				class="marker__inner"
 			></svg>
 		</div>
@@ -129,12 +142,12 @@
 			[ngClass]="{
 				'marker--inactive': !point.public
 			}"
-			[title]="point.public ? 'Публичное' : 'Приватное'"
 		>
 			<svg
 				app-svg
 				name="users"
 				aria-hidden="false"
+				[attr.aria-label]="point.public ? 'Публичное' : 'Приватное'"
 				class="marker__inner"
 			></svg>
 		</div>
@@ -147,6 +160,7 @@
 			name="hourglass"
 			class="loader rotating"
 			aria-hidden="false"
+			aria-label="Загрузка"
 		></svg>
 	</ng-template>
 

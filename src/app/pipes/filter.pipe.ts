@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Point } from '../interfaces';
-import { FilterSelected } from '../types';
+import { Direction, FilterSelected } from '../types';
 
 @Pipe({
 	name: 'filter',
@@ -13,12 +13,14 @@ export class FilterPipe implements PipeTransform {
 			isRepeatable,
 			isGreenwich,
 			isPublic,
+			direction,
 			color,
 		}: {
 			search: string;
 			isRepeatable?: FilterSelected;
 			isGreenwich?: FilterSelected;
 			isPublic?: FilterSelected;
+			direction?: Direction | 'all';
 			color?: string;
 		}
 	): Point[] {
@@ -27,6 +29,7 @@ export class FilterPipe implements PipeTransform {
 			typeof isRepeatable === 'undefined' &&
 			typeof isGreenwich === 'undefined' &&
 			typeof isPublic === 'undefined' &&
+			typeof direction === 'undefined' &&
 			color === ''
 		) {
 			return points;
@@ -42,6 +45,7 @@ export class FilterPipe implements PipeTransform {
 						isGreenwich === 'all') &&
 					(point.public?.toString() === isPublic ||
 						isPublic === 'all') &&
+					(point.direction === direction || direction === 'all') &&
 					(color?.split('+').includes(point.color || 'gray') ||
 						color === '')
 				);

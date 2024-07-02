@@ -87,6 +87,12 @@
         <svg id="refresh" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3v6m0 0h6M3 9c2.327-2.089 4.483-4.453 7.745-4.912a9 9 0 0 1 9.469 5.234M21 21v-6m0 0h-6m6 0c-2.328 2.089-4.483 4.453-7.745 4.912a9 9 0 0 1-9.469-5.234"/>
         </svg>
+        <svg id="rotate-left" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.51 14.99a9 9 0 1 0 7.235-11.902C7.483 3.547 5.327 5.91 3 8m0 0V2m0 6h6"/>
+        </svg>
+        <svg id="rotate-right" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.49 14.99a9 9 0 1 1-7.235-11.902C16.517 3.547 18.672 5.91 21 8m0 0V2m0 6h-6"/>
+        </svg>
         <svg id="search" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 20-4.197-4.197S14 18 10.5 18a7.5 7.5 0 1 1 7.35-6"/>
         </svg>

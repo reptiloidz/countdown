@@ -157,12 +157,12 @@
 					[ngClass]="{
 						'marker--inactive': !point?.greenwich
 					}"
-					[title]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
 				>
 					<svg
 						app-svg
 						name="globe"
 						aria-hidden="false"
+						[attr.aria-label]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
 						class="marker__inner"
 					></svg>
 				</div>
@@ -171,12 +171,12 @@
 					[ngClass]="{
 						'marker--inactive': !point?.repeatable
 					}"
-					[title]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
 				>
 					<svg
 						app-svg
 						name="refresh"
 						aria-hidden="false"
+						[attr.aria-label]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
 						class="marker__inner"
 					></svg>
 				</div>
@@ -185,12 +185,12 @@
 					[ngClass]="{
 						'marker--inactive': !point?.public
 					}"
-					[title]="point?.public ? 'Публичное' : 'Приватное'"
 				>
 					<svg
 						app-svg
 						name="users"
 						aria-hidden="false"
+						[attr.aria-label]="point?.public ? 'Публичное' : 'Приватное'"
 						class="marker__inner"
 					></svg>
 				</div>
@@ -318,7 +318,7 @@
 						app-svg
 						*ngIf="date.reason === 'frequency'"
 						name="refresh"
-						title="Итерация сгенерирована автоматически"
+						aria-label="Итерация сгенерирована автоматически"
 						aria-hidden="false"
 						class="tabs__item-icon"
 					></svg>

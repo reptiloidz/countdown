@@ -96,8 +96,6 @@ export class SortService {
 	}
 
 	compareDirection(a: Point, b: Point) {
-		const currentDate = new Date();
-
 		if (getClosestIteration(a).date < getClosestIteration(b).date) {
 			return 1;
 		} else if (getClosestIteration(a).date > getClosestIteration(b).date) {

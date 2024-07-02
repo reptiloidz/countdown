@@ -12,7 +12,12 @@ import { PointColors, SortTypeNames } from 'src/app/enums';
 import { Point, SwitcherItem } from 'src/app/interfaces';
 import { DataService, ActionService, AuthService } from 'src/app/services';
 import { SortService } from 'src/app/services/sort.service';
-import { FilterSelected, PointColorTypes, SortTypes } from 'src/app/types';
+import {
+	Direction,
+	FilterSelected,
+	PointColorTypes,
+	SortTypes,
+} from 'src/app/types';
 import { InputComponent } from '../input/input.component';
 
 @Component({
@@ -35,6 +40,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	repeatableValue: FilterSelected = 'all';
 	greenwichValue: FilterSelected = 'all';
 	publicValue: FilterSelected = 'all';
+	directionValue: Direction | 'all' = 'all';
 	modesValue: 'list' | 'grid' = 'grid';
 	searchInputValue = '';
 
@@ -88,6 +94,24 @@ export class MainListComponent implements OnInit, OnDestroy {
 		{
 			text: 'Публичные',
 			value: 'true',
+			boolean: true,
+		},
+	];
+
+	directionList: SwitcherItem[] = [
+		{
+			text: 'Обратный',
+			value: 'backward',
+			boolean: false,
+		},
+		{
+			text: 'Обратный/прямой',
+			value: 'all',
+			icon: 'clock',
+		},
+		{
+			text: 'Прямой',
+			value: 'forward',
 			boolean: true,
 		},
 	];
@@ -182,6 +206,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 						this.publicValue = 'all';
 					}
 
+					if (data.direction) {
+						this.directionValue = data.direction;
+					} else {
+						this.directionValue = 'all';
+					}
+
 					if (data.color) {
 						this.colorType = data.color.split('+');
 					} else {
@@ -199,6 +229,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 					);
 					localStorage.setItem('greenwichValue', this.greenwichValue);
 					localStorage.setItem('publicValue', this.publicValue);
+					localStorage.setItem('directionValue', this.directionValue);
 					localStorage.setItem(
 						'colorValue',
 						this.colorType.join('+') || 'all'
@@ -243,6 +274,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			this.repeatableValue !== 'all' ||
 			this.greenwichValue !== 'all' ||
 			this.publicValue !== 'all' ||
+			this.directionValue !== 'all' ||
 			this.searchInputValue !== '' ||
 			this.colorType.length
 		);
@@ -267,6 +299,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.changeFilters();
 	}
 
+	changeDirectionFilter(value: string) {
+		this.directionValue = value as Direction | 'all';
+		this.changeFilters();
+	}
+
 	changeFilters() {
 		this.searchInputValue = this.searchInput.value;
 		this.colorType = this.colorList
@@ -287,6 +324,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 				greenwich:
 					this.greenwichValue === 'all' ? null : this.greenwichValue,
 				public: this.publicValue === 'all' ? null : this.publicValue,
+				direction:
+					this.directionValue === 'all' ? null : this.directionValue,
 				search: this.searchInputValue || null,
 				color: this.colorType.join('+') || null,
 			},
@@ -298,6 +337,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.repeatableValue = 'all';
 		this.greenwichValue = 'all';
 		this.publicValue = 'all';
+		this.directionValue = 'all';
 		this.searchInput.value = '';
 		this.resetColors();
 		this.changeFilters();

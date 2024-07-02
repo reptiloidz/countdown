@@ -4,6 +4,7 @@
 		isRepeatable: repeatableValue,
 		isGreenwich: greenwichValue,
 		isPublic: publicValue,
+		direction: directionValue,
 		color: colorTypeString
 	} as filteredPoints">
 		<div class="dashboard">
@@ -112,6 +113,13 @@
 					[value]="publicValue"
 					[showTitle]="true"
 					(valueSwitched)="changePublicFilter($event)"
+				></app-switcher>
+				<app-switcher
+					class="filters__switcher"
+					[items]="directionList"
+					[value]="directionValue"
+					[showTitle]="true"
+					(valueSwitched)="changeDirectionFilter($event)"
 				></app-switcher>
 
 				<app-drop [isSelectView]="true">
@@ -264,5 +272,6 @@
 		name="hourglass"
 		class="loader rotating"
 		aria-hidden="false"
+		aria-label="Загрузка"
 	></svg>
 </ng-template>
