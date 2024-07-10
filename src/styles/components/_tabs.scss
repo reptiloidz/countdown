@@ -77,13 +77,17 @@
 		}
 
 		&--day {
-			[data-open='true'] & + & {
+			// stylelint-disable scss/selector-nest-combinators
+			[data-open='true'] & + &,
+			[data-open='true'] & + .tabs__item--home:has(+ .tabs__item--day)::before,
+			[data-open='true'] & + .tabs__item--home:has(+ .tabs__item--day) + .tabs__item--day::before {
 				--tabs-item-pseudo-opacity: 1;
 			}
 
 			[data-open='true'] & .tabs__btn {
 				--button-border-cl: rgba(var(--c-border-primary), .2);
 			}
+			// stylelint-enable scss/selector-nest-combinators
 		}
 
 		&--active {
