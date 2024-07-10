@@ -14,41 +14,7 @@
 		class="point__main"
 	>
 		<h2 class="point__title">
-			<span
-				app-tooltip
-				(mouseenter)="loadUserInfo(point.user)"
-			>
-				<span class="point__title-text">{{ point.title }}</span>
-
-				<ng-container *ngIf="isAuth else userUnAuth">
-					<ng-container *ngIf="point?.userInfo">
-						<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else userEmpty">
-							<ng-template #tooltipContent>
-								<div class="point__user">
-									<img
-										*ngIf="point.userInfo?.photoURL"
-										class="userpic userpic--sm"
-										[src]="point.userInfo?.photoURL"
-										[alt]="point.userInfo?.displayName"
-										aria-hidden="true"
-									>{{ point.userInfo?.displayName }}
-								</div>
-							</ng-template>
-						</ng-container>
-						<ng-template #userEmpty>
-							<ng-template #tooltipContent>
-								<p class="point__user">...</p>
-							</ng-template>
-						</ng-template>
-					</ng-container>
-				</ng-container>
-
-				<ng-template #userUnAuth>
-					<ng-template #tooltipContent>
-						<p class="point__user">Доступ ограничен</p>
-					</ng-template>
-				</ng-template>
-			</span>
+			<span class="point__title-text">{{ point.title }}</span>
 		</h2>
 		<p
 			*ngIf="point.description && !isSm"
@@ -108,48 +74,75 @@
 		</ng-container>
 	</div>
 
-	<div class="point__markers">
-		<div
-			class="marker"
-			[ngClass]="{
-				'marker--inactive': !point.greenwich
-			}"
-		>
-			<svg
-				app-svg
-				name="globe"
-				[attr.aria-label]="point.greenwich ? 'По Гринвичу' : 'По местному времени'"
-				aria-hidden="false"
-				class="marker__inner"
-			></svg>
+	<div class="point__markers-wrapper">
+		<div class="point__markers">
+			<div
+				class="marker"
+				[ngClass]="{
+					'marker--inactive': !point.greenwich
+				}"
+			>
+				<svg
+					app-svg
+					name="globe"
+					[attr.aria-label]="point.greenwich ? 'По Гринвичу' : 'По местному времени'"
+					aria-hidden="false"
+					class="marker__inner"
+				></svg>
+			</div>
+			<div
+				class="marker"
+				[ngClass]="{
+					'marker--inactive': !point.repeatable
+				}"
+			>
+				<svg
+					app-svg
+					name="refresh"
+					aria-hidden="false"
+					[attr.aria-label]="point.repeatable ? 'Повторяемое' : 'Однократное'"
+					class="marker__inner"
+				></svg>
+			</div>
+			<div
+				class="marker"
+				[ngClass]="{
+					'marker--inactive': !point.public
+				}"
+			>
+				<svg
+					app-svg
+					name="users"
+					aria-hidden="false"
+					[attr.aria-label]="point.public ? 'Публичное' : 'Приватное'"
+					class="marker__inner"
+				></svg>
+			</div>
 		</div>
-		<div
-			class="marker"
-			[ngClass]="{
-				'marker--inactive': !point.repeatable
-			}"
-		>
-			<svg
-				app-svg
-				name="refresh"
-				aria-hidden="false"
-				[attr.aria-label]="point.repeatable ? 'Повторяемое' : 'Однократное'"
-				class="marker__inner"
-			></svg>
-		</div>
-		<div
-			class="marker"
-			[ngClass]="{
-				'marker--inactive': !point.public
-			}"
-		>
-			<svg
-				app-svg
-				name="users"
-				aria-hidden="false"
-				[attr.aria-label]="point.public ? 'Публичное' : 'Приватное'"
-				class="marker__inner"
-			></svg>
+		<div class="point__author">
+			<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else btnAuthor">
+				<img
+					*ngIf="point.userInfo?.photoURL"
+					class="userpic userpic--sm"
+					[src]="point.userInfo?.photoURL"
+					[alt]="point.userInfo?.displayName"
+					aria-hidden="true"
+				>
+				<span class="point__author-text">{{ point.userInfo?.displayName }}</span>
+			</ng-container>
+			<ng-template #btnAuthor>
+				<button
+					app-button
+					view="link"
+					class="point__author-button"
+					[ngClass]="{
+						'point__author-button--text': !authorLoading
+					}"
+					[disabled]="authorLoading"
+					(click)="loadUserInfo(point.user)"
+					[loading]="authorLoading"
+				>{{ authorLoading ? '' : 'Чьё?'}}</button>
+			</ng-template>
 		</div>
 	</div>
 

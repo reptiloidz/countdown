@@ -30,6 +30,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@Output() pointCheck = new EventEmitter();
 
 	loading = false;
+	authorLoading = false;
 	timerYears: number | string | undefined;
 	timerMonths: number | string | undefined;
 	timerDays: number | string | undefined;
@@ -188,6 +189,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	loadUserInfo(id?: string) {
 		if (id && !this.point.userInfo) {
+			this.authorLoading = true;
 			this.auth
 				.getUserData(id)
 				.pipe(first())
@@ -200,6 +202,9 @@ export class MainItemComponent implements OnInit, OnDestroy {
 							'Ошибка при получении информации о пользователе:\n',
 							err.message
 						);
+					},
+					complete: () => {
+						this.authorLoading = false;
 					},
 				});
 		}

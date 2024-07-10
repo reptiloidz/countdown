@@ -24,7 +24,6 @@ import { PrivacyComponent } from './components/privacy/privacy.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SharedModule } from './shared/shared.module';
-import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { CheckCopiesPipe } from './pipes/check-copies.pipe';
 import { CheckAccessEditPipe } from './pipes/check-access-edit.pipe';
 import { SortPointsPipe } from './pipes/sort-points.pipe';
@@ -53,7 +52,6 @@ import { TimeRemainPipe } from './pipes/time-remain.pipe';
 		PrivacyComponent,
 		PopupComponent,
 		FilterPipe,
-		TooltipComponent,
 		CheckCopiesPipe,
 		CheckAccessEditPipe,
 		SortPointsPipe,
