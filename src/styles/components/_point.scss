@@ -6,7 +6,7 @@
 
 	position: relative;
 	display: grid;
-	grid-template-areas: 'main markers' 'timers markers' 'nav author';
+	grid-template-areas: 'main markers' 'timers markers' 'footer footer';
 	grid-template-rows: 1fr;
 	grid-template-columns: 1fr;
 	width: 100%;
@@ -72,7 +72,7 @@
 
 	&__author {
 		display: flex;
-		grid-area: author;
+		grid-area: footer;
 		gap: 2px;
 		justify-content: flex-end;
 		margin-top: auto;
@@ -102,7 +102,7 @@
 
 	&__nav {
 		display: flex;
-		grid-area: nav;
+		grid-area: footer;
 		align-items: center;
 		justify-content: space-between;
 		width: 80px;
