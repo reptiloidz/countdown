@@ -55,7 +55,10 @@
 		></svg>
 	</div>
 
-	<div class="point__nav">
+	<div
+		*ngIf="isAuth"
+		class="point__nav"
+	>
 		<ng-container *ngIf="!loading; else loader">
 			<button
 				app-button
@@ -119,7 +122,10 @@
 				></svg>
 			</div>
 		</div>
-		<div class="point__author">
+		<div
+			*ngIf="isAuth"
+			class="point__author"
+		>
 			<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else btnAuthor">
 				<img
 					*ngIf="point.userInfo?.photoURL"

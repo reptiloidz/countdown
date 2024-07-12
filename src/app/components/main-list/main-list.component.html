@@ -95,6 +95,7 @@
 
 				<app-switcher
 					class="filters__switcher"
+					switcherListClass="dashboard__filters-list"
 					[items]="greenwichList"
 					[value]="greenwichValue"
 					[showTitle]="true"
@@ -102,13 +103,16 @@
 				></app-switcher>
 				<app-switcher
 					class="filters__switcher"
+					switcherListClass="dashboard__filters-list"
 					[items]="repeatList"
 					[value]="repeatableValue"
 					[showTitle]="true"
 					(valueSwitched)="changeRepeatFilter($event)"
 				></app-switcher>
 				<app-switcher
+					*ngIf="isAuth"
 					class="filters__switcher"
+					switcherListClass="dashboard__filters-list"
 					[items]="publicList"
 					[value]="publicValue"
 					[showTitle]="true"
@@ -116,6 +120,7 @@
 				></app-switcher>
 				<app-switcher
 					class="filters__switcher"
+					switcherListClass="dashboard__filters-list"
 					[items]="directionList"
 					[value]="directionValue"
 					[showTitle]="true"

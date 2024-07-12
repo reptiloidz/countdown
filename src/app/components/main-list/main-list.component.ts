@@ -48,17 +48,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 		{
 			text: 'Однократные',
 			value: 'false',
-			boolean: false,
+			icon: 'redo',
 		},
 		{
 			text: 'Однократные/повторяемые',
 			value: 'all',
-			icon: 'refresh',
+			icon: 'minus',
 		},
 		{
 			text: 'Повторяемые',
 			value: 'true',
-			boolean: true,
+			icon: 'refresh',
 		},
 	];
 
@@ -66,17 +66,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 		{
 			text: 'По местному времени',
 			value: 'false',
-			boolean: false,
+			icon: 'home',
 		},
 		{
 			text: 'По местному/по Гринвичу',
 			value: 'all',
-			icon: 'globe',
+			icon: 'minus',
 		},
 		{
 			text: 'По Гринвичу',
 			value: 'true',
-			boolean: true,
+			icon: 'globe',
 		},
 	];
 
@@ -84,17 +84,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 		{
 			text: 'Приватные',
 			value: 'false',
-			boolean: false,
+			icon: 'lock',
 		},
 		{
 			text: 'Приватные/публичные',
 			value: 'all',
-			icon: 'users',
+			icon: 'minus',
 		},
 		{
 			text: 'Публичные',
 			value: 'true',
-			boolean: true,
+			icon: 'users',
 		},
 	];
 
@@ -102,17 +102,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 		{
 			text: 'Обратный',
 			value: 'backward',
-			boolean: false,
+			icon: 'rotate-left',
 		},
 		{
 			text: 'Обратный/прямой',
 			value: 'all',
-			icon: 'clock',
+			icon: 'minus',
 		},
 		{
 			text: 'Прямой',
 			value: 'forward',
-			boolean: true,
+			icon: 'rotate-right',
 		},
 	];
 
@@ -282,6 +282,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	get colorTypeString() {
 		return this.colorType.join('+');
+	}
+
+	get isAuth() {
+		return this.auth.isAuthenticated;
 	}
 
 	changeRepeatFilter(value: string) {

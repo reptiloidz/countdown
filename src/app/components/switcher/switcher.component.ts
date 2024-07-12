@@ -16,6 +16,7 @@ export class SwitcherComponent {
 	@Input() value!: string;
 	@Input() mode: 'ghost' = 'ghost';
 	@Input() showTitle = false;
+	@Input() switcherListClass = '';
 	@Output() valueSwitched = new EventEmitter<string>();
 	@HostBinding('class') get componentClass(): string | null {
 		const baseClass = 'switcher';

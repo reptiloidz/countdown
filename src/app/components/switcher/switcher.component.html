@@ -1,4 +1,7 @@
-<div class="switcher__list">
+<div
+	class="switcher__list"
+	[ngClass]="switcherListClass"
+>
 	<label
 		*ngFor="let item of items"
 		class="switcher__item"
