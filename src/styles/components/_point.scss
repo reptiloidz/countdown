@@ -75,9 +75,11 @@
 		grid-area: footer;
 		gap: 2px;
 		justify-content: flex-end;
+		width: fit-content;
 		margin-top: auto;
 		margin-right: 16px;
 		margin-bottom: 4px;
+		margin-left: auto;
 		font-size: 12px;
 	}
 
@@ -168,6 +170,7 @@
 			&__author {
 				margin-top: 4px;
 				margin-right: 0;
+				margin-left: 0;
 				padding: 0 12px;
 			}
 		}
