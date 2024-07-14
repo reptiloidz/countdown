@@ -37,6 +37,7 @@ import { TimersComponent } from './components/timers/timers.component';
 import { FontProvider } from './providers/font.provider';
 import { TimeRemainTextPipe } from './pipes/time-remain-text.pipe';
 import { TimeRemainPipe } from './pipes/time-remain.pipe';
+import { PointUrlComponent } from './components/point-url/point-url.component';
 
 @NgModule({
 	declarations: [
@@ -64,6 +65,7 @@ import { TimeRemainPipe } from './pipes/time-remain.pipe';
 		PanelComponent,
 		BoardComponent,
 		TimersComponent,
+		PointUrlComponent,
 	],
 	imports: [
 		BrowserModule,

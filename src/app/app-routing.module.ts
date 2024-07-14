@@ -6,6 +6,7 @@ import { EditPointComponent } from './components/edit-point/edit-point.component
 import { CreatePointComponent } from './components/create-point/create-point.component';
 import { AuthComponent } from './personal/components/auth/auth.component';
 import { readGuard, editGuard, authGuard } from './guards';
+import { PointUrlComponent } from './components/point-url/point-url.component';
 
 const routes: Routes = [
 	{
@@ -21,6 +22,10 @@ const routes: Routes = [
 		path: 'point/:id',
 		component: PointComponent,
 		canActivate: [readGuard],
+	},
+	{
+		path: 'url',
+		component: PointUrlComponent,
 	},
 	{
 		path: 'auth',

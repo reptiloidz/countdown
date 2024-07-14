@@ -7,6 +7,7 @@ import {
 	HostBinding,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
+	Input,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -18,6 +19,7 @@ import {
 	fromEvent,
 	timer,
 	throttle,
+	EMPTY,
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
@@ -89,6 +91,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 	@HostBinding('class') class = 'main__inner';
+	@Input() urlMode = false;
 	point!: Point | undefined;
 	pointDate = new Date();
 	remainTextValue = '';
@@ -132,14 +135,46 @@ export class PointComponent implements OnInit, OnDestroy {
 				.pipe(
 					distinctUntilChanged(),
 					tap((data: any) => {
-						data.iteration &&
-							(this.currentIterationIndex = data.iteration - 1);
+						if (this.urlMode) {
+							this.point = {
+								color: data.color || 'gray',
+								title: data.title || '',
+								description: data.description || null,
+								dates: [
+									{
+										date:
+											data.date ||
+											formatDate(
+												new Date(),
+												Constants.fullDateFormat
+											),
+										reason: 'byHand',
+									},
+								],
+								greenwich: false,
+								repeatable: false,
+								direction:
+									data.date &&
+									parseDate(data.date) > new Date()
+										? 'backward'
+										: 'forward',
+							};
+							this.currentIterationIndex = 0;
+						} else {
+							data.iteration &&
+								(this.currentIterationIndex =
+									data.iteration - 1);
+						}
 					}),
-					mergeMap(() => this.route.params),
+					mergeMap(() => (!this.urlMode ? EMPTY : this.route.params)),
 					mergeMap((data: any) => {
-						return this.data.fetchPoint(data['id']);
+						return !this.urlMode
+							? EMPTY
+							: this.data.fetchPoint(data['id']);
 					}),
 					tap((point: Point | undefined) => {
+						if (this.urlMode) return;
+
 						this.point = point && sortDates(point);
 
 						this.hasAccess =
@@ -173,15 +208,21 @@ export class PointComponent implements OnInit, OnDestroy {
 								});
 						}, 500);
 					}),
-					mergeMap(() => this.auth.getUserData(this.point?.user))
+					mergeMap(() =>
+						!this.urlMode
+							? EMPTY
+							: this.auth.getUserData(this.point?.user)
+					)
 				)
 				.subscribe({
 					next: (userData) => {
-						this.userData = userData;
-						this.point && this.data.putPoint(this.point);
+						if (!this.urlMode) {
+							this.userData = userData;
+							this.point && this.data.putPoint(this.point);
+						}
 						this.setAllTimers(true);
 						this.dateLoading = false;
-						this.setIterationsParam();
+						!this.urlMode && this.setIterationsParam();
 						this.action.iterationSwitched(this.pointDate);
 					},
 					error: (err) => {

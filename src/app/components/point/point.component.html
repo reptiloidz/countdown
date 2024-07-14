@@ -151,7 +151,10 @@
 
 		<div class="point-page__header">
 
-			<div class="point-page__markers">
+			<div
+				*ngIf="!urlMode"
+				class="point-page__markers"
+			>
 				<div
 					class="marker"
 					[ngClass]="{
