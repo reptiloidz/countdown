@@ -7,7 +7,6 @@ import {
 	HostBinding,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
-	Input,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -19,7 +18,7 @@ import {
 	fromEvent,
 	timer,
 	throttle,
-	EMPTY,
+	BehaviorSubject,
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
@@ -91,7 +90,6 @@ export class PointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 	@HostBinding('class') class = 'main__inner';
-	@Input() urlMode = false;
 	point!: Point | undefined;
 	pointDate = new Date();
 	remainTextValue = '';
@@ -118,6 +116,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerSecs!: number | string;
 	showIterationsInfo = false;
 
+	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -131,11 +130,25 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.subscriptions.add(
+			this.route.url.subscribe({
+				next: (data: any) => {
+					this.urlMode.next(data[0].path === 'url');
+				},
+			})
+		);
+
+		this.subscriptions.add(
 			this.route.queryParams
 				.pipe(
 					distinctUntilChanged(),
 					tap((data: any) => {
-						if (this.urlMode) {
+						if (this.urlModeValue) {
+							const dateParsed = parseDate(data.date, true);
+							const fullDate = formatDate(
+								dateParsed,
+								Constants.fullDateFormat
+							);
+
 							this.point = {
 								color: data.color || 'gray',
 								title: data.title || '',
@@ -143,7 +156,7 @@ export class PointComponent implements OnInit, OnDestroy {
 								dates: [
 									{
 										date:
-											data.date ||
+											fullDate ||
 											formatDate(
 												new Date(),
 												Constants.fullDateFormat
@@ -154,8 +167,7 @@ export class PointComponent implements OnInit, OnDestroy {
 								greenwich: false,
 								repeatable: false,
 								direction:
-									data.date &&
-									parseDate(data.date) > new Date()
+									fullDate && dateParsed > new Date()
 										? 'backward'
 										: 'forward',
 							};
@@ -166,14 +178,12 @@ export class PointComponent implements OnInit, OnDestroy {
 									data.iteration - 1);
 						}
 					}),
-					mergeMap(() => (!this.urlMode ? EMPTY : this.route.params)),
+					mergeMap(() => this.route.params),
 					mergeMap((data: any) => {
-						return !this.urlMode
-							? EMPTY
-							: this.data.fetchPoint(data['id']);
+						return this.data.fetchPoint(data['id']);
 					}),
 					tap((point: Point | undefined) => {
-						if (this.urlMode) return;
+						if (this.urlModeValue) return;
 
 						this.point = point && sortDates(point);
 
@@ -208,21 +218,17 @@ export class PointComponent implements OnInit, OnDestroy {
 								});
 						}, 500);
 					}),
-					mergeMap(() =>
-						!this.urlMode
-							? EMPTY
-							: this.auth.getUserData(this.point?.user)
-					)
+					mergeMap(() => this.auth.getUserData(this.point?.user))
 				)
 				.subscribe({
 					next: (userData) => {
-						if (!this.urlMode) {
+						if (!this.urlModeValue) {
 							this.userData = userData;
 							this.point && this.data.putPoint(this.point);
 						}
 						this.setAllTimers(true);
 						this.dateLoading = false;
-						!this.urlMode && this.setIterationsParam();
+						!this.urlModeValue && this.setIterationsParam();
 						this.action.iterationSwitched(this.pointDate);
 					},
 					error: (err) => {
@@ -411,6 +417,10 @@ export class PointComponent implements OnInit, OnDestroy {
 				? ''
 				: '. Но есть нюанс. Подробнее в описании'
 		}`;
+	}
+
+	get urlModeValue() {
+		return this.urlMode.getValue();
 	}
 
 	onIterationsScroll(event: WheelEvent) {

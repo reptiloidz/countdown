@@ -2,6 +2,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, filter, first, interval, switchMap } from 'rxjs';
 import { ActionService, NotifyService } from './services';
 import { Notification } from './interfaces';
+import { ActivationStart, Event, Router } from '@angular/router';
 
 @Component({
 	selector: 'app-root',
@@ -10,8 +11,13 @@ import { Notification } from './interfaces';
 export class AppComponent implements OnInit, OnDestroy {
 	count = 0;
 	startTime = new Date();
+	isUrlMode = false;
 
-	constructor(private notify: NotifyService, private action: ActionService) {}
+	constructor(
+		private notify: NotifyService,
+		private action: ActionService,
+		private router: Router
+	) {}
 
 	public notifyList: Notification[] = [];
 	private subscriptions = new Subscription();
@@ -28,6 +34,18 @@ export class AppComponent implements OnInit, OnDestroy {
 					this.notifyList = list;
 				},
 			})
+		);
+
+		this.subscriptions.add(
+			this.router.events
+				.pipe(
+					filter((event: Event) => event instanceof ActivationStart)
+				)
+				.subscribe({
+					next: (data: any) => {
+						this.isUrlMode = data.snapshot.url[0]?.path === 'url';
+					},
+				})
 		);
 
 		document.documentElement.style.setProperty(

@@ -152,7 +152,7 @@
 		<div class="point-page__header">
 
 			<div
-				*ngIf="!urlMode"
+				*ngIf="(urlMode | async) !== true"
 				class="point-page__markers"
 			>
 				<div
