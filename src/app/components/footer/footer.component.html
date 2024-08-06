@@ -62,6 +62,16 @@
 		title="Экспорт в Google Calendar"
 	></a>
 	<a
+		*ngIf="!isCreateUrl"
+		app-button
+		size="lg"
+		mode="positive"
+		icon="link"
+		routerLink="/create-url"
+		title="Создать событие-ссылку"
+		class="nav__create"
+	></a>
+	<a
 		*ngIf="isAuthenticated && !isCreate"
 		app-button
 		size="lg"

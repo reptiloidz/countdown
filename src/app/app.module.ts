@@ -13,7 +13,6 @@ import { PointComponent } from './components/point/point.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
-import { CreatePointComponent } from './components/create-point/create-point.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
@@ -47,7 +46,6 @@ import { TimeRemainPipe } from './pipes/time-remain.pipe';
 		HeaderComponent,
 		FooterComponent,
 		EditPointComponent,
-		CreatePointComponent,
 		GenerateIterationsComponent,
 		PrivacyComponent,
 		PopupComponent,

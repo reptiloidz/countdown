@@ -1,6 +1,5 @@
 import {
 	Component,
-	Input,
 	OnInit,
 	OnDestroy,
 	ChangeDetectionStrategy,
@@ -41,6 +40,7 @@ import { CalendarMode, EditPointEvent, PointColorTypes } from 'src/app/types';
 export enum EditPointType {
 	Create = 'create',
 	Edit = 'edit',
+	CreateUrl = 'create-url',
 }
 
 enum EditPointSuccessMessage {
@@ -61,7 +61,7 @@ enum EditPointSuccessMessage {
 export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@HostBinding('class') class = 'content';
-	@Input() type = EditPointType.Edit;
+	type = EditPointType.Edit;
 	form!: FormGroup;
 	point: Point | undefined;
 	pointDate = new Date();
@@ -120,6 +120,19 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				]),
 			}),
 		});
+
+		this.subscriptions.add(
+			this.route.url.subscribe({
+				next: (data: any) => {
+					this.type =
+						data[0].path === 'create'
+							? EditPointType.Create
+							: data[0].path === 'edit'
+							? EditPointType.Edit
+							: EditPointType.CreateUrl;
+				},
+			})
+		);
 
 		this.subscriptions.add(
 			this.route.queryParams
@@ -291,7 +304,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get isCreation() {
-		return this.type === EditPointType.Create;
+		return (
+			this.type === EditPointType.Create ||
+			this.type === EditPointType.CreateUrl
+		);
 	}
 
 	get isRepeatable() {

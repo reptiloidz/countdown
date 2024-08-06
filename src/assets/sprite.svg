@@ -69,6 +69,9 @@
         <svg id="lines" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20.5h3.5v-7h-17v7H12m-6-17H3.5v7h17v-7H11"/>
         </svg>
+        <svg id="link" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 16h2a4 4 0 0 0 0-8h-2m-7 4h8M9 8H7c-.729 0-1.412.195-2 .535M3 12a4 4 0 0 0 4 4h2"/>
+        </svg>
         <svg id="lock" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 11V7c0-1.333.8-4 4-4s4 2.667 4 4v4m-8 0H5v10h7M8 11h8m0 0h3v10h-2"/>
         </svg>
