@@ -48,7 +48,7 @@
 			</ng-container>
 		</ng-template>
 	</app-calendar>
-	<h1>{{ isCreation ? "Создание" : "Редактирование" }}<span
+	<h1>{{ pageTitle }}<span
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
@@ -80,51 +80,53 @@
 				formControlName="description"
 			></textarea>
 
-			<div class="control">
-				<label>
-					<input
-						type="radio"
-						formControlName="direction"
-						value="backward"
-					>
-					Обратный отсчёт
-				</label>
-				<label>
-					<input
-						type="radio"
-						formControlName="direction"
-						value="forward"
-					>
-					Прямой отсчёт
-				</label>
-			</div>
-			<div class="control">
-				<label>
-					<input
-						type="checkbox"
-						formControlName="greenwich"
-					>
-					Время по Гринвичу (убрать, если время должно быть местным)
-				</label>
-			</div>
-			<div class="control">
-				<label>
-					<input
-						type="checkbox"
-						formControlName="repeatable"
-					>
-					Повторяемое событие
-				</label>
-			</div>
-			<div class="control">
-				<label>
-					<input
-						type="checkbox"
-						formControlName="public"
-					>
-					Публичное событие
-				</label>
-			</div>
+			<ng-container *ngIf="!isCreationUrl">
+				<div class="control">
+					<label>
+						<input
+							type="radio"
+							formControlName="direction"
+							value="backward"
+						>
+						Обратный отсчёт
+					</label>
+					<label>
+						<input
+							type="radio"
+							formControlName="direction"
+							value="forward"
+						>
+						Прямой отсчёт
+					</label>
+				</div>
+				<div class="control">
+					<label>
+						<input
+							type="checkbox"
+							formControlName="greenwich"
+						>
+						Время по Гринвичу (убрать, если время должно быть местным)
+					</label>
+				</div>
+				<div class="control">
+					<label>
+						<input
+							type="checkbox"
+							formControlName="repeatable"
+						>
+						Повторяемое событие
+					</label>
+				</div>
+				<div class="control">
+					<label>
+						<input
+							type="checkbox"
+							formControlName="public"
+						>
+						Публичное событие
+					</label>
+				</div>
+			</ng-container>
 			<div class="control">
 				<select formControlName="color">
 					<option

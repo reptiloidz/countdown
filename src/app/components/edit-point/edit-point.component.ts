@@ -32,6 +32,7 @@ import {
 	getFirstIteration,
 	getPointDate,
 	isDateValid,
+	parseDate,
 	sortDates,
 } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
@@ -130,6 +131,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							: data[0].path === 'edit'
 							? EditPointType.Edit
 							: EditPointType.CreateUrl;
+
+					this.isCreationUrl &&
+						this.form.controls['title'].setValidators(null);
 				},
 			})
 		);
@@ -137,7 +141,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.route.queryParams
 				.pipe(
-					filter(() => !this.isIterationAdded),
+					tap(() => {
+						if (this.isCreation || this.isIterationAdded) {
+							this.checking.next(false);
+						}
+					}),
+					filter(() => !this.isCreation && !this.isIterationAdded),
 					distinctUntilChanged(),
 					tap((data: any) => {
 						data.iteration &&
@@ -310,6 +319,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	get isCreationBase() {
+		return this.type === EditPointType.Create;
+	}
+
+	get isCreationUrl() {
+		return this.type === EditPointType.CreateUrl;
+	}
+
 	get isRepeatable() {
 		return this.form.controls['repeatable'].value;
 	}
@@ -335,7 +352,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get isBaseFormValid() {
-		return this.form.controls['title'].valid;
+		return this.form.controls['title'].valid || this.isCreationUrl;
 	}
 
 	get isDateFormValid() {
@@ -516,6 +533,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.dates && this.dates?.length > 1;
 	}
 
+	get pageTitle() {
+		return !this.isCreation
+			? 'Редактирование'
+			: this.isCreationBase
+			? 'Создание'
+			: 'Создание события-ссылки';
+	}
+
 	convertToMinutes(ms: number): number {
 		return Math.ceil(ms / Constants.msInMinute);
 		// Оставил только ceil, когда начал выводить отрицательные значения
@@ -652,8 +677,38 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.isIterationSwitched = true;
 		}
 
-		if (this.isCreation) {
+		if (this.isCreationBase) {
 			this.data.addPoint(result);
+		} else if (this.isCreationUrl) {
+			const urlParams = {
+				color:
+					result.color !== 'gray' && result.title
+						? result.color
+						: null,
+				title: result.title,
+				description: result.description,
+				date: format(
+					parseDate(result.dates[0].date),
+					Constants.fullDateUrlFormat
+				),
+			};
+
+			this.router
+				.navigate(['/url/'], {
+					queryParams: urlParams,
+				})
+				.then(() => {
+					navigator.clipboard
+						.writeText(window.location.href)
+						.then(() => {
+							alert(
+								'URL события успешно скопирован в буфер обмена'
+							);
+						});
+				})
+				.catch((err) => {
+					console.error('Ошибка при копировании URL:\n', err.message);
+				});
 		} else if (saveIteration || repeats.length) {
 			if (newDatesArray) {
 				this.data.editPoint(

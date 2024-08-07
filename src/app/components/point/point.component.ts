@@ -19,6 +19,7 @@ import {
 	timer,
 	throttle,
 	BehaviorSubject,
+	of,
 } from 'rxjs';
 import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
@@ -180,7 +181,9 @@ export class PointComponent implements OnInit, OnDestroy {
 					}),
 					mergeMap(() => this.route.params),
 					mergeMap((data: any) => {
-						return this.data.fetchPoint(data['id']);
+						return data['id']
+							? this.data.fetchPoint(data['id'])
+							: of(undefined);
 					}),
 					tap((point: Point | undefined) => {
 						if (this.urlModeValue) return;
@@ -218,11 +221,15 @@ export class PointComponent implements OnInit, OnDestroy {
 								});
 						}, 500);
 					}),
-					mergeMap(() => this.auth.getUserData(this.point?.user))
+					mergeMap(() => {
+						return this.point?.user
+							? this.auth.getUserData(this.point.user)
+							: of(undefined);
+					})
 				)
 				.subscribe({
 					next: (userData) => {
-						if (!this.urlModeValue) {
+						if (!this.urlModeValue && userData) {
 							this.userData = userData;
 							this.point && this.data.putPoint(this.point);
 						}
@@ -245,7 +252,7 @@ export class PointComponent implements OnInit, OnDestroy {
 				.pipe(
 					filter((event) => {
 						const eWheel = event as WheelEvent;
-						return this.iterationsList.nativeElement.contains(
+						return this.iterationsList?.nativeElement.contains(
 							eWheel.target as HTMLElement
 						);
 					}),
