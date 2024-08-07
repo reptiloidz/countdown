@@ -222,7 +222,7 @@ export class PointComponent implements OnInit, OnDestroy {
 						}, 500);
 					}),
 					mergeMap(() => {
-						return this.point?.user
+						return this.point?.user && this.auth.isAuthenticated
 							? this.auth.getUserData(this.point.user)
 							: of(undefined);
 					})
