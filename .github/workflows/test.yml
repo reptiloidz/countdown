@@ -1,0 +1,9 @@
+- name: Debug environment variables
+  run: |
+    echo "SSH_HOST: $SSH_HOST"
+    echo "SSH_USER: $SSH_USER"
+    echo "DEPLOY_PATH: $DEPLOY_PATH"
+  env:
+    SSH_HOST: ${{ secrets.SSH_HOST }}
+    SSH_USER: ${{ secrets.SSH_USER }}
+    DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
