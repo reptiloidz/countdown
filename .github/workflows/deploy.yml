@@ -27,10 +27,9 @@ jobs:
 
     - name: Deploy to external server via SFTP
       env:
-        SSH_HOST: ${{ vars.SSH_HOST }}
-        SSH_USER: ${{ vars.SSH_USER }}
-        SSH_PASS: ${{ vars.SSH_PASS }}
-        REMOTE_PATH: /path/to/deploy/
+        SSH_HOST: ${{ secret.SSH_HOST }}
+        SSH_USER: ${{ secret.SSH_USER }}
+        SSH_PASS: ${{ secret.SSH_PASS }}
 
       run: |
         sshpass -p "$SSH_PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dist/cd/ $SSH_USER@$SSH_HOST:$DEPLOY_PATH
