@@ -1,0 +1,36 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+    - run: npm run build
+    #- run: npm test
+
+    - name: Deploy to external server via SFTP
+      env:
+        SSH_HOST: ${{ vars.SSH_HOST }}
+        SSH_USER: ${{ vars.SSH_USER }}
+        SSH_PASS: ${{ vars.SSH_PASS }}
+        REMOTE_PATH: /path/to/deploy/
+
+      run: |
+        sshpass -p "$SSH_PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dist/cd/ $SSH_USER@$SSH_HOST:$DEPLOY_PATH
