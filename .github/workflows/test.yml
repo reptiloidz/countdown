@@ -1,9 +1,34 @@
-- name: Debug environment variables
-  run: |
-    echo "SSH_HOST: $SSH_HOST"
-    echo "SSH_USER: $SSH_USER"
-    echo "DEPLOY_PATH: $DEPLOY_PATH"
-  env:
-    SSH_HOST: ${{ secrets.SSH_HOST }}
-    SSH_USER: ${{ secrets.SSH_USER }}
-    DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    #- run: npm test
+
+    - name: Debug environment variables
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+      run: |
+        echo "SSH_HOST: $SSH_HOST"
+        echo "SSH_USER: $SSH_USER"
+        echo "DEPLOY_PATH: $DEPLOY_PATH"
