@@ -7,7 +7,7 @@
 		"svg": "node sprite.js && yarn run svgo",
 		"svgo": "svgo src/assets/sprite.svg --config svgo.config.cjs --pretty",
 		"start-mock": "ng serve -o --host 0.0.0.0 --configuration mock",
-		"build": "ng build --base-href /countdown/",
+		"build": "ng build",
 		"build-local": "ng build --base-href /dist/cd/",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
