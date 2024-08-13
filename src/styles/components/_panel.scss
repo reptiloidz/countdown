@@ -38,4 +38,10 @@
 		display: flex;
 		align-items: flex-start;
 	}
+
+	&__tabs {
+		display: flex;
+		gap: 4px;
+		overflow: hidden;
+	}
 }

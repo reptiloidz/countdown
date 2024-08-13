@@ -213,12 +213,7 @@ export class PointComponent implements OnInit, OnDestroy {
 						}
 
 						setTimeout(() => {
-							(this.iterationsList?.nativeElement as HTMLElement)
-								?.querySelector('.tabs__item--active input')
-								?.scrollIntoView({
-									block: 'nearest',
-									behavior: 'smooth',
-								});
+							this.scrollHome();
 						}, 500);
 					}),
 					mergeMap(() => {
@@ -631,5 +626,21 @@ export class PointComponent implements OnInit, OnDestroy {
 			'showIterationsInfo',
 			this.showIterationsInfo ? 'true' : ''
 		);
+	}
+
+	scrollList(position = 999999) {
+		this.iterationsList?.nativeElement.scroll({
+			left: position,
+			behavior: 'smooth',
+		});
+	}
+
+	scrollHome() {
+		(this.iterationsList?.nativeElement as HTMLElement)
+			?.querySelector('.tabs__item--active input')
+			?.scrollIntoView({
+				block: 'nearest',
+				behavior: 'smooth',
+			});
 	}
 }

@@ -9,7 +9,7 @@
 	display: flex;
 	gap: var(--tabs-gap);
 	margin: 0;
-	padding: 4px calc(var(--tabs-gap) + 20px) var(--tabs-pb) calc(var(--tabs-gap) + 40px);
+	padding: 4px calc(var(--tabs-gap) + 20px) var(--tabs-pb) var(--tabs-gap);
 	overflow: auto hidden;
 	list-style-type: none;
 	transition: padding .2s .1s;
@@ -165,8 +165,14 @@
 	&__nav {
 		display: flex;
 		gap: 4px;
+		align-items: center;
 		align-self: flex-start;
 		height: 42px;
+		padding: 0 12px;
+
+		& + & {
+			height: auto;
+		}
 	}
 
 	&__label-wrapper {

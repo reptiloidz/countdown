@@ -73,73 +73,105 @@
 			</label>
 		</ng-template>
 		<ng-template #extraTemplate>
-			<ul
-				#iterationsList
-				class="tabs"
-				[ngClass]="{
-					'tabs--expanded': showIterationsInfo
-				}"
-				(wheel)="onIterationsScroll($event)"
-			>
-				<ng-container *ngFor="let date of datesBefore; let i = index">
-					<ng-container
-						[ngTemplateOutlet]="iteration"
-						[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past' }"
-					></ng-container>
-				</ng-container>
-				<li class="tabs__item tabs__item--home">
-					<svg
-						app-svg
-						name="home-2"
-					></svg>
-					<div
-						*ngIf="showIterationsInfo"
-						@iterationsInfo
-						class="tabs__label-wrapper"
-					>
-						<div class="tabs__label tabs__label--now">
-							<p class="tabs__date">{{ currentTime }}</p>
-						</div>
+			<div class="panel__tabs">
+				<div>
+					<div class="tabs__nav">
+						<button
+							app-button
+							icon="chevron-left"
+							(click)="scrollList(0)"
+							title="Перейти к началу списка итераций"
+						></button>
 					</div>
-				</li>
-				<ng-container *ngFor="let date of datesAfter; let i = index">
-					<ng-container
-						[ngTemplateOutlet]="iteration"
-						[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future'  }"
-					></ng-container>
-				</ng-container>
-			</ul>
+					<div class="tabs__nav">
+						<button
+							app-button
+							size="sm"
+							mode="ghost"
+							icon="clock"
+							(click)="scrollHome()"
+							title="Перейти к выбранной итерации"
+						></button>
+					</div>
+				</div>
+				<ul
+					#iterationsList
+					class="tabs"
+					[ngClass]="{
+						'tabs--expanded': showIterationsInfo
+					}"
+					(wheel)="onIterationsScroll($event)"
+				>
+					<ng-container *ngFor="let date of datesBefore; let i = index">
+						<ng-container
+							[ngTemplateOutlet]="iteration"
+							[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past' }"
+						></ng-container>
+					</ng-container>
+					<li class="tabs__item tabs__item--home">
+						<svg
+							app-svg
+							name="home-2"
+						></svg>
+						<div
+							*ngIf="showIterationsInfo"
+							@iterationsInfo
+							class="tabs__label-wrapper"
+						>
+							<div class="tabs__label tabs__label--now">
+								<p class="tabs__date">{{ currentTime }}</p>
+							</div>
+						</div>
+					</li>
+					<ng-container *ngFor="let date of datesAfter; let i = index">
+						<ng-container
+							[ngTemplateOutlet]="iteration"
+							[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future'  }"
+						></ng-container>
+					</ng-container>
+				</ul>
 
-			<div
-				*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
-				class="tabs__nav"
-			>
-				<button
-					app-button
-					size="sm"
-					mode="positive"
-					icon="document-check"
-					title="Выбрать все итерации"
-					(click)="checkAllIterations()"
-				></button>
-				<ng-container *ngIf="iterationsChecked.length">
-					<button
-						app-button
-						size="sm"
-						mode="secondary"
-						icon="document-cross"
-						title="Снять выбор со всех итераций"
-						(click)="checkAllIterations(false)"
-					></button>
-					<button
-						app-button
-						size="sm"
-						mode="negative"
-						icon="cross"
-						title="Удалить выбранные итерации"
-						(click)="removeCheckedIterations()"
-					></button>
-				</ng-container>
+				<div>
+					<div class="tabs__nav">
+						<button
+							app-button
+							icon="chevron-right"
+							(click)="scrollList()"
+							title="Перейти к концу списка итераций"
+						></button>
+						<button
+							app-button
+							size="sm"
+							mode="negative"
+							icon="cross"
+							[attr.disabled]="iterationsChecked.length ? null : true"
+							title="Удалить выбранные итерации"
+							(click)="removeCheckedIterations()"
+						></button>
+					</div>
+					<div
+						*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
+						class="tabs__nav"
+					>
+						<button
+							app-button
+							size="sm"
+							mode="positive"
+							icon="document-check"
+							title="Выбрать все итерации"
+							(click)="checkAllIterations()"
+						></button>
+						<button
+							app-button
+							size="sm"
+							mode="secondary"
+							[attr.disabled]="iterationsChecked.length ? null : true"
+							icon="document-cross"
+							title="Снять выбор со всех итераций"
+							(click)="checkAllIterations(false)"
+						></button>
+					</div>
+				</div>
 			</div>
 		</ng-template>
 	</ng-container>
