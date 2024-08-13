@@ -10,7 +10,12 @@ import { filter, Subscription, EMPTY, mergeMap, combineLatestWith } from 'rxjs';
 import { Constants } from 'src/app/enums';
 import { getPointDate, parseDate } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
-import { AuthService, DataService, ActionService } from 'src/app/services';
+import {
+	AuthService,
+	DataService,
+	ActionService,
+	NotifyService,
+} from 'src/app/services';
 import { HttpParams } from '@angular/common/http';
 
 @Component({
@@ -36,7 +41,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private data: DataService,
 		private action: ActionService,
-		private auth: AuthService
+		private auth: AuthService,
+		private notify: NotifyService
 	) {}
 
 	get isAuthenticated() {
@@ -122,6 +128,23 @@ export class FooterComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
+			this.data.eventRemovePoint$.subscribe({
+				next: () => {
+					this.router.navigate(['']);
+					this.notify.add({
+						title: `Событие удалено`,
+					});
+				},
+				error: (err) => {
+					console.error(
+						'Ошибка при удалении события:\n',
+						err.message
+					);
+				},
+			})
+		);
+
+		this.subscriptions.add(
 			this.action.eventPointsChecked$.subscribe({
 				next: (check) => {
 					this.pointsChecked = check;
@@ -176,5 +199,11 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	removeAllCheckedPoints() {
 		this.data.removePoints();
+	}
+
+	removePoint() {
+		this.data.removePoints({
+			id: this.point?.id,
+		});
 	}
 }

@@ -1,33 +1,41 @@
-<div
-	*ngIf="isMain && hasEditablePoints"
-	class="nav__aside"
->
+<div class="nav__aside">
+	<ng-container *ngIf="isMain && hasEditablePoints">
+		<button
+			app-button
+			size="lg"
+			mode="positive"
+			icon="document-check"
+			title="Выбрать все доступные события"
+			(click)="checkAllPoints()"
+		></button>
+		<ng-container *ngIf="pointsChecked">
+			<button
+				app-button
+				size="lg"
+				mode="secondary"
+				icon="document-cross"
+				title="Снять отметки со всех событий"
+				(click)="uncheckAllPoints()"
+			></button>
+			<button
+				app-button
+				size="lg"
+				mode="negative"
+				icon="cross"
+				title="Удалить выбранные события"
+				(click)="removeAllCheckedPoints()"
+			></button>
+		</ng-container>
+	</ng-container>
 	<button
+		*ngIf="pointId && hasAccess"
 		app-button
 		size="lg"
-		mode="positive"
-		icon="document-check"
-		title="Выбрать все доступные события"
-		(click)="checkAllPoints()"
+		icon="cross"
+		mode="negative"
+		(click)="removePoint()"
+		title="Удалить"
 	></button>
-	<ng-container *ngIf="pointsChecked">
-		<button
-			app-button
-			size="lg"
-			mode="secondary"
-			icon="document-cross"
-			title="Снять отметки со всех событий"
-			(click)="uncheckAllPoints()"
-		></button>
-		<button
-			app-button
-			size="lg"
-			mode="negative"
-			icon="cross"
-			title="Удалить выбранные события"
-			(click)="removeAllCheckedPoints()"
-		></button>
-	</ng-container>
 </div>
 
 
