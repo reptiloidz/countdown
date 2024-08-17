@@ -24,7 +24,12 @@ import {
 	mergeMap,
 	filter,
 } from 'rxjs';
-import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
+import {
+	Point,
+	Iteration,
+	UserExtraData,
+	SwitcherItem,
+} from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format } from 'date-fns';
 import {
@@ -81,6 +86,17 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	userData!: UserExtraData;
 	isIterationSwitched = false;
 	datePickerValue = this.pointDate;
+
+	directionList: SwitcherItem[] = [
+		{
+			text: 'Обратный отсчёт',
+			value: 'backward',
+		},
+		{
+			text: 'Прямой отсчёт',
+			value: 'forward',
+		},
+	];
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();

@@ -61,6 +61,7 @@ export class HttpService implements HttpServiceInterface {
 				);
 
 				// Из-за ограничений Firebase фильтрация данных осуществляется на клиенте, при этом выполняется 2 запроса данных
+				// TODO: Стоит ли делать так, или просто фильтровать на фронте?
 				return combineLatest([userPoints$, publicPoints$]).pipe(
 					map((results) => results.flat()),
 					map((points) =>

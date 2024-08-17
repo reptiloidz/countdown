@@ -81,24 +81,11 @@
 			></textarea>
 
 			<ng-container *ngIf="!isCreationUrl">
-				<div class="control">
-					<label>
-						<input
-							type="radio"
-							formControlName="direction"
-							value="backward"
-						>
-						Обратный отсчёт
-					</label>
-					<label>
-						<input
-							type="radio"
-							formControlName="direction"
-							value="forward"
-						>
-						Прямой отсчёт
-					</label>
-				</div>
+				<app-switcher
+					[items]="directionList"
+					[value]="this.point?.direction || 'forward'"
+					formControlName="direction"
+				></app-switcher>
 				<div class="control">
 					<label>
 						<input

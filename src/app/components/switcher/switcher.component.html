@@ -14,8 +14,8 @@
 			[value]="item?.value"
 			type="radio"
 			[checked]="item?.value === value || null"
-			(change)="switchMode($event)"
-			name="switcher"
+			(change)="onOptionSelected($event)"
+			[attr.name]="name"
 			class="switcher__input"
 		>
 		<ng-container *ngIf="item?.icon || item?.boolean !== undefined; else textValue;">
