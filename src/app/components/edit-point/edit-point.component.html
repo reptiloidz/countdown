@@ -67,12 +67,11 @@
 			><ng-container *ngIf="userData?.displayName">
 				{{ userData.displayName }}
 			</ng-container>
-			<input
-				class="control"
-				type="text"
+			<app-input
 				placeholder="Название"
+				type="text"
 				formControlName="title"
-			>
+			></app-input>
 			<textarea
 				class="control"
 				type="text"
@@ -86,33 +85,21 @@
 					[value]="this.point?.direction || 'forward'"
 					formControlName="direction"
 				></app-switcher>
-				<div class="control">
-					<label>
-						<input
-							type="checkbox"
-							formControlName="greenwich"
-						>
-						Время по Гринвичу (убрать, если время должно быть местным)
-					</label>
-				</div>
-				<div class="control">
-					<label>
-						<input
-							type="checkbox"
-							formControlName="repeatable"
-						>
-						Повторяемое событие
-					</label>
-				</div>
-				<div class="control">
-					<label>
-						<input
-							type="checkbox"
-							formControlName="public"
-						>
-						Публичное событие
-					</label>
-				</div>
+				<label
+					app-checkbox
+					formControlName="greenwich"
+					iconSize="sm"
+				>Время по Гринвичу (убрать, если время должно быть местным)</label>
+				<label
+					app-checkbox
+					formControlName="repeatable"
+					iconSize="sm"
+				>Повторяемое событие</label>
+				<label
+					app-checkbox
+					formControlName="public"
+					iconSize="sm"
+				>Публичное событие</label>
 			</ng-container>
 			<div class="control">
 				<select formControlName="color">
