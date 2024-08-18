@@ -10,15 +10,24 @@ import {
 	OnInit,
 	Renderer2,
 	TemplateRef,
+	forwardRef,
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ButtonSize, DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
 	selector: 'app-drop',
 	templateUrl: './drop.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => DropComponent),
+			multi: true,
+		},
+	],
 })
-export class DropComponent implements OnInit, OnDestroy {
+export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@HostBinding('class') get dropClass() {
 		return [
 			'drop',
@@ -43,6 +52,8 @@ export class DropComponent implements OnInit, OnDestroy {
 	@Input() buttonTitle: string | null = null;
 	@Input() dropBodyClass: string | string[] = '';
 	@Input() isSelectView = false;
+	@Input() formControlName!: string;
+	@Input() titleValue = '';
 
 	value = '';
 	private documentClickListener: (() => void) | null = null;
@@ -99,4 +110,25 @@ export class DropComponent implements OnInit, OnDestroy {
 			this.documentClickListener = null;
 		}
 	}
+
+	selectHandler(value: string) {
+		this.value = value;
+		this.onChange(value);
+		this.onTouched();
+		this.closeHandler();
+	}
+
+	onChange: (value: string) => void = () => {};
+	onTouched: () => void = () => {};
+
+	writeValue(value: string): void {
+		this.value = value;
+	}
+	registerOnChange(fn: any): void {
+		this.onChange = fn;
+	}
+	registerOnTouched(fn: any): void {
+		this.onTouched = fn;
+	}
+	setDisabledState?(isDisabled: boolean): void {}
 }

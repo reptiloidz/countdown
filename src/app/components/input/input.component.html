@@ -1,4 +1,5 @@
 <input
+	*ngIf="!textarea else textareaTemplate;"
 	[attr.type]="type"
 	[placeholder]="placeholder"
 	[autocomplete]="autocomplete"
@@ -18,3 +19,13 @@
 		class="control__icon"
 	></svg>
 </div>
+<ng-template #textareaTemplate>
+	<textarea
+		[placeholder]="placeholder"
+		class="control__textarea"
+		[disabled]="isDisabled"
+		(input)="onInput($event)"
+		[attr.name]="formControlName || null"
+		rows="10"
+	>{{ value || '' }}</textarea>
+</ng-template>

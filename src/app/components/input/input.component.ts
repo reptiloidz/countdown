@@ -23,6 +23,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() formControlName!: string;
 	@Input() type = 'text';
 	@Input() icon!: string;
+	@Input() textarea = false;
 
 	value: string = '';
 	isDisabled: boolean = false;

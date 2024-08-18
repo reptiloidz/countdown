@@ -375,6 +375,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.form.controls['difference'].valid;
 	}
 
+	get colorSelectedName() {
+		return this.pointColorNames[
+			this.form.controls['color'].value as PointColorTypes
+		];
+	}
+
 	sortDates() {
 		const sortedDates = this.point && sortDates(this.point).dates;
 		if (this.point && sortedDates) {

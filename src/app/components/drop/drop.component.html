@@ -18,12 +18,22 @@
 		[size]="buttonSize"
 		[icon]="icon"
 		(click)="toggleHandler()"
-	></button>
+	>{{ isSelectView ? titleValue || value : null }}</button>
 </ng-template>
 <div
 	*ngIf="bodyTemplate && open"
 	class="drop__body"
 	[ngClass]="[dropBodyClass, isSelectView ? 'drop__body--list' : '']"
 >
-	<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
+	<ng-container
+		[ngTemplateOutlet]="bodyTemplate"
+		[ngTemplateOutletContext]="{
+			value,
+			select: selectHandler.bind(this)
+		}"
+	></ng-container><input
+		type="hidden"
+		[attr.name]="formControlName"
+		[value]="value"
+	>
 </div>
