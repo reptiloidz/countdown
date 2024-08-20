@@ -41,7 +41,7 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
-import { CalendarMode, EditPointEvent, PointColorTypes } from 'src/app/types';
+import { CalendarMode, EditPointEvent } from 'src/app/types';
 
 export enum EditPointType {
 	Create = 'create',
@@ -359,12 +359,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.point?.dates;
 	}
 
-	get pointColorNames() {
+	get pointColorNames(): { [key: string]: string } {
 		return PointColors;
-	}
-
-	get pointColors() {
-		return Object.keys(PointColors) as PointColorTypes[];
 	}
 
 	get isBaseFormValid() {
@@ -373,12 +369,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	get isDateFormValid() {
 		return this.form.controls['difference'].valid;
-	}
-
-	get colorSelectedName() {
-		return this.pointColorNames[
-			this.form.controls['color'].value as PointColorTypes
-		];
 	}
 
 	sortDates() {

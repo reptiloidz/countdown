@@ -52,6 +52,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() buttonTitle: string | null = null;
 	@Input() dropBodyClass: string | string[] = '';
 	@Input() isSelectView = false;
+	@Input() dropList: { [key: string]: string } = {};
 	@Input() formControlName!: string;
 	@Input() titleValue = '';
 

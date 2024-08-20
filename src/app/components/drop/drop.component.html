@@ -18,22 +18,46 @@
 		[size]="buttonSize"
 		[icon]="icon"
 		(click)="toggleHandler()"
-	>{{ isSelectView ? titleValue || value : null }}</button>
+	>{{ isSelectView ? dropList[value] || value : null }}</button>
 </ng-template>
+
 <div
-	*ngIf="bodyTemplate && open"
+	*ngIf="open"
 	class="drop__body"
 	[ngClass]="[dropBodyClass, isSelectView ? 'drop__body--list' : '']"
 >
 	<ng-container
+		*ngIf="bodyTemplate else selectList"
 		[ngTemplateOutlet]="bodyTemplate"
 		[ngTemplateOutletContext]="{
 			value,
 			select: selectHandler.bind(this)
 		}"
-	></ng-container><input
+	></ng-container>
+	<input
+		*ngIf="formControlName"
 		type="hidden"
 		[attr.name]="formControlName"
 		[value]="value"
 	>
 </div>
+<ng-template #selectList>
+	<button
+		*ngFor="let item of dropList | keyvalue"
+		app-button
+		class="drop__item"
+		[ngClass]="{
+			'drop__item--selected': value === item.key
+		}"
+		textClass="drop__item-text"
+		(click)="selectHandler(item.key)"
+	>
+		{{ item.value }}
+		<svg
+			app-svg
+			name="check"
+			size="sm"
+			class="drop__item-icon"
+		></svg>
+	</button>
+</ng-template>

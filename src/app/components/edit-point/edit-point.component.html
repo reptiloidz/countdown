@@ -106,34 +106,8 @@
 				horizontal="right"
 				vertical="top"
 				formControlName="color"
-				[titleValue]="colorSelectedName"
-			>
-				<ng-template
-					#bodyTemplate
-					let-select="select"
-					let-value="value"
-				>
-					<!-- TODO: вынести в компонент дропа, чтобы получится универсальный селект -->
-					<button
-						*ngFor="let color of pointColors"
-						app-button
-						class="drop__item"
-						[ngClass]="{
-							'drop__item--selected': value === color
-						}"
-						textClass="drop__item-text"
-						(click)="select(color)"
-					>
-						{{ pointColorNames[color] }}
-						<svg
-							app-svg
-							name="check"
-							size="sm"
-							class="drop__item-icon"
-						></svg>
-					</button>
-				</ng-template>
-			</app-drop>
+				[dropList]="pointColorNames"
+			></app-drop>
 			<p
 				class="info"
 				*ngIf="isCreation && isRepeatable"
