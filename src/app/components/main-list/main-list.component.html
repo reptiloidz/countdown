@@ -127,7 +127,7 @@
 					(valueSwitched)="changeDirectionFilter($event)"
 				></app-switcher>
 
-				<app-drop [isSelectView]="true">
+				<app-drop [select]="true">
 					<ng-template
 						#buttonTemplate
 						let-toggle="toggle"
@@ -189,7 +189,7 @@
 			</div>
 			<div class="dashboard__aside">
 				<app-drop
-					[isSelectView]="true"
+					[select]="true"
 					horizontal="left"
 				>
 					<ng-template

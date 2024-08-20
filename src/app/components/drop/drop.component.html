@@ -18,13 +18,13 @@
 		[size]="buttonSize"
 		[icon]="icon"
 		(click)="toggleHandler()"
-	>{{ isSelectView ? dropList[value] || value : null }}</button>
+	>{{ select ? dropList[value] || value : null }}</button>
 </ng-template>
 
 <div
 	*ngIf="open"
 	class="drop__body"
-	[ngClass]="[dropBodyClass, isSelectView ? 'drop__body--list' : '']"
+	[ngClass]="[dropBodyClass, select ? 'drop__body--list' : '']"
 >
 	<ng-container
 		*ngIf="bodyTemplate else selectList"
