@@ -52,7 +52,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() buttonTitle: string | null = null;
 	@Input() dropBodyClass: string | string[] = '';
 	@Input() select = false;
-	@Input() dropList: { [key: string]: string } = {};
+	@Input() dropList!: { [key: string]: string };
 	@Input() formControlName!: string;
 	@Input() titleValue = '';
 
@@ -112,7 +112,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		}
 	}
 
-	selectHandler(value: string) {
+	changeHandler(value: string) {
 		this.value = value;
 		this.onChange(value);
 		this.onTouched();

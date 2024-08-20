@@ -18,20 +18,20 @@
 		[size]="buttonSize"
 		[icon]="icon"
 		(click)="toggleHandler()"
-	>{{ select ? dropList[value] || value : null }}</button>
+	>{{ (select || dropList) ? dropList[value] || value : null }}</button>
 </ng-template>
 
 <div
 	*ngIf="open"
 	class="drop__body"
-	[ngClass]="[dropBodyClass, select ? 'drop__body--list' : '']"
+	[ngClass]="[dropBodyClass, (select || dropList) ? 'drop__body--list' : '']"
 >
 	<ng-container
 		*ngIf="bodyTemplate else selectList"
 		[ngTemplateOutlet]="bodyTemplate"
 		[ngTemplateOutletContext]="{
 			value,
-			select: selectHandler.bind(this)
+			change: changeHandler.bind(this)
 		}"
 	></ng-container>
 	<input
@@ -50,7 +50,7 @@
 			'drop__item--selected': value === item.key
 		}"
 		textClass="drop__item-text"
-		(click)="selectHandler(item.key)"
+		(click)="changeHandler(item.key)"
 	>
 		{{ item.value }}
 		<svg
