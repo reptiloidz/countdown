@@ -3,66 +3,44 @@
 
 	<p>Начало диапазона</p>
 	<app-datepicker
-		class="control"
 		(datePicked)="rangeStartDatePicked($event)"
 		[date]="rangeStartDate"
 	></app-datepicker>
 
 	<p>Повторять каждые</p>
-	<input
-		class="control"
+	<app-input
 		type="number"
 		formControlName="rangePeriod"
-	>
-	<select formControlName="periodicity">
-		<option value="perMinutes">Минут</option>
-		<option value="perHours">Часов</option>
-		<option value="perDays">Дней</option>
-		<option value="perWeeks">Недель</option>
-		<option value="perMonths">Месяцев</option>
-		<option value="perYears">Лет</option>
-	</select>
+	></app-input>
+	<app-drop
+		formControlName="periodicity"
+		[dropList]="periodicityList"
+	></app-drop>
 
-	<div class="control">
-		<label>
-			<input
-				type="radio"
-				value="setRepeatsAmount"
-				formControlName="repeatsMode"
-			>
-			Задать число повторов
-		</label>
-		<label>
-			<input
-				type="radio"
-				value="setRangeEnd"
-				formControlName="repeatsMode"
-			>
-			Задать конец диапазона
-		</label>
-	</div>
+	<app-switcher
+		[items]="repeatsModeList"
+		formControlName="repeatsMode"
+	></app-switcher>
 
-	<input
+	<app-input
 		*ngIf="isRepeatsAmountSet"
-		class="control"
 		type="number"
 		placeholder="Число повторов"
 		formControlName="rangeAmount"
-		min="2"
-	>
+		[min]="2"
+	></app-input>
 
 	<ng-container *ngIf="!isRepeatsAmountSet">
 		<p>Конец диапазона</p>
 		<app-datepicker
-			class="control"
 			(datePicked)="rangeEndDatePicked($event)"
 			[date]="rangeEndDate"
 		></app-datepicker>
 	</ng-container>
 
 	<button
+		app-button
 		[disabled]="loading || iterationsForm.invalid"
-		type="button"
 		(click)="genRepeats()"
 	>Генерировать</button>
 

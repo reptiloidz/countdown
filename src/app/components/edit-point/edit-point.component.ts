@@ -569,10 +569,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.iterationControls = controls;
 	}
 
-	resetDifference() {
-		this.form.controls['difference'].setValue(0);
-	}
-
 	setIterationsParam() {
 		const filteredIterations = filterIterations({
 			date: this.pointDate,

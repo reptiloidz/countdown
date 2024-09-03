@@ -120,8 +120,10 @@
 			</p>
 
 			<button
+				app-button
 				*ngIf="isRepeatable && !isCreation"
 				[disabled]="loading || !isBaseFormValid"
+				mode="secondary"
 				type="button"
 				(click)="submit()"
 			>Сохранить параметры события</button>
@@ -202,26 +204,20 @@
 	</div>
 
 	<div class="form">
-		<div class="control control--row">
-			<input
-				class="control__input"
-				type="text"
-				placeholder="Срок в минутах"
-				formControlName="difference"
-				mask="0*"
-				[allowNegativeNumbers]="true"
-				[validation]="false"
-				[maxlength]="validatorDifferenceMaxLength"
-			>
-			<button
-				title="Сброс (итерация произошла сейчас)"
-				(click)="resetDifference()"
-				type="button"
-			>X</button>
-		</div>
+		<app-input
+			type="text"
+			placeholder="Срок в минутах"
+			formControlName="difference"
+			mask="0*"
+			[allowNegativeNumbers]="true"
+			[validation]="false"
+			[maxlength]="validatorDifferenceMaxLength"
+			[clearButton]="true"
+			clearButtonTitle="Сброс (итерация произошла сейчас)"
+			clearButtonValue="0"
+		></app-input>
 
 		<app-datepicker
-			class="control"
 			vertical="top"
 			(datePicked)="datePicked($event)"
 			[date]="pointDate"
@@ -229,6 +225,8 @@
 	</div>
 
 	<button
+		app-button
+		type="submit"
 		[disabled]="loading || (isRepeatable && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
 	>
 		{{ isRepeatable && !isCreation ? "Сохранить параметры итерации" :

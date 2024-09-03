@@ -14,7 +14,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -71,7 +70,6 @@ import { TimeRemainPipe } from './pipes/time-remain.pipe';
 		ReactiveFormsModule,
 		HttpClientModule,
 		SharedModule,
-		NgxMaskDirective,
 		provideFirebaseApp(() =>
 			initializeApp({
 				projectId: 'countdown-2971d',
@@ -89,7 +87,6 @@ import { TimeRemainPipe } from './pipes/time-remain.pipe';
 		provideDatabase(() => getDatabase()),
 	],
 	providers: [
-		[provideNgxMask()],
 		SortTrendingPipe,
 		provideAnimations(),
 		{

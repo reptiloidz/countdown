@@ -35,7 +35,7 @@
 		"@angular/platform-browser-dynamic": "^16.1.0",
 		"@angular/router": "^16.1.0",
 		"date-fns": "^3.0.1",
-		"ngx-mask": "^16.2.9",
+		"ngx-mask": "18.0.0",
 		"ngx-quicklink": "^0.4.2",
 		"rxjs": "~7.8.0",
 		"svg4everybody": "^2.1.9",

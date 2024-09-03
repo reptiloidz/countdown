@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { format } from 'date-fns';
 import { Constants } from 'src/app/enums';
 import { getPointDate, parseDate } from 'src/app/helpers';
-import { Iteration } from 'src/app/interfaces';
+import { Iteration, SwitcherItem } from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-generate-iterations',
@@ -17,6 +17,26 @@ export class GenerateIterationsComponent {
 	rangeStartDate = new Date();
 	rangeEndDate = new Date(+new Date() + Constants.msInMinute * 10);
 	repeats: Iteration[] = [];
+
+	periodicityList = {
+		perMinutes: 'Минут',
+		perHours: 'Часов',
+		perDays: 'Дней',
+		perWeeks: 'Недель',
+		perMonths: 'Месяцев',
+		perYears: 'Лет',
+	};
+
+	repeatsModeList: SwitcherItem[] = [
+		{
+			text: 'Задать число повторов',
+			value: 'setRepeatsAmount',
+		},
+		{
+			text: 'Задать конец диапазона',
+			value: 'setRangeEnd',
+		},
+	];
 
 	get iterationsForm() {
 		return this.form.get('iterationsForm') as FormGroup;

@@ -10,6 +10,11 @@ import { SwitcherComponent } from '../components/switcher/switcher.component';
 import { InputComponent } from '../components/input/input.component';
 import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 import { LetDirective } from '../directives/let.directive';
+import { IConfig, NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+
+const maskConfig: Partial<IConfig> = {
+	validation: false,
+};
 
 @NgModule({
 	declarations: [
@@ -23,7 +28,7 @@ import { LetDirective } from '../directives/let.directive';
 		CheckboxComponent,
 		LetDirective,
 	],
-	imports: [CommonModule, FormsModule, ReactiveFormsModule],
+	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective],
 	exports: [
 		DatepickerComponent,
 		DropComponent,
@@ -35,5 +40,6 @@ import { LetDirective } from '../directives/let.directive';
 		CheckboxComponent,
 		LetDirective,
 	],
+	providers: [[provideNgxMask()]],
 })
 export class SharedModule {}

@@ -29,6 +29,7 @@
 
 	&__addon {
 		display: flex;
+		align-items: center;
 		justify-content: center;
 		width: 40px;
 		border-left: 1px solid rgba(var(--c-border-primary), .1);
