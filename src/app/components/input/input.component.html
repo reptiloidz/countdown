@@ -5,19 +5,34 @@
 	[autocomplete]="autocomplete"
 	class="control__input"
 	[value]="value"
+	[(ngModel)]="value"
 	[disabled]="isDisabled"
 	(input)="onInput($event)"
 	[attr.name]="formControlName || null"
+	[mask]="$any(mask)"
+	[validation]="validation"
+	[attr.allowNegativeNumbers]="allowNegativeNumbers || null"
+	[attr.maxlength]="maxlength || null"
+	[attr.min]="min || null"
 >
 <div
-	*ngIf="icon"
+	*ngIf="icon || clearButton"
 	class="control__addon"
 >
 	<svg
 		app-svg
+		*ngIf="icon"
 		[name]="icon"
 		class="control__icon"
 	></svg>
+	<button
+		app-button
+		*ngIf="clearButton"
+		mode="negative"
+		icon="cross"
+		[attr.title]="clearButtonTitle || null"
+		(click)="resetValue()"
+	></button>
 </div>
 <ng-template #textareaTemplate>
 	<textarea

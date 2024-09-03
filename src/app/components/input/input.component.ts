@@ -24,6 +24,14 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() type = 'text';
 	@Input() icon!: string;
 	@Input() textarea = false;
+	@Input() mask: string | null = null;
+	@Input() allowNegativeNumbers!: boolean;
+	@Input() validation = false;
+	@Input() maxlength!: number;
+	@Input() min!: number;
+	@Input() clearButton = false;
+	@Input() clearButtonValue: string | number = '';
+	@Input() clearButtonTitle = '';
 
 	value: string = '';
 	isDisabled: boolean = false;
@@ -31,8 +39,8 @@ export class InputComponent implements ControlValueAccessor {
 	onChange: (value: string) => void = () => {};
 	onTouched: () => void = () => {};
 
-	writeValue(value: string): void {
-		this.value = value;
+	writeValue(value: string | number): void {
+		this.value = value.toString();
 	}
 	registerOnChange(fn: (value: string) => void): void {
 		this.onChange = fn;
@@ -48,5 +56,9 @@ export class InputComponent implements ControlValueAccessor {
 		this.value = (event.target as HTMLInputElement).value || '';
 		this.onChange(this.value);
 		this.onTouched();
+	}
+
+	resetValue() {
+		this.writeValue(this.clearButtonValue);
 	}
 }
