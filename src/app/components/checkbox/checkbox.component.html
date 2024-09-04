@@ -1,4 +1,5 @@
 <span
+	*ngIf="!icon else iconTemplate;"
 	class="checkbox__box"
 	[ngClass]="{
 		'checkbox__box--sm': iconSize === 'sm'
@@ -20,3 +21,18 @@
 	[attr.name]="name"
 	[attr.id]="name"
 >
+
+<ng-template #iconTemplate>
+	<span
+		class="checkbox__box"
+		[ngClass]="{
+			'checkbox__box--sm': iconSize === 'sm'
+		}"
+	>
+		<svg
+			app-svg
+			[name]="icon"
+			class="checkbox__icon"
+		></svg>
+	</span>
+</ng-template>

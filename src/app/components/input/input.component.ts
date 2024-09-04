@@ -32,6 +32,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() clearButton = false;
 	@Input() clearButtonValue: string | number = '';
 	@Input() clearButtonTitle = '';
+	@Input() textareaRows = 5;
 
 	value: string = '';
 	isDisabled: boolean = false;

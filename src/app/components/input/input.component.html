@@ -40,6 +40,6 @@
 		[disabled]="isDisabled"
 		(input)="onInput($event)"
 		[attr.name]="formControlName || null"
-		rows="10"
+		[rows]="textareaRows"
 	>{{ value || '' }}</textarea>
 </ng-template>

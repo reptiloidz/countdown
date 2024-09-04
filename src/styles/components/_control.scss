@@ -21,6 +21,10 @@
 		border-radius: inherit;
 		outline: 0;
 		font-weight: 300;
+
+		&::placeholder {
+			color: rgba(var(--c-text-primary), .4);
+		}
 	}
 
 	&__textarea {

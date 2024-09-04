@@ -17,13 +17,8 @@
 	margin: 12px 0;
 }
 
-.form-row {
+.row {
 	display: flex;
-	gap: 20px;
-
-	@media (max-width: 1024px) {
-		flex-direction: column;
-	}
 }
 
 .empty {

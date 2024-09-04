@@ -4,6 +4,7 @@
 	width: 400px;
 	margin: auto;
 	padding-left: 4px;
+	border-top: 1px solid rgb(var(--point-color));
 
 	@media (max-width: 1024px) {
 		width: 100%;

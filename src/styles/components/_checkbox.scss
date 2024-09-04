@@ -68,4 +68,11 @@
 			margin-left: 4px;
 		}
 	}
+
+	&--custom {
+		--checkbox-cl: rgba(var(--c-border-primary), .2);
+		--checkbox-border-cl: transparent;
+		--checkbox-box-w: 40px;
+		--checkbox-icon-w: 32px;
+	}
 }

@@ -28,9 +28,10 @@ export class CheckboxComponent implements ControlValueAccessor {
 	@Input() formControlName!: string;
 	@Input() control!: FormControl;
 	@Input() iconSize: 'sm' | 'md' = 'md';
-	@Input() mode: 'text' | 'icon' = 'text';
+	@Input() mode: 'text' | 'icon' | 'custom' = 'text';
 	@Input() isChecked = false;
 	@Input() isDisabled = false;
+	@Input() icon!: string;
 
 	private _name: string | null = null;
 	@Input() get name() {

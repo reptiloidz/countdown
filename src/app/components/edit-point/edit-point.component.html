@@ -1,5 +1,6 @@
 <form
-	class="main__inner"
+	class="main__inner color"
+	[ngClass]="'color--' + this.form.controls['color'].value"
 	*ngIf="!(checking | async); else loader"
 	[formGroup]="form"
 	(ngSubmit)="submit(isRepeatable && !isCreation)"
@@ -52,21 +53,19 @@
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
-	<div class="form-row">
-		<div
-			class="form color"
-			[ngClass]="'color--' + this.form.controls['color'].value"
-		>
+	<div>
+		<div class="form">
 			<h3 class="subtitle">Параметры события</h3>
-			<img
+			<!-- Надо ли показывать автора? Сейчас редактировать больше никто не может -->
+			<!-- <img
 				*ngIf="userData?.photoURL"
 				class="userpic userpic--sm"
 				[src]="userData.photoURL"
 				[alt]="userData.displayName"
 				aria-hidden="true"
-			><ng-container *ngIf="userData?.displayName">
+				><ng-container *ngIf="userData?.displayName">
 				{{ userData.displayName }}
-			</ng-container>
+				</ng-container> -->
 			<app-input
 				placeholder="Название"
 				type="text"
@@ -84,21 +83,29 @@
 					[value]="this.point?.direction || 'forward'"
 					formControlName="direction"
 				></app-switcher>
-				<label
-					app-checkbox
-					formControlName="greenwich"
-					iconSize="sm"
-				>Время по Гринвичу (убрать, если время должно быть местным)</label>
-				<label
-					app-checkbox
-					formControlName="repeatable"
-					iconSize="sm"
-				>Повторяемое событие</label>
-				<label
-					app-checkbox
-					formControlName="public"
-					iconSize="sm"
-				>Публичное событие</label>
+				<div class="row">
+					<label
+						app-checkbox
+						mode="custom"
+						icon="globe"
+						formControlName="greenwich"
+						title="Время по Гринвичу (убрать, если время должно быть местным)"
+					></label>
+					<label
+						app-checkbox
+						mode="custom"
+						icon="users"
+						formControlName="public"
+						title="Публичное событие"
+					></label>
+					<label
+						app-checkbox
+						mode="custom"
+						icon="refresh"
+						formControlName="repeatable"
+						title="Повторяемое событие"
+					></label>
+				</div>
 			</ng-container>
 
 			<app-drop
@@ -123,7 +130,7 @@
 				app-button
 				*ngIf="isRepeatable && !isCreation"
 				[disabled]="loading || !isBaseFormValid"
-				mode="secondary"
+				mode="ghost"
 				type="button"
 				(click)="submit()"
 			>Сохранить параметры события</button>
