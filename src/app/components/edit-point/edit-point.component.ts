@@ -91,10 +91,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		{
 			text: 'Обратный отсчёт',
 			value: 'backward',
+			icon: 'rotate-left',
 		},
 		{
 			text: 'Прямой отсчёт',
 			value: 'forward',
+			icon: 'rotate-right',
 		},
 	];
 
