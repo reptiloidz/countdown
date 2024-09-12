@@ -17,7 +17,7 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
-import { ActionService, AuthService, DataService } from 'src/app/services';
+import { AuthService, DataService } from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
 import { PanelComponent } from '../panel/panel.component';
 import { formatDate } from 'date-fns';
@@ -86,6 +86,8 @@ export class DatePanelComponent {
 	@Input() dateLoading = true;
 	@Input() urlMode = false;
 	@Input() point: Point | undefined;
+	@Input() pointDate = new Date();
+	@Input() selectedIterationDate = new Date();
 	@Output() iterationSwitched = new EventEmitter<number>();
 	private subscriptions = new Subscription();
 
@@ -94,7 +96,6 @@ export class DatePanelComponent {
 		private router: Router,
 		private route: ActivatedRoute,
 		private auth: AuthService,
-		private action: ActionService,
 		private cdr: ChangeDetectorRef
 	) {}
 
@@ -102,10 +103,8 @@ export class DatePanelComponent {
 	isCalendarCreated = false;
 	currentIterationIndex!: number;
 	calendarMode!: CalendarMode;
-	pointDate = new Date();
 	firstIterationIndex = 0;
 	selectedIterationsNumber = 0;
-	selectedIterationDate = new Date();
 	hasAccess: boolean | undefined = false;
 	iterationsChecked: Number[] = [];
 	showIterationsInfo = false;
@@ -164,7 +163,6 @@ export class DatePanelComponent {
 				.subscribe({
 					next: () => {
 						!this.urlMode && this.setIterationsParam();
-						this.action.iterationSwitched(this.pointDate);
 					},
 					error: (err) => {
 						console.error(

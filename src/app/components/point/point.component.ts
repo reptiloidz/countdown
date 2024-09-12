@@ -177,6 +177,7 @@ export class PointComponent implements OnInit, OnDestroy {
 				next: ([point]) => {
 					this.loading = this.data.loading = false;
 					this.point = point;
+					this._pointFetchedSubject.next(this.point);
 					this.setAllTimers();
 				},
 				error: (err) => {
