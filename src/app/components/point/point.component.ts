@@ -2,26 +2,21 @@ import {
 	Component,
 	OnInit,
 	OnDestroy,
-	ViewChild,
-	ElementRef,
 	HostBinding,
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
 	Subscription,
 	distinctUntilChanged,
 	tap,
 	mergeMap,
 	filter,
-	fromEvent,
-	timer,
-	throttle,
 	BehaviorSubject,
 	of,
+	ReplaySubject,
 } from 'rxjs';
-import { Point, Iteration, UserExtraData } from 'src/app/interfaces';
+import { Point, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import {
 	format,
@@ -32,64 +27,18 @@ import {
 import { ru } from 'date-fns/locale';
 import { Constants, DateText } from 'src/app/enums';
 import {
-	filterIterations,
 	getClosestIteration,
-	getFirstIteration,
 	getPointDate,
 	parseDate,
 	sortDates,
 } from 'src/app/helpers';
-import { CalendarMode } from 'src/app/types';
-import { PanelComponent } from '../panel/panel.component';
-import {
-	animate,
-	query,
-	style,
-	transition,
-	trigger,
-} from '@angular/animations';
 
 @Component({
 	selector: 'app-point',
 	templateUrl: './point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,
-	animations: [
-		trigger('iterationsInfo', [
-			transition(
-				':enter',
-				query('.tabs__label', [
-					style({
-						transform: 'rotate(90deg)',
-						opacity: 0,
-					}),
-					animate(
-						'.4s .1s cubic-bezier(.1, .79, .24, .95)',
-						style({
-							transform: 'rotate(45deg)',
-							opacity: 1,
-						})
-					),
-				])
-			),
-			transition(
-				':leave',
-				query(
-					'.tabs__label',
-					animate(
-						'.4s cubic-bezier(.1, .79, .24, .95)',
-						style({
-							transform: 'rotate(90deg)',
-							opacity: 0,
-						})
-					)
-				)
-			),
-		]),
-	],
 })
 export class PointComponent implements OnInit, OnDestroy {
-	@ViewChild('iterationsList') private iterationsList!: ElementRef;
-	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 	@HostBinding('class') class = 'main__inner';
 	point!: Point | undefined;
 	pointDate = new Date();
@@ -98,35 +47,27 @@ export class PointComponent implements OnInit, OnDestroy {
 	timer = '0:00:00';
 	loading = false;
 	dateLoading = true;
-	hasAccess: boolean | undefined = false;
 	currentIterationIndex!: number;
-	firstIterationIndex = 0;
-	removedIterationIndex = 0;
-	iterationsChecked: Number[] = [];
 	selectedIterationDate = new Date();
-	selectedIterationsNumber = 0;
-	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
-	isCalendarPanelOpen = false;
-	isCalendarCreated = false;
 	timerYears: number | string | undefined;
 	timerMonths: number | string | undefined;
 	timerDays: number | string | undefined;
 	timerHours!: number | string;
 	timerMins!: number | string;
 	timerSecs!: number | string;
-	showIterationsInfo = false;
 
 	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
+	private _pointFetchedSubject = new ReplaySubject<Point>();
+
+	pointFetched$ = this._pointFetchedSubject.asObservable();
 
 	constructor(
 		private data: DataService,
-		private router: Router,
 		private route: ActivatedRoute,
 		private auth: AuthService,
-		private action: ActionService,
-		private cdr: ChangeDetectorRef
+		private action: ActionService
 	) {}
 
 	ngOnInit(): void {
@@ -172,11 +113,6 @@ export class PointComponent implements OnInit, OnDestroy {
 										? 'backward'
 										: 'forward',
 							};
-							this.currentIterationIndex = 0;
-						} else {
-							data.iteration &&
-								(this.currentIterationIndex =
-									data.iteration - 1);
 						}
 					}),
 					mergeMap(() => this.route.params),
@@ -186,35 +122,11 @@ export class PointComponent implements OnInit, OnDestroy {
 							: of(undefined);
 					}),
 					tap((point: Point | undefined) => {
-						if (this.urlModeValue) return;
-
-						this.point = point && sortDates(point);
-
-						this.hasAccess =
-							this.hasAccess ||
-							(point && this.auth.checkAccessEdit(point));
-
-						if (this.dates?.length) {
-							if (
-								this.currentIterationIndex >
-									this.dates.length ||
-								typeof this.currentIterationIndex !==
-									'number' ||
-								isNaN(this.currentIterationIndex) ||
-								this.currentIterationIndex < 0
-							) {
-								point &&
-									this.switchIteration(
-										getClosestIteration(point).index
-									);
-							}
-						} else {
-							this.switchIteration();
+						if (!this.urlModeValue) {
+							this.point = point && sortDates(point);
 						}
-
-						setTimeout(() => {
-							this.scrollHome();
-						}, 500);
+						this.point &&
+							this._pointFetchedSubject.next(this.point);
 					}),
 					mergeMap(() => {
 						return this.point?.user && this.auth.isAuthenticated
@@ -230,38 +142,12 @@ export class PointComponent implements OnInit, OnDestroy {
 						}
 						this.setAllTimers(true);
 						this.dateLoading = false;
-						!this.urlModeValue && this.setIterationsParam();
-						this.action.iterationSwitched(this.pointDate);
 					},
 					error: (err) => {
 						console.error(
 							'Ошибка при обновлении таймеров:\n',
 							err.message
 						);
-					},
-				})
-		);
-
-		this.subscriptions.add(
-			fromEvent(document, 'wheel')
-				.pipe(
-					filter((event) => {
-						const eWheel = event as WheelEvent;
-						return this.iterationsList?.nativeElement.contains(
-							eWheel.target as HTMLElement
-						);
-					}),
-					throttle(() => timer(100))
-				)
-				.subscribe({
-					next: (event) => {
-						const eWheel = event as WheelEvent;
-						if (eWheel.deltaY !== 0) {
-							if (this.iterationsList.nativeElement) {
-								this.iterationsList.nativeElement.scrollLeft +=
-									eWheel.deltaY;
-							}
-						}
 					},
 				})
 		);
@@ -287,29 +173,11 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			this.data.eventStartEditPoint$.subscribe({
-				next: () => {
-					this.loading = true;
-				},
-				error: (err) => {
-					console.error('Ошибка при сбросе таймера:\n', err.message);
-				},
-			})
-		);
-
-		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
 				next: ([point]) => {
 					this.loading = this.data.loading = false;
 					this.point = point;
-					if (
-						this.currentIterationIndex >= this.removedIterationIndex
-					) {
-						this.currentIterationIndex = point.dates.length - 1;
-					}
-					this.switchIteration();
 					this.setAllTimers();
-					this.setIterationsParam();
 				},
 				error: (err) => {
 					console.error(
@@ -319,10 +187,6 @@ export class PointComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
-
-		this.switchCalendarPanel();
-
-		this.showIterationsInfo = !!localStorage.getItem('showIterationsInfo');
 	}
 
 	ngOnDestroy(): void {
@@ -353,26 +217,6 @@ export class PointComponent implements OnInit, OnDestroy {
 		return this.point?.dates;
 	}
 
-	get datesBefore() {
-		return this.dates?.filter(
-			(item) =>
-				getPointDate({
-					pointDate: parseDate(item.date),
-					isGreenwich: this.point?.greenwich,
-				}) < new Date()
-		);
-	}
-
-	get datesAfter() {
-		return this.dates?.filter(
-			(item) =>
-				getPointDate({
-					pointDate: parseDate(item.date),
-					isGreenwich: this.point?.greenwich,
-				}) > new Date()
-		);
-	}
-
 	get iterationDate() {
 		return format(this.pointDate, Constants.shortDateFormat);
 	}
@@ -383,18 +227,6 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get iterationTime() {
 		return format(this.pointDate, Constants.timeFormat);
-	}
-
-	get isDatesLengthPlural() {
-		return this.dates && this.dates?.length > 1;
-	}
-
-	get calendarOpen() {
-		return this.isCalendarCreated && this.isCalendarPanelOpen;
-	}
-
-	get currentTime() {
-		return formatDate(new Date(), Constants.fullDateFormat);
 	}
 
 	get isDirectionCorrect() {
@@ -423,34 +255,6 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get urlModeValue() {
 		return this.urlMode.getValue();
-	}
-
-	onIterationsScroll(event: WheelEvent) {
-		event.preventDefault();
-	}
-
-	switchCalendarPanel(value?: boolean) {
-		if (typeof value !== 'undefined') {
-			this.isCalendarPanelOpen = value;
-			localStorage.setItem('isCalendarPanelOpen', value.toString());
-		} else {
-			this.isCalendarPanelOpen =
-				localStorage.getItem('isCalendarPanelOpen') === 'true'
-					? true
-					: false;
-		}
-	}
-
-	setIterationsParam() {
-		const filteredIterations = filterIterations({
-			date: this.pointDate,
-			iterations: this.point?.dates || [],
-			activeMode: this.calendarMode,
-			greenwich: this.point?.greenwich || false,
-		});
-		this.firstIterationIndex =
-			getFirstIteration(filteredIterations, this.point) || 0;
-		this.selectedIterationsNumber = filteredIterations.length;
 	}
 
 	zeroPad(num?: number) {
@@ -506,141 +310,8 @@ export class PointComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	switchIteration(i: number = this.currentIterationIndex) {
-		this.router.navigate([], {
-			relativeTo: this.route,
-			queryParams: {
-				iteration: i + 1,
-			},
-			queryParamsHandling: 'merge',
-		});
-	}
-
-	removeIteration(i: number) {
-		let newDatesArray = this.dates?.slice(0);
-		newDatesArray && newDatesArray.splice(i, 1);
-
-		confirm('Удалить итерацию?') &&
-			(() => {
-				this.removedIterationIndex = i;
-				this.data.editPoint(this.point?.id, {
-					...this.point,
-					dates: newDatesArray,
-				} as Point);
-			})();
-	}
-
-	checkIteration() {
-		this.iterationsChecked = Array.from(
-			this.iterationsList.nativeElement.children
-		)
-			.filter((item: any) => item.querySelector('input')?.checked)
-			.map((item: any) => item.querySelector('input')?.name);
-	}
-
-	checkAllIterations(check = true, iterations?: Iteration[]) {
-		[...this.iterationsList.nativeElement.querySelectorAll('input')]
-			.filter((item: HTMLInputElement) => {
-				if (!iterations?.length) {
-					return true;
-				} else {
-					return iterations.some(
-						(iteration) =>
-							iteration.date ===
-							this.point?.dates[
-								parseFloat(item.getAttribute('name') || '0')
-							].date
-					);
-				}
-			})
-			.forEach((item: any) => {
-				item.checked = check;
-			});
-		this.checkIteration();
-	}
-
-	removeCheckedIterations() {
-		let newDatesArray = this.dates?.slice(0);
-		newDatesArray = newDatesArray?.filter(
-			(item, i: any) => !this.iterationsChecked.includes(i.toString())
-		);
-
-		confirm(
-			'Удалить выбранные итерации? Если выбраны все, останется только последняя'
-		) &&
-			(() => {
-				this.data.editPoint(this.point?.id, {
-					...this.point,
-					dates: newDatesArray?.length
-						? newDatesArray
-						: [this.dates?.[this.dates?.length - 1]],
-				} as Point);
-			})();
-	}
-
-	dateSelected({ data }: { data: Point[] | Iteration[] }) {
-		const iterationIndex = getFirstIteration(
-			data as Iteration[],
-			this.point
-		);
-		if ((iterationIndex || iterationIndex === 0) && iterationIndex >= 0) {
-			this.switchIteration(iterationIndex);
-		}
-	}
-
-	modeSelected(mode: CalendarMode) {
-		this.calendarMode = mode;
-		this.setIterationsParam();
-
-		if (this.panelCalendar) {
-			this.panelCalendar.updateHeight();
-		} else {
-			requestAnimationFrame(() => {
-				this.panelCalendar?.updateHeight();
-			});
-		}
-	}
-
-	dateChecked({
-		data,
-		check,
-	}: {
-		data: Point[] | Iteration[];
-		check: boolean;
-	}) {
-		if (check) {
-			this.checkAllIterations(true, data as Iteration[]);
-		} else {
-			this.checkAllIterations(false, data as Iteration[]);
-		}
-	}
-
-	calendarCreated() {
-		this.isCalendarCreated = true;
-		this.cdr.detectChanges();
-	}
-
-	iterationsInfoSwitch(event: Event) {
-		this.showIterationsInfo = (event.target as HTMLInputElement).checked;
-		localStorage.setItem(
-			'showIterationsInfo',
-			this.showIterationsInfo ? 'true' : ''
-		);
-	}
-
-	scrollList(position = 999999) {
-		this.iterationsList?.nativeElement.scroll({
-			left: position,
-			behavior: 'smooth',
-		});
-	}
-
-	scrollHome() {
-		(this.iterationsList?.nativeElement as HTMLElement)
-			?.querySelector('.tabs__item--active input')
-			?.scrollIntoView({
-				block: 'nearest',
-				behavior: 'smooth',
-			});
+	iterationSwitchHandler(iterationNumber: number) {
+		this.currentIterationIndex = iterationNumber;
+		this.setAllTimers();
 	}
 }
