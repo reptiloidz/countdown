@@ -83,12 +83,15 @@ export class DatePanelComponent {
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 	@Input() pointFetched$!: Observable<Point>;
 	@Input() loading = false;
-	@Input() dateLoading = true;
+	@Input() dateLoading = false;
 	@Input() urlMode = false;
 	@Input() point: Point | undefined;
 	@Input() pointDate = new Date();
 	@Input() selectedIterationDate = new Date();
+	@Input() isEditing = false;
+	@Input() isIterationAdded = false;
 	@Output() iterationSwitched = new EventEmitter<number>();
+	@Output() addIteration = new EventEmitter<void>();
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -138,6 +141,7 @@ export class DatePanelComponent {
 								this.currentIterationIndex < 0
 							) {
 								this.point &&
+									!this.isIterationAdded &&
 									this.switchIteration(
 										getClosestIteration(this.point).index
 									);
@@ -157,7 +161,10 @@ export class DatePanelComponent {
 						} else if (data.iteration) {
 							this.currentIterationIndex = data.iteration - 1;
 						}
-						this.iterationSwitched.next(this.currentIterationIndex);
+						!this.isIterationAdded &&
+							this.iterationSwitched.emit(
+								this.currentIterationIndex
+							);
 					})
 				)
 				.subscribe({
@@ -398,6 +405,8 @@ export class DatePanelComponent {
 			},
 			queryParamsHandling: 'merge',
 		});
+
+		this.isIterationAdded = false;
 	}
 
 	modeSelected(mode: CalendarMode) {
@@ -432,5 +441,17 @@ export class DatePanelComponent {
 			(this.point && getFirstIteration(filteredIterations, this.point)) ||
 			0;
 		this.selectedIterationsNumber = filteredIterations.length;
+	}
+
+	addIterationClick() {
+		this.isIterationAdded = true;
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: {
+				iteration: null,
+			},
+			queryParamsHandling: 'merge',
+		});
+		this.addIteration.emit();
 	}
 }

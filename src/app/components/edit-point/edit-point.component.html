@@ -5,50 +5,16 @@
 	[formGroup]="form"
 	(ngSubmit)="submit(isRepeatable && !isCreation)"
 >
-	<app-calendar
+	<app-date-panel
 		*ngIf="this.dates?.length"
-		(dateSelected)="dateSelected($event)"
-		(modeSelected)="modeSelected($event)"
-		[iterations]="point?.dates"
-		class="calendar"
-		[selectedDate]="selectedIterationDate"
-		[visibleDate]="selectedIterationDate"
-		[point]="point"
-	>
-		<ng-template
-			#navTemplate
-			let-date="date"
-			let-mode="mode"
-			let-point="point"
-		>
-			<ng-container *ngIf="date.iterations.length && point.repeatable">
-				<button
-					app-button
-					mode="positive"
-					size="sm"
-					icon="document-check"
-					class="calendar__btn-nav"
-					title="Отметить все итерации даты"
-					(click)="dateChecked({
-						check: true,
-						data: date.iterations
-					})"
-				></button>
-				<button
-					app-button
-					mode="secondary"
-					size="sm"
-					icon="document-cross"
-					class="calendar__btn-nav"
-					title="Снять отметки со всех итераций даты"
-					(click)="dateChecked({
-						check: false,
-						data: date.iterations
-					})"
-				></button>
-			</ng-container>
-		</ng-template>
-	</app-calendar>
+		[pointFetched$]="pointFetched$"
+		[loading]="loading"
+		[pointDate]="pointDate"
+		[selectedIterationDate]="selectedIterationDate"
+		[isEditing]="true"
+		(iterationSwitched)="switchIteration($event, true)"
+		(addIteration)="addIterationHandler()"
+	></app-date-panel>
 	<h1>{{ pageTitle }}<span
 			*ngIf="loading"
 			class="loader rotating"
@@ -129,37 +95,36 @@
 		</p>
 
 		<div class="form__row">
-			<div
-				*ngIf="isRepeatable && !isCreation"
-				class="form__col"
-			>
-				<app-drop vertical="top">
-					<ng-template
-						#buttonTemplate
-						let-toggle="toggle"
-					>
-						<button
-							app-button
-							mode="ghost"
-							icon="chevron-down"
-							(click)="toggle()"
-						>Генерация итераций</button>
-					</ng-template>
-					<ng-template #bodyTemplate>
-						<app-generate-iterations
-							[loading]="loading"
-							[form]="formGroup"
-							(repeatsIsGenerated)="getRepeats($event)"
-						></app-generate-iterations>
-					</ng-template>
-				</app-drop>
-				<button
-					app-button
-					[disabled]="loading || !isBaseFormValid"
-					mode="primary"
-					type="button"
-					(click)="submit()"
-				>Сохранить событие</button>
+			<div class="form__col">
+				<ng-container *ngIf="isRepeatable && !isCreation">
+					<app-drop vertical="top">
+						<ng-template
+							#buttonTemplate
+							let-toggle="toggle"
+						>
+							<button
+								app-button
+								mode="ghost"
+								icon="chevron-down"
+								(click)="toggle()"
+							>Генерация итераций</button>
+						</ng-template>
+						<ng-template #bodyTemplate>
+							<app-generate-iterations
+								[loading]="loading"
+								[form]="formGroup"
+								(repeatsIsGenerated)="getRepeats($event)"
+							></app-generate-iterations>
+						</ng-template>
+					</app-drop>
+					<button
+						app-button
+						[disabled]="loading || !isBaseFormValid"
+						mode="primary"
+						type="button"
+						(click)="submit()"
+					>Сохранить событие</button>
+				</ng-container>
 			</div>
 			<div class="form__col">
 				<app-datepicker
@@ -193,85 +158,6 @@
 			</div>
 		</div>
 	</div>
-
-	<ul
-		#iterationsList
-		*ngIf="isRepeatable && !isCreation"
-		class="tabs"
-	>
-		<li
-			*ngFor="let date of dates; let i = index"
-			class="tabs__item"
-			[ngClass]="{
-				'tabs__item--active': i == currentIterationIndex && !isIterationAdded,
-				'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex) && !isIterationAdded,
-				'tabs__item--copy': i | checkCopies : point,
-			}"
-		>
-			<button
-				class="link tabs__btn"
-				(click)="switchIteration(i, true)"
-				type="button"
-			>{{ i + 1 }}
-				<ng-container *ngIf="date.reason === 'frequency'">*</ng-container>
-			</button>
-
-			<ng-container *ngIf="dates?.length && (dates?.length != 1)">
-				<button
-					class="link"
-					(click)="removeIteration(i)"
-					type="button"
-				>x</button>
-				<input
-					type="checkbox"
-					[name]="i"
-					(change)="checkIteration()"
-				>
-			</ng-container>
-		</li>
-		<li
-			class="tabs__item"
-			[ngClass]="{
-					'tabs__item--active': isIterationAdded
-				}"
-		>
-			<button
-				class="link tabs__btn"
-				(click)="addIteration()"
-				type="button"
-			>+</button>
-		</li>
-	</ul>
-	<div *ngIf="!loading && isDatesLengthPlural">
-		<button
-			app-button
-			size="sm"
-			mode="positive"
-			icon="document-check"
-			title="Выбрать все итерации"
-			(click)="checkAllIterations()"
-		></button>
-		<ng-container *ngIf="iterationsChecked.length">
-			<button
-				app-button
-				size="sm"
-				mode="secondary"
-				[attr.disabled]="iterationsChecked.length ? null : true"
-				icon="document-cross"
-				title="Снять выбор со всех итераций"
-				(click)="checkAllIterations(false)"
-			></button>
-			<button
-				app-button
-				size="sm"
-				mode="negative"
-				icon="cross"
-				title="Удалить выбранные итерации"
-				(click)="removeCheckedIterations()"
-			></button>
-		</ng-container>
-	</div>
-
 </form>
 
 <ng-template #loader>

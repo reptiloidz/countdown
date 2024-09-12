@@ -129,6 +129,19 @@
 							[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future'  }"
 						></ng-container>
 					</ng-container>
+					<li
+						*ngIf="isEditing"
+						class="tabs__item"
+						[ngClass]="{
+							'tabs__item--active': isIterationAdded
+						}"
+					>
+						<button
+							class="link tabs__btn"
+							(click)="addIterationClick()"
+							type="button"
+						>+</button>
+					</li>
 				</ul>
 
 				<div>
@@ -186,8 +199,8 @@
 	<li
 		class="tabs__item"
 		[ngClass]="{
-			'tabs__item--active': i == currentIterationIndex,
-			'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex),
+			'tabs__item--active': i == currentIterationIndex && !isIterationAdded,
+			'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex) && !isIterationAdded,
 			'tabs__item--copy': i | checkCopies : point,
 			'tabs__item--after': time === 'future'
 		}"

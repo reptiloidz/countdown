@@ -23,6 +23,7 @@ import {
 	startWith,
 	mergeMap,
 	filter,
+	ReplaySubject,
 } from 'rxjs';
 import {
 	Point,
@@ -30,7 +31,7 @@ import {
 	UserExtraData,
 	SwitcherItem,
 } from 'src/app/interfaces';
-import { DataService, AuthService, ActionService } from 'src/app/services';
+import { DataService, AuthService } from 'src/app/services';
 import { format } from 'date-fns';
 import {
 	filterIterations,
@@ -78,6 +79,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	firstIterationIndex = 0;
 	removedIterationIndex = 0;
 	isIterationAdded = false;
+	isCalendarCreated = false;
+	isCalendarPanelOpen = false;
 	iterationControls = {};
 	iterationsChecked: Number[] = [];
 	selectedIterationDate = new Date();
@@ -85,6 +88,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	calendarMode!: CalendarMode;
 	userData!: UserExtraData;
 	isIterationSwitched = false;
+	showIterationsInfo = false;
 	datePickerValue = this.pointDate;
 
 	directionList: SwitcherItem[] = [
@@ -102,14 +106,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
+	private _pointFetchedSubject = new ReplaySubject<Point>();
+
 	checking = new BehaviorSubject<boolean>(true);
+	pointFetched$ = this._pointFetchedSubject.asObservable();
 
 	constructor(
 		private data: DataService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private auth: AuthService,
-		private action: ActionService,
 		private cdr: ChangeDetectorRef
 	) {}
 
@@ -166,11 +172,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					}),
 					filter(() => !this.isCreation && !this.isIterationAdded),
 					distinctUntilChanged(),
-					tap((data: any) => {
-						data.iteration &&
-							(this.currentIterationIndex = data.iteration - 1);
-						this.isIterationAdded = false;
-					}),
 					mergeMap(() => this.route.params),
 					mergeMap((data: any) => {
 						return data['id']
@@ -180,21 +181,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					tap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
+							this.point &&
+								this._pointFetchedSubject.next(this.point);
 							this.sortDates();
-							if (this.dates?.length) {
-								if (
-									this.currentIterationIndex >
-										this.dates.length ||
-									typeof this.currentIterationIndex !==
-										'number' ||
-									isNaN(this.currentIterationIndex) ||
-									this.currentIterationIndex < 0
-								) {
-									this.switchIteration(this.dates.length - 1);
-								}
-							} else {
-								this.switchIteration();
-							}
 						}
 					}),
 					mergeMap(() => this.auth.getUserData(this.point?.user)),
@@ -213,7 +202,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.checking.next(false);
 							this.setValues();
 							this.setIterationsParam();
-							this.action.iterationSwitched(this.pointDate);
 						}
 					},
 					error: (err) => {
@@ -295,6 +283,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventAddPoint$.subscribe({
 				next: (point) => {
 					this.point = point;
+					this._pointFetchedSubject.next(this.point);
 					this.success(undefined, 'pointAdded');
 				},
 			})
@@ -304,18 +293,19 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$.subscribe({
 				next: ([point, editPointEvent]) => {
 					this.point = point;
+					this._pointFetchedSubject.next(this.point);
 					this.cdr.detectChanges();
-					if (
-						this.currentIterationIndex >= this.removedIterationIndex
-					) {
-						this.currentIterationIndex = point.dates.length - 1;
-					}
+					// if (
+					// 	this.currentIterationIndex >= this.removedIterationIndex
+					// ) {
+					// 	this.currentIterationIndex = point.dates.length - 1;
+					// }
 					this.sortDates();
 					this.switchIteration(
 						this.currentIterationIndex,
 						this.isIterationSwitched
 					);
-					this.setIterationsParam();
+					// this.setIterationsParam();
 					this.success(point, editPointEvent);
 				},
 			})
@@ -449,102 +439,17 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		isSwitched = false
 	) {
 		this.isIterationSwitched = isSwitched;
+		this.currentIterationIndex = i;
 		this.isIterationAdded = false;
-		this.router.navigate([], {
-			relativeTo: this.route,
-			queryParams: {
-				iteration: i + 1,
-			},
-			queryParamsHandling: 'merge',
-		});
+		if (this.isIterationSwitched) {
+			this.setValues();
+			this.setIterationsParam();
+		}
 	}
 
-	addIteration() {
-		this.router.navigate([], {
-			relativeTo: this.route,
-			queryParams: {
-				iteration: null,
-			},
-			queryParamsHandling: 'merge',
-		});
+	addIterationHandler() {
 		this.isIterationAdded = true;
 		this.setValues(true);
-	}
-
-	removeIteration(i: number) {
-		let newDatesArray = this.dates?.slice(0);
-		newDatesArray && newDatesArray.splice(i, 1);
-
-		confirm('Удалить итерацию?') &&
-			(() => {
-				this.removedIterationIndex = i;
-				this.isIterationSwitched = true;
-				this.data.editPoint(
-					this.point?.id,
-					{
-						...this.point,
-						dates: newDatesArray,
-					} as Point,
-					'iterationRemoved'
-				);
-			})();
-	}
-
-	checkIteration() {
-		this.iterationsChecked = Array.from(
-			this.iterationsList.nativeElement.children
-		)
-			.filter((item: any) => item.querySelector('input')?.checked)
-			.map((item: any) => item.querySelector('input').name);
-	}
-
-	checkAllIterations(check = true, iterations?: Iteration[]) {
-		[...this.iterationsList.nativeElement.querySelectorAll('input')]
-			.filter((item: HTMLInputElement) => {
-				if (!iterations?.length) {
-					return true;
-				} else {
-					return iterations.some(
-						(iteration) =>
-							iteration.date ===
-							this.point?.dates[
-								parseFloat(item.getAttribute('name') || '0')
-							].date
-					);
-				}
-			})
-			.forEach((item: any) => {
-				item.checked = check;
-			});
-		this.checkIteration();
-	}
-
-	removeCheckedIterations() {
-		let newDatesArray = this.dates?.slice(0);
-		newDatesArray = newDatesArray?.filter(
-			(item, i: any) => !this.iterationsChecked.includes(i.toString())
-		);
-
-		confirm(
-			'Удалить выбранные итерации? Если выбраны все, останется только последняя'
-		) &&
-			(() => {
-				this.isIterationSwitched = true;
-				this.data.editPoint(
-					this.point?.id,
-					{
-						...this.point,
-						dates: newDatesArray?.length
-							? newDatesArray
-							: [this.dates?.[this.dates?.length - 1]],
-					} as Point,
-					'iterationsRemoved'
-				);
-			})();
-	}
-
-	get isDatesLengthPlural() {
-		return this.dates && this.dates?.length > 1;
 	}
 
 	get pageTitle() {
@@ -596,20 +501,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	modeSelected(mode: CalendarMode) {
 		this.calendarMode = mode;
 		this.setIterationsParam();
-	}
-
-	dateChecked({
-		data,
-		check,
-	}: {
-		data: Point[] | Iteration[];
-		check: boolean;
-	}) {
-		if (check) {
-			this.checkAllIterations(true, data as Iteration[]);
-		} else {
-			this.checkAllIterations(false, data as Iteration[]);
-		}
 	}
 
 	datePicked(date: Date) {
