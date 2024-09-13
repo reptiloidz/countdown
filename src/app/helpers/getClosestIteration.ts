@@ -3,8 +3,6 @@ import { getPointDate } from './getPointDate';
 import { parseDate } from './parseDate';
 
 export const getClosestIteration = (point: Point) => {
-	const currentDate = new Date();
-
 	const datesFuture = point.dates
 		.filter(
 			(iteration) =>

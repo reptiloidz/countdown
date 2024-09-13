@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
+import { Point } from '../interfaces';
 
 @Injectable({
 	providedIn: 'root',
@@ -9,6 +10,7 @@ export class ActionService {
 	private _eventPointsCheckedSubject = new Subject<boolean>();
 	private _eventIterationSwitchedSubject = new Subject<Date>();
 	private _eventFetchedPointsSubject = new Subject<void>();
+	private _eventUpdatedPointSubject = new ReplaySubject<Point>();
 	private _eventHasEditablePointsSubject = new Subject<boolean>();
 	private _eventIntervalSwitchedSubject = new Subject<void>();
 	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
@@ -16,6 +18,7 @@ export class ActionService {
 	eventIterationSwitched$ =
 		this._eventIterationSwitchedSubject.asObservable();
 	eventFetchedPoints$ = this._eventFetchedPointsSubject.asObservable();
+	eventUpdatedPoint$ = this._eventUpdatedPointSubject.asObservable();
 	eventHasEditablePoints$ =
 		this._eventHasEditablePointsSubject.asObservable();
 	eventIntervalSwitched$ = this._eventIntervalSwitchedSubject.asObservable();
@@ -43,12 +46,12 @@ export class ActionService {
 		this._eventPointsCheckedSubject.next(false);
 	}
 
-	iterationSwitched(date: Date) {
-		this._eventIterationSwitchedSubject.next(date);
-	}
-
 	pointsFetched() {
 		this._eventFetchedPointsSubject.next();
+	}
+
+	pointUpdated(point: Point) {
+		this._eventUpdatedPointSubject.next(point);
 	}
 
 	hasEditablePoints(has: boolean) {

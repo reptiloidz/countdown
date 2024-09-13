@@ -17,13 +17,12 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
-import { AuthService, DataService } from 'src/app/services';
+import { ActionService, AuthService, DataService } from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
 import { PanelComponent } from '../panel/panel.component';
 import { formatDate } from 'date-fns';
 import { Constants } from 'src/app/enums';
 import {
-	Observable,
 	Subscription,
 	distinctUntilChanged,
 	filter,
@@ -81,7 +80,6 @@ import {
 export class DatePanelComponent {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
-	@Input() pointFetched$!: Observable<Point>;
 	@Input() loading = false;
 	@Input() dateLoading = false;
 	@Input() urlMode = false;
@@ -99,7 +97,8 @@ export class DatePanelComponent {
 		private router: Router,
 		private route: ActivatedRoute,
 		private auth: AuthService,
-		private cdr: ChangeDetectorRef
+		private cdr: ChangeDetectorRef,
+		private action: ActionService
 	) {}
 
 	isCalendarPanelOpen = false;
@@ -115,7 +114,7 @@ export class DatePanelComponent {
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.pointFetched$
+			this.action.eventUpdatedPoint$
 				.pipe(
 					distinctUntilChanged(),
 					tap((point) => {
@@ -206,16 +205,26 @@ export class DatePanelComponent {
 
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
-				next: () => {
+				next: ([point, editPointEvent, newIteration]) => {
+					const newIterationIndex =
+						newIteration &&
+						getFirstIteration([newIteration], point);
+
 					if (
+						(editPointEvent === 'iterationAdded' ||
+							editPointEvent === 'iterationEdited') &&
+						typeof newIterationIndex !== 'undefined'
+					) {
+						this.currentIterationIndex = newIterationIndex;
+					} else if (
 						this.currentIterationIndex >=
 							this.removedIterationIndex &&
 						this.point
 					) {
 						this.currentIterationIndex =
-							this.point.dates.length - 1;
+							getClosestIteration(point).index;
 					}
-					this.switchIteration();
+					this.switchIteration(this.currentIterationIndex);
 					this.setIterationsParam();
 				},
 				error: (err) => {

@@ -14,7 +14,6 @@ import {
 	filter,
 	BehaviorSubject,
 	of,
-	ReplaySubject,
 } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
@@ -59,9 +58,6 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
-	private _pointFetchedSubject = new ReplaySubject<Point>();
-
-	pointFetched$ = this._pointFetchedSubject.asObservable();
 
 	constructor(
 		private data: DataService,
@@ -125,8 +121,7 @@ export class PointComponent implements OnInit, OnDestroy {
 						if (!this.urlModeValue) {
 							this.point = point && sortDates(point);
 						}
-						this.point &&
-							this._pointFetchedSubject.next(this.point);
+						this.point && this.action.pointUpdated(this.point);
 					}),
 					mergeMap(() => {
 						return this.point?.user && this.auth.isAuthenticated
@@ -177,7 +172,7 @@ export class PointComponent implements OnInit, OnDestroy {
 				next: ([point]) => {
 					this.loading = this.data.loading = false;
 					this.point = point;
-					this._pointFetchedSubject.next(this.point);
+					this.action.pointUpdated(this.point);
 					this.setAllTimers();
 				},
 				error: (err) => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject, BehaviorSubject, Subscription } from 'rxjs';
-import { Point } from '../interfaces';
+import { Iteration, Point } from '../interfaces';
 import { ActionService, HttpService, NotifyService } from '.';
 import { EditPointEvent } from '../types';
 
@@ -17,7 +17,9 @@ export class DataService {
 		this._points
 	);
 	private _eventAddPointSubject = new Subject<Point>();
-	private _eventEditPointSubject = new Subject<[Point, EditPointEvent]>();
+	private _eventEditPointSubject = new Subject<
+		[Point, EditPointEvent, Iteration?]
+	>();
 	private _eventStartEditPointSubject = new Subject<void>();
 	private _eventRemovePointSubject = new Subject<string | undefined>();
 	private _eventStartRemovePointSubject = new Subject<string>();
@@ -161,7 +163,8 @@ export class DataService {
 	editPoint(
 		id: string | undefined,
 		point: Point,
-		editPointEvent: EditPointEvent = 'pointEdited'
+		editPointEvent: EditPointEvent = 'pointEdited',
+		newIteration?: Iteration
 	) {
 		if (id) {
 			this.loading = true;
@@ -169,7 +172,11 @@ export class DataService {
 			this.http
 				.patchPoint(point)
 				.then(() => {
-					this._eventEditPointSubject.next([point, editPointEvent]);
+					this._eventEditPointSubject.next([
+						point,
+						editPointEvent,
+						newIteration,
+					]);
 				})
 				.catch((err) => {
 					this.notify.add({

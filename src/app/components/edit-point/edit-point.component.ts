@@ -23,7 +23,6 @@ import {
 	startWith,
 	mergeMap,
 	filter,
-	ReplaySubject,
 } from 'rxjs';
 import {
 	Point,
@@ -31,11 +30,9 @@ import {
 	UserExtraData,
 	SwitcherItem,
 } from 'src/app/interfaces';
-import { DataService, AuthService } from 'src/app/services';
+import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format } from 'date-fns';
 import {
-	filterIterations,
-	getFirstIteration,
 	getPointDate,
 	isDateValid,
 	parseDate,
@@ -106,17 +103,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
-	private _pointFetchedSubject = new ReplaySubject<Point>();
 
 	checking = new BehaviorSubject<boolean>(true);
-	pointFetched$ = this._pointFetchedSubject.asObservable();
 
 	constructor(
 		private data: DataService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private auth: AuthService,
-		private cdr: ChangeDetectorRef
+		private cdr: ChangeDetectorRef,
+		private action: ActionService
 	) {}
 
 	ngOnInit(): void {
@@ -181,8 +177,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					tap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
-							this.point &&
-								this._pointFetchedSubject.next(this.point);
+							this.point && this.action.pointUpdated(this.point);
 							this.sortDates();
 						}
 					}),
@@ -201,7 +196,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						) {
 							this.checking.next(false);
 							this.setValues();
-							this.setIterationsParam();
 						}
 					},
 					error: (err) => {
@@ -283,7 +277,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventAddPoint$.subscribe({
 				next: (point) => {
 					this.point = point;
-					this._pointFetchedSubject.next(this.point);
+					this.action.pointUpdated(this.point);
 					this.success(undefined, 'pointAdded');
 				},
 			})
@@ -293,19 +287,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$.subscribe({
 				next: ([point, editPointEvent]) => {
 					this.point = point;
-					this._pointFetchedSubject.next(this.point);
+					this.action.pointUpdated(this.point);
 					this.cdr.detectChanges();
-					// if (
-					// 	this.currentIterationIndex >= this.removedIterationIndex
-					// ) {
-					// 	this.currentIterationIndex = point.dates.length - 1;
-					// }
 					this.sortDates();
-					this.switchIteration(
-						this.currentIterationIndex,
-						this.isIterationSwitched
-					);
-					// this.setIterationsParam();
 					this.success(point, editPointEvent);
 				},
 			})
@@ -414,6 +398,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.difference = this.convertToMinutes(
 			+(date || this.datePickerValue) - +new Date()
 		);
+
 		this.form.controls['difference'].setValue(this.difference, {
 			emitEvent: false,
 		});
@@ -443,7 +428,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.isIterationAdded = false;
 		if (this.isIterationSwitched) {
 			this.setValues();
-			this.setIterationsParam();
 		}
 	}
 
@@ -476,31 +460,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.iterationControls = controls;
 	}
 
-	setIterationsParam() {
-		const filteredIterations = filterIterations({
-			date: this.pointDate,
-			iterations: this.point?.dates || [],
-			activeMode: this.calendarMode,
-			greenwich: this.point?.greenwich || false,
-		});
-		this.firstIterationIndex =
-			getFirstIteration(filteredIterations, this.point) || 0;
-		this.selectedIterationsNumber = filteredIterations.length;
-	}
-
-	dateSelected({ data }: { data: Point[] | Iteration[] }) {
-		const iterationIndex = getFirstIteration(
-			data as Iteration[],
-			this.point
-		);
-		if ((iterationIndex || iterationIndex === 0) && iterationIndex >= 0) {
-			this.switchIteration(iterationIndex);
-		}
-	}
-
 	modeSelected(mode: CalendarMode) {
 		this.calendarMode = mode;
-		this.setIterationsParam();
 	}
 
 	datePicked(date: Date) {
@@ -620,7 +581,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						dates: newDatesArray,
 						id: this.point?.id,
 					} as Point,
-					editPointEvent
+					editPointEvent,
+					lastDate
 				);
 			}
 		} else {
