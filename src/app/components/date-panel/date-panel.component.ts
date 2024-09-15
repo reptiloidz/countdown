@@ -1,4 +1,5 @@
 import {
+	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
 	ElementRef,
@@ -43,6 +44,7 @@ import {
 @Component({
 	selector: 'app-date-panel',
 	templateUrl: './date-panel.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
 		trigger('iterationsInfo', [
 			transition(
@@ -169,6 +171,7 @@ export class DatePanelComponent {
 				.subscribe({
 					next: () => {
 						!this.urlMode && this.setIterationsParam();
+						this.cdr.detectChanges();
 					},
 					error: (err) => {
 						console.error(
