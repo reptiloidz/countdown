@@ -1,19 +1,19 @@
+<app-date-panel
+	*ngIf="this.dates?.length"
+	[loading]="loading"
+	[pointDate]="pointDate"
+	[selectedIterationDate]="selectedIterationDate"
+	[isEditing]="true"
+	(iterationSwitched)="switchIteration($event, true)"
+	(addIteration)="addIterationHandler()"
+></app-date-panel>
 <form
-	class="main__inner color"
+	class="color content"
 	[ngClass]="'color--' + this.form.controls['color'].value"
 	*ngIf="!(checking | async); else loader"
 	[formGroup]="form"
 	(ngSubmit)="submit(isRepeatable && !isCreation)"
 >
-	<app-date-panel
-		*ngIf="this.dates?.length"
-		[loading]="loading"
-		[pointDate]="pointDate"
-		[selectedIterationDate]="selectedIterationDate"
-		[isEditing]="true"
-		(iterationSwitched)="switchIteration($event, true)"
-		(addIteration)="addIterationHandler()"
-	></app-date-panel>
 	<h1>{{ pageTitle }}<span
 			*ngIf="loading"
 			class="loader rotating"
@@ -29,109 +29,103 @@
 			><ng-container *ngIf="userData?.displayName">
 			{{ userData.displayName }}
 			</ng-container> -->
-		<div class="form__row">
-			<div class="form__body">
-				<app-input
-					placeholder="Название"
-					type="text"
-					formControlName="title"
-				></app-input>
-				<app-input
-					[textarea]="true"
-					placeholder="Описание события"
-					formControlName="description"
-				></app-input>
-			</div>
-			<div
-				*ngIf="!isCreationUrl"
-				class="form__aside"
-			>
+		<div class="form__col">
+			<app-input
+				placeholder="Название"
+				type="text"
+				formControlName="title"
+			></app-input>
+			<app-input
+				[textarea]="true"
+				[textareaRows]="3"
+				placeholder="Описание события"
+				formControlName="description"
+			></app-input>
+		</div>
+
+		<div class="form__col">
+			<div class="form__row">
 				<app-switcher
 					[items]="directionList"
 					[value]="this.point?.direction || 'forward'"
 					formControlName="direction"
 				></app-switcher>
-				<label
-					app-checkbox
-					mode="custom"
-					icon="globe"
-					formControlName="greenwich"
-					title="Время по Гринвичу (убрать, если время должно быть местным)"
-				></label>
-				<label
-					app-checkbox
-					mode="custom"
-					icon="users"
-					formControlName="public"
-					title="Публичное событие"
-				></label>
-				<label
-					app-checkbox
-					mode="custom"
-					icon="refresh"
-					formControlName="repeatable"
-					title="Повторяемое событие"
-				></label>
+				<div class="form__checks">
+					<label
+						app-checkbox
+						mode="custom"
+						icon="globe"
+						formControlName="greenwich"
+						title="Время по Гринвичу (убрать, если время должно быть местным)"
+					></label>
+					<label
+						app-checkbox
+						mode="custom"
+						icon="users"
+						formControlName="public"
+						title="Публичное событие"
+					></label>
+					<label
+						app-checkbox
+						mode="custom"
+						icon="refresh"
+						formControlName="repeatable"
+						title="Повторяемое событие"
+					></label>
+				</div>
+			</div>
+			<div class="form__row">
 				<app-drop
-					vertical="top"
+					horizontal="left"
 					formControlName="color"
 					[dropList]="pointColorNames"
+					class="form__color"
 				></app-drop>
+				<button
+					*ngIf="isRepeatable && !isCreation"
+					app-button
+					[attr.disabled]="(loading || !isBaseFormValid) || null"
+					mode="primary"
+					type="button"
+					(click)="submit()"
+				>Сохранить событие</button>
 			</div>
 		</div>
 
-		<p
-			class="info"
-			*ngIf="isCreation && isRepeatable"
+		<div
+			*ngIf="!isCreationUrl"
+			class="form__col"
 		>
-			Изменение итераций будет доступно после создания события
-		</p>
-		<p
-			class="info"
-			*ngIf="!isCreation && !isRepeatable && hasManyIterations"
-		>
-			Отключены повторы события. Все итерации кроме последней будут удалены
-		</p>
-
-		<div class="form__row">
-			<div class="form__col">
-				<ng-container *ngIf="isRepeatable && !isCreation">
-					<app-drop vertical="top">
-						<ng-template
-							#buttonTemplate
-							let-toggle="toggle"
-						>
-							<button
-								app-button
-								mode="ghost"
-								icon="chevron-down"
-								(click)="toggle()"
-							>Генерация итераций</button>
-						</ng-template>
-						<ng-template #bodyTemplate>
-							<app-generate-iterations
-								[loading]="loading"
-								[form]="formGroup"
-								(repeatsIsGenerated)="getRepeats($event)"
-							></app-generate-iterations>
-						</ng-template>
-					</app-drop>
-					<button
-						app-button
-						[disabled]="loading || !isBaseFormValid"
-						mode="primary"
-						type="button"
-						(click)="submit()"
-					>Сохранить событие</button>
-				</ng-container>
-			</div>
-			<div class="form__col">
+			<div class="form__row">
+				<app-drop>
+					<ng-template
+						#buttonTemplate
+						let-toggle="toggle"
+					>
+						<button
+							app-button
+							[attr.disabled]="(!isRepeatable || isCreation) || null"
+							class="form__btn"
+							mode="ghost"
+							icon="chevron-down"
+							(click)="toggle()"
+						>Генерация итераций</button>
+					</ng-template>
+					<ng-template #bodyTemplate>
+						<app-generate-iterations
+							[loading]="loading"
+							[form]="formGroup"
+							(repeatsIsGenerated)="getRepeats($event)"
+						></app-generate-iterations>
+					</ng-template>
+				</app-drop>
 				<app-datepicker
-					vertical="top"
+					class="form__btn"
 					(datePicked)="datePicked($event)"
 					[date]="pointDate"
 				></app-datepicker>
-
+			</div>
+			<div class="form__row">
 				<app-input
 					type="text"
 					placeholder="Срок в минутах"
@@ -148,15 +142,28 @@
 					app-button
 					type="submit"
 					mode="positive"
+					icon="check"
 					[disabled]="loading || (isRepeatable && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
 					[title]="isRepeatable && !isCreation ? 'Сохранить параметры итерации' :
-					'Сохранить событие'"
-				>
-					{{ 'Сохранить' }}
-				</button>
+										'Сохранить событие'"
+				></button>
 			</div>
 		</div>
+
 	</div>
+
+	<p
+		class="info"
+		*ngIf="isCreation && isRepeatable"
+	>
+		Изменение итераций будет доступно после создания события
+	</p>
+	<p
+		class="info"
+		*ngIf="!isCreation && !isRepeatable && hasManyIterations"
+	>
+		Отключены повторы события. Все итерации кроме последней будут удалены
+	</p>
 </form>
 
 <ng-template #loader>

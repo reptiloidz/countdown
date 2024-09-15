@@ -64,7 +64,7 @@ enum EditPointSuccessMessage {
 })
 export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
-	@HostBinding('class') class = 'content';
+	@HostBinding('class') class = 'main__inner';
 	type = EditPointType.Edit;
 	form!: FormGroup;
 	point: Point | undefined;
