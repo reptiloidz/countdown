@@ -12,7 +12,7 @@ import { Iteration, SwitcherItem } from 'src/app/interfaces';
 export class GenerateIterationsComponent {
 	@Input() form!: FormGroup;
 	@Input() loading = false;
-	@Output() repeatsIsGenerated = new EventEmitter<Iteration[]>();
+	@Output() repeatsAreGenerated = new EventEmitter<Iteration[]>();
 
 	rangeStartDate = new Date();
 	rangeEndDate = new Date(+new Date() + Constants.msInMinute * 10);
@@ -101,7 +101,7 @@ export class GenerateIterationsComponent {
 			this.addIterationRecursively(0);
 		}
 
-		this.repeatsIsGenerated.emit(this.repeats);
+		this.repeatsAreGenerated.emit(this.repeats);
 
 		this.repeats = [];
 	}

@@ -4,7 +4,7 @@
 	[pointDate]="pointDate"
 	[selectedIterationDate]="selectedIterationDate"
 	[isEditing]="true"
-	(iterationSwitched)="switchIteration($event, true)"
+	(iterationSwitched)="switchIteration($event)"
 	(addIteration)="addIterationHandler()"
 ></app-date-panel>
 <form
@@ -76,7 +76,6 @@
 			</div>
 			<div class="form__row">
 				<app-drop
-					horizontal="left"
 					formControlName="color"
 					[dropList]="pointColorNames"
 					class="form__color"
@@ -115,7 +114,7 @@
 						<app-generate-iterations
 							[loading]="loading"
 							[form]="formGroup"
-							(repeatsIsGenerated)="getRepeats($event)"
+							(repeatsAreGenerated)="getRepeats($event)"
 						></app-generate-iterations>
 					</ng-template>
 				</app-drop>
