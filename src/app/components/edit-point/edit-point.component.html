@@ -18,7 +18,12 @@
 			*ngIf="loading"
 			class="loader rotating"
 		></span></h1>
-	<div class="form">
+	<div
+		class="form"
+		[ngClass]="{
+			'form--separated': isRepeatable && !isCreation,
+		}"
+	>
 		<!-- Надо ли показывать автора? Сейчас редактировать больше никто не может -->
 		<!-- <img
 			*ngIf="userData?.photoURL"
@@ -43,14 +48,17 @@
 			></app-input>
 		</div>
 
-		<div class="form__col">
+		<div class="form__col form__col--middle">
 			<div class="form__row">
 				<app-switcher
 					[items]="directionList"
 					[value]="this.point?.direction || 'forward'"
 					formControlName="direction"
 				></app-switcher>
-				<div class="form__checks">
+				<div
+					*ngIf="!isCreationUrl"
+					class="form__checks"
+				>
 					<label
 						app-checkbox
 						mode="custom"
@@ -83,27 +91,30 @@
 				<button
 					*ngIf="isRepeatable && !isCreation"
 					app-button
-					[attr.disabled]="(loading || !isBaseFormValid) || null"
 					mode="primary"
+					icon="arrow-right"
 					type="button"
 					(click)="submit()"
-				>Сохранить событие</button>
+					title="Сохранить параметры события"
+				></button>
 			</div>
 		</div>
 
-		<div
-			*ngIf="!isCreationUrl"
-			class="form__col"
-		>
+		<div class="form__col">
 			<div class="form__row">
-				<app-drop>
+				<app-datepicker
+					horizontal="left"
+					class="form__btn"
+					(datePicked)="datePicked($event)"
+					[date]="pointDate"
+				></app-datepicker>
+				<app-drop *ngIf="isRepeatable && !isCreation">
 					<ng-template
 						#buttonTemplate
 						let-toggle="toggle"
 					>
 						<button
 							app-button
-							[attr.disabled]="(!isRepeatable || isCreation) || null"
 							class="form__btn"
 							mode="ghost"
 							icon="chevron-down"
@@ -118,11 +129,6 @@
 						></app-generate-iterations>
 					</ng-template>
 				</app-drop>
-				<app-datepicker
-					class="form__btn"
-					(datePicked)="datePicked($event)"
-					[date]="pointDate"
-				></app-datepicker>
 			</div>
 			<div class="form__row">
 				<app-input
@@ -140,8 +146,8 @@
 				<button
 					app-button
 					type="submit"
-					mode="positive"
-					icon="check"
+					mode="primary"
+					icon="arrow-right"
 					[disabled]="loading || (isRepeatable && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
 					[title]="isRepeatable && !isCreation ? 'Сохранить параметры итерации' :
 										'Сохранить событие'"

@@ -61,4 +61,8 @@ export class ActionService {
 	intervalSwitched() {
 		this._eventIntervalSwitchedSubject.next();
 	}
+
+	iterationSwitched(date: Date) {
+		this._eventIterationSwitchedSubject.next(date);
+	}
 }

@@ -1,4 +1,5 @@
 import {
+	AfterViewInit,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
@@ -79,7 +80,8 @@ import {
 		]),
 	],
 })
-export class DatePanelComponent {
+export class DatePanelComponent implements AfterViewInit {
+	@ViewChild('iterationsTabs') private iterationsTabs!: ElementRef;
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 	@Input() loading = false;
@@ -113,6 +115,8 @@ export class DatePanelComponent {
 	iterationsChecked: Number[] = [];
 	showIterationsInfo = false;
 	removedIterationIndex = 0;
+	resizeObserver: ResizeObserver | null = null;
+	iterationsListScrollable = false;
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -187,7 +191,7 @@ export class DatePanelComponent {
 				.pipe(
 					filter((event) => {
 						const eWheel = event as WheelEvent;
-						return this.iterationsList?.nativeElement.contains(
+						return this.iterationsTabs?.nativeElement.contains(
 							eWheel.target as HTMLElement
 						);
 					}),
@@ -197,8 +201,8 @@ export class DatePanelComponent {
 					next: (event) => {
 						const eWheel = event as WheelEvent;
 						if (eWheel.deltaY !== 0) {
-							if (this.iterationsList.nativeElement) {
-								this.iterationsList.nativeElement.scrollLeft +=
+							if (this.iterationsTabs.nativeElement) {
+								this.iterationsTabs.nativeElement.scrollLeft +=
 									eWheel.deltaY;
 							}
 						}
@@ -244,8 +248,22 @@ export class DatePanelComponent {
 		this.showIterationsInfo = !!localStorage.getItem('showIterationsInfo');
 	}
 
+	ngAfterViewInit(): void {
+		if (this.iterationsTabs && this.iterationsList) {
+			this.resizeObserver = new ResizeObserver(() => {
+				this.iterationsListScrollable =
+					this.iterationsList.nativeElement?.clientWidth !==
+					this.iterationsTabs.nativeElement?.clientWidth;
+				this.cdr.detectChanges();
+			});
+			this.resizeObserver.observe(this.iterationsTabs?.nativeElement);
+		}
+	}
+
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+		this.iterationsTabs &&
+			this.resizeObserver?.unobserve(this.iterationsTabs?.nativeElement);
 	}
 
 	get pointValue() {
@@ -342,14 +360,14 @@ export class DatePanelComponent {
 	}
 
 	scrollList(position = 999999) {
-		this.iterationsList?.nativeElement.scroll({
+		this.iterationsTabs?.nativeElement.scroll({
 			left: position,
 			behavior: 'smooth',
 		});
 	}
 
 	scrollHome() {
-		(this.iterationsList?.nativeElement as HTMLElement)
+		(this.iterationsTabs?.nativeElement as HTMLElement)
 			?.querySelector('.tabs__item--active input')
 			?.scrollIntoView({
 				block: 'nearest',
@@ -384,7 +402,7 @@ export class DatePanelComponent {
 	}
 
 	checkAllIterations(check = true, iterations?: Iteration[]) {
-		[...this.iterationsList.nativeElement.querySelectorAll('input')]
+		[...this.iterationsTabs.nativeElement.querySelectorAll('input')]
 			.filter((item: HTMLInputElement) => {
 				if (!iterations?.length) {
 					return true;

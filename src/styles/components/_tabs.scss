@@ -6,20 +6,19 @@
 	--tabs-item-pseudo-bg-size: 20px;
 	--tabs-pb: 20px;
 
-	display: flex;
-	gap: var(--tabs-gap);
-	margin: 0;
-	padding: 4px calc(var(--tabs-gap) + 20px) var(--tabs-pb) var(--tabs-gap);
+	padding-left: 20px;
 	overflow: auto hidden;
-	list-style-type: none;
 	transition: padding .2s .1s;
 	scroll-behavior: smooth;
 	scroll-padding: 50%;
 
-	&--expanded {
-		--tabs-pb: 120px;
-
-		transition-delay: 0s;
+	&__inner {
+		display: flex;
+		gap: var(--tabs-gap);
+		width: fit-content;
+		margin: 0;
+		padding: 4px calc(var(--tabs-gap) + 20px) var(--tabs-pb) var(--tabs-gap);
+		list-style-type: none;
 	}
 
 	&__item {
@@ -210,6 +209,20 @@
 	&__date {
 		margin: 0;
 		color: var(--tabs-date-cl);
+	}
+
+	&__remove-all {
+		margin-left: auto;
+	}
+
+	&--expanded {
+		--tabs-pb: 120px;
+
+		transition-delay: 0s;
+	}
+
+	&--scrollable {
+		padding-left: 0;
 	}
 }
 

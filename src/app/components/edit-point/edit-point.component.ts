@@ -287,10 +287,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$.subscribe({
 				next: ([point, editPointEvent]) => {
 					this.point = point;
-					this.action.pointUpdated(this.point);
-					this.cdr.detectChanges();
 					this.sortDates();
+					this.action.pointUpdated(this.point);
 					this.success(point, editPointEvent);
+					this.cdr.detectChanges();
 				},
 			})
 		);

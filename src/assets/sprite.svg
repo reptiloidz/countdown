@@ -1,5 +1,11 @@
 <svg>
     <defs>
+        <svg id="arrow-right" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12h16l-6 6m3-9-3-3"/>
+        </svg>
+        <svg id="arrow-small-right" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12h10l-4 4m2-6-2-2"/>
+        </svg>
         <svg id="at-email" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.857 12a3.857 3.857 0 1 1-7.714 0 3.857 3.857 0 0 1 7.714 0m0 0v1.286a2.571 2.571 0 0 0 5.143 0V12a8.98 8.98 0 0 0-3-6.708M12 3a9 9 0 1 0 5.143 16.387"/>
         </svg>
@@ -93,6 +99,9 @@
         <svg id="piles" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13.5H3.5v7h7v-7H9M13.5 5V3.5h7v7h-7V9m-10-5.5h7v7h-7zm10 10h7v7h-7z"/>
         </svg>
+        <svg id="play" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 18V6l10 6-6.667 4"/>
+        </svg>
         <svg id="plus" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12h5m3 0h8m-8-8v16"/>
         </svg>
@@ -110,6 +119,9 @@
         </svg>
         <svg id="rotate-right" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.49 14.99a9 9 0 1 1-7.235-11.902C16.517 3.547 18.672 5.91 21 8m0 0V2m0 6h-6"/>
+        </svg>
+        <svg id="save" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 13v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M4 8V6a2 2 0 0 1 2-2h8.172a2 2 0 0 1 1.414.586l3.828 3.828A2 2 0 0 1 20 9.828V12m-5 8v-5H9v5"/>
         </svg>
         <svg id="search" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 20-4.197-4.197S14 18 10.5 18a7.5 7.5 0 1 1 7.35-6"/>

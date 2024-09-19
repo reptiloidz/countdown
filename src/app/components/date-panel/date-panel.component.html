@@ -74,7 +74,7 @@
 		</ng-template>
 		<ng-template #extraTemplate>
 			<div class="panel__tabs">
-				<div>
+				<div *ngIf="iterationsListScrollable">
 					<div class="tabs__nav">
 						<button
 							app-button
@@ -94,65 +94,74 @@
 						></button>
 					</div>
 				</div>
-				<ul
-					#iterationsList
+				<div
+					#iterationsTabs
 					class="tabs"
 					[ngClass]="{
-						'tabs--expanded': showIterationsInfo
+						'tabs--scrollable': iterationsListScrollable
 					}"
-					(wheel)="onIterationsScroll($event)"
 				>
-					<ng-container *ngFor="let date of datesBefore; let i = index">
-						<ng-container
-							[ngTemplateOutlet]="iteration"
-							[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past' }"
-						></ng-container>
-					</ng-container>
-					<li class="tabs__item tabs__item--home">
-						<svg
-							app-svg
-							name="home-2"
-						></svg>
-						<div
-							*ngIf="showIterationsInfo"
-							@iterationsInfo
-							class="tabs__label-wrapper"
-						>
-							<div class="tabs__label tabs__label--now">
-								<p class="tabs__date">{{ currentTime }}</p>
-							</div>
-						</div>
-					</li>
-					<ng-container *ngFor="let date of datesAfter; let i = index">
-						<ng-container
-							[ngTemplateOutlet]="iteration"
-							[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future'  }"
-						></ng-container>
-					</ng-container>
-					<li
-						*ngIf="isEditing"
-						class="tabs__item"
+					<ul
+						#iterationsList
+						class="tabs__inner"
 						[ngClass]="{
-							'tabs__item--active': isIterationAdded
+							'tabs--expanded': showIterationsInfo
 						}"
+						(wheel)="onIterationsScroll($event)"
 					>
-						<button
-							class="link tabs__btn"
-							(click)="addIterationClick()"
-							type="button"
-						>+</button>
-					</li>
-				</ul>
-
+						<ng-container *ngFor="let date of datesBefore; let i = index">
+							<ng-container
+								[ngTemplateOutlet]="iteration"
+								[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past' }"
+							></ng-container>
+						</ng-container>
+						<li class="tabs__item tabs__item--home">
+							<svg
+								app-svg
+								name="home-2"
+							></svg>
+							<div
+								*ngIf="showIterationsInfo"
+								@iterationsInfo
+								class="tabs__label-wrapper"
+							>
+								<div class="tabs__label tabs__label--now">
+									<p class="tabs__date">{{ currentTime }}</p>
+								</div>
+							</div>
+						</li>
+						<ng-container *ngFor="let date of datesAfter; let i = index">
+							<ng-container
+								[ngTemplateOutlet]="iteration"
+								[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future'  }"
+							></ng-container>
+						</ng-container>
+						<li
+							*ngIf="isEditing"
+							class="tabs__item"
+							[ngClass]="{
+								'tabs__item--active': isIterationAdded
+							}"
+						>
+							<button
+								class="link tabs__btn"
+								(click)="addIterationClick()"
+								type="button"
+							>+</button>
+						</li>
+					</ul>
+				</div>
 				<div>
 					<div class="tabs__nav">
 						<button
 							app-button
+							*ngIf="iterationsListScrollable"
 							icon="chevron-right"
 							(click)="scrollList()"
 							title="Перейти к концу списка итераций"
 						></button>
 						<button
+							class="tabs__remove-all"
 							app-button
 							size="sm"
 							mode="negative"
