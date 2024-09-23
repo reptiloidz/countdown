@@ -7,7 +7,6 @@ import {
 	trigger,
 } from '@angular/animations';
 import {
-	ChangeDetectionStrategy,
 	Component,
 	ContentChild,
 	ElementRef,
@@ -24,7 +23,6 @@ import { ButtonSize } from 'src/app/types';
 @Component({
 	selector: 'app-panel',
 	templateUrl: './panel.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
 		trigger('panelContent', [
 			state(

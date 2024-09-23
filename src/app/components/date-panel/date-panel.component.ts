@@ -45,7 +45,7 @@ import {
 @Component({
 	selector: 'app-date-panel',
 	templateUrl: './date-panel.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.Default,
 	animations: [
 		trigger('iterationsInfo', [
 			transition(
@@ -84,17 +84,19 @@ export class DatePanelComponent implements AfterViewInit {
 	@ViewChild('iterationsTabs') private iterationsTabs!: ElementRef;
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
+
+	private subscriptions = new Subscription();
+	@Input() point: Point | undefined;
 	@Input() loading = false;
 	@Input() dateLoading = false;
 	@Input() urlMode = false;
-	@Input() point: Point | undefined;
 	@Input() pointDate = new Date();
 	@Input() selectedIterationDate = new Date();
 	@Input() isEditing = false;
 	@Input() isIterationAdded = false;
+
 	@Output() iterationSwitched = new EventEmitter<number>();
 	@Output() addIteration = new EventEmitter<void>();
-	private subscriptions = new Subscription();
 
 	constructor(
 		private data: DataService,
@@ -252,8 +254,8 @@ export class DatePanelComponent implements AfterViewInit {
 		if (this.iterationsTabs && this.iterationsList) {
 			this.resizeObserver = new ResizeObserver(() => {
 				this.iterationsListScrollable =
-					this.iterationsList.nativeElement?.clientWidth !==
-					this.iterationsTabs.nativeElement?.clientWidth;
+					this.iterationsList?.nativeElement?.clientWidth !==
+					this.iterationsTabs?.nativeElement?.clientWidth;
 				this.cdr.detectChanges();
 			});
 			this.resizeObserver.observe(this.iterationsTabs?.nativeElement);
@@ -402,7 +404,7 @@ export class DatePanelComponent implements AfterViewInit {
 	}
 
 	checkAllIterations(check = true, iterations?: Iteration[]) {
-		[...this.iterationsTabs.nativeElement.querySelectorAll('input')]
+		[...this.iterationsTabs?.nativeElement.querySelectorAll('input')]
 			.filter((item: HTMLInputElement) => {
 				if (!iterations?.length) {
 					return true;
