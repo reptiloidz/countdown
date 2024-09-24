@@ -1,7 +1,7 @@
 .form {
 	--form-col-brs: 20px;
 
-	display: flex;
+	// display: flex;
 	margin-top: 20px;
 
 	@media (max-width: 1024px) {
@@ -39,7 +39,7 @@
 		padding: 20px;
 		border: 1px solid rgba(var(--point-color), .2);
 		border-radius: var(--form-col-brs);
-		background-color: rgba(var(--point-color), .05);
+		// background-color: rgba(var(--point-color), .05);
 
 		& + & {
 			padding-left: 20px;

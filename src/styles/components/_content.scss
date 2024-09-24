@@ -7,11 +7,6 @@
 	padding: 20px;
 	overflow: hidden;
 
-	&--main {
-		padding-top: 60px;
-		padding-bottom: 60px;
-	}
-
 	&__clock {
 		position: absolute;
 		top: 5%;
@@ -19,5 +14,18 @@
 		z-index: -1;
 		width: 100vh;
 		overflow: hidden;
+	}
+
+	&__col {
+		width: 50%;
+	}
+
+	&--main {
+		padding-top: 60px;
+		padding-bottom: 60px;
+	}
+
+	&--row {
+		flex-direction: row;
 	}
 }
