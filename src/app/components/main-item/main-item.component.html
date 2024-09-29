@@ -3,6 +3,7 @@
 	class="point color"
 	[ngClass]="[
 		hasAccessEdit ? 'point--available' : '',
+		isEdit ? 'point--edit' : '',
 		point.color ? 'color--' + point.color : '',
 		isLine ? 'point--line color--horizontal' : '',
 		isSm ? 'point--sm' : '',

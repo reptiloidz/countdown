@@ -202,6 +202,10 @@
 			}
 		}
 	}
+
+	&--edit {
+		display: block;
+	}
 }
 
 @keyframes rotatingForward {

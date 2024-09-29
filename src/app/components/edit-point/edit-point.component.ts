@@ -60,7 +60,7 @@ enum EditPointSuccessMessage {
 @Component({
 	selector: 'app-edit-point',
 	templateUrl: './edit-point.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.Default,
 })
 export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;

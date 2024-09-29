@@ -2,7 +2,7 @@
 	--form-col-brs: 20px;
 
 	// display: flex;
-	margin-top: 20px;
+	// margin-top: 20px;
 
 	@media (max-width: 1024px) {
 		width: 100%;
@@ -31,25 +31,26 @@
 		margin-right: auto;
 	}
 
-	&__col {
+	&__section {
 		display: flex;
 		flex-direction: column;
+		gap: 10px;
 		justify-content: space-between;
 		width: 100%;
-		padding: 20px;
+		padding: 10px 0;
 		border: 1px solid rgba(var(--point-color), .2);
 		border-radius: var(--form-col-brs);
 		// background-color: rgba(var(--point-color), .05);
 
 		& + & {
-			padding-left: 20px;
+			// padding-left: 20px;
 			border-left-color: rgba(var(--point-color), .1);
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
 		}
 
 		&:not(:last-child) {
-			padding-right: 20px;
+			// padding-right: 20px;
 			border-right-color: rgba(var(--point-color), .1);
 			border-top-right-radius: 0;
 			border-bottom-right-radius: 0;

@@ -22,10 +22,10 @@
 		[formGroup]="form"
 		(ngSubmit)="submit(isRepeatable && !isCreation)"
 	>
-		<h1>{{ pageTitle }}<span
+		<h3>{{ pageTitle }}<span
 				*ngIf="loading"
 				class="loader rotating"
-			></span></h1>
+			></span></h3>
 		<div
 			class="form"
 			[ngClass]="{
@@ -42,7 +42,7 @@
 				><ng-container *ngIf="userData?.displayName">
 				{{ userData.displayName }}
 				</ng-container> -->
-			<div class="form__col">
+			<div class="form__section">
 				<app-input
 					placeholder="Название"
 					type="text"
@@ -56,7 +56,7 @@
 				></app-input>
 			</div>
 
-			<div class="form__col form__col--middle">
+			<div class="form__section form__section--middle">
 				<div class="form__row">
 					<app-switcher
 						[items]="directionList"
@@ -108,7 +108,8 @@
 				</div>
 			</div>
 
-			<div class="form__col">
+			<div class="form__section">
+				<h3 *ngIf="isRepeatable && !isCreation">Редактирование итерации</h3>
 				<div class="form__row">
 					<app-datepicker
 						horizontal="left"
