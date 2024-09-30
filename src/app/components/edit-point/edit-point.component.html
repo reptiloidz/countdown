@@ -43,17 +43,23 @@
 				{{ userData.displayName }}
 				</ng-container> -->
 			<div class="form__section">
-				<app-input
-					placeholder="Название"
-					type="text"
-					formControlName="title"
-				></app-input>
-				<app-input
-					[textarea]="true"
-					[textareaRows]="3"
-					placeholder="Описание события"
-					formControlName="description"
-				></app-input>
+				<div class="form__row">
+					<app-input
+						class="form__control"
+						placeholder="Название"
+						type="text"
+						formControlName="title"
+					></app-input>
+				</div>
+				<div class="form__row">
+					<app-input
+						class="form__control"
+						[textarea]="true"
+						[textareaRows]="3"
+						placeholder="Описание события"
+						formControlName="description"
+					></app-input>
+				</div>
 			</div>
 
 			<div class="form__section form__section--middle">

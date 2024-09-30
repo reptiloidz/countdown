@@ -98,15 +98,14 @@
 					#iterationsTabs
 					class="tabs"
 					[ngClass]="{
-						'tabs--scrollable': iterationsListScrollable
+						'tabs--scrollable': iterationsListScrollable,
+						'tabs--expanded': showIterationsInfo,
+						'tabs--edit': isEditing
 					}"
 				>
 					<ul
 						#iterationsList
 						class="tabs__inner"
-						[ngClass]="{
-							'tabs--expanded': showIterationsInfo
-						}"
 						(wheel)="onIterationsScroll($event)"
 					>
 						<ng-container *ngFor="let date of datesBefore; let i = index">
@@ -138,15 +137,17 @@
 						</ng-container>
 						<li
 							*ngIf="isEditing"
-							class="tabs__item"
+							class="tabs__item tabs__item--add"
 							[ngClass]="{
 								'tabs__item--active': isIterationAdded
 							}"
 						>
 							<button
-								class="link tabs__btn"
+								app-button
+								class="button"
+								mode="ghost"
+								class="tabs__btn"
 								(click)="addIterationClick()"
-								type="button"
 							>+</button>
 						</li>
 					</ul>
