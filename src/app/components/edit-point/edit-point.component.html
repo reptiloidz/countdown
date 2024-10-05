@@ -29,7 +29,7 @@
 		<div
 			class="form"
 			[ngClass]="{
-				'form--separated': isRepeatable && !isCreation,
+				'form--single': !isRepeatable || isCreation,
 			}"
 		>
 			<!-- Надо ли показывать автора? Сейчас редактировать больше никто не может -->
@@ -60,15 +60,18 @@
 						formControlName="description"
 					></app-input>
 				</div>
-			</div>
 
-			<div class="form__section form__section--middle">
 				<div class="form__row">
 					<app-switcher
 						[items]="directionList"
 						[value]="this.point?.direction || 'forward'"
 						formControlName="direction"
 					></app-switcher>
+					<app-drop
+						formControlName="color"
+						[dropList]="pointColorNames"
+						class="form__color"
+					></app-drop>
 					<div
 						*ngIf="!isCreationUrl"
 						class="form__checks"
@@ -97,25 +100,26 @@
 					</div>
 				</div>
 				<div class="form__row">
-					<app-drop
-						formControlName="color"
-						[dropList]="pointColorNames"
-						class="form__color"
-					></app-drop>
 					<button
 						*ngIf="isRepeatable && !isCreation"
 						app-button
-						mode="primary"
+						class="form__submit"
+						mode="positive"
+						iconPosition="right"
 						icon="arrow-right"
 						type="button"
 						(click)="submit()"
 						title="Сохранить параметры события"
-					></button>
+					>Сохранить</button>
 				</div>
 			</div>
 
+			<h3
+				*ngIf="isRepeatable && !isCreation"
+				class="form__section-title"
+			>Редактирование итерации</h3>
+
 			<div class="form__section">
-				<h3 *ngIf="isRepeatable && !isCreation">Редактирование итерации</h3>
 				<div class="form__row">
 					<app-datepicker
 						horizontal="left"
@@ -123,7 +127,24 @@
 						(datePicked)="datePicked($event)"
 						[date]="pointDate"
 					></app-datepicker>
-					<app-drop *ngIf="isRepeatable && !isCreation">
+					<app-input
+						type="text"
+						placeholder="Срок в минутах"
+						formControlName="difference"
+						mask="0*"
+						[allowNegativeNumbers]="true"
+						[validation]="false"
+						[maxlength]="validatorDifferenceMaxLength"
+						[clearButton]="true"
+						clearButtonTitle="Сброс (итерация произошла сейчас)"
+						clearButtonValue="0"
+					></app-input>
+				</div>
+				<div class="form__row">
+					<app-drop
+						*ngIf="isRepeatable && !isCreation"
+						vertical="top"
+					>
 						<ng-template
 							#buttonTemplate
 							let-toggle="toggle"
@@ -144,29 +165,17 @@
 							></app-generate-iterations>
 						</ng-template>
 					</app-drop>
-				</div>
-				<div class="form__row">
-					<app-input
-						type="text"
-						placeholder="Срок в минутах"
-						formControlName="difference"
-						mask="0*"
-						[allowNegativeNumbers]="true"
-						[validation]="false"
-						[maxlength]="validatorDifferenceMaxLength"
-						[clearButton]="true"
-						clearButtonTitle="Сброс (итерация произошла сейчас)"
-						clearButtonValue="0"
-					></app-input>
 					<button
 						app-button
+						class="form__submit"
 						type="submit"
-						mode="primary"
+						mode="positive"
 						icon="arrow-right"
+						iconPosition="right"
 						[disabled]="loading || (isRepeatable && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
 						[title]="isRepeatable && !isCreation ? 'Сохранить параметры итерации' :
 											'Сохранить событие'"
-					></button>
+					>Сохранить</button>
 				</div>
 			</div>
 

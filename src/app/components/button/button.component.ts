@@ -8,6 +8,7 @@ import { ButtonSize } from 'src/app/types';
 export class ButtonComponent {
 	@Input() icon!: string;
 	@Input() iconTitle!: string;
+	@Input() iconPosition: 'left' | 'right' = 'left';
 	@Input() iconAriaHidden: 'true' | 'false' = 'true';
 	@Input() type!: string;
 	@Input() loading = false;

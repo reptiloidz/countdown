@@ -1,8 +1,5 @@
 .form {
-	--form-col-brs: 20px;
-
-	// display: flex;
-	// margin-top: 20px;
+	--form-col-brs: 15px;
 
 	@media (max-width: 1024px) {
 		width: 100%;
@@ -29,6 +26,7 @@
 
 	&__checks {
 		display: flex;
+		gap: 4px;
 	}
 
 	&__color {
@@ -41,28 +39,23 @@
 		gap: 10px;
 		justify-content: space-between;
 		width: 100%;
-		padding: 10px 0;
+		margin-top: 10px;
+		padding: 15px;
 		border: 1px solid rgba(var(--point-color), .2);
 		border-radius: var(--form-col-brs);
-		// background-color: rgba(var(--point-color), .05);
+		background-color: rgba(var(--c-bg-primary), .02);
+	}
 
-		& + & {
-			// padding-left: 20px;
-			border-left-color: rgba(var(--point-color), .1);
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-		}
-
-		&:not(:last-child) {
-			// padding-right: 20px;
-			border-right-color: rgba(var(--point-color), .1);
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-		}
+	&__section-title {
+		margin-top: 20px;
 	}
 
 	&__btn {
 		white-space: nowrap;
+	}
+
+	&__submit {
+		margin-left: auto;
 	}
 
 	&__aside {
@@ -75,19 +68,19 @@
 		padding: 0 10px;
 	}
 
-	&--separated {
+	&--single {
 		.form {
-			&__col {
-				&--middle {
-					border-right-color: rgba(var(--point-color), .2);
-					border-top-right-radius: var(--form-col-brs);
-					border-bottom-right-radius: var(--form-col-brs);
+			&__section {
+				&:first-child {
+					border-bottom-right-radius: 0;
+					border-bottom-left-radius: 0;
 				}
 
-				&:last-child {
-					border-left-color: rgba(var(--point-color), .2);
-					border-top-left-radius: var(--form-col-brs);
-					border-bottom-left-radius: var(--form-col-brs);
+				+ .form__section {
+					margin-top: 0;
+					padding-top: 0;
+					border-top-left-radius: 0;
+					border-top-right-radius: 0;
 				}
 			}
 		}

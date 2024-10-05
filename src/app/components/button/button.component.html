@@ -1,21 +1,45 @@
-<svg
-	*ngIf="icon && !loading"
-	app-svg
-	[name]="icon"
-	[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
-	[title]="iconTitle || undefined"
-	[attr.aria-label]="iconTitle"
-	[aria-hidden]="iconAriaHidden"
-></svg><svg
-	*ngIf="loading"
-	app-svg
-	aria-label="Загрузка"
-	name="hourglass"
-	class="rotating"
-	aria-hidden="false"
-	[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
-></svg>
+<ng-container
+	*ngIf="iconPosition === 'left' && !loading && icon"
+	[ngTemplateOutlet]="iconTemplate"
+></ng-container>
+<ng-container
+	*ngIf="iconPosition === 'left' && loading"
+	[ngTemplateOutlet]="iconTemplate"
+></ng-container>
+
 <span [ngClass]="[
 		view === 'button' ? 'button__text' : 'link__text',
 		textClass
 	]"><ng-content></ng-content></span>
+
+<ng-container
+	*ngIf="iconPosition === 'right' && !loading && icon"
+	[ngTemplateOutlet]="iconTemplate"
+></ng-container>
+<ng-container
+	*ngIf="iconPosition === 'right' && loading"
+	[ngTemplateOutlet]="iconTemplate"
+></ng-container>
+
+<ng-template #iconTemplate>
+	<svg
+		*ngIf="!loading"
+		app-svg
+		[name]="icon"
+		[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
+		[title]="iconTitle || undefined"
+		[attr.aria-label]="iconTitle"
+		[aria-hidden]="iconAriaHidden"
+	></svg>
+</ng-template>
+<ng-template #loaderTemplate>
+	<svg
+		*ngIf="loading"
+		app-svg
+		aria-label="Загрузка"
+		name="hourglass"
+		class="rotating"
+		aria-hidden="false"
+		[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
+	></svg>
+</ng-template>

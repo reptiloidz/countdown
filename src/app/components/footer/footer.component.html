@@ -41,14 +41,14 @@
 
 <div class="nav__aside nav__aside--right">
 	<a
-		*ngIf="pointId && hasAccess"
+		*ngIf="pointId && hasAccess && !isEdit"
 		app-button
 		size="lg"
 		icon="pencil"
 		mode="ghost"
 		routerLink="/{{isEdit ? 'point' : 'edit'}}/{{pointId}}"
 		[queryParams]="{iteration}"
-		[attr.title]="isEdit ? 'Перейти к событию' : 'Редактировать'"
+		title="Редактировать"
 	></a>
 	<button
 		*ngIf="pointId && hasAccess && !isEdit"

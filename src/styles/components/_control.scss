@@ -4,12 +4,16 @@
 	border: 1px solid rgba(var(--c-border-primary), .2);
 	border-radius: 12px;
 
-	& + & {
-		margin-top: 16px;
-	}
-
 	&:has(.control__textarea) {
 		height: auto;
+	}
+
+	&:has(.control__addon) {
+		.control__input,
+		.control__textarea {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
 	}
 
 	&__input,
@@ -20,7 +24,6 @@
 		border: 0;
 		border-radius: inherit;
 		outline: 0;
-		background-color: transparent;
 		font-weight: 300;
 
 		&::placeholder {
@@ -42,6 +45,10 @@
 
 	&__icon {
 		--icon-w: 20px;
+	}
+
+	& + & {
+		margin-top: 16px;
 	}
 
 	&--row {

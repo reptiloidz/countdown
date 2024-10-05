@@ -19,6 +19,7 @@
 		margin: 0;
 		padding: 4px calc(var(--tabs-gap) + 20px) var(--tabs-pb) var(--tabs-gap);
 		list-style-type: none;
+		transition: padding .2s .1s;
 	}
 
 	&__item {

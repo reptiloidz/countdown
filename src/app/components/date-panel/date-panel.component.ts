@@ -253,16 +253,16 @@ export class DatePanelComponent implements AfterViewInit {
 	ngAfterViewInit(): void {
 		if (this.iterationsTabs && this.iterationsList) {
 			this.resizeObserver = new ResizeObserver(() => {
-				this.resizeIterationsList();
+				this.iterationsListScrollable =
+					this.iterationsList?.nativeElement?.clientWidth !==
+					this.iterationsTabs?.nativeElement?.clientWidth -
+						parseInt(
+							getComputedStyle(this.iterationsTabs?.nativeElement)
+								.paddingLeft
+						);
+				this.cdr.detectChanges();
 			});
 			this.resizeObserver.observe(this.iterationsTabs?.nativeElement);
-			setTimeout(() => {
-				this.resizeIterationsList();
-				console.log(
-					this.iterationsList?.nativeElement?.clientWidth,
-					this.iterationsTabs?.nativeElement?.clientWidth
-				);
-			}, 1000);
 		}
 	}
 
@@ -311,14 +311,6 @@ export class DatePanelComponent implements AfterViewInit {
 	get isDatesLengthPlural() {
 		return this.dates && this.dates?.length > 1;
 	}
-
-	resizeIterationsList() {
-		this.iterationsListScrollable =
-			this.iterationsList?.nativeElement?.clientWidth !==
-			this.iterationsTabs?.nativeElement?.clientWidth;
-		this.cdr.detectChanges();
-	}
-
 	removeIteration(i: number) {
 		let newDatesArray = this.dates?.slice(0);
 		newDatesArray && newDatesArray.splice(i, 1);
