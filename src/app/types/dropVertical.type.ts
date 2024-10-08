@@ -1,1 +1,1 @@
-export type DropVertical = 'top' | 'bottom';
+export type DropVertical = 'top' | 'bottom' | 'auto';

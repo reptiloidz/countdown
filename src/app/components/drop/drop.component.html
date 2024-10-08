@@ -31,20 +31,22 @@
 	class="drop__body"
 	[ngClass]="[dropBodyClass, (select || dropList) ? 'drop__body--list' : '']"
 >
-	<ng-container
-		*ngIf="bodyTemplate else selectList"
-		[ngTemplateOutlet]="bodyTemplate"
-		[ngTemplateOutletContext]="{
-			value,
-			change: changeHandler.bind(this)
-		}"
-	></ng-container>
-	<input
-		*ngIf="formControlName"
-		type="hidden"
-		[attr.name]="formControlName"
-		[value]="value"
-	>
+	<div class="drop__inner">
+		<ng-container
+			*ngIf="bodyTemplate else selectList"
+			[ngTemplateOutlet]="bodyTemplate"
+			[ngTemplateOutletContext]="{
+				value,
+				change: changeHandler.bind(this)
+			}"
+		></ng-container>
+		<input
+			*ngIf="formControlName"
+			type="hidden"
+			[attr.name]="formControlName"
+			[value]="value"
+		>
+	</div>
 </div>
 <ng-template #selectList>
 	<button

@@ -20,7 +20,7 @@ export class DatepickerComponent implements OnInit {
 	@Input() isNow = true;
 	@Input() date: Date | undefined = this.isNow ? new Date() : undefined;
 	@Input() visibleDate = this.date;
-	@Input() vertical: DropVertical = 'bottom';
+	@Input() vertical: DropVertical = 'auto';
 	@Input() horizontal: DropHorizontal = 'right';
 
 	@Output() datePicked = new EventEmitter<Date>();

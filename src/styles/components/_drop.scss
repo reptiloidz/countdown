@@ -32,10 +32,9 @@
 
 		position: absolute;
 		z-index: 1;
-		max-height: calc(var(--drop-max-h) * 1px);
 		padding: 12px;
 		border: 1px solid rgba(var(--c-border-primary), .4);
-		overflow: auto;
+		overflow: hidden;
 
 		&--list {
 			margin-top: 10px;
@@ -45,6 +44,11 @@
 				padding-top: 0;
 			}
 		}
+	}
+
+	&__inner {
+		max-height: calc(var(--drop-max-h) * 1px - 10px);
+		overflow: auto;
 	}
 
 	&__nav,

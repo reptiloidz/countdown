@@ -34,7 +34,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@HostBinding('class') get dropClass() {
 		return [
 			'drop',
-			'drop--' + this.vertical,
+			this.vertical === 'auto' ? '' : 'drop--' + this.vertical,
 			'drop--' + this.horizontal,
 		].join(' ');
 	}
@@ -51,7 +51,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	defaultTriggerButton!: ElementRef;
 
 	@Input() open = false;
-	@Input() vertical: DropVertical = 'bottom';
+	@Input() vertical: DropVertical = 'auto';
 	@Input() horizontal: DropHorizontal = 'right';
 	@Input() icon: string = 'chevron-down';
 	@Input() buttonSize!: ButtonSize;
@@ -66,6 +66,10 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	value = '';
 	private triggerOffsetTop = 0;
 	private footerHeight = 0;
+	private dropHeight = 0;
+	private triggerHeight = 0;
+	private bottomSpace = 0;
+	private topSpace = 0;
 	private documentClickListener: (() => void) | null = null;
 
 	constructor(
@@ -98,25 +102,71 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				.height
 		);
 
-		this.renderer.setStyle(
-			this.elementRef.nativeElement,
-			'--drop-max-h',
-			window.innerHeight -
-				this.triggerOffsetTop -
-				this.footerHeight -
-				parseInt(
-					getComputedStyle(
-						this.elementRef.nativeElement as HTMLElement
-					).height
-				),
-			RendererStyleFlags2.DashCase
-		);
+		this.bottomSpace =
+			window.innerHeight - this.triggerOffsetTop - this.footerHeight;
+		this.topSpace = this.triggerOffsetTop - this.footerHeight;
+
+		this.triggerHeight = parseInt(getComputedStyle(triggerElement).height);
+
+		requestAnimationFrame(() => {
+			this.dropHeight = this.elementRef.nativeElement
+				.querySelector('.drop__body')
+				?.getBoundingClientRect().height;
+
+			if (
+				this.dropHeight > this.bottomSpace - this.triggerHeight &&
+				this.bottomSpace - this.triggerHeight < this.triggerOffsetTop
+			) {
+				if (this.vertical === 'auto') {
+					this.renderer.addClass(
+						this.elementRef.nativeElement,
+						'drop--top'
+					);
+				} else {
+					this.setDropMaxH(true);
+				}
+			} else {
+				this.renderer.addClass(
+					this.elementRef.nativeElement,
+					'drop--bottom'
+				);
+
+				this.setDropMaxH();
+			}
+		});
 	}
 
 	closeHandler() {
 		this.open = false;
 		this.removeDocumentClickListener();
 		this.cdr.detectChanges();
+
+		if (this.vertical === 'auto') {
+			this.renderer.removeClass(
+				this.elementRef.nativeElement,
+				'drop--top'
+			);
+			this.renderer.removeClass(
+				this.elementRef.nativeElement,
+				'drop--bottom'
+			);
+		}
+
+		this.renderer.setStyle(
+			this.elementRef.nativeElement,
+			'--drop-max-h',
+			null,
+			RendererStyleFlags2.DashCase
+		);
+	}
+
+	setDropMaxH(isTop = false) {
+		this.renderer.setStyle(
+			this.elementRef.nativeElement,
+			'--drop-max-h',
+			(isTop ? this.topSpace : this.bottomSpace) - this.triggerHeight,
+			RendererStyleFlags2.DashCase
+		);
 	}
 
 	toggleHandler() {
