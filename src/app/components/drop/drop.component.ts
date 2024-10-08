@@ -8,9 +8,11 @@ import {
 	Input,
 	OnDestroy,
 	OnInit,
-	Renderer2,
 	TemplateRef,
+	ViewChild,
 	forwardRef,
+	Renderer2,
+	ViewContainerRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ButtonSize, DropHorizontal, DropVertical } from 'src/app/types';
@@ -36,12 +38,16 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		].join(' ');
 	}
 
+	@ViewChild('buttonTemplateRef', { read: ViewContainerRef })
+	buttonTemplateRef: ViewContainerRef | undefined;
 	@ContentChild('buttonTemplate') buttonTemplate:
 		| TemplateRef<unknown>
 		| undefined;
 	@ContentChild('bodyTemplate') bodyTemplate:
 		| TemplateRef<unknown>
 		| undefined;
+	@ViewChild('triggerButton', { static: false, read: ElementRef })
+	defaultTriggerButton!: ElementRef;
 
 	@Input() open = false;
 	@Input() vertical: DropVertical = 'bottom';
@@ -57,6 +63,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() titleValue = '';
 
 	value = '';
+	private triggerOffsetTop = 0;
 	private documentClickListener: (() => void) | null = null;
 
 	constructor(
@@ -76,6 +83,13 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	openHandler() {
 		this.open = true;
 		this.addDocumentClickListener();
+
+		const triggerElement = this.buttonTemplate
+			? this.buttonTemplateRef?.element.nativeElement.querySelector(
+					'button'
+			  )
+			: this.defaultTriggerButton.nativeElement;
+		this.triggerOffsetTop = triggerElement.getBoundingClientRect().top;
 	}
 
 	closeHandler() {

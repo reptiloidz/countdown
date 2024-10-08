@@ -1,15 +1,20 @@
-<ng-container
+<div
+	#buttonTemplateRef
 	*ngIf="buttonTemplate else defaultButton"
-	[ngTemplateOutlet]="buttonTemplate"
-	[ngTemplateOutletContext]="{
-		value,
-		toggle: toggleHandler.bind(this),
-		open: openHandler.bind(this),
-		close: closeHandler.bind(this)
-	}"
-></ng-container>
+>
+	<ng-container
+		[ngTemplateOutlet]="buttonTemplate"
+		[ngTemplateOutletContext]="{
+			value,
+			toggle: toggleHandler.bind(this),
+			open: openHandler.bind(this),
+			close: closeHandler.bind(this)
+		}"
+	></ng-container>
+</div>
 <ng-template #defaultButton>
 	<button
+		#triggerButton
 		app-button
 		class="drop__nav"
 		[ngClass]="buttonClass"
