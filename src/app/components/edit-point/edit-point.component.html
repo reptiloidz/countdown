@@ -141,10 +141,7 @@
 					></app-input>
 				</div>
 				<div class="form__row">
-					<app-drop
-						*ngIf="isRepeatable && !isCreation"
-						vertical="top"
-					>
+					<app-drop *ngIf="isRepeatable && !isCreation">
 						<ng-template
 							#buttonTemplate
 							let-toggle="toggle"

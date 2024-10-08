@@ -97,10 +97,12 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			: this.defaultTriggerButton.nativeElement;
 		this.triggerOffsetTop = triggerElement.getBoundingClientRect().top;
 
-		this.footerHeight = parseInt(
-			getComputedStyle(document.querySelector('footer') as HTMLElement)
-				.height
-		);
+		this.footerHeight =
+			parseInt(
+				getComputedStyle(
+					document.querySelector('footer') as HTMLElement
+				).height
+			) || 0;
 
 		this.bottomSpace =
 			window.innerHeight - this.triggerOffsetTop - this.footerHeight;
