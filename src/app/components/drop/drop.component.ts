@@ -13,6 +13,7 @@ import {
 	forwardRef,
 	Renderer2,
 	ViewContainerRef,
+	RendererStyleFlags2,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ButtonSize, DropHorizontal, DropVertical } from 'src/app/types';
@@ -46,7 +47,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@ContentChild('bodyTemplate') bodyTemplate:
 		| TemplateRef<unknown>
 		| undefined;
-	@ViewChild('triggerButton', { static: false, read: ElementRef })
+	@ViewChild('triggerButton', { read: ElementRef })
 	defaultTriggerButton!: ElementRef;
 
 	@Input() open = false;
@@ -64,6 +65,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	value = '';
 	private triggerOffsetTop = 0;
+	private footerHeight = 0;
 	private documentClickListener: (() => void) | null = null;
 
 	constructor(
@@ -90,6 +92,25 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			  )
 			: this.defaultTriggerButton.nativeElement;
 		this.triggerOffsetTop = triggerElement.getBoundingClientRect().top;
+
+		this.footerHeight = parseInt(
+			getComputedStyle(document.querySelector('footer') as HTMLElement)
+				.height
+		);
+
+		this.renderer.setStyle(
+			this.elementRef.nativeElement,
+			'--drop-max-h',
+			window.innerHeight -
+				this.triggerOffsetTop -
+				this.footerHeight -
+				parseInt(
+					getComputedStyle(
+						this.elementRef.nativeElement as HTMLElement
+					).height
+				),
+			RendererStyleFlags2.DashCase
+		);
 	}
 
 	closeHandler() {
