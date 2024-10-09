@@ -141,7 +141,10 @@
 					></app-input>
 				</div>
 				<div class="form__row">
-					<app-drop *ngIf="isRepeatable && !isCreation">
+					<app-drop
+						*ngIf="isRepeatable && !isCreation"
+						class="drop--nested"
+					>
 						<ng-template
 							#buttonTemplate
 							let-toggle="toggle"

@@ -119,26 +119,35 @@
 	}
 
 	&--top {
-		.drop__body {
+		> .drop__body {
 			bottom: 100%;
 		}
 	}
 
 	&--bottom {
-		.drop__body {
+		> .drop__body {
 			top: 100%;
 		}
 	}
 
 	&--right {
-		.drop__body {
+		> .drop__body {
 			left: 0;
 		}
 	}
 
 	&--left {
-		.drop__body {
+		> .drop__body {
 			right: 0;
+		}
+	}
+
+	&--nested {
+		> .drop__body {
+			&,
+			> .drop__inner {
+				overflow: visible;
+			}
 		}
 	}
 }
