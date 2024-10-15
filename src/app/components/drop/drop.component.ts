@@ -57,11 +57,11 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() buttonSize!: ButtonSize;
 	@Input() buttonClass = '';
 	@Input() buttonTitle: string | null = null;
+	@Input() buttonLabel: string | null = null;
 	@Input() dropBodyClass: string | string[] = '';
 	@Input() select = false;
 	@Input() dropList!: { [key: string]: string };
 	@Input() formControlName!: string;
-	@Input() titleValue = '';
 
 	value = '';
 	private triggerOffsetTop = 0;
@@ -106,7 +106,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 		this.bottomSpace =
 			window.innerHeight - this.triggerOffsetTop - this.footerHeight;
-		this.topSpace = this.triggerOffsetTop - this.footerHeight;
+		this.topSpace = this.triggerOffsetTop;
 
 		this.triggerHeight = parseInt(getComputedStyle(triggerElement).height);
 
@@ -124,9 +124,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 						this.elementRef.nativeElement,
 						'drop--top'
 					);
-				} else {
-					this.setDropMaxH(true);
 				}
+				this.setDropMaxH(true);
 			} else {
 				this.renderer.addClass(
 					this.elementRef.nativeElement,

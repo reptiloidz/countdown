@@ -2,18 +2,9 @@
 	[ngClass]="dropClass"
 	[vertical]="vertical"
 	[horizontal]="horizontal"
+	[buttonLabel]="dateFormatted"
+	icon=""
 >
-	<ng-template
-		#buttonTemplate
-		let-toggle="toggle"
-	>
-		<button
-			app-button
-			mode="ghost"
-			[innerHTML]="dateFormatted"
-			(click)="toggle()"
-		></button>
-	</ng-template>
 	<ng-template #bodyTemplate>
 		<form>
 			<div>
@@ -58,7 +49,7 @@
 				</ng-container>
 			</div>
 			<app-calendar
-				class="calendar"
+				class="calendar calendar--drop"
 				[hideCurrentPeriod]="true"
 				[hideModeSwitch]="true"
 				(dateSelected)="dateSelected($event)"

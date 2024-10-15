@@ -23,7 +23,7 @@
 		[size]="buttonSize"
 		[icon]="icon"
 		(click)="toggleHandler()"
-	>{{ (select || dropList) ? dropList[value] || value : null }}</button>
+	>{{ buttonLabel || ((select || dropList) ? dropList[value] || value : null) }}</button>
 </ng-template>
 
 <div

@@ -1,6 +1,15 @@
 .drop {
 	--drop-bg-cl: rgba(var(--c-bg-drop), .2);
 	--drop-brs: 8px;
+	--drop-nav-brs: var(--drop-brs) var(--drop-brs) 0 1px;
+	--drop-nav-border-top-cl: rgba(var(--c-border-primary), .4);
+	--drop-nav-border-bottom-cl: transparent;
+	--drop-body-brs-tl: 0;
+	--drop-body-brs-tr: var(--drop-brs);
+	--drop-body-brs-br: var(--drop-brs);
+	--drop-body-brs-bl: var(--drop-brs);
+	--drop-body-mt: -1px;
+	--drop-body-mb: 0;
 
 	position: relative;
 	z-index: 2;
@@ -10,8 +19,9 @@
 
 	&:has(> .drop__nav) {
 		> .drop__body {
-			margin-top: -1px;
-			border-radius: 0 var(--drop-brs) var(--drop-brs);
+			margin-top: var(--drop-body-mt);
+			margin-bottom: var(--drop-body-mb);
+			border-radius: var(--drop-body-brs-tl) var(--drop-body-brs-tr) var(--drop-body-brs-br) var(--drop-body-brs-bl);
 		}
 	}
 
@@ -21,9 +31,13 @@
 		> .drop__nav {
 			position: relative;
 			z-index: 2;
-			border: 1px solid rgba(var(--c-border-primary), .4);
-			border-bottom-color: transparent;
-			border-radius: var(--drop-brs) var(--drop-brs) 0 1px;
+			border-width: 1px;
+			border-style: solid;
+			border-top-color: var(--drop-nav-border-top-cl);
+			border-right-color: rgba(var(--c-border-primary), .4);
+			border-bottom-color: var(--drop-nav-border-bottom-cl);
+			border-left-color: rgba(var(--c-border-primary), .4);
+			border-radius: var(--drop-nav-brs);
 		}
 	}
 
@@ -122,11 +136,34 @@
 		> .drop__body {
 			bottom: 100%;
 		}
+
+		--drop-nav-brs: 1px 0 var(--drop-brs) var(--drop-brs);
+		--drop-nav-border-bottom-cl: rgba(var(--c-border-primary), .4);
+		--drop-nav-border-top-cl: transparent;
+		--drop-body-brs-tl: var(--drop-brs);
+		--drop-body-brs-tr: var(--drop-brs);
+		--drop-body-mb: -1px;
+		--drop-body-mt: 0;
+
+		&.drop--left {
+			--drop-body-brs-br: 0;
+			--drop-body-brs-bl: var(--drop-brs);
+		}
+
+		&.drop--right {
+			--drop-body-brs-br: var(--drop-brs);
+			--drop-body-brs-bl: 0;
+		}
 	}
 
 	&--bottom {
 		> .drop__body {
 			top: 100%;
+		}
+
+		&.drop--left {
+			--drop-body-brs-tr: 0;
+			--drop-body-brs-tl: var(--drop-brs);
 		}
 	}
 
