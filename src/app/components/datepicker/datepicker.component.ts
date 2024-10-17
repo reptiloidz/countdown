@@ -25,6 +25,8 @@ export class DatepickerComponent implements OnInit {
 
 	@Output() datePicked = new EventEmitter<Date>();
 
+	currentYear = getYear(new Date());
+
 	ngOnInit(): void {
 		this.visibleDate = this.date;
 	}
@@ -57,7 +59,7 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	get dateMonth() {
-		return getMonth(this.visibleDate || this.defaultDate).toString();
+		return (getMonth(this.visibleDate || this.defaultDate) + 1).toString();
 	}
 
 	set dateMonth(value: string) {
@@ -90,20 +92,33 @@ export class DatepickerComponent implements OnInit {
 		this.datePicked.emit(this.date);
 	}
 
-	get yearsArray() {
-		return [].constructor(200);
+	get yearsArray(): Record<number, number> {
+		return this.createArray(200, (index) => this.currentYear - 100 + index);
 	}
 
-	get monthsArray() {
-		return [].constructor(12);
+	get monthsArray(): Record<number, number> {
+		return this.createArray(12, (index) => index + 1);
 	}
 
-	get hoursArray() {
-		return [].constructor(24);
+	get hoursArray(): Record<number, number> {
+		return this.createArray(24, (index) => index);
 	}
 
-	get minutesArray() {
-		return [].constructor(60);
+	get minutesArray(): Record<number, number> {
+		return this.createArray(60, (index) => index);
+	}
+
+	private createArray(
+		length: number,
+		getValue: (index: number) => number
+	): Record<number, number> {
+		return Array.from({ length }, (_, index) => ({
+			[index]: getValue(index),
+		})).reduce((acc, obj) => ({ ...acc, ...obj }), {});
+	}
+
+	dateTimeChanged(value: string | number) {
+		console.log(value);
 	}
 
 	dateSelected({ date }: { date: Date }) {
