@@ -41,16 +41,16 @@
 			}"
 		></ng-container>
 		<input
-			*ngIf="formControlName"
+			*ngIf="formControlName || name"
 			type="hidden"
-			[attr.name]="formControlName"
+			[attr.name]="formControlName || name"
 			[value]="value"
 		>
 	</div>
 </div>
 <ng-template #selectList>
 	<button
-		*ngFor="let item of dropList | keyvalue"
+		*ngFor="let item of dropList | keyvalue | sortKeyValue"
 		app-button
 		class="drop__item"
 		[ngClass]="{

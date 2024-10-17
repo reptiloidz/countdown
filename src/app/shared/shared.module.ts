@@ -10,11 +10,8 @@ import { SwitcherComponent } from '../components/switcher/switcher.component';
 import { InputComponent } from '../components/input/input.component';
 import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 import { LetDirective } from '../directives/let.directive';
-import { IConfig, NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-
-const maskConfig: Partial<IConfig> = {
-	validation: false,
-};
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { SortKeyValuePipe } from '../pipes/sortKeyValue.pipe';
 
 @NgModule({
 	declarations: [
@@ -27,6 +24,7 @@ const maskConfig: Partial<IConfig> = {
 		InputComponent,
 		CheckboxComponent,
 		LetDirective,
+		SortKeyValuePipe,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective],
 	exports: [

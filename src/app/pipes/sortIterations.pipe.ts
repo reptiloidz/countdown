@@ -6,9 +6,9 @@ import { compareAsc } from 'date-fns';
 import { parseDate } from '../helpers';
 
 @Pipe({
-	name: 'sort',
+	name: 'sort-iterations',
 })
-export class SortPipe implements PipeTransform {
+export class SortIterationsPipe implements PipeTransform {
 	transform(iterations: Iteration[] | undefined): Iteration[] | undefined {
 		return (
 			iterations &&

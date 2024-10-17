@@ -14,8 +14,11 @@ import {
 	Renderer2,
 	ViewContainerRef,
 	RendererStyleFlags2,
+	Output,
+	EventEmitter,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Select } from 'src/app/interfaces';
 import { ButtonSize, DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
@@ -60,10 +63,13 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() buttonLabel: string | null = null;
 	@Input() dropBodyClass: string | string[] = '';
 	@Input() select = false;
-	@Input() dropList!: { [key: string]: string };
+	@Input() dropList!: Select;
 	@Input() formControlName!: string;
+	@Input() name!: string;
+	@Input() value: string | number = '';
 
-	value = '';
+	@Output() dropChanged = new EventEmitter<string | number>();
+
 	private triggerOffsetTop = 0;
 	private footerHeight = 0;
 	private dropHeight = 0;
@@ -183,9 +189,9 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			'document',
 			'click',
 			(event: MouseEvent) => {
-				const clickedInside = this.elementRef.nativeElement.contains(
-					event.target
-				);
+				const clickedInside =
+					this.elementRef.nativeElement.contains(event.target) ||
+					!document.contains(event.target as HTMLElement);
 				!clickedInside && this.closeHandler();
 			}
 		);
@@ -203,6 +209,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.onChange(value);
 		this.onTouched();
 		this.closeHandler();
+		this.dropChanged.emit(value);
 	}
 
 	onChange: (value: string) => void = () => {};
