@@ -9,32 +9,36 @@
 	<ng-template #bodyTemplate>
 		<form>
 			<div class="datepicker__nav">
-				<app-drop
-					name="year"
-					[dropList]="yearsArray"
+				<app-autocomplete
+					placeholder="Год"
 					[value]="dateYear"
-					(dropChanged)="dateTimeChanged($event)"
-				></app-drop>
-				<app-drop
-					name="month"
-					[dropList]="monthsArray"
+					name="year"
+					[autocompleteList]="yearsArray"
+					(autocompleteChanged)="dateTimeChanged($event)"
+				></app-autocomplete>
+				<app-autocomplete
+					placeholder="Месяц"
 					[value]="dateMonth"
-					(dropChanged)="dateTimeChanged($event)"
-				></app-drop>
+					name="month"
+					[autocompleteList]="monthsArray"
+					(autocompleteChanged)="dateTimeChanged($event)"
+				></app-autocomplete>
 
 				<ng-container *ngIf="!dateOnly">
-					<app-drop
-						name="month"
-						[dropList]="hoursArray"
+					<app-autocomplete
+						placeholder="Час"
 						[value]="dateHour"
-						(dropChanged)="dateTimeChanged($event)"
-					></app-drop>
-					<app-drop
-						name="month"
-						[dropList]="minutesArray"
+						name="hour"
+						[autocompleteList]="hoursArray"
+						(autocompleteChanged)="dateTimeChanged($event)"
+					></app-autocomplete>
+					<app-autocomplete
+						placeholder="Минута"
 						[value]="dateMinute"
-						(dropChanged)="dateTimeChanged($event)"
-					></app-drop>
+						name="minute"
+						[autocompleteList]="minutesArray"
+						(autocompleteChanged)="dateTimeChanged($event)"
+					></app-autocomplete>
 				</ng-container>
 			</div>
 			<app-calendar

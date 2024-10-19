@@ -1,9 +1,9 @@
 <div
-	#buttonTemplateRef
-	*ngIf="buttonTemplate else defaultButton"
+	#triggerTemplateRef
+	*ngIf="triggerTemplate else defaultButton"
 >
 	<ng-container
-		[ngTemplateOutlet]="buttonTemplate"
+		[ngTemplateOutlet]="triggerTemplate"
 		[ngTemplateOutletContext]="{
 			value,
 			toggle: toggleHandler.bind(this),
@@ -31,7 +31,10 @@
 	class="drop__body"
 	[ngClass]="[dropBodyClass, (select || dropList) ? 'drop__body--list' : '']"
 >
-	<div class="drop__inner">
+	<div
+		class="drop__inner"
+		#selectListRef
+	>
 		<ng-container
 			*ngIf="bodyTemplate else selectList"
 			[ngTemplateOutlet]="bodyTemplate"

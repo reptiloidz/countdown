@@ -309,7 +309,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	changeFilters() {
-		this.searchInputValue = this.searchInput.value;
+		this.searchInputValue = this.searchInput.value.toString();
 		this.colorType = this.colorList
 			? Array.from(this.colorList.nativeElement.children)
 					.filter(

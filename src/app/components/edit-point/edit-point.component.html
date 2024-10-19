@@ -47,7 +47,6 @@
 					<app-input
 						class="form__control"
 						placeholder="Название"
-						type="text"
 						formControlName="title"
 					></app-input>
 				</div>
@@ -128,7 +127,6 @@
 						[date]="pointDate"
 					></app-datepicker>
 					<app-input
-						type="text"
 						placeholder="Срок в минутах"
 						formControlName="difference"
 						mask="0*"
@@ -146,7 +144,7 @@
 						class="drop--nested"
 					>
 						<ng-template
-							#buttonTemplate
+							#triggerTemplate
 							let-toggle="toggle"
 						>
 							<button

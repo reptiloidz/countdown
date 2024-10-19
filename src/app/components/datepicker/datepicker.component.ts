@@ -113,7 +113,7 @@ export class DatepickerComponent implements OnInit {
 		getValue: (index: number) => number
 	): Record<number, number> {
 		return Array.from({ length }, (_, index) => ({
-			[index]: getValue(index),
+			[getValue(index)]: getValue(index),
 		})).reduce((acc, obj) => ({ ...acc, ...obj }), {});
 	}
 

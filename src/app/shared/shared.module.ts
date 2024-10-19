@@ -12,6 +12,7 @@ import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 import { LetDirective } from '../directives/let.directive';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { SortKeyValuePipe } from '../pipes/sortKeyValue.pipe';
+import { AutocompleteComponent } from '../components/autocomplete/autocomplete.component';
 
 @NgModule({
 	declarations: [
@@ -25,6 +26,7 @@ import { SortKeyValuePipe } from '../pipes/sortKeyValue.pipe';
 		CheckboxComponent,
 		LetDirective,
 		SortKeyValuePipe,
+		AutocompleteComponent,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective],
 	exports: [

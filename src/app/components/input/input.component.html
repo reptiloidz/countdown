@@ -7,12 +7,14 @@
 	[(ngModel)]="value"
 	[disabled]="isDisabled"
 	(input)="onInput($event)"
-	[attr.name]="formControlName || null"
+	[attr.name]="formControlName || name || null"
 	[mask]="mask"
 	[validation]="validation"
 	[allowNegativeNumbers]="allowNegativeNumbers || null"
 	[attr.maxlength]="maxlength || null"
 	[attr.min]="min || null"
+	(focus)="focusHandler($event)"
+	(blur)="blurHandler($event)"
 >
 <div
 	*ngIf="icon || clearButton"

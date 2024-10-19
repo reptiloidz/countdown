@@ -1,0 +1,18 @@
+<app-drop
+	[dropList]="autocompleteList"
+	(dropChanged)="changeHandler($event)"
+	[value]="value"
+	[focusoutClose]="true"
+>
+	<ng-template
+		#triggerTemplate
+		let-open="open"
+	>
+		<app-input
+			placeholder="Название"
+			name="autocomplete"
+			[value]="value"
+			(focus)="open()"
+		></app-input>
+	</ng-template>
+</app-drop>

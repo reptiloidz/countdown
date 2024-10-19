@@ -42,9 +42,9 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		].join(' ');
 	}
 
-	@ViewChild('buttonTemplateRef', { read: ViewContainerRef })
-	buttonTemplateRef: ViewContainerRef | undefined;
-	@ContentChild('buttonTemplate') buttonTemplate:
+	@ViewChild('triggerTemplateRef', { read: ViewContainerRef })
+	triggerTemplateRef: ViewContainerRef | undefined;
+	@ContentChild('triggerTemplate') triggerTemplate:
 		| TemplateRef<unknown>
 		| undefined;
 	@ContentChild('bodyTemplate') bodyTemplate:
@@ -52,6 +52,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		| undefined;
 	@ViewChild('triggerButton', { read: ElementRef })
 	defaultTriggerButton!: ElementRef;
+	@ViewChild('selectListRef', { read: ElementRef })
+	selectListRef!: ElementRef;
 
 	@Input() open = false;
 	@Input() vertical: DropVertical = 'auto';
@@ -67,6 +69,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() formControlName!: string;
 	@Input() name!: string;
 	@Input() value: string | number = '';
+	@Input() focusoutClose = false;
 
 	@Output() dropChanged = new EventEmitter<string | number>();
 
@@ -77,6 +80,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	private bottomSpace = 0;
 	private topSpace = 0;
 	private documentClickListener: (() => void) | null = null;
+	private dropFocusoutListener: (() => void) | null = null;
 
 	constructor(
 		private elementRef: ElementRef,
@@ -86,6 +90,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	ngOnInit(): void {
 		this.open && this.addDocumentClickListener();
+		this.open && this.focusoutClose && this.addDropFocusoutListener();
 	}
 
 	ngOnDestroy(): void {
@@ -95,10 +100,11 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	openHandler() {
 		this.open = true;
 		this.addDocumentClickListener();
+		this.focusoutClose && this.addDropFocusoutListener();
 
-		const triggerElement = this.buttonTemplate
-			? this.buttonTemplateRef?.element.nativeElement.querySelector(
-					'button'
+		const triggerElement = this.triggerTemplate
+			? this.triggerTemplateRef?.element.nativeElement.querySelector(
+					'button, input'
 			  )
 			: this.defaultTriggerButton.nativeElement;
 		this.triggerOffsetTop = triggerElement.getBoundingClientRect().top;
@@ -140,12 +146,19 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 				this.setDropMaxH();
 			}
+
+			this.selectListRef?.nativeElement
+				?.querySelector('.drop__item--selected')
+				?.scrollIntoView({
+					block: 'center',
+				});
 		});
 	}
 
 	closeHandler() {
 		this.open = false;
 		this.removeDocumentClickListener();
+		this.focusoutClose && this.removeDropFocusoutListener();
 		this.cdr.detectChanges();
 
 		if (this.vertical === 'auto') {
@@ -197,10 +210,29 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		);
 	}
 
+	private addDropFocusoutListener() {
+		this.dropFocusoutListener = this.renderer.listen(
+			this.elementRef.nativeElement,
+			'focusout',
+			() => {
+				requestAnimationFrame(() => {
+					this.closeHandler();
+				});
+			}
+		);
+	}
+
 	private removeDocumentClickListener() {
 		if (this.documentClickListener) {
 			this.documentClickListener();
 			this.documentClickListener = null;
+		}
+	}
+
+	private removeDropFocusoutListener() {
+		if (this.dropFocusoutListener) {
+			this.dropFocusoutListener();
+			this.dropFocusoutListener = null;
 		}
 	}
 

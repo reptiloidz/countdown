@@ -1,4 +1,11 @@
-import { Component, HostBinding, Input, forwardRef } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	HostBinding,
+	Input,
+	Output,
+	forwardRef,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ValidationObjectFieldValue } from 'src/app/interfaces';
 
@@ -21,6 +28,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() autocomplete = '';
 	@Input() invalid: boolean | ValidationObjectFieldValue = false;
 	@Input() formControlName!: string;
+	@Input() name!: string;
 	@Input() type = 'text';
 	@Input() icon!: string;
 	@Input() textarea = false;
@@ -34,7 +42,10 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() clearButtonTitle = '';
 	@Input() textareaRows = 5;
 
-	value: string = '';
+	@Output() focus = new EventEmitter<FocusEvent>();
+	@Output() blur = new EventEmitter<FocusEvent>();
+
+	@Input() value: string | number = '';
 	isDisabled: boolean = false;
 
 	onChange: (value: string) => void = () => {};
@@ -63,5 +74,13 @@ export class InputComponent implements ControlValueAccessor {
 
 	resetValue() {
 		this.writeValue(this.clearButtonValue);
+	}
+
+	focusHandler(event: FocusEvent) {
+		this.focus.emit(event);
+	}
+
+	blurHandler(event: FocusEvent) {
+		this.blur.emit(event);
 	}
 }
