@@ -1,6 +1,7 @@
 <div
 	#triggerTemplateRef
 	*ngIf="triggerTemplate else defaultButton"
+	[ngClass]="navClass"
 >
 	<ng-container
 		[ngTemplateOutlet]="triggerTemplate"
@@ -13,17 +14,18 @@
 	></ng-container>
 </div>
 <ng-template #defaultButton>
-	<button
-		#triggerButton
-		app-button
-		class="drop__nav"
-		[ngClass]="buttonClass"
-		[attr.title]="buttonTitle"
-		mode="ghost"
-		[size]="buttonSize"
-		[icon]="icon"
-		(click)="toggleHandler()"
-	>{{ buttonLabel || ((select || dropList) ? dropList[value] || value : null) }}</button>
+	<div [ngClass]="navClass">
+		<button
+			#triggerButton
+			app-button
+			[ngClass]="buttonClass"
+			[attr.title]="buttonTitle"
+			mode="secondary"
+			[size]="buttonSize"
+			[icon]="icon"
+			(click)="toggleHandler()"
+		>{{ buttonLabel || ((select || dropList) ? dropList[value] || value : null) }}</button>
+	</div>
 </ng-template>
 
 <div

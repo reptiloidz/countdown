@@ -127,7 +127,10 @@
 					(valueSwitched)="changeDirectionFilter($event)"
 				></app-switcher>
 
-				<app-drop [select]="true">
+				<app-drop
+					[select]="true"
+					navClass=""
+				>
 					<ng-template
 						#triggerTemplate
 						let-toggle="toggle"
@@ -191,6 +194,7 @@
 				<app-drop
 					[select]="true"
 					horizontal="left"
+					navClass=""
 				>
 					<ng-template
 						#triggerTemplate

@@ -58,4 +58,8 @@
 	&--error {
 		box-shadow: 0 0 3px red;
 	}
+
+	&--autocomplete {
+		border-width: 0;
+	}
 }

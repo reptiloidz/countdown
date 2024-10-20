@@ -3,7 +3,7 @@
 	--drop-brs: 8px;
 	--drop-nav-brs: var(--drop-brs) var(--drop-brs) 0 1px;
 	--drop-nav-border-top-cl: rgba(var(--c-border-primary), .4);
-	--drop-nav-border-bottom-cl: transparent;
+	--drop-nav-border-bottom-cl: rgba(var(--c-border-primary), .4);
 	--drop-body-brs-tl: 0;
 	--drop-body-brs-tr: var(--drop-brs);
 	--drop-body-brs-br: var(--drop-brs);
@@ -31,12 +31,6 @@
 		> .drop__nav {
 			position: relative;
 			z-index: 2;
-			border-width: 1px;
-			border-style: solid;
-			border-top-color: var(--drop-nav-border-top-cl);
-			border-right-color: rgba(var(--c-border-primary), .4);
-			border-bottom-color: var(--drop-nav-border-bottom-cl);
-			border-left-color: rgba(var(--c-border-primary), .4);
 			border-radius: var(--drop-nav-brs);
 		}
 	}
@@ -45,6 +39,7 @@
 		@include glass;
 
 		position: absolute;
+		min-width: calc(100% + 6px);
 		padding: 12px;
 		border: 1px solid rgba(var(--c-border-primary), .4);
 		overflow: hidden;
@@ -71,6 +66,12 @@
 	}
 
 	&__nav {
+		border-width: 1px;
+		border-style: solid;
+		border-top-color: var(--drop-nav-border-top-cl);
+		border-right-color: rgba(var(--c-border-primary), .4);
+		border-bottom-color: var(--drop-nav-border-bottom-cl);
+		border-left-color: rgba(var(--c-border-primary), .4);
 		background-color: rgb(var(--c-bg-inverse));
 
 		&--sm {
@@ -159,6 +160,8 @@
 		> .drop__body {
 			top: 100%;
 		}
+
+		--drop-nav-border-bottom-cl: transparent;
 
 		&.drop--left {
 			--drop-body-brs-tr: 0;

@@ -70,6 +70,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() name!: string;
 	@Input() value: string | number = '';
 	@Input() focusoutClose = false;
+	@Input() navClass = 'drop__nav';
 
 	@Output() dropChanged = new EventEmitter<string | number>();
 
