@@ -5,27 +5,32 @@
 	[horizontal]="horizontal"
 	[buttonLabel]="dateFormatted"
 	icon=""
+	navClass="drop__nav datepicker__trigger"
 >
 	<ng-template #bodyTemplate>
 		<form>
 			<div class="datepicker__nav">
 				<app-autocomplete
+					class="datepicker__nav-item"
 					placeholder="Год"
 					[value]="dateYear"
 					name="year"
 					[autocompleteList]="yearsArray"
-					(autocompleteChanged)="dateTimeChanged($event)"
+					(autocompleteChanged)="yearSwitched($event)"
 				></app-autocomplete>
 				<app-autocomplete
+					class="datepicker__nav-item datepicker__nav-item--lg"
 					placeholder="Месяц"
-					[value]="dateMonth"
+					[value]="dateMonthNumber"
+					[filterFn]="filterMonth"
 					name="month"
 					[autocompleteList]="monthsArray"
-					(autocompleteChanged)="dateTimeChanged($event)"
+					(autocompleteChanged)="monthSwitched($event)"
 				></app-autocomplete>
 
 				<ng-container *ngIf="!dateOnly">
 					<app-autocomplete
+						class="datepicker__nav-item datepicker__nav-item--sm"
 						placeholder="Час"
 						[value]="dateHour"
 						name="hour"
@@ -33,6 +38,7 @@
 						(autocompleteChanged)="dateTimeChanged($event)"
 					></app-autocomplete>
 					<app-autocomplete
+						class="datepicker__nav-item datepicker__nav-item--sm"
 						placeholder="Минута"
 						[value]="dateMinute"
 						name="minute"

@@ -33,6 +33,7 @@ import {
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format } from 'date-fns';
 import {
+	getInvertedObject,
 	getPointDate,
 	isDateValid,
 	parseDate,
@@ -336,7 +337,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get pointColorNames(): { [key: string]: string } {
-		return PointColors;
+		return getInvertedObject(PointColors);
 	}
 
 	get isBaseFormValid() {

@@ -7,7 +7,9 @@ import {
 	getYear,
 	parse,
 } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { Constants } from 'src/app/enums';
+import { parseDate } from 'src/app/helpers';
 import { DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
@@ -52,14 +54,18 @@ export class DatepickerComponent implements OnInit {
 
 	set dateYear(value: string) {
 		this.visibleDate = parse(
-			value + '.' + (+this.dateMonth + 1) + '.' + '1',
+			value + '.' + (this.dateMonthNumber + 1) + '.' + '1',
 			'y.M.d',
 			this.defaultDate
 		);
 	}
 
 	get dateMonth() {
-		return (getMonth(this.visibleDate || this.defaultDate) + 1).toString();
+		return this.getMonthName(this.dateMonthNumber);
+	}
+
+	get dateMonthNumber() {
+		return getMonth(this.visibleDate || this.defaultDate);
 	}
 
 	set dateMonth(value: string) {
@@ -92,33 +98,54 @@ export class DatepickerComponent implements OnInit {
 		this.datePicked.emit(this.date);
 	}
 
-	get yearsArray(): Record<number, number> {
+	get yearsArray(): Record<number, number | string> {
 		return this.createArray(200, (index) => this.currentYear - 100 + index);
 	}
 
-	get monthsArray(): Record<number, number> {
-		return this.createArray(12, (index) => index + 1);
+	get monthsArray(): Record<number, number | string> {
+		return this.createArray(
+			12,
+			(index) => this.getMonthName(index),
+			(index) => index
+		);
 	}
 
-	get hoursArray(): Record<number, number> {
+	get hoursArray(): Record<number, number | string> {
 		return this.createArray(24, (index) => index);
 	}
 
-	get minutesArray(): Record<number, number> {
+	get minutesArray(): Record<number, number | string> {
 		return this.createArray(60, (index) => index);
 	}
 
 	private createArray(
 		length: number,
-		getValue: (index: number) => number
-	): Record<number, number> {
+		getValue: (index: number) => number | string,
+		getKey?: (index: number) => number | string
+	): Record<number, number | string> {
 		return Array.from({ length }, (_, index) => ({
-			[getValue(index)]: getValue(index),
+			[getValue(index)]: getKey ? getKey(index) : getValue(index),
 		})).reduce((acc, obj) => ({ ...acc, ...obj }), {});
 	}
 
+	getMonthName(index: number): string {
+		return format(new Date(2000, index), 'LLLL', {
+			locale: ru,
+		});
+	}
+
+	yearSwitched(value: string | number) {
+		this.visibleDate = parseDate(
+			`${+this.dateMonthNumber}/01/${value} 00:00`
+		);
+	}
+
+	monthSwitched(value: string | number) {
+		this.visibleDate = parseDate(`${+value + 1}/01/${this.dateYear} 00:00`);
+	}
+
 	dateTimeChanged(value: string | number) {
-		console.log(value);
+		// console.log(value);
 	}
 
 	dateSelected({ date }: { date: Date }) {
@@ -132,5 +159,12 @@ export class DatepickerComponent implements OnInit {
 	visibleDateSelected(date: Date = this.visibleDate || this.defaultDate) {
 		this.dateYear = getYear(date).toString();
 		this.dateMonth = getMonth(date).toString();
+	}
+
+	filterMonth(item: [string, string | number], filterValue: string) {
+		return (
+			item[0].includes(filterValue) ||
+			(+item[1] + 1).toString().includes(filterValue)
+		);
 	}
 }

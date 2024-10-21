@@ -24,7 +24,7 @@
 			[size]="buttonSize"
 			[icon]="icon"
 			(click)="toggleHandler()"
-		>{{ buttonLabel || ((select || dropList) ? dropList[value] || value : null) }}</button>
+		>{{ buttonLabel || ((select || dropList) ? keyOfValue || value : null) }}</button>
 	</div>
 </ng-template>
 
@@ -59,12 +59,12 @@
 		app-button
 		class="drop__item"
 		[ngClass]="{
-			'drop__item--selected': value === item.key
+			'drop__item--selected': value.toString() === item.value.toString()
 		}"
 		textClass="drop__item-text"
-		(click)="changeHandler(item.key)"
+		(click)="changeHandler(item.value)"
 	>
-		{{ item.value }}
+		{{ item.key }}
 		<svg
 			app-svg
 			name="check"

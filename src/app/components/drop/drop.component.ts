@@ -18,6 +18,7 @@ import {
 	EventEmitter,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { getKeyByValue } from 'src/app/helpers';
 import { Select } from 'src/app/interfaces';
 import { ButtonSize, DropHorizontal, DropVertical } from 'src/app/types';
 
@@ -96,6 +97,10 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	ngOnDestroy(): void {
 		this.removeDocumentClickListener();
+	}
+
+	get keyOfValue() {
+		return getKeyByValue(this.dropList, this.value);
 	}
 
 	openHandler() {
@@ -216,9 +221,9 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			this.elementRef.nativeElement,
 			'focusout',
 			() => {
-				requestAnimationFrame(() => {
+				setTimeout(() => {
 					this.closeHandler();
-				});
+				}, 100);
 			}
 		);
 	}
@@ -237,7 +242,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		}
 	}
 
-	changeHandler(value: string) {
+	changeHandler(value: string | number) {
 		this.value = value;
 		this.onChange(value);
 		this.onTouched();
@@ -245,7 +250,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.dropChanged.emit(value);
 	}
 
-	onChange: (value: string) => void = () => {};
+	onChange: (value: string | number) => void = () => {};
 	onTouched: () => void = () => {};
 
 	writeValue(value: string): void {

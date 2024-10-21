@@ -1,5 +1,5 @@
 <app-drop
-	[dropList]="autocompleteList"
+	[dropList]="autocompleteListFiltered"
 	(dropChanged)="changeHandler($event)"
 	[value]="value"
 	[focusoutClose]="true"
@@ -12,8 +12,10 @@
 			class="control--autocomplete"
 			placeholder="Название"
 			name="autocomplete"
-			[value]="value"
+			[(ngModel)]="visibleValue"
+			(ngModelChange)="filter($event)"
 			(focus)="open()"
+			autocomplete="off"
 		></app-input>
 	</ng-template>
 </app-drop>

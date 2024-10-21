@@ -12,3 +12,5 @@ export * from './getFirstIteration';
 export * from './checkCopies';
 export * from './getClosestIteration';
 export * from './parseDate';
+export * from './getInvertedObject';
+export * from './getKeyByValue';
