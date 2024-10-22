@@ -35,7 +35,7 @@
 						[value]="dateHour"
 						name="hour"
 						[autocompleteList]="hoursArray"
-						(autocompleteChanged)="dateTimeChanged($event)"
+						(autocompleteChanged)="hourSwitched($event)"
 					></app-autocomplete>
 					<app-autocomplete
 						class="datepicker__nav-item datepicker__nav-item--sm"
@@ -43,7 +43,7 @@
 						[value]="dateMinute"
 						name="minute"
 						[autocompleteList]="minutesArray"
-						(autocompleteChanged)="dateTimeChanged($event)"
+						(autocompleteChanged)="minuteSwitched($event)"
 					></app-autocomplete>
 				</ng-container>
 			</div>

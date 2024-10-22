@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
 	format,
+	getDate,
 	getHours,
 	getMinutes,
 	getMonth,
@@ -76,6 +77,10 @@ export class DatepickerComponent implements OnInit {
 		);
 	}
 
+	get dateDay() {
+		return getDate(this.defaultDate).toString();
+	}
+
 	get dateHour() {
 		return getHours(this.defaultDate).toString();
 	}
@@ -144,8 +149,20 @@ export class DatepickerComponent implements OnInit {
 		this.visibleDate = parseDate(`${+value + 1}/01/${this.dateYear} 00:00`);
 	}
 
-	dateTimeChanged(value: string | number) {
-		// console.log(value);
+	hourSwitched(value: string | number) {
+		this.date = parseDate(
+			`${+this.dateMonthNumber + 1}/${this.dateDay}/${
+				this.dateYear
+			} ${value}:${this.dateMinute}`
+		);
+	}
+
+	minuteSwitched(value: string | number) {
+		this.date = parseDate(
+			`${+this.dateMonthNumber + 1}/${this.dateDay}/${this.dateYear} ${
+				this.dateHour
+			}:${value}`
+		);
 	}
 
 	dateSelected({ date }: { date: Date }) {
