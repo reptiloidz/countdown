@@ -40,7 +40,8 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
-import { CalendarMode, EditPointEvent } from 'src/app/types';
+import { CalendarMode, EditPointEvent, PointColorTypes } from 'src/app/types';
+import { DropComponent } from '../drop/drop.component';
 
 export enum EditPointType {
 	Create = 'create',
@@ -65,6 +66,7 @@ enum EditPointSuccessMessage {
 })
 export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
+	@ViewChild('colorDrop') private colorDrop!: DropComponent;
 	@HostBinding('class') class = 'main__inner';
 	type = EditPointType.Edit;
 	form!: FormGroup;
@@ -337,7 +339,23 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get pointColorNames(): { [key: string]: string } {
+		return PointColors;
+	}
+
+	get pointColorNamesInverted(): { [key: string]: string } {
 		return getInvertedObject(PointColors);
+	}
+
+	get pointColors() {
+		return Object.keys(PointColors) as PointColorTypes[];
+	}
+
+	get pointColor() {
+		return this.form.controls['color'].value;
+	}
+
+	get pointColorName() {
+		return this.pointColorNames[this.pointColor];
 	}
 
 	get isBaseFormValid() {
@@ -430,6 +448,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		if (this.isIterationSwitched) {
 			this.setValues();
 		}
+	}
+
+	switchColor(color: string) {
+		this.form.controls['color'].setValue(color);
+		this.colorDrop.closeHandler();
 	}
 
 	addIterationHandler() {

@@ -16,7 +16,7 @@ export class ButtonComponent {
 	@Input() mode!: 'primary' | 'secondary' | 'negative' | 'positive' | 'ghost';
 	@Input() size!: ButtonSize;
 	@Input() disabled = false;
-	@Input() textClass = '';
+	@Input() textClass: string[] = [];
 
 	@HostBinding('attr.type') get typeAttr(): string | null {
 		return this.type || (this.tag === 'button' ? 'button' : null);
@@ -34,6 +34,13 @@ export class ButtonComponent {
 
 	get tag(): string {
 		return this.elementRef.nativeElement.nodeName?.toLowerCase();
+	}
+
+	get textClasses() {
+		return [
+			this.view === 'button' ? 'button__text' : 'link__text',
+			...this.textClass,
+		];
 	}
 
 	constructor(public elementRef: ElementRef) {}

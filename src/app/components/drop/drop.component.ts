@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { getKeyByValue } from 'src/app/helpers';
-import { Select } from 'src/app/interfaces';
+import { NgClassType, Select } from 'src/app/interfaces';
 import { ButtonSize, DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
@@ -71,7 +71,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() name!: string;
 	@Input() value: string | number = '';
 	@Input() focusoutClose = false;
-	@Input() navClass = 'drop__nav';
+	@Input() navClass: NgClassType = 'drop__nav';
+	@Input() listButtonTextClass = '';
 
 	@Output() dropChanged = new EventEmitter<string | number>();
 

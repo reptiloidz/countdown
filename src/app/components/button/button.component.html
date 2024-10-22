@@ -7,10 +7,7 @@
 	[ngTemplateOutlet]="iconTemplate"
 ></ng-container>
 
-<span [ngClass]="[
-		view === 'button' ? 'button__text' : 'link__text',
-		textClass
-	]"><ng-content></ng-content></span>
+<span [ngClass]="textClasses"><ng-content></ng-content></span>
 
 <ng-container
 	*ngIf="iconPosition === 'right' && !loading && icon"

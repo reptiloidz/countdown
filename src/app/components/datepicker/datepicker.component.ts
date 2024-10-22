@@ -155,6 +155,7 @@ export class DatepickerComponent implements OnInit {
 				this.dateYear
 			} ${value}:${this.dateMinute}`
 		);
+		this.datePicked.emit(this.date);
 	}
 
 	minuteSwitched(value: string | number) {
@@ -163,6 +164,7 @@ export class DatepickerComponent implements OnInit {
 				this.dateHour
 			}:${value}`
 		);
+		this.datePicked.emit(this.date);
 	}
 
 	dateSelected({ date }: { date: Date }) {

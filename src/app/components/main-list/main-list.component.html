@@ -218,7 +218,7 @@
 							[ngClass]="{
 								'drop__item--selected': sortTypeItem === sortType
 							}"
-							textClass="drop__item-text"
+							[textClass]="['drop__item-text']"
 							[icon]="(sortTypeItem | sortTrending).icon"
 							[iconTitle]="(sortTypeItem | sortTrending).title"
 							iconAriaHidden="false"

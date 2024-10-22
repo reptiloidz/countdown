@@ -12,3 +12,4 @@ export * from './validation.interface';
 export * from './environment.interface';
 export * from './switcherItem.interface';
 export * from './select.interface';
+export * from './ngClass.interface';
