@@ -1,6 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Input,
+	OnInit,
+	Output,
+	ViewChild,
+} from '@angular/core';
 import { getKeyByValue } from 'src/app/helpers';
 import { Select } from 'src/app/interfaces';
+import { DropComponent } from '../drop/drop.component';
+import { InputComponent } from '../input/input.component';
 
 @Component({
 	selector: 'app-autocomplete',
@@ -18,7 +27,12 @@ export class AutocompleteComponent implements OnInit {
 	autocompleteListFiltered!: Select;
 	visibleValue: string | number = '';
 
+	private firstFilteredValue!: [string, string | number];
+
 	@Output() autocompleteChanged = new EventEmitter<string | number>();
+
+	@ViewChild(DropComponent) drop!: DropComponent;
+	@ViewChild(InputComponent) input!: InputComponent;
 
 	ngOnInit(): void {
 		this.visibleValue =
@@ -34,15 +48,32 @@ export class AutocompleteComponent implements OnInit {
 	}
 
 	filter(filterValue: string) {
-		const autocompleteListFilteredArray = Object.entries(
-			this.autocompleteList
-		).filter((item) => this.filterFn(item, filterValue));
+		const autocompleteListArray = Object.entries(this.autocompleteList);
+		const autocompleteListFilteredArray = autocompleteListArray.filter(
+			(item) => this.filterFn(item, filterValue)
+		);
 
+		this.firstFilteredValue = autocompleteListFilteredArray[0];
 		this.autocompleteListFiltered = autocompleteListFilteredArray.length
 			? autocompleteListFilteredArray.reduce((acc, [key, value]) => {
 					acc[key] = value;
 					return acc;
 			  }, {} as { [key: string]: string | number })
 			: this.autocompleteList;
+	}
+
+	selectFirstOption() {
+		this.drop.closeHandler();
+		this.input.blurInput();
+		this.changeHandler(
+			this.firstFilteredValue ? this.firstFilteredValue[1] : this.value
+		);
+		this.autocompleteListFiltered = this.autocompleteList;
+	}
+
+	keydown(event: KeyboardEvent) {
+		if (event.key === 'Enter') {
+			this.selectFirstOption();
+		}
 	}
 }

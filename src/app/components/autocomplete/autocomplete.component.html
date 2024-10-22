@@ -15,6 +15,7 @@
 			[(ngModel)]="visibleValue"
 			(ngModelChange)="filter($event)"
 			(focus)="open()"
+			(keydown)="keydown($event)"
 			autocomplete="off"
 		></app-input>
 	</ng-template>

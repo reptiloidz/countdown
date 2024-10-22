@@ -1,9 +1,11 @@
 import {
 	Component,
+	ElementRef,
 	EventEmitter,
 	HostBinding,
 	Input,
 	Output,
+	ViewChild,
 	forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -44,8 +46,12 @@ export class InputComponent implements ControlValueAccessor {
 
 	@Output() focus = new EventEmitter<FocusEvent>();
 	@Output() blur = new EventEmitter<FocusEvent>();
+	@Output() keydown = new EventEmitter<KeyboardEvent>();
 
 	@Input() value: string | number = '';
+
+	@ViewChild('inputRef') inputRef!: ElementRef;
+
 	isDisabled: boolean = false;
 
 	onChange: (value: string) => void = () => {};
@@ -82,5 +88,13 @@ export class InputComponent implements ControlValueAccessor {
 
 	blurHandler(event: FocusEvent) {
 		this.blur.emit(event);
+	}
+
+	blurInput() {
+		this.inputRef.nativeElement.blur();
+	}
+
+	keydownHandler(event: KeyboardEvent) {
+		this.keydown.emit(event);
 	}
 }

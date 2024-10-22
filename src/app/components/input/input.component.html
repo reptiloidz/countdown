@@ -1,4 +1,5 @@
 <input
+	#inputRef
 	*ngIf="!textarea else textareaTemplate;"
 	[attr.type]="type"
 	[placeholder]="placeholder"
@@ -15,6 +16,7 @@
 	[attr.min]="min || null"
 	(focus)="focusHandler($event)"
 	(blur)="blurHandler($event)"
+	(keydown)="keydownHandler($event)"
 >
 <div
 	*ngIf="icon || clearButton"
