@@ -136,7 +136,7 @@ export class DatepickerComponent implements OnInit {
 
 	yearSwitched(value: string | number) {
 		this.visibleDate = parseDate(
-			`${+this.dateMonthNumber}/01/${value} 00:00`
+			`${+this.dateMonthNumber + 1}/01/${value} 00:00`
 		);
 	}
 
