@@ -69,6 +69,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() hideModeSwitch = false;
 	@Input() daysPerWeek: number | string = 7;
 	@Input() weekendDays = [5, 6];
+	@Input() rowsNumber!: number;
 
 	calendarArray: CalendarDate[][] = [];
 	daysOfWeek: string[] = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
@@ -292,20 +293,24 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		let cols = +this.daysPerWeek;
 		let rowNumber = 0;
 
-		switch (mode) {
-			case 'year':
-				cols = 12;
-				break;
-			case 'day':
-				rows = 2;
-				cols = 12;
-				break;
-			case 'hour':
-				rows = 4;
-				cols = 15;
-				break;
-			default:
-				break;
+		if (this.rowsNumber) {
+			rows = this.rowsNumber;
+		} else {
+			switch (mode) {
+				case 'year':
+					cols = 12;
+					break;
+				case 'day':
+					rows = 2;
+					cols = 12;
+					break;
+				case 'hour':
+					rows = 4;
+					cols = 15;
+					break;
+				default:
+					break;
+			}
 		}
 
 		let fullArray = [];
@@ -377,8 +382,10 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 					if (
 						(mode === 'month' &&
+							!this.rowsNumber &&
 							+thisDate === +this.lastDateOfCurrentMonth) ||
-						((mode === 'year' ||
+						((this.rowsNumber ||
+							mode === 'year' ||
 							mode === 'day' ||
 							mode === 'hour') &&
 							rowNumber === rows - 1)
@@ -413,7 +420,12 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			}
 
-			if (mode === 'year' || mode === 'day' || mode === 'hour') {
+			if (
+				mode === 'year' ||
+				mode === 'day' ||
+				mode === 'hour' ||
+				this.rowsNumber
+			) {
 				rowNumber++;
 			}
 
