@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { format } from 'date-fns';
 import { Constants } from 'src/app/enums';
-import { getPointDate, parseDate } from 'src/app/helpers';
+import { getInvertedObject, getPointDate, parseDate } from 'src/app/helpers';
 import { Iteration, SwitcherItem } from 'src/app/interfaces';
 
 @Component({
@@ -31,12 +31,18 @@ export class GenerateIterationsComponent {
 		{
 			text: 'Задать число повторов',
 			value: 'setRepeatsAmount',
+			icon: 'refresh',
 		},
 		{
 			text: 'Задать конец диапазона',
 			value: 'setRangeEnd',
+			icon: 'calendar-clock',
 		},
 	];
+
+	get periodicityListInverted() {
+		return getInvertedObject(this.periodicityList);
+	}
 
 	get iterationsForm() {
 		return this.form.get('iterationsForm') as FormGroup;
