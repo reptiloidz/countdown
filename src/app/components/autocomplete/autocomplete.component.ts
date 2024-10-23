@@ -102,4 +102,10 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 		this.action.autocompleteOpened();
 		this.drop.openHandler();
 	}
+
+	closeHandler() {
+		this.visibleValue =
+			getKeyByValue(this.autocompleteList, this.value) ||
+			this.visibleValue;
+	}
 }

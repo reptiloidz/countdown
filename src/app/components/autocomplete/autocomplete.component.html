@@ -1,6 +1,7 @@
 <app-drop
 	[dropList]="autocompleteListFiltered"
 	(dropChanged)="changeHandler($event)"
+	(dropClosed)="closeHandler()"
 	[value]="value"
 	[focusoutClose]="true"
 >

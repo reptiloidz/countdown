@@ -75,6 +75,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() listButtonTextClass = '';
 
 	@Output() dropChanged = new EventEmitter<string | number>();
+	@Output() dropClosed = new EventEmitter();
 
 	private triggerOffsetTop = 0;
 	private footerHeight = 0;
@@ -181,6 +182,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			null,
 			RendererStyleFlags2.DashCase
 		);
+
+		this.dropClosed.emit();
 	}
 
 	setDropMaxH(isTop = false) {
