@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() value: string | number = '';
+	@Input() visibleValue: string | number = '';
 	@Input() placeholder = '';
 	@Input() autocompleteList!: Select;
 	@Input() filterFn = (
@@ -28,7 +29,6 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	) => item[0].includes(filterValue);
 
 	autocompleteListFiltered!: Select;
-	visibleValue: string | number = '';
 
 	private firstFilteredValue!: [string, string | number];
 	private subscriptions = new Subscription();
