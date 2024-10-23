@@ -4,17 +4,14 @@
 	[value]="value"
 	[focusoutClose]="true"
 >
-	<ng-template
-		#triggerTemplate
-		let-open="open"
-	>
+	<ng-template #triggerTemplate>
 		<app-input
 			class="control--autocomplete"
 			placeholder="Название"
 			name="autocomplete"
 			[(ngModel)]="visibleValue"
 			(ngModelChange)="filter($event)"
-			(focus)="open()"
+			(focus)="openHandler()"
 			(keydown)="keydown($event)"
 			autocomplete="off"
 		></app-input>

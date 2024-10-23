@@ -83,7 +83,6 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	private bottomSpace = 0;
 	private topSpace = 0;
 	private documentClickListener: (() => void) | null = null;
-	private dropFocusoutListener: (() => void) | null = null;
 
 	constructor(
 		private elementRef: ElementRef,
@@ -93,7 +92,6 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	ngOnInit(): void {
 		this.open && this.addDocumentClickListener();
-		this.open && this.focusoutClose && this.addDropFocusoutListener();
 	}
 
 	ngOnDestroy(): void {
@@ -107,7 +105,6 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	openHandler() {
 		this.open = true;
 		this.addDocumentClickListener();
-		this.focusoutClose && this.addDropFocusoutListener();
 
 		const triggerElement = this.triggerTemplate
 			? this.triggerTemplateRef?.element.nativeElement.querySelector(
@@ -165,7 +162,6 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	closeHandler() {
 		this.open = false;
 		this.removeDocumentClickListener();
-		this.focusoutClose && this.removeDropFocusoutListener();
 		this.cdr.detectChanges();
 
 		if (this.vertical === 'auto') {
@@ -217,29 +213,10 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		);
 	}
 
-	private addDropFocusoutListener() {
-		this.dropFocusoutListener = this.renderer.listen(
-			this.elementRef.nativeElement,
-			'focusout',
-			() => {
-				setTimeout(() => {
-					this.closeHandler();
-				}, 100);
-			}
-		);
-	}
-
 	private removeDocumentClickListener() {
 		if (this.documentClickListener) {
 			this.documentClickListener();
 			this.documentClickListener = null;
-		}
-	}
-
-	private removeDropFocusoutListener() {
-		if (this.dropFocusoutListener) {
-			this.dropFocusoutListener();
-			this.dropFocusoutListener = null;
 		}
 	}
 

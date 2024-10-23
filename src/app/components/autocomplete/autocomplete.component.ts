@@ -2,6 +2,7 @@ import {
 	Component,
 	EventEmitter,
 	Input,
+	OnDestroy,
 	OnInit,
 	Output,
 	ViewChild,
@@ -10,12 +11,14 @@ import { getKeyByValue } from 'src/app/helpers';
 import { Select } from 'src/app/interfaces';
 import { DropComponent } from '../drop/drop.component';
 import { InputComponent } from '../input/input.component';
+import { ActionService } from 'src/app/services';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-autocomplete',
 	templateUrl: './autocomplete.component.html',
 })
-export class AutocompleteComponent implements OnInit {
+export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() value: string | number = '';
 	@Input() placeholder = '';
 	@Input() autocompleteList!: Select;
@@ -28,16 +31,33 @@ export class AutocompleteComponent implements OnInit {
 	visibleValue: string | number = '';
 
 	private firstFilteredValue!: [string, string | number];
+	private subscriptions = new Subscription();
+	private isOpening = false;
 
 	@Output() autocompleteChanged = new EventEmitter<string | number>();
 
 	@ViewChild(DropComponent) drop!: DropComponent;
 	@ViewChild(InputComponent) input!: InputComponent;
 
+	constructor(private action: ActionService) {}
+
 	ngOnInit(): void {
 		this.visibleValue =
 			getKeyByValue(this.autocompleteList, this.value) || '';
 		this.autocompleteListFiltered = this.autocompleteList;
+
+		this.subscriptions.add(
+			this.action.eventAutocompleteOpened$.subscribe({
+				next: () => {
+					!this.isOpening && this.drop.closeHandler();
+					this.isOpening = false;
+				},
+			})
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	changeHandler(value: string | number) {
@@ -75,5 +95,11 @@ export class AutocompleteComponent implements OnInit {
 		if (event.key === 'Enter') {
 			this.selectFirstOption();
 		}
+	}
+
+	openHandler() {
+		this.isOpening = true;
+		this.action.autocompleteOpened();
+		this.drop.openHandler();
 	}
 }
