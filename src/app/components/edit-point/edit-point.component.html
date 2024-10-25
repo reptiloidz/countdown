@@ -147,10 +147,15 @@
 				<div class="form__row">
 					<app-datepicker
 						horizontal="left"
-						class="form__btn"
+						class="form__btn form__col"
 						(datePicked)="datePicked($event)"
 						[date]="pointDate"
 					></app-datepicker>
+					<app-drop
+						[dropList]="differenceModeArray"
+						(dropChanged)="differenceModeChanged($event)"
+						[value]="differenceMode"
+					></app-drop>
 					<app-input
 						placeholder="Срок в минутах"
 						formControlName="difference"
@@ -166,7 +171,7 @@
 				<div class="form__row">
 					<app-drop
 						*ngIf="isRepeatable && !isCreation"
-						class="drop--nested"
+						class="drop--nested form__col"
 					>
 						<ng-template
 							#triggerTemplate

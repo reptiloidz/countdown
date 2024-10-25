@@ -1,13 +1,19 @@
-import { Select } from 'src/app/interfaces';
+import { Select, SelectArray } from 'src/app/interfaces';
 
 export const getKeyByValue = (
-	arrayOfValues: Select,
+	values: Select | SelectArray[],
 	searchValue: string | number
 ) => {
-	for (const [key, value] of Object.entries(arrayOfValues)) {
-		if (searchValue.toString() === value.toString()) {
-			return key;
+	if (Array.isArray(values)) {
+		return (values as SelectArray[]).find(
+			(item) => item.value === searchValue
+		)?.key;
+	} else {
+		for (const [key, value] of Object.entries(values)) {
+			if (searchValue.toString() === value.toString()) {
+				return key;
+			}
 		}
+		return undefined;
 	}
-	return undefined;
 };

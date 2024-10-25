@@ -29,6 +29,7 @@ import {
 	Iteration,
 	UserExtraData,
 	SwitcherItem,
+	SelectArray,
 } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import { format } from 'date-fns';
@@ -40,7 +41,12 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
-import { CalendarMode, EditPointEvent, PointColorTypes } from 'src/app/types';
+import {
+	CalendarMode,
+	DifferenceMode,
+	EditPointEvent,
+	PointColorTypes,
+} from 'src/app/types';
 import { DropComponent } from '../drop/drop.component';
 
 export enum EditPointType {
@@ -90,6 +96,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	isIterationSwitched = false;
 	showIterationsInfo = false;
 	datePickerValue = this.pointDate;
+	differenceMode: DifferenceMode = 'minutes';
 
 	directionList: SwitcherItem[] = [
 		{
@@ -101,6 +108,33 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			text: 'Прямой отсчёт',
 			value: 'forward',
 			icon: 'rotate-right',
+		},
+	];
+
+	differenceModeArray: SelectArray[] = [
+		{
+			key: 'Минуты',
+			value: 'minutes',
+		},
+		{
+			key: 'Часы',
+			value: 'hours',
+		},
+		{
+			key: 'Дни',
+			value: 'days',
+		},
+		{
+			key: 'Недели',
+			value: 'weeks',
+		},
+		{
+			key: 'Месяцы',
+			value: 'months',
+		},
+		{
+			key: 'Годы',
+			value: 'years',
 		},
 	];
 
@@ -366,6 +400,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.form.controls['difference'].valid;
 	}
 
+	get pageTitle() {
+		return !this.isCreation
+			? 'Редактирование'
+			: this.isCreationBase
+			? 'Создание'
+			: 'Создание события-ссылки';
+	}
+
 	sortDates() {
 		const sortedDates = this.point && sortDates(this.point).dates;
 		if (this.point && sortedDates) {
@@ -460,12 +502,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.setValues(true);
 	}
 
-	get pageTitle() {
-		return !this.isCreation
-			? 'Редактирование'
-			: this.isCreationBase
-			? 'Создание'
-			: 'Создание события-ссылки';
+	differenceModeChanged(value: string | number) {
+		this.differenceMode = value as DifferenceMode;
 	}
 
 	convertToMinutes(ms: number): number {

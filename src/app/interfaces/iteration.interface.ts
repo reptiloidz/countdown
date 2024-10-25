@@ -1,4 +1,4 @@
-import { IterationReasons } from '.';
+import { IterationReasons } from '../types';
 
 export interface Iteration {
 	date: string;
