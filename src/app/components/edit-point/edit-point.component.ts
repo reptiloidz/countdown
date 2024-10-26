@@ -32,7 +32,7 @@ import {
 	SelectArray,
 } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
-import { format } from 'date-fns';
+import { addMonths, addYears, format } from 'date-fns';
 import {
 	getInvertedObject,
 	getPointDate,
@@ -96,7 +96,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	isIterationSwitched = false;
 	showIterationsInfo = false;
 	datePickerValue = this.pointDate;
-	differenceMode: DifferenceMode = 'minutes';
+	differenceMode: DifferenceMode =
+		(localStorage.getItem('differenceMode') as DifferenceMode) || 'minutes';
 
 	directionList: SwitcherItem[] = [
 		{
@@ -302,7 +303,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			interval(Constants.msInMinute).subscribe({
 				next: () => {
-					this.dateChanged();
+					this.dateChanged(this.pointDate);
 				},
 				error: (err) => {
 					console.error('Ошибка при работе таймера:\n', err.message);
@@ -408,6 +409,23 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			: 'Создание события-ссылки';
 	}
 
+	get visibleDifference() {
+		switch (this.differenceMode) {
+			case 'hours':
+				return Math.round(this.difference / 60);
+			case 'days':
+				return Math.round(this.difference / (60 * 24));
+			case 'weeks':
+				return Math.round(this.difference / (60 * 24 * 7));
+			case 'months':
+				return Math.round(this.difference / (60 * 24 * 30));
+			case 'years':
+				return Math.round(this.difference / (60 * 24 * 30 * 12));
+			default:
+				return this.difference;
+		}
+	}
+
 	sortDates() {
 		const sortedDates = this.point && sortDates(this.point).dates;
 		if (this.point && sortedDates) {
@@ -460,17 +478,36 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			+(date || this.datePickerValue) - +new Date()
 		);
 
-		this.form.controls['difference'].setValue(this.difference, {
-			emitEvent: false,
-		});
+		this.setVisibleDifference();
 	}
 
-	differenceChanged() {
-		const diff = +this.form.controls['difference'].value;
+	differenceChanged(diff: number = +this.form.controls['difference'].value) {
 		const currentDate = new Date();
-		const targetDate = new Date(
-			currentDate.getTime() + diff * Constants.msInMinute
-		);
+		let diffMs!: number;
+		let targetDate!: Date;
+
+		switch (this.differenceMode) {
+			case 'hours':
+				diffMs = diff * Constants.msInMinute * 60;
+				break;
+			case 'days':
+				diffMs = diff * Constants.msInMinute * 60 * 24;
+				break;
+			case 'weeks':
+				diffMs = diff * Constants.msInMinute * 60 * 24 * 7;
+				break;
+			case 'months':
+				targetDate = addMonths(currentDate, diff);
+				break;
+			case 'years':
+				targetDate = addYears(currentDate, diff);
+				break;
+			default:
+				diffMs = diff * Constants.msInMinute;
+				break;
+		}
+
+		!targetDate && (targetDate = new Date(currentDate.getTime() + diffMs));
 		// Пришлось упростить, когда добавил вывод отрицательных значений
 		// const targetDate = this.isForward
 		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
@@ -504,6 +541,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	differenceModeChanged(value: string | number) {
 		this.differenceMode = value as DifferenceMode;
+		localStorage.setItem('differenceMode', this.differenceMode);
+		this.setVisibleDifference();
 	}
 
 	convertToMinutes(ms: number): number {
@@ -529,6 +568,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	datePicked(date: Date) {
 		this.datePickerValue = date;
 		this.dateChanged();
+	}
+
+	setVisibleDifference() {
+		this.form.controls['difference'].setValue(this.visibleDifference, {
+			emitEvent: false,
+		});
 	}
 
 	submit(saveIteration = false, repeats: Iteration[] = []) {

@@ -76,11 +76,11 @@ export class GenerateIterationsComponent {
 				break;
 
 			case 'perMonths':
-				periodicity = Constants.msInMinute * 60 * 24 * 7 * 30;
+				periodicity = Constants.msInMinute * 60 * 24 * 30;
 				break;
 
 			case 'perYears':
-				periodicity = Constants.msInMinute * 60 * 24 * 7 * 30 * 12;
+				periodicity = Constants.msInMinute * 60 * 24 * 30 * 12;
 				break;
 
 			default:

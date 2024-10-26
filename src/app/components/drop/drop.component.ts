@@ -78,6 +78,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() focusoutClose = false;
 	@Input() navClass: NgClassType = 'drop__nav';
 	@Input() listButtonTextClass = '';
+	@Input() buttonTextClass: string[] = [];
 
 	@Output() dropChanged = new EventEmitter<string | number>();
 	@Output() dropClosed = new EventEmitter();

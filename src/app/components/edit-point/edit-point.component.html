@@ -70,6 +70,7 @@
 						#colorDrop
 						formControlName="color"
 						class="form__color"
+						[buttonTextClass]="['color', 'color--' + pointColor, 'drop__item-color']"
 						[select]="true"
 						[buttonLabel]="pointColorName"
 					>
@@ -166,6 +167,7 @@
 						[clearButton]="true"
 						clearButtonTitle="Сброс (итерация произошла сейчас)"
 						clearButtonValue="0"
+						(reset)="differenceChanged(0)"
 					></app-input>
 				</div>
 				<div class="form__row">

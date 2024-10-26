@@ -47,6 +47,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Output() focus = new EventEmitter<FocusEvent>();
 	@Output() blur = new EventEmitter<FocusEvent>();
 	@Output() keydown = new EventEmitter<KeyboardEvent>();
+	@Output() reset = new EventEmitter<string | number>();
 
 	@Input() value: string | number = '';
 
@@ -80,6 +81,7 @@ export class InputComponent implements ControlValueAccessor {
 
 	resetValue() {
 		this.writeValue(this.clearButtonValue);
+		this.reset.emit(this.value);
 	}
 
 	focusHandler(event: FocusEvent) {
