@@ -12,6 +12,7 @@
 				<app-input
 					class="generation__control-datepicker"
 					type="number"
+					mask="0*"
 					placeholder="Число повторов"
 					formControlName="rangeAmount"
 					[min]="2"
@@ -38,13 +39,24 @@
 				<app-input
 					class="generation__period"
 					type="number"
+					mask="0*"
+					[min]="1"
 					formControlName="rangePeriod"
 				></app-input>
 				<app-drop
+					navClass="drop__nav generation__period-mode"
 					formControlName="periodicity"
 					[dropList]="periodicityList"
 				></app-drop>
 			</div>
+			<app-radio
+				*ngIf="periodicityModeValue === 'perMonths'"
+				class="generation__month-options"
+				[items]="monthOptions"
+				formControlName="monthOptions"
+				dotSize="sm"
+				radioClass="generation__radio"
+			></app-radio>
 			<div>
 
 			</div>

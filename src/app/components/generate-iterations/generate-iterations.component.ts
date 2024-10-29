@@ -5,13 +5,20 @@ import {
 	differenceInWeeks,
 	endOfMonth,
 	format,
+	getDate,
+	getDay,
 	getWeekOfMonth,
 	startOfMonth,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants } from 'src/app/enums';
 import { getPointDate, parseDate } from 'src/app/helpers';
-import { Iteration, SelectArray, SwitcherItem } from 'src/app/interfaces';
+import {
+	Iteration,
+	RadioItem,
+	SelectArray,
+	SwitcherItem,
+} from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-generate-iterations',
@@ -25,6 +32,7 @@ export class GenerateIterationsComponent implements OnInit {
 	rangeStartDate = new Date();
 	rangeEndDate = new Date(+new Date() + Constants.msInMinute * 10);
 	repeats: Iteration[] = [];
+	monthOptions: RadioItem[] = [];
 
 	periodicityList: SelectArray[] = [
 		{
@@ -79,6 +87,18 @@ export class GenerateIterationsComponent implements OnInit {
 			this.iterationsForm.controls['repeatsMode'].value ===
 			'setRepeatsAmount'
 		);
+	}
+
+	get rangeAmountValue() {
+		return this.iterationsForm.controls['rangeAmount'].value;
+	}
+
+	get rangePeriodValue() {
+		return this.iterationsForm.controls['rangePeriod'].value;
+	}
+
+	get periodicityModeValue() {
+		return this.iterationsForm.controls['periodicity'].value;
 	}
 
 	get periodicityValue() {
@@ -181,7 +201,108 @@ export class GenerateIterationsComponent implements OnInit {
 		);
 	}
 
+	getStartDayParam() {
+		let startDayParams: RadioItem[] = [];
+		let dayNumberSelected = false;
+
+		if (
+			!this.lastDayOfMonth &&
+			!this.secondFromTheEndDayMonth &&
+			!this.thirdFromTheEndDayMonth
+		) {
+			startDayParams.push({
+				text: `${getDate(this.rangeStartDate)}-е число месяца`,
+				value: 'dayOfMonth',
+				checked: true,
+			});
+
+			dayNumberSelected = true;
+		}
+
+		this.lastDayOfMonth &&
+			startDayParams.push({
+				text: 'Последний день месяца',
+				value: 'lastDayOfMonth',
+				checked: !dayNumberSelected,
+			}) &&
+			(dayNumberSelected = true);
+
+		this.secondFromTheEndDayMonth &&
+			startDayParams.push({
+				text: 'Предпоследний день месяца',
+				value: 'secondFromTheEndDayMonth',
+				checked: !dayNumberSelected,
+			}) &&
+			(dayNumberSelected = true);
+
+		this.thirdFromTheEndDayMonth &&
+			startDayParams.push({
+				text: '3-й с конца день месяца',
+				value: 'thirdFromTheEndDayMonth',
+				checked: !dayNumberSelected,
+			}) &&
+			(dayNumberSelected = true);
+
+		this.dayWeekNumber &&
+			startDayParams.push({
+				text: `${this.dayWeekNumber}-${this.getEnding(
+					getDay(this.rangeStartDate),
+					true
+				)} ${format(this.rangeStartDate, 'EEEE', {
+					locale: ru,
+				})}`,
+				value: 'dayWeekNumber',
+			});
+
+		this.dayFullWeekNumber &&
+			startDayParams.push({
+				text: `${this.dayFullWeekNumber}-${this.getEnding(
+					getDay(this.rangeStartDate),
+					true
+				)} ${format(this.rangeStartDate, 'EEEE', {
+					locale: ru,
+				})} (считая с первой полной недели)`,
+				value: 'dayFullWeekNumber',
+			});
+
+		this.lastDayWeek &&
+			startDayParams.push({
+				text: `Последн${this.getEnding(
+					getDay(this.rangeStartDate)
+				)} ${format(this.rangeStartDate, 'EEEE', {
+					locale: ru,
+				})} месяца`,
+				value: 'lastDayWeek',
+			});
+
+		this.monthOptions = startDayParams;
+		this.iterationsForm.controls['monthOptions'].setValue(
+			this.monthOptions.find((item) => item.checked)?.value
+		);
+	}
+
+	getEnding(number: number, short = false) {
+		switch (number) {
+			case 0:
+				return short ? 'е' : 'ее';
+
+			case 3:
+			case 5:
+			case 6:
+				return short ? 'я' : 'яя';
+
+			default:
+				return short ? 'й' : 'ий';
+		}
+	}
+
 	genRepeats() {
+		!+this.rangePeriodValue &&
+			this.iterationsForm.controls['rangePeriod'].setValue(1);
+		this.isRepeatsAmountSet &&
+			+this.rangeAmountValue < 2 &&
+			this.iterationsForm.controls['rangeAmount'].setValue(2);
+
 		if (this.isRepeatsAmountSet) {
 			for (
 				let i = 0;
@@ -227,31 +348,6 @@ export class GenerateIterationsComponent implements OnInit {
 
 	rangeEndDatePicked(date: Date) {
 		this.rangeEndDate = date;
-	}
-
-	getStartDayParam() {
-		console.log(
-			`${format(this.rangeStartDate, 'EEEE', {
-				locale: ru,
-			})} номер ${this.dayWeekNumber}`
-		);
-		this.dayFullWeekNumber &&
-			console.log(
-				`${format(this.rangeStartDate, 'EEEE', {
-					locale: ru,
-				})} номер ${this.dayFullWeekNumber} (целые недели)`
-			);
-		this.lastDayWeek &&
-			console.log(
-				`Последний ${format(this.rangeStartDate, 'EEEE', {
-					locale: ru,
-				})} недели`
-			);
-		this.lastDayOfMonth && console.log('Последний день месяца');
-		this.secondFromTheEndDayMonth &&
-			console.log('Предпоследний день месяца');
-		this.thirdFromTheEndDayMonth &&
-			console.log('Третий с конца день месяца');
 	}
 
 	addIterationRecursively(k: number) {

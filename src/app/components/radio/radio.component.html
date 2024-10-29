@@ -1,0 +1,23 @@
+<label
+	*ngFor="let item of items"
+	class="radio"
+	[ngClass]="radioClass"
+	[attr.title]="item?.text || null"
+>
+	<span
+		class="radio__box"
+		[ngClass]="{
+			'radio__box--sm': dotSize === 'sm'
+		}"
+	></span>
+	<span class="radio__label">{{ item.text }}</span>
+	<input
+		type="radio"
+		class="radio__input"
+		[checked]="item?.value === value || null"
+		[disabled]="item.disabled"
+		[value]="item?.value"
+		(change)="onRadioChange($event)"
+		[attr.name]="name"
+	>
+</label>

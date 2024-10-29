@@ -36,6 +36,7 @@ import { FontProvider } from './providers/font.provider';
 import { TimeRemainTextPipe } from './pipes/time-remain-text.pipe';
 import { TimeRemainPipe } from './pipes/time-remain.pipe';
 import { DatePanelComponent } from './components/date-panel/date-panel.component';
+import { RadioComponent } from './components/radio/radio.component';
 
 @NgModule({
 	declarations: [
@@ -63,6 +64,7 @@ import { DatePanelComponent } from './components/date-panel/date-panel.component
 		BoardComponent,
 		TimersComponent,
 		DatePanelComponent,
+		RadioComponent,
 	],
 	imports: [
 		BrowserModule,

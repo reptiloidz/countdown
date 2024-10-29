@@ -169,12 +169,21 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			public: new FormControl(false),
 			color: new FormControl('gray'),
 			iterationsForm: new FormGroup({
-				rangePeriod: new FormControl(1, [Validators.required]),
+				rangePeriod: new FormControl(1, [
+					Validators.required,
+					Validators.min(1),
+				]),
 				repeatsMode: new FormControl('setRepeatsAmount', [
 					Validators.required,
 				]),
-				rangeAmount: new FormControl(2, [Validators.required]),
+				rangeAmount: new FormControl(2, [
+					Validators.required,
+					Validators.min(2),
+				]),
 				periodicity: new FormControl('perMinutes', [
+					Validators.required,
+				]),
+				monthOptions: new FormControl('dayOfMonth', [
 					Validators.required,
 				]),
 			}),
