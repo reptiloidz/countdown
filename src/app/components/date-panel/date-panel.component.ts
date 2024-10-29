@@ -235,6 +235,7 @@ export class DatePanelComponent implements AfterViewInit {
 					}
 					this.switchIteration(this.currentIterationIndex);
 					this.setIterationsParam();
+					this.checkIteration();
 				},
 				error: (err) => {
 					console.error(
@@ -257,8 +258,10 @@ export class DatePanelComponent implements AfterViewInit {
 					this.iterationsList?.nativeElement?.clientWidth !==
 					this.iterationsTabs?.nativeElement?.clientWidth -
 						parseInt(
-							getComputedStyle(this.iterationsTabs?.nativeElement)
-								.paddingLeft
+							this.iterationsTabs?.nativeElement &&
+								getComputedStyle(
+									this.iterationsTabs?.nativeElement
+								).paddingLeft
 						);
 				this.cdr.detectChanges();
 			});
@@ -399,11 +402,11 @@ export class DatePanelComponent implements AfterViewInit {
 	}
 
 	checkIteration() {
-		this.iterationsChecked = Array.from(
-			this.iterationsList.nativeElement.children
-		)
-			.filter((item: any) => item.querySelector('input')?.checked)
-			.map((item: any) => item.querySelector('input')?.name);
+		this.iterationsChecked = this.iterationsList?.nativeElement
+			? Array.from(this.iterationsList.nativeElement.children)
+					.filter((item: any) => item.querySelector('input')?.checked)
+					.map((item: any) => item.querySelector('input')?.name)
+			: [];
 	}
 
 	checkAllIterations(check = true, iterations?: Iteration[]) {

@@ -158,7 +158,7 @@
 						[value]="differenceMode"
 					></app-drop>
 					<app-input
-						placeholder="Срок в минутах"
+						placeholder="Срок"
 						formControlName="difference"
 						mask="0*"
 						[allowNegativeNumbers]="true"
@@ -193,6 +193,7 @@
 								[loading]="loading"
 								[form]="formGroup"
 								(repeatsAreGenerated)="getRepeats($event)"
+								[point]="point"
 							></app-generate-iterations>
 						</ng-template>
 					</app-drop>

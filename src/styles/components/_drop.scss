@@ -56,7 +56,8 @@
 
 	&__inner {
 		max-height: calc(var(--drop-max-h) * 1px - 10px);
-		overflow: auto;
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 
 	&__nav,

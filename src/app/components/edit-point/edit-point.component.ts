@@ -551,7 +551,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	differenceModeChanged(value: string | number) {
 		this.differenceMode = value as DifferenceMode;
 		localStorage.setItem('differenceMode', this.differenceMode);
-		this.setVisibleDifference();
+		this.dateChanged();
 	}
 
 	convertToMinutes(ms: number): number {

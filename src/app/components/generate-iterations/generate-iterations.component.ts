@@ -1,20 +1,32 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
+	Day,
+	addDays,
+	addMonths,
+	addWeeks,
+	addYears,
 	differenceInDays,
 	differenceInWeeks,
 	endOfMonth,
+	endOfWeek,
 	format,
 	getDate,
 	getDay,
 	getWeekOfMonth,
+	isMonday,
+	lastDayOfMonth,
+	nextDay,
+	previousDay,
 	startOfMonth,
+	subDays,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants } from 'src/app/enums';
 import { getPointDate, parseDate } from 'src/app/helpers';
 import {
 	Iteration,
+	Point,
 	RadioItem,
 	SelectArray,
 	SwitcherItem,
@@ -27,6 +39,7 @@ import {
 export class GenerateIterationsComponent implements OnInit {
 	@Input() form!: FormGroup;
 	@Input() loading = false;
+	@Input() point: Point | undefined;
 	@Output() repeatsAreGenerated = new EventEmitter<Iteration[]>();
 
 	rangeStartDate = new Date();
@@ -101,10 +114,14 @@ export class GenerateIterationsComponent implements OnInit {
 		return this.iterationsForm.controls['periodicity'].value;
 	}
 
+	get monthOptionsValue() {
+		return this.iterationsForm.controls['monthOptions'].value;
+	}
+
 	get periodicityValue() {
 		let periodicity = 0;
 
-		switch (this.iterationsForm.controls['periodicity'].value) {
+		switch (this.periodicityModeValue) {
 			case 'perMinutes':
 				periodicity = Constants.msInMinute;
 				break;
@@ -121,20 +138,12 @@ export class GenerateIterationsComponent implements OnInit {
 				periodicity = Constants.msInMinute * 60 * 24 * 7;
 				break;
 
-			case 'perMonths':
-				periodicity = Constants.msInMinute * 60 * 24 * 30;
-				break;
-
-			case 'perYears':
-				periodicity = Constants.msInMinute * 60 * 24 * 30 * 12;
-				break;
-
 			default:
 				periodicity = Constants.msInMinute;
 				break;
 		}
 
-		return periodicity * this.iterationsForm.controls['rangePeriod'].value;
+		return periodicity * this.rangePeriodValue;
 	}
 
 	get dayWeekNumber(): number {
@@ -244,6 +253,7 @@ export class GenerateIterationsComponent implements OnInit {
 			(dayNumberSelected = true);
 
 		this.dayWeekNumber &&
+			this.dayWeekNumber < 5 &&
 			startDayParams.push({
 				text: `${this.dayWeekNumber}-${this.getEnding(
 					getDay(this.rangeStartDate),
@@ -255,6 +265,8 @@ export class GenerateIterationsComponent implements OnInit {
 			});
 
 		this.dayFullWeekNumber &&
+			this.dayFullWeekNumber < 5 &&
+			!isMonday(startOfMonth(this.rangeStartDate)) &&
 			startDayParams.push({
 				text: `${this.dayFullWeekNumber}-${this.getEnding(
 					getDay(this.rangeStartDate),
@@ -324,21 +336,72 @@ export class GenerateIterationsComponent implements OnInit {
 	}
 
 	getDateTime(k: number) {
-		return format(
-			getPointDate({
-				pointDate: new Date(
-					+getPointDate({
-						pointDate: this.rangeStartDate,
-						isGreenwich: this.form.controls['greenwich'].value,
-						isInvert: true,
-					}) +
-						this.periodicityValue * k
-				),
-				isGreenwich: this.form.controls['greenwich'].value,
-				isInvert: true,
-			}),
-			Constants.fullDateFormat
+		const startPointDate = +getPointDate({
+			pointDate: this.rangeStartDate,
+			isGreenwich: this.point?.greenwich,
+			isInvert: true,
+		});
+
+		let nextPointDate: number | Date;
+
+		switch (this.periodicityModeValue) {
+			case 'perMonths':
+				nextPointDate = this.getNextMatchMonth(k);
+				break;
+			case 'perYears':
+				nextPointDate = this.getNextMatchYear(k);
+				break;
+			default:
+				nextPointDate = startPointDate + this.periodicityValue * k;
+				break;
+		}
+
+		return format(nextPointDate, Constants.fullDateFormat);
+	}
+
+	getNextMatchYear(k: number) {
+		return addYears(this.rangeStartDate, this.rangePeriodValue * k);
+	}
+
+	getNextMatchMonth(k: number) {
+		const sameDayOfNextMonth = addMonths(
+			this.rangeStartDate,
+			this.rangePeriodValue * k
 		);
+		const lastDay = lastDayOfMonth(sameDayOfNextMonth);
+		const weekDay = getDay(this.rangeStartDate) as Day;
+
+		switch (this.monthOptionsValue) {
+			case 'lastDayOfMonth':
+				return lastDay;
+			case 'secondFromTheEndDayMonth':
+				return subDays(lastDay, 1);
+			case 'thirdFromTheEndDayMonth':
+				return subDays(lastDay, 2);
+			case 'dayWeekNumber':
+				return addWeeks(
+					nextDay(
+						subDays(startOfMonth(sameDayOfNextMonth), 1),
+						weekDay
+					),
+					this.dayWeekNumber - 1
+				);
+			case 'dayFullWeekNumber':
+				return addWeeks(
+					nextDay(
+						endOfWeek(startOfMonth(sameDayOfNextMonth), {
+							locale: ru,
+						}),
+						weekDay
+					),
+					this.dayFullWeekNumber -
+						(isMonday(startOfMonth(sameDayOfNextMonth)) ? 2 : 1)
+				);
+			case 'lastDayWeek':
+				return previousDay(addDays(lastDay, 1), weekDay);
+			default:
+				return sameDayOfNextMonth;
+		}
 	}
 
 	rangeStartDatePicked(date: Date) {
