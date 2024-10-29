@@ -129,7 +129,7 @@
 						*ngIf="isRepeatable && !isCreation"
 						app-button
 						class="form__submit"
-						mode="positive"
+						mode="ghost"
 						iconPosition="right"
 						icon="arrow-right"
 						type="button"
@@ -189,6 +189,7 @@
 						</ng-template>
 						<ng-template #bodyTemplate>
 							<app-generate-iterations
+								class="generation"
 								[loading]="loading"
 								[form]="formGroup"
 								(repeatsAreGenerated)="getRepeats($event)"
@@ -199,7 +200,7 @@
 						app-button
 						class="form__submit"
 						type="submit"
-						mode="positive"
+						mode="ghost"
 						icon="arrow-right"
 						iconPosition="right"
 						[disabled]="loading || (isRepeatable && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"

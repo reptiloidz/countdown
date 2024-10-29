@@ -1,45 +1,62 @@
 <ng-container [formGroup]="iterationsForm">
-	<p>Начало диапазона</p>
-	<app-datepicker
-		(datePicked)="rangeStartDatePicked($event)"
-		[date]="rangeStartDate"
-	></app-datepicker>
+	<div class="generation__body">
+		<div class="generation__col">
+			<h3 class="generation__subtitle">Начало:</h3>
+			<app-datepicker
+				(datePicked)="rangeStartDatePicked($event)"
+				[date]="rangeStartDate"
+			></app-datepicker>
 
-	<p>Повторять каждые</p>
-	<app-input
-		type="number"
-		formControlName="rangePeriod"
-	></app-input>
-	<app-drop
-		formControlName="periodicity"
-		[dropList]="periodicityListInverted"
-	></app-drop>
+			<ng-container *ngIf="isRepeatsAmountSet">
+				<h3 class="generation__subtitle">Повторы:</h3>
+				<app-input
+					class="generation__control-datepicker"
+					type="number"
+					placeholder="Число повторов"
+					formControlName="rangeAmount"
+					[min]="2"
+				></app-input>
+			</ng-container>
 
-	<app-switcher
-		[items]="repeatsModeList"
-		formControlName="repeatsMode"
-	></app-switcher>
+			<ng-container *ngIf="!isRepeatsAmountSet">
+				<h3 class="generation__subtitle">Конец:</h3>
+				<app-datepicker
+					(datePicked)="rangeEndDatePicked($event)"
+					[date]="rangeEndDate"
+				></app-datepicker>
+			</ng-container>
+			<app-switcher
+				class="generation__mode"
+				[items]="repeatsModeList"
+				formControlName="repeatsMode"
+				[showTitle]="true"
+			></app-switcher>
+		</div>
+		<div class="generation__col generation__col--period">
+			<h3 class="generation__subtitle">Каждые</h3>
+			<div class="generation__row">
+				<app-input
+					class="generation__period"
+					type="number"
+					formControlName="rangePeriod"
+				></app-input>
+				<app-drop
+					formControlName="periodicity"
+					[dropList]="periodicityList"
+				></app-drop>
+			</div>
+			<div>
 
-	<app-input
-		*ngIf="isRepeatsAmountSet"
-		type="number"
-		placeholder="Число повторов"
-		formControlName="rangeAmount"
-		[min]="2"
-	></app-input>
-
-	<ng-container *ngIf="!isRepeatsAmountSet">
-		<p>Конец диапазона</p>
-		<app-datepicker
-			(datePicked)="rangeEndDatePicked($event)"
-			[date]="rangeEndDate"
-		></app-datepicker>
-	</ng-container>
-
-	<button
-		app-button
-		[disabled]="loading || iterationsForm.invalid"
-		(click)="genRepeats()"
-	>Генерировать</button>
-
+			</div>
+			<button
+				class="generation__submit"
+				app-button
+				mode="ghost"
+				icon="arrow-right"
+				iconPosition="right"
+				[disabled]="loading || iterationsForm.invalid"
+				(click)="genRepeats()"
+			>Генерировать</button>
+		</div>
+	</div>
 </ng-container>

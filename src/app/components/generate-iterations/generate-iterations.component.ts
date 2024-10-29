@@ -1,15 +1,23 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { format } from 'date-fns';
+import {
+	differenceInDays,
+	differenceInWeeks,
+	endOfMonth,
+	format,
+	getWeekOfMonth,
+	startOfMonth,
+} from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { Constants } from 'src/app/enums';
-import { getInvertedObject, getPointDate, parseDate } from 'src/app/helpers';
-import { Iteration, SwitcherItem } from 'src/app/interfaces';
+import { getPointDate, parseDate } from 'src/app/helpers';
+import { Iteration, SelectArray, SwitcherItem } from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-generate-iterations',
 	templateUrl: './generate-iterations.component.html',
 })
-export class GenerateIterationsComponent {
+export class GenerateIterationsComponent implements OnInit {
 	@Input() form!: FormGroup;
 	@Input() loading = false;
 	@Output() repeatsAreGenerated = new EventEmitter<Iteration[]>();
@@ -18,30 +26,48 @@ export class GenerateIterationsComponent {
 	rangeEndDate = new Date(+new Date() + Constants.msInMinute * 10);
 	repeats: Iteration[] = [];
 
-	periodicityList = {
-		perMinutes: 'Минут',
-		perHours: 'Часов',
-		perDays: 'Дней',
-		perWeeks: 'Недель',
-		perMonths: 'Месяцев',
-		perYears: 'Лет',
-	};
+	periodicityList: SelectArray[] = [
+		{
+			key: 'Минут',
+			value: 'perMinutes',
+		},
+		{
+			key: 'Часов',
+			value: 'perHours',
+		},
+		{
+			key: 'Дней',
+			value: 'perDays',
+		},
+		{
+			key: 'Недель',
+			value: 'perWeeks',
+		},
+		{
+			key: 'Месяцев',
+			value: 'perMonths',
+		},
+		{
+			key: 'Лет',
+			value: 'perYears',
+		},
+	];
 
 	repeatsModeList: SwitcherItem[] = [
 		{
-			text: 'Задать число повторов',
+			text: 'Число повторов',
 			value: 'setRepeatsAmount',
 			icon: 'refresh',
 		},
 		{
-			text: 'Задать конец диапазона',
+			text: 'Конец диапазона',
 			value: 'setRangeEnd',
 			icon: 'calendar-clock',
 		},
 	];
 
-	get periodicityListInverted() {
-		return getInvertedObject(this.periodicityList);
+	ngOnInit(): void {
+		this.getStartDayParam();
 	}
 
 	get iterationsForm() {
@@ -91,6 +117,70 @@ export class GenerateIterationsComponent {
 		return periodicity * this.iterationsForm.controls['rangePeriod'].value;
 	}
 
+	get dayWeekNumber(): number {
+		return (
+			getWeekOfMonth(this.rangeStartDate, {
+				weekStartsOn: 1,
+			}) - (this.wasSameWeekdayInFirstWeek ? 1 : 0)
+		);
+	}
+
+	get dayFullWeekNumber(): number {
+		return (
+			differenceInWeeks(
+				this.rangeStartDate,
+				startOfMonth(this.rangeStartDate)
+			) + (this.wasSameWeekdayInFirstWeek ? 1 : 0)
+		);
+	}
+
+	get lastDayWeek(): boolean {
+		return !differenceInWeeks(
+			this.rangeStartDate,
+			endOfMonth(this.rangeStartDate)
+		);
+	}
+
+	get lastDayOfMonth(): boolean {
+		return (
+			differenceInDays(
+				endOfMonth(this.rangeStartDate),
+				this.rangeStartDate
+			) === 0
+		);
+	}
+
+	get secondFromTheEndDayMonth(): boolean {
+		return (
+			differenceInDays(
+				endOfMonth(this.rangeStartDate),
+				this.rangeStartDate
+			) === 1
+		);
+	}
+
+	get thirdFromTheEndDayMonth(): boolean {
+		return (
+			differenceInDays(
+				endOfMonth(this.rangeStartDate),
+				this.rangeStartDate
+			) === 2
+		);
+	}
+
+	get wasSameWeekdayInFirstWeek(): boolean {
+		return (
+			getWeekOfMonth(this.rangeStartDate, {
+				weekStartsOn: 1,
+			}) -
+				differenceInWeeks(
+					this.rangeStartDate,
+					startOfMonth(this.rangeStartDate)
+				) >
+			1
+		);
+	}
+
 	genRepeats() {
 		if (this.isRepeatsAmountSet) {
 			for (
@@ -132,10 +222,36 @@ export class GenerateIterationsComponent {
 
 	rangeStartDatePicked(date: Date) {
 		this.rangeStartDate = date;
+		this.getStartDayParam();
 	}
 
 	rangeEndDatePicked(date: Date) {
 		this.rangeEndDate = date;
+	}
+
+	getStartDayParam() {
+		console.log(
+			`${format(this.rangeStartDate, 'EEEE', {
+				locale: ru,
+			})} номер ${this.dayWeekNumber}`
+		);
+		this.dayFullWeekNumber &&
+			console.log(
+				`${format(this.rangeStartDate, 'EEEE', {
+					locale: ru,
+				})} номер ${this.dayFullWeekNumber} (целые недели)`
+			);
+		this.lastDayWeek &&
+			console.log(
+				`Последний ${format(this.rangeStartDate, 'EEEE', {
+					locale: ru,
+				})} недели`
+			);
+		this.lastDayOfMonth && console.log('Последний день месяца');
+		this.secondFromTheEndDayMonth &&
+			console.log('Предпоследний день месяца');
+		this.thirdFromTheEndDayMonth &&
+			console.log('Третий с конца день месяца');
 	}
 
 	addIterationRecursively(k: number) {

@@ -1,0 +1,49 @@
+.generation {
+	&__body {
+		display: flex;
+		gap: 18px;
+		min-height: 120px;
+	}
+
+	&__row {
+		display: flex;
+	}
+
+	&__col {
+		display: flex;
+		flex-direction: column;
+		width: 170px;
+
+		&:first-child {
+			border-right: 1px solid rgb(var(--c-border-inverse));
+		}
+
+		&--period {
+			width: 200px;
+		}
+	}
+
+	&__mode {
+		margin-top: 10px;
+		margin-right: auto;
+	}
+
+	&__period {
+		margin-right: 10px;
+	}
+
+	&__subtitle {
+		margin-top: 6px;
+		margin-bottom: 6px;
+		font-size: 14px;
+	}
+
+	&__submit {
+		margin-top: auto;
+		margin-left: auto;
+	}
+
+	&__control-datepicker {
+		width: 150px;
+	}
+}
