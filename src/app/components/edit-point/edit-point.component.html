@@ -20,7 +20,7 @@
 		*ngIf="!(checking | async); else loader"
 		class="content__col"
 		[formGroup]="form"
-		(ngSubmit)="submit(isRepeatable && !isCreation)"
+		(ngSubmit)="submit(repeatableValue && !isCreation)"
 	>
 		<h3>{{ pageTitle }}<span
 				*ngIf="loading"
@@ -29,7 +29,7 @@
 		<div
 			class="form"
 			[ngClass]="{
-				'form--single': !isRepeatable || isCreation,
+				'form--single': !repeatableValue || isCreation,
 			}"
 		>
 			<!-- Надо ли показывать автора? Сейчас редактировать больше никто не может -->
@@ -65,6 +65,7 @@
 						[items]="directionList"
 						[value]="this.point?.direction || 'forward'"
 						formControlName="direction"
+						[showTitle]="true"
 					></app-switcher>
 					<app-drop
 						#colorDrop
@@ -106,27 +107,27 @@
 							mode="custom"
 							icon="globe"
 							formControlName="greenwich"
-							title="Время по Гринвичу (убрать, если время должно быть местным)"
+							[title]="greenwichValue ? 'Время по Гринвичу' : 'Локальное время'"
 						></label>
 						<label
 							app-checkbox
 							mode="custom"
 							icon="users"
 							formControlName="public"
-							title="Публичное событие"
+							[title]="publicValue ? 'Публичное событие' : 'Приватное событие'"
 						></label>
 						<label
 							app-checkbox
 							mode="custom"
 							icon="refresh"
 							formControlName="repeatable"
-							title="Повторяемое событие"
+							[title]="repeatableValue ? 'Повторяемое событие' : 'Однократное событие'"
 						></label>
 					</div>
 				</div>
 				<div class="form__row">
 					<button
-						*ngIf="isRepeatable && !isCreation"
+						*ngIf="repeatableValue && !isCreation"
 						app-button
 						class="form__submit"
 						mode="ghost"
@@ -140,7 +141,7 @@
 			</div>
 
 			<h3
-				*ngIf="isRepeatable && !isCreation"
+				*ngIf="repeatableValue && !isCreation"
 				class="form__section-title"
 			>Редактирование итерации</h3>
 
@@ -158,8 +159,9 @@
 						[value]="differenceMode"
 					></app-drop>
 					<app-input
-						placeholder="Срок"
+						placeholder="Прошло/осталось"
 						formControlName="difference"
+						autocomplete="off"
 						mask="0*"
 						[allowNegativeNumbers]="true"
 						[validation]="false"
@@ -172,7 +174,7 @@
 				</div>
 				<div class="form__row">
 					<app-drop
-						*ngIf="isRepeatable && !isCreation"
+						*ngIf="repeatableValue && !isCreation"
 						class="drop--nested form__col"
 					>
 						<ng-template
@@ -204,8 +206,8 @@
 						mode="ghost"
 						icon="arrow-right"
 						iconPosition="right"
-						[disabled]="loading || (isRepeatable && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
-						[title]="isRepeatable && !isCreation ? 'Сохранить параметры итерации' :
+						[disabled]="loading || (repeatableValue && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
+						[title]="repeatableValue && !isCreation ? 'Сохранить параметры итерации' :
 											'Сохранить событие'"
 					>Сохранить</button>
 				</div>
@@ -215,13 +217,13 @@
 
 		<p
 			class="info"
-			*ngIf="isCreation && isRepeatable"
+			*ngIf="isCreation && repeatableValue"
 		>
 			Изменение итераций будет доступно после создания события
 		</p>
 		<p
 			class="info"
-			*ngIf="!isCreation && !isRepeatable && hasManyIterations"
+			*ngIf="!isCreation && !repeatableValue && hasManyIterations"
 		>
 			Отключены повторы события. Все итерации кроме последней будут удалены
 		</p>

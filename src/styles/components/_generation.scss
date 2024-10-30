@@ -12,7 +12,7 @@
 	&__col {
 		display: flex;
 		flex-direction: column;
-		width: 170px;
+		width: 190px;
 		min-height: 274px;
 
 		&:first-child {
@@ -30,11 +30,8 @@
 	}
 
 	&__period {
-		margin-right: 10px;
-	}
-
-	&__period-mode {
-		width: 110px;
+		width: 80px;
+		margin-right: auto;
 	}
 
 	&__subtitle {
@@ -53,7 +50,7 @@
 	}
 
 	&__control-datepicker {
-		width: 150px;
+		width: 170px;
 	}
 
 	&__month-options {

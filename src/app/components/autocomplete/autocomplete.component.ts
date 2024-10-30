@@ -30,6 +30,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 		item: [string, string | number],
 		filterValue: string
 	) => item[0].includes(filterValue);
+	@Input() dataSuffix = '';
 
 	autocompleteListFiltered!: Select;
 

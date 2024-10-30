@@ -16,6 +16,25 @@
 		}
 	}
 
+	&[data-suffix] {
+		&:not([data-suffix='']) {
+			&::after {
+				content: attr(data-suffix);
+				display: flex;
+				align-items: center;
+				padding-right: 8px;
+				color: rgba(var(--c-text-primary), .4);
+				cursor: text;
+			}
+
+			.control__input {
+				padding-right: 4px;
+				padding-left: 0;
+				text-align: right;
+			}
+		}
+	}
+
 	&__input,
 	&__textarea {
 		flex-grow: 1;

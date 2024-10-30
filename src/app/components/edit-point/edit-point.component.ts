@@ -366,10 +366,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.type === EditPointType.CreateUrl;
 	}
 
-	get isRepeatable() {
-		return this.form.controls['repeatable'].value;
-	}
-
 	get hasManyIterations() {
 		return this.dates?.length && this.dates?.length > 1;
 	}
@@ -435,6 +431,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	get greenwichValue() {
+		return this.form.controls['greenwich'].value;
+	}
+
+	get publicValue() {
+		return this.form.controls['public'].value;
+	}
+
+	get repeatableValue() {
+		return this.form.controls['repeatable'].value;
+	}
+
 	sortDates() {
 		const sortedDates = this.point && sortDates(this.point).dates;
 		if (this.point && sortedDates) {
@@ -468,9 +476,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				: new Date(
 						this.dates?.[this.currentIterationIndex]?.date || ''
 				  ),
-			isGreenwich: this.isIterationAdded
-				? false
-				: this.form.controls['greenwich'].value,
+			isGreenwich: this.isIterationAdded ? false : this.greenwichValue,
 		});
 
 		this.pointDate = isDateValid(this.pointDate)
@@ -598,7 +604,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		const dateTime = format(
 			getPointDate({
 				pointDate: this.datePickerValue,
-				isGreenwich: this.form.controls['greenwich'].value,
+				isGreenwich: this.greenwichValue,
 				isInvert: true,
 			}),
 			Constants.fullDateFormat
@@ -613,7 +619,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			newDatesArray?.push(...repeats);
 			editPointEvent = 'iterationsGenerated';
 		} else if (saveIteration) {
-			if (!this.isRepeatable || this.isCreation) {
+			if (!this.repeatableValue || this.isCreation) {
 				newDatesArray = [lastDate];
 			} else if (this.isIterationAdded) {
 				saveIteration && newDatesArray?.push(lastDate);
@@ -622,7 +628,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				newDatesArray[this.currentIterationIndex] = lastDate;
 				editPointEvent = 'iterationEdited';
 			}
-		} else if (!this.form.controls['repeatable'].value || this.isCreation) {
+		} else if (!this.repeatableValue || this.isCreation) {
 			newDatesArray = [lastDate];
 		}
 
@@ -635,9 +641,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				title: this.form.controls['title'].value,
 				description: this.form.controls['description'].value || null,
 				direction: this.form.controls['direction'].value,
-				greenwich: this.form.controls['greenwich'].value,
-				repeatable: this.form.controls['repeatable'].value,
-				public: this.form.controls['public'].value,
+				greenwich: this.greenwichValue,
+				repeatable: this.repeatableValue,
+				public: this.publicValue,
 				user: this.auth.uid || '',
 				color: this.form.controls['color'].value,
 			});

@@ -4,7 +4,7 @@
 	[vertical]="vertical"
 	[horizontal]="horizontal"
 	[buttonLabel]="dateFormatted"
-	icon=""
+	icon="calendar-clock"
 	navClass="drop__nav datepicker__trigger"
 >
 	<ng-template #bodyTemplate>
@@ -18,6 +18,7 @@
 					name="year"
 					[autocompleteList]="yearsArray"
 					(autocompleteChanged)="yearSwitched($event)"
+					dataSuffix="г"
 				></app-autocomplete>
 				<app-autocomplete
 					class="datepicker__nav-item datepicker__nav-item--lg"
@@ -38,6 +39,7 @@
 						name="hour"
 						[autocompleteList]="hoursArray"
 						(autocompleteChanged)="hourSwitched($event)"
+						dataSuffix="ч"
 					></app-autocomplete>
 					<app-autocomplete
 						class="datepicker__nav-item datepicker__nav-item--sm"
@@ -46,6 +48,7 @@
 						name="minute"
 						[autocompleteList]="minutesArray"
 						(autocompleteChanged)="minuteSwitched($event)"
+						dataSuffix="м"
 					></app-autocomplete>
 				</ng-container>
 			</div>
@@ -60,7 +63,6 @@
 				[activeMode]="'month'"
 				[rowsNumber]="6"
 			></app-calendar>
-
 		</form>
 	</ng-template>
 </app-drop>
