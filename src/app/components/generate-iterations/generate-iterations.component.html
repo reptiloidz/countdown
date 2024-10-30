@@ -3,7 +3,9 @@
 		<div class="generation__col">
 			<h3 class="generation__subtitle">Начало:</h3>
 			<app-datepicker
+				class="generation__datepicker"
 				(datePicked)="rangeStartDatePicked($event)"
+				horizontal="left"
 				[date]="rangeStartDate"
 			></app-datepicker>
 
@@ -22,7 +24,9 @@
 			<ng-container *ngIf="!isRepeatsAmountSet">
 				<h3 class="generation__subtitle">Конец:</h3>
 				<app-datepicker
+					class="generation__datepicker"
 					(datePicked)="rangeEndDatePicked($event)"
+					horizontal="left"
 					[date]="rangeEndDate"
 				></app-datepicker>
 			</ng-container>

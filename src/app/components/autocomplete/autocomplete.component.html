@@ -15,6 +15,9 @@
 			(focus)="openHandler()"
 			(keydown)="keydown($event)"
 			autocomplete="off"
+			[mask]="mask"
+			[suffix]="suffix"
+			[prefix]="prefix"
 		></app-input>
 	</ng-template>
 </app-drop>

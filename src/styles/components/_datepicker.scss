@@ -1,4 +1,6 @@
 .datepicker {
+	--drop-max-h-gap: 30px;
+
 	&__trigger {
 		display: flex;
 		justify-content: center;
@@ -13,11 +15,17 @@
 
 	&__nav-item {
 		&--sm {
-			flex-basis: 50%;
+			flex-basis: 60%;
 		}
 
 		&--lg {
-			flex-basis: 150%;
+			flex-basis: 110%;
 		}
+	}
+
+	&__form {
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
 	}
 }

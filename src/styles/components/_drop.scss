@@ -10,6 +10,7 @@
 	--drop-body-brs-bl: var(--drop-brs);
 	--drop-body-mt: -1px;
 	--drop-body-mb: 0;
+	--drop-max-h-gap: 10px;
 
 	position: relative;
 	z-index: 2;
@@ -55,7 +56,9 @@
 	}
 
 	&__inner {
-		max-height: calc(var(--drop-max-h) * 1px - 10px);
+		display: flex;
+		flex-direction: column;
+		max-height: calc(var(--drop-max-h) * 1px - var(--drop-max-h-gap));
 		overflow-x: hidden;
 		overflow-y: auto;
 	}

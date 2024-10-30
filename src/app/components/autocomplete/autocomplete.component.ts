@@ -23,6 +23,9 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() visibleValue: string | number = '';
 	@Input() placeholder = '';
 	@Input() autocompleteList!: Select;
+	@Input() mask: string | null = null;
+	@Input() suffix: string = '';
+	@Input() prefix: string = '';
 	@Input() filterFn = (
 		item: [string, string | number],
 		filterValue: string

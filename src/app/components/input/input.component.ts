@@ -35,6 +35,8 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() icon!: string;
 	@Input() textarea = false;
 	@Input() mask: string | null = null;
+	@Input() suffix: string = '';
+	@Input() prefix: string = '';
 	@Input() allowNegativeNumbers!: boolean;
 	@Input() validation = false;
 	@Input() maxlength!: number;

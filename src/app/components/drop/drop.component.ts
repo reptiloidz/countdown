@@ -77,6 +77,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() value: string | number = '';
 	@Input() focusoutClose = false;
 	@Input() navClass: NgClassType = 'drop__nav';
+	@Input() innerClass: NgClassType = '';
 	@Input() listButtonTextClass = '';
 	@Input() buttonTextClass: string[] = [];
 
@@ -173,7 +174,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			this.selectListRef?.nativeElement
 				?.querySelector('.drop__item--selected')
 				?.scrollIntoView({
-					block: 'center',
+					block: 'nearest',
 				});
 		});
 	}
