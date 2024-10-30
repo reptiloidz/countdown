@@ -76,6 +76,7 @@
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
 						}"
+						[disabled]="item.disabledDate"
 						(click)="dateClicked({
 							date: item.date,
 							activeMode,

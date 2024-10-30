@@ -25,6 +25,8 @@ export class DatepickerComponent implements OnInit {
 	@Input() visibleDate = this.date;
 	@Input() vertical: DropVertical = 'auto';
 	@Input() horizontal: DropHorizontal = 'right';
+	@Input() disabledBefore: Date | undefined;
+	@Input() disabledAfter: Date | undefined;
 
 	@Output() datePicked = new EventEmitter<Date>();
 

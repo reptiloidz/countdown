@@ -7,6 +7,7 @@
 				(datePicked)="rangeStartDatePicked($event)"
 				horizontal="left"
 				[date]="rangeStartDate"
+				[disabledAfter]="!isRepeatsAmountSet ? rangeEndDate : undefined"
 			></app-datepicker>
 
 			<ng-container *ngIf="isRepeatsAmountSet">
@@ -28,6 +29,7 @@
 					(datePicked)="rangeEndDatePicked($event)"
 					horizontal="left"
 					[date]="rangeEndDate"
+					[disabledBefore]="rangeStartDate"
 				></app-datepicker>
 			</ng-container>
 			<app-switcher

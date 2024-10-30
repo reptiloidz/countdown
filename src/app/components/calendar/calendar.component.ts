@@ -18,6 +18,8 @@ import {
 	addMonths,
 	addYears,
 	format,
+	isAfter,
+	isBefore,
 	isMonday,
 	isSameDay,
 	isSameHour,
@@ -70,6 +72,8 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() daysPerWeek: number | string = 7;
 	@Input() weekendDays = [5, 6];
 	@Input() rowsNumber!: number;
+	@Input() disabledBefore: Date | undefined;
+	@Input() disabledAfter: Date | undefined;
 
 	calendarArray: CalendarDate[][] = [];
 	daysOfWeek: string[] = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
@@ -345,6 +349,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
+						disabledDate: this.isDateDisabled(thisDate),
 						weekendDate:
 							this.weekendDays.includes(i) &&
 							this.activeMode === 'month',
@@ -399,6 +404,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 						visibleDate: this.isDateMatch(thisDate, 'visible'),
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
+						disabledDate: this.isDateDisabled(thisDate),
 						weekendDate:
 							this.weekendDays.includes(i) &&
 							this.activeMode === 'month',
@@ -445,6 +451,13 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 			default:
 				return +date === +startOfDay(this[`${matchMode}Date`]);
 		}
+	}
+
+	isDateDisabled(date: Date) {
+		return (
+			(this.disabledAfter && isAfter(date, this.disabledAfter)) ||
+			(this.disabledBefore && isBefore(date, this.disabledBefore))
+		);
 	}
 
 	getAllowedPoints(item: any) {

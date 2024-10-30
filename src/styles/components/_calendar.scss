@@ -86,6 +86,12 @@
 		&--other {
 			--calendar-button-cl: rgba(var(--c-text-primary), .3);
 		}
+
+		&:disabled {
+			--calendar-button-cl: rgba(var(--c-text-primary), .1);
+
+			pointer-events: none;
+		}
 	}
 
 	&__counter {
