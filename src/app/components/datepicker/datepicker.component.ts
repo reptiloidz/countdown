@@ -1,14 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
+	addMinutes,
 	format,
 	getDate,
 	getHours,
 	getMinutes,
 	getMonth,
 	getYear,
+	isAfter,
+	isBefore,
 	isSameDay,
 	isSameHour,
 	parse,
+	subMinutes,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { IConfig } from 'ngx-mask';
@@ -35,7 +39,6 @@ export class DatepickerComponent implements OnInit {
 	@Output() datePicked = new EventEmitter<Date>();
 
 	currentYear = getYear(new Date());
-
 	monthPatterns: IConfig['patterns'] = {
 		A: {
 			pattern: new RegExp('[а-яА-Я0-9]'),
@@ -146,6 +149,24 @@ export class DatepickerComponent implements OnInit {
 		});
 	}
 
+	get isDateDisabledBefore(): boolean {
+		return (
+			(this.date &&
+				this.disabledBefore &&
+				isBefore(this.date, this.disabledBefore)) ||
+			false
+		);
+	}
+
+	get isDateDisabledAfter(): boolean {
+		return (
+			(this.date &&
+				this.disabledAfter &&
+				isAfter(this.date, this.disabledAfter)) ||
+			false
+		);
+	}
+
 	isHourDisabled(index: number): boolean {
 		if (!this.date) {
 			return false;
@@ -176,6 +197,16 @@ export class DatepickerComponent implements OnInit {
 				index >= getMinutes(this.disabledAfter);
 			return isDisabledBefore || isDisabledAfter || false;
 		}
+	}
+
+	fixDisabledDate() {
+		if (this.isDateDisabledBefore) {
+			this.date =
+				this.disabledBefore && addMinutes(this.disabledBefore, 1);
+		} else if (this.isDateDisabledAfter) {
+			this.date = this.disabledAfter && subMinutes(this.disabledAfter, 1);
+		}
+		this.datePicked.emit(this.date);
 	}
 
 	createArray({
@@ -218,7 +249,8 @@ export class DatepickerComponent implements OnInit {
 				this.dateYear
 			} ${value}:${this.dateMinute}`
 		);
-		this.datePicked.emit(this.date);
+
+		this.fixDisabledDate();
 	}
 
 	minuteSwitched(value: string | number) {
@@ -235,7 +267,8 @@ export class DatepickerComponent implements OnInit {
 			? parse('0:0', 'H:m', date)
 			: parse(this.dateHour + ':' + this.dateMinute, 'H:m', date);
 		this.visibleDate = this.date;
-		this.datePicked.emit(this.date);
+
+		this.fixDisabledDate();
 	}
 
 	visibleDateSelected(date: Date = this.visibleDate || this.defaultDate) {

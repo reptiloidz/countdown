@@ -67,7 +67,8 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	changeHandler(value: string | number) {
 		this.autocompleteChanged.emit(value);
 		this.visibleValue =
-			getKeyByValue(this.autocompleteList, value) || this.visibleValue;
+			getKeyByValue(this.autocompleteList, value)?.toString() ||
+			this.visibleValue;
 		this.value = value;
 	}
 
