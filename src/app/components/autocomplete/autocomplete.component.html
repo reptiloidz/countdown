@@ -8,7 +8,7 @@
 	<ng-template #triggerTemplate>
 		<app-input
 			class="control--autocomplete"
-			placeholder="Название"
+			[placeholder]="placeholder"
 			name="autocomplete"
 			[(ngModel)]="visibleValue"
 			(ngModelChange)="filter($event)"

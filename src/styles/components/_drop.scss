@@ -102,6 +102,12 @@
 				visibility: visible;
 			}
 		}
+
+		&:disabled {
+			--button-cl: rgb(var(--c-text-primary), .2);
+
+			pointer-events: none;
+		}
 	}
 
 	&__item-text {

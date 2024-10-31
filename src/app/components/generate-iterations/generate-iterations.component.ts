@@ -3,6 +3,8 @@ import { FormGroup } from '@angular/forms';
 import {
 	Day,
 	addDays,
+	addHours,
+	addMinutes,
 	addMonths,
 	addWeeks,
 	addYears,
@@ -13,11 +15,14 @@ import {
 	format,
 	getDate,
 	getDay,
+	getHours,
+	getMinutes,
 	getWeekOfMonth,
 	isMonday,
 	lastDayOfMonth,
 	nextDay,
 	previousDay,
+	startOfDay,
 	startOfMonth,
 	subDays,
 } from 'date-fns';
@@ -43,7 +48,7 @@ export class GenerateIterationsComponent implements OnInit {
 	@Output() repeatsAreGenerated = new EventEmitter<Iteration[]>();
 
 	rangeStartDate = new Date();
-	rangeEndDate = new Date(+new Date() + Constants.msInMinute * 10);
+	rangeEndDate = addMinutes(new Date(), 10);
 	repeats: Iteration[] = [];
 	monthOptions: RadioItem[] = [];
 
@@ -373,35 +378,52 @@ export class GenerateIterationsComponent implements OnInit {
 
 		switch (this.monthOptionsValue) {
 			case 'lastDayOfMonth':
-				return lastDay;
+				return this.setRangeStartTime(lastDay);
 			case 'secondFromTheEndDayMonth':
-				return subDays(lastDay, 1);
+				return this.setRangeStartTime(subDays(lastDay, 1));
 			case 'thirdFromTheEndDayMonth':
-				return subDays(lastDay, 2);
+				return this.setRangeStartTime(subDays(lastDay, 2));
 			case 'dayWeekNumber':
-				return addWeeks(
-					nextDay(
-						subDays(startOfMonth(sameDayOfNextMonth), 1),
-						weekDay
-					),
-					this.dayWeekNumber - 1
+				return this.setRangeStartTime(
+					addWeeks(
+						nextDay(
+							subDays(startOfMonth(sameDayOfNextMonth), 1),
+							weekDay
+						),
+						this.dayWeekNumber - 1
+					)
 				);
 			case 'dayFullWeekNumber':
-				return addWeeks(
-					nextDay(
-						endOfWeek(startOfMonth(sameDayOfNextMonth), {
-							locale: ru,
-						}),
-						weekDay
-					),
-					this.dayFullWeekNumber -
-						(isMonday(startOfMonth(sameDayOfNextMonth)) ? 2 : 1)
+				return this.setRangeStartTime(
+					addWeeks(
+						nextDay(
+							endOfWeek(startOfMonth(sameDayOfNextMonth), {
+								locale: ru,
+							}),
+							weekDay
+						),
+						this.dayFullWeekNumber -
+							(isMonday(startOfMonth(sameDayOfNextMonth)) ? 2 : 1)
+					)
 				);
 			case 'lastDayWeek':
-				return previousDay(addDays(lastDay, 1), weekDay);
+				return this.setRangeStartTime(
+					previousDay(addDays(lastDay, 1), weekDay)
+				);
 			default:
-				return sameDayOfNextMonth;
+				return this.setRangeStartTime(sameDayOfNextMonth);
 		}
+	}
+
+	setRangeStartTime(date: Date) {
+		return getPointDate({
+			pointDate: addMinutes(
+				addHours(startOfDay(date), getHours(this.rangeStartDate)),
+				getMinutes(this.rangeStartDate)
+			),
+			isGreenwich: this.point?.greenwich,
+			isInvert: true,
+		});
 	}
 
 	rangeStartDatePicked(date: Date) {

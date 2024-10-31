@@ -6,11 +6,14 @@ import {
 	getMinutes,
 	getMonth,
 	getYear,
+	isSameDay,
+	isSameHour,
 	parse,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants } from 'src/app/enums';
 import { parseDate } from 'src/app/helpers';
+import { SelectArray } from 'src/app/interfaces';
 import { DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
@@ -105,34 +108,85 @@ export class DatepickerComponent implements OnInit {
 		this.datePicked.emit(this.date);
 	}
 
-	get yearsArray(): Record<number, number | string> {
-		return this.createArray(200, (index) => this.currentYear - 100 + index);
+	get yearsArray(): SelectArray[] {
+		return this.createArray({
+			length: 200,
+			getKey: (index) => this.currentYear - 100 + index,
+		});
 	}
 
-	get monthsArray(): Record<number, number | string> {
-		return this.createArray(
-			12,
-			(index) => this.getMonthName(index),
-			(index) => index
-		);
+	get monthsArray(): SelectArray[] {
+		return this.createArray({
+			length: 12,
+			getValue: (index) => index,
+			getKey: (index) => this.getMonthName(index).toString(),
+		});
 	}
 
-	get hoursArray(): Record<number, number | string> {
-		return this.createArray(24, (index) => index);
+	get hoursArray(): SelectArray[] {
+		return this.createArray({
+			length: 24,
+			getKey: (index) => index,
+			isDisabled: (index) => this.isHourDisabled(index),
+		});
 	}
 
-	get minutesArray(): Record<number, number | string> {
-		return this.createArray(60, (index) => index);
+	get minutesArray(): SelectArray[] {
+		return this.createArray({
+			length: 60,
+			getKey: (index) => index,
+			isDisabled: (index) => this.isMinuteDisabled(index),
+		});
 	}
 
-	private createArray(
-		length: number,
-		getValue: (index: number) => number | string,
-		getKey?: (index: number) => number | string
-	): Record<number, number | string> {
+	isHourDisabled(index: number): boolean {
+		if (!this.date) {
+			return false;
+		} else {
+			const isDisabledBefore =
+				this.disabledBefore &&
+				isSameDay(this.date, this.disabledBefore) &&
+				index < getHours(this.disabledBefore);
+			const isDisabledAfter =
+				this.disabledAfter &&
+				isSameDay(this.date, this.disabledAfter) &&
+				index > getHours(this.disabledAfter);
+			return isDisabledBefore || isDisabledAfter || false;
+		}
+	}
+
+	isMinuteDisabled(index: number): boolean {
+		if (!this.date) {
+			return false;
+		} else {
+			const isDisabledBefore =
+				this.disabledBefore &&
+				isSameHour(this.date, this.disabledBefore) &&
+				index <= getMinutes(this.disabledBefore);
+			const isDisabledAfter =
+				this.disabledAfter &&
+				isSameHour(this.date, this.disabledAfter) &&
+				index >= getMinutes(this.disabledAfter);
+			return isDisabledBefore || isDisabledAfter || false;
+		}
+	}
+
+	createArray({
+		length,
+		getValue,
+		getKey,
+		isDisabled,
+	}: {
+		length: number;
+		getValue?: (index: number) => number | string;
+		getKey: (index: number) => number | string;
+		isDisabled?: (index: number) => boolean;
+	}): SelectArray[] {
 		return Array.from({ length }, (_, index) => ({
-			[getValue(index)]: getKey ? getKey(index) : getValue(index),
-		})).reduce((acc, obj) => ({ ...acc, ...obj }), {});
+			value: getValue ? getValue(index) : getKey(index).toString(),
+			key: getKey(index),
+			disabled: isDisabled ? isDisabled(index) : false,
+		}));
 	}
 
 	getMonthName(index: number): string {

@@ -258,6 +258,27 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		});
 	}
 
+	getStartOfDate(date: Date) {
+		let startOfDate: Date;
+
+		switch (this.activeMode) {
+			case 'year':
+				startOfDate = startOfMonth(date);
+				break;
+			case 'day':
+				startOfDate = startOfHour(date);
+				break;
+			case 'hour':
+				startOfDate = startOfMinute(date);
+				break;
+			default:
+				startOfDate = startOfDay(date);
+				break;
+		}
+
+		return startOfDate;
+	}
+
 	generateCalendar({
 		date,
 		mode = this.activeMode,
@@ -272,20 +293,7 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 			this.selectedDate = date;
 		}
 
-		switch (this.activeMode) {
-			case 'year':
-				this.visibleDate = startOfMonth(date);
-				break;
-			case 'day':
-				this.visibleDate = startOfHour(date);
-				break;
-			case 'hour':
-				this.visibleDate = startOfMinute(date);
-				break;
-			default:
-				this.visibleDate = startOfDay(date);
-				break;
-		}
+		this.visibleDate = this.getStartOfDate(date);
 
 		this.visibleDateSelected.emit(this.visibleDate);
 		this.lastDateOfCurrentMonth = lastDayOfMonth(date);
@@ -455,8 +463,10 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 
 	isDateDisabled(date: Date) {
 		return (
-			(this.disabledAfter && isAfter(date, this.disabledAfter)) ||
-			(this.disabledBefore && isBefore(date, this.disabledBefore))
+			(this.disabledAfter &&
+				isAfter(date, this.getStartOfDate(this.disabledAfter))) ||
+			(this.disabledBefore &&
+				isBefore(date, this.getStartOfDate(this.disabledBefore)))
 		);
 	}
 

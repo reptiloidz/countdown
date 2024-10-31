@@ -85,6 +85,7 @@
 		[ngClass]="{
 			'drop__item--selected': value.toString() === item.value.toString()
 		}"
+		[attr.disabled]="item.disabled || null"
 		[textClass]="[listButtonTextClass, 'drop__item-text']"
 		(click)="changeHandler(item.value)"
 	>

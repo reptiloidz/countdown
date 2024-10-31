@@ -12,7 +12,7 @@
 			<div class="datepicker__nav">
 				<app-autocomplete
 					class="datepicker__nav-item"
-					placeholder="Год"
+					placeholder=""
 					[value]="dateYear"
 					[visibleValue]="dateYear"
 					name="year"
@@ -34,7 +34,7 @@
 				<ng-container *ngIf="!dateOnly">
 					<app-autocomplete
 						class="datepicker__nav-item datepicker__nav-item--sm"
-						placeholder="Час"
+						placeholder=""
 						[value]="dateHour"
 						name="hour"
 						[autocompleteList]="hoursArray"
@@ -43,7 +43,7 @@
 					></app-autocomplete>
 					<app-autocomplete
 						class="datepicker__nav-item datepicker__nav-item--sm"
-						placeholder="Минута"
+						placeholder=""
 						[value]="dateMinute"
 						name="minute"
 						[autocompleteList]="minutesArray"
