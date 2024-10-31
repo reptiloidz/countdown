@@ -56,23 +56,12 @@
 	</div>
 </div>
 <ng-template #selectList>
-	<ng-container *ngIf="isDropListArray; else objectList">
-		<ng-container *ngFor="let item of dropListArray">
-			<ng-template
-				[ngTemplateOutlet]="selectItem"
-				[ngTemplateOutletContext]="{ item: item }"
-			></ng-template>
-		</ng-container>
+	<ng-container *ngFor="let item of dropList">
+		<ng-template
+			[ngTemplateOutlet]="selectItem"
+			[ngTemplateOutletContext]="{ item: item }"
+		></ng-template>
 	</ng-container>
-
-	<ng-template #objectList>
-		<ng-container *ngFor="let item of dropListObject | keyvalue | sortKeyValue">
-			<ng-template
-				[ngTemplateOutlet]="selectItem"
-				[ngTemplateOutletContext]="{ item: item }"
-			></ng-template>
-		</ng-container>
-	</ng-template>
 </ng-template>
 
 <ng-template

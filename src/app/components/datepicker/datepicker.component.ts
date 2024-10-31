@@ -11,6 +11,7 @@ import {
 	parse,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { IConfig } from 'ngx-mask';
 import { Constants } from 'src/app/enums';
 import { parseDate } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
@@ -34,6 +35,12 @@ export class DatepickerComponent implements OnInit {
 	@Output() datePicked = new EventEmitter<Date>();
 
 	currentYear = getYear(new Date());
+
+	monthPatterns: IConfig['patterns'] = {
+		A: {
+			pattern: new RegExp('[а-яА-Я0-9]'),
+		},
+	};
 
 	ngOnInit(): void {
 		this.visibleDate = this.date;
@@ -236,10 +243,10 @@ export class DatepickerComponent implements OnInit {
 		this.dateMonth = getMonth(date).toString();
 	}
 
-	filterMonth(item: [string, string | number], filterValue: string) {
+	filterMonth(item: SelectArray, filterValue: string) {
 		return (
-			item[0].includes(filterValue) ||
-			(+item[1] + 1).toString().includes(filterValue)
+			item.key.toString().includes(filterValue) ||
+			(+item.value + 1).toString().includes(filterValue)
 		);
 	}
 }

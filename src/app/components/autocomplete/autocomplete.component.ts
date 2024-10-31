@@ -8,11 +8,12 @@ import {
 	ViewChild,
 } from '@angular/core';
 import { getKeyByValue } from 'src/app/helpers';
-import { Select } from 'src/app/interfaces';
+import { SelectArray } from 'src/app/interfaces';
 import { DropComponent } from '../drop/drop.component';
 import { InputComponent } from '../input/input.component';
 import { ActionService } from 'src/app/services';
 import { Subscription } from 'rxjs';
+import { IConfig } from 'ngx-mask';
 
 @Component({
 	selector: 'app-autocomplete',
@@ -22,19 +23,18 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() value: string | number = '';
 	@Input() visibleValue: string | number = '';
 	@Input() placeholder = '';
-	@Input() autocompleteList!: Select;
+	@Input() autocompleteList!: SelectArray[];
 	@Input() mask: string | null = null;
+	@Input() patterns!: IConfig['patterns'];
 	@Input() suffix: string = '';
 	@Input() prefix: string = '';
-	@Input() filterFn = (
-		item: [string, string | number],
-		filterValue: string
-	) => item[0].includes(filterValue);
+	@Input() filterFn = (item: SelectArray, filterValue: string) =>
+		item.value.toString().includes(filterValue);
 	@Input() dataSuffix = '';
 
-	autocompleteListFiltered!: Select;
+	autocompleteListFiltered!: SelectArray[];
 
-	private firstFilteredValue!: [string, string | number];
+	private firstFilteredValue!: SelectArray;
 	private subscriptions = new Subscription();
 	private isOpening = false;
 
@@ -71,18 +71,16 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 		this.value = value;
 	}
 
-	filter(filterValue: string) {
-		const autocompleteListArray = Object.entries(this.autocompleteList);
-		const autocompleteListFilteredArray = autocompleteListArray.filter(
-			(item) => this.filterFn(item, filterValue)
-		);
+	filter(filterValue?: string) {
+		const autocompleteListFilteredArray = filterValue
+			? this.autocompleteList.filter((item) =>
+					this.filterFn(item, filterValue)
+			  )
+			: this.autocompleteList;
 
 		this.firstFilteredValue = autocompleteListFilteredArray[0];
 		this.autocompleteListFiltered = autocompleteListFilteredArray.length
-			? autocompleteListFilteredArray.reduce((acc, [key, value]) => {
-					acc[key] = value;
-					return acc;
-			  }, {} as { [key: string]: string | number })
+			? autocompleteListFilteredArray
 			: this.autocompleteList;
 	}
 
@@ -90,7 +88,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 		this.drop.closeHandler();
 		this.input.blurInput();
 		this.changeHandler(
-			this.firstFilteredValue ? this.firstFilteredValue[1] : this.value
+			this.firstFilteredValue ? this.firstFilteredValue.value : this.value
 		);
 		this.autocompleteListFiltered = this.autocompleteList;
 	}
@@ -104,6 +102,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	openHandler() {
 		this.isOpening = true;
 		this.action.autocompleteOpened();
+		this.filter();
 		this.drop.openHandler();
 	}
 

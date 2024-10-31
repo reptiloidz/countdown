@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { getKeyByValue } from 'src/app/helpers';
-import { Select, SelectArray } from 'src/app/interfaces';
+import { SelectArray } from 'src/app/interfaces';
 import {
 	ButtonSize,
 	DropHorizontal,
@@ -71,7 +71,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() buttonLabel: string | null = null;
 	@Input() dropBodyClass: string | string[] = '';
 	@Input() select = false;
-	@Input() dropList!: Select | SelectArray[];
+	@Input() dropList!: SelectArray[];
 	@Input() formControlName!: string;
 	@Input() name!: string;
 	@Input() value: string | number = '';
@@ -108,18 +108,6 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	get keyOfValue() {
 		return getKeyByValue(this.dropList, this.value);
-	}
-
-	get isDropListArray(): boolean {
-		return Array.isArray(this.dropList);
-	}
-
-	get dropListArray() {
-		return this.dropList as SelectArray[];
-	}
-
-	get dropListObject() {
-		return this.dropList as Select;
 	}
 
 	openHandler() {

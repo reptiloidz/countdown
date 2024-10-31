@@ -9,6 +9,7 @@ import {
 	forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { IConfig } from 'ngx-mask';
 import { ValidationObjectFieldValue } from 'src/app/interfaces';
 
 @Component({
@@ -35,6 +36,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() icon!: string;
 	@Input() textarea = false;
 	@Input() mask: string | null = null;
+	@Input() patterns!: IConfig['patterns'];
 	@Input() suffix: string = '';
 	@Input() prefix: string = '';
 	@Input() allowNegativeNumbers!: boolean;
