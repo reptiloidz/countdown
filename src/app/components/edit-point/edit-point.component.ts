@@ -95,7 +95,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	userData!: UserExtraData;
 	isIterationSwitched = false;
 	showIterationsInfo = false;
-	datePickerValue = this.pointDate;
 	differenceMode: DifferenceMode =
 		(localStorage.getItem('differenceMode') as DifferenceMode) || 'minutes';
 
@@ -490,7 +489,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	dateChanged(date?: Date) {
 		this.difference = this.convertToMinutes(
-			+(date || this.datePickerValue) - +new Date()
+			+(date || this.pointDate) - +new Date()
 		);
 
 		this.setVisibleDifference();
@@ -528,8 +527,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
 		// 	: new Date(currentDate.getTime() + diff * Constants.msInMinute);
 
-		isDateValid(targetDate) &&
-			(this.pointDate = this.datePickerValue = targetDate);
+		isDateValid(targetDate) && (this.pointDate = targetDate);
 	}
 
 	switchIteration(
@@ -581,7 +579,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	datePicked(date: Date) {
-		this.datePickerValue = date;
+		this.pointDate = date;
 		this.dateChanged();
 	}
 
@@ -603,7 +601,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		const dateTime = format(
 			getPointDate({
-				pointDate: this.datePickerValue,
+				pointDate: this.pointDate,
 				isGreenwich: this.greenwichValue,
 				isInvert: true,
 			}),

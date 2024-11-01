@@ -172,25 +172,25 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.removeDocumentClickListener();
 		this.cdr.detectChanges();
 
-		if (this.vertical === 'auto') {
-			this.renderer.removeClass(
+		requestAnimationFrame(() => {
+			if (this.vertical === 'auto') {
+				this.renderer.removeClass(
+					this.elementRef.nativeElement,
+					'drop--top'
+				);
+				this.renderer.removeClass(
+					this.elementRef.nativeElement,
+					'drop--bottom'
+				);
+			}
+			this.renderer.setStyle(
 				this.elementRef.nativeElement,
-				'drop--top'
+				'--drop-max-h',
+				null,
+				RendererStyleFlags2.DashCase
 			);
-			this.renderer.removeClass(
-				this.elementRef.nativeElement,
-				'drop--bottom'
-			);
-		}
-
-		this.renderer.setStyle(
-			this.elementRef.nativeElement,
-			'--drop-max-h',
-			null,
-			RendererStyleFlags2.DashCase
-		);
-
-		this.dropClosed.emit();
+			this.dropClosed.emit();
+		});
 	}
 
 	setDropMaxH(isTop = false) {
