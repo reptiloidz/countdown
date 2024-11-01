@@ -9,7 +9,7 @@
 ></app-date-panel>
 <div class="content content--row">
 	<div
-		*ngIf="point"
+		*ngIf="point; else pointPlaceholder"
 		app-main-item
 		class="color content__col"
 		[ngClass]="'color--' + this.form.controls['color'].value"
@@ -234,4 +234,8 @@
 	<h2>
 		<div class="loader rotating"></div>
 	</h2>
+</ng-template>
+
+<ng-template #pointPlaceholder>
+	<app-clock class="content__col"></app-clock>
 </ng-template>
