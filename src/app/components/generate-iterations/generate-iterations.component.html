@@ -25,6 +25,7 @@
 			<ng-container *ngIf="!isRepeatsAmountSet">
 				<h3 class="generation__subtitle">Конец:</h3>
 				<app-datepicker
+					#rangeEndRef
 					class="generation__datepicker"
 					(datePicked)="rangeEndDatePicked($event)"
 					horizontal="left"
@@ -37,6 +38,7 @@
 				[items]="repeatsModeList"
 				formControlName="repeatsMode"
 				[showTitle]="true"
+				(valueSwitched)="repeatsModeSwitcher()"
 			></app-switcher>
 		</div>
 		<div class="generation__col generation__col--period">

@@ -167,6 +167,16 @@ export class DatepickerComponent implements OnInit {
 		);
 	}
 
+	public fixDisabledDate() {
+		if (this.isDateDisabledBefore) {
+			this.date =
+				this.disabledBefore && addMinutes(this.disabledBefore, 1);
+		} else if (this.isDateDisabledAfter) {
+			this.date = this.disabledAfter && subMinutes(this.disabledAfter, 1);
+		}
+		this.datePicked.emit(this.date);
+	}
+
 	isHourDisabled(index: number): boolean {
 		if (!this.date) {
 			return false;
@@ -197,16 +207,6 @@ export class DatepickerComponent implements OnInit {
 				index >= getMinutes(this.disabledAfter);
 			return isDisabledBefore || isDisabledAfter || false;
 		}
-	}
-
-	fixDisabledDate() {
-		if (this.isDateDisabledBefore) {
-			this.date =
-				this.disabledBefore && addMinutes(this.disabledBefore, 1);
-		} else if (this.isDateDisabledAfter) {
-			this.date = this.disabledAfter && subMinutes(this.disabledAfter, 1);
-		}
-		this.datePicked.emit(this.date);
 	}
 
 	createArray({

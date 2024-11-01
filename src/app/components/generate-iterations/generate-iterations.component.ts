@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Input,
+	OnInit,
+	Output,
+	ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
 	Day,
@@ -36,6 +43,7 @@ import {
 	SelectArray,
 	SwitcherItem,
 } from 'src/app/interfaces';
+import { DatepickerComponent } from '../datepicker/datepicker.component';
 
 @Component({
 	selector: 'app-generate-iterations',
@@ -46,6 +54,7 @@ export class GenerateIterationsComponent implements OnInit {
 	@Input() loading = false;
 	@Input() point: Point | undefined;
 	@Output() repeatsAreGenerated = new EventEmitter<Iteration[]>();
+	@ViewChild('rangeEndRef') rangeEndRef!: DatepickerComponent;
 
 	rangeStartDate = new Date();
 	rangeEndDate = addMinutes(new Date(), 10);
@@ -451,5 +460,11 @@ export class GenerateIterationsComponent implements OnInit {
 			});
 			this.addIterationRecursively(k + 1);
 		}
+	}
+
+	repeatsModeSwitcher() {
+		requestAnimationFrame(() => {
+			this.rangeEndRef?.fixDisabledDate();
+		});
 	}
 }
