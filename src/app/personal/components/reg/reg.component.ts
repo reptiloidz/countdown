@@ -250,6 +250,7 @@ export class RegComponent implements OnInit, OnDestroy {
 
 						this.notify.add({
 							title: authErrMsg,
+							type: 'negative',
 						});
 
 						console.error('Ошибка при регистрации:\n', err.message);

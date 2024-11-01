@@ -188,6 +188,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						data?.displayName &&
 							this.notify.add({
 								title: `Данные пользователя ${data.displayName} (${this._user?.email}) обновлены.`,
+								autoremove: true,
+								type: 'positive',
 							});
 					},
 				})
@@ -211,6 +213,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					if (!passwordError) {
 						this.notify.add({
 							title: `Пароль пользователя ${this._user?.displayName} (${this._user?.email}) обновлён.`,
+							autoremove: true,
+							type: 'positive',
 						});
 
 						this.formPassword.controls['password'].setValue(null);
@@ -231,6 +235,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this._birthDatePointId = '';
 					this.notify.add({
 						title: `Учётная запись ${this._user?.displayName} (${this._user?.email}) удалена.`,
+						autoremove: true,
+						type: 'positive',
 					});
 				},
 			})
@@ -340,6 +346,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						.then(() => {
 							this.notify.add({
 								title: `Создано событие "<a href="../point/${point.id}">${this.birthDateEventName}</a>"`,
+								autoremove: true,
+								type: 'positive',
 							});
 						});
 				},

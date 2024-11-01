@@ -111,6 +111,8 @@ export class AuthComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.notify.add({
 						title: `Письмо для сброса пароля отправлено&nbsp;на ${this.emailForReset}`,
+						autoremove: true,
+						type: 'positive',
 					});
 				},
 			})
@@ -168,6 +170,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 
 					this.notify.add({
 						title: authErrMsg,
+						type: 'negative',
 					});
 
 					console.error('Ошибка при авторизации:\n', err.message);

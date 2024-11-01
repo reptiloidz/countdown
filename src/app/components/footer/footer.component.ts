@@ -133,6 +133,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 					this.router.navigate(['']);
 					this.notify.add({
 						title: `Событие удалено`,
+						type: 'positive',
+						autoremove: true,
 					});
 				},
 				error: (err) => {
