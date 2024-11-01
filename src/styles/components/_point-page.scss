@@ -116,10 +116,11 @@
 		&::before {
 			content: '';
 			display: block;
-			width: clamp(200px, 25%, 400px);
+			// width: clamp(200px, 25%, 400px);
+			width: 20px;
 			height: 1px;
 			margin: 0 auto 8px;
-			background-color: rgb(var(--c-border-primary));
+			background-color: rgba(var(--c-border-primary), .4);
 		}
 	}
 
