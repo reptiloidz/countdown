@@ -21,7 +21,7 @@ import { IConfig } from 'ngx-mask';
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() value: string | number = '';
-	@Input() visibleValue: string | number = '';
+	@Input() visibleValue: string = '';
 	@Input() placeholder = '';
 	@Input() autocompleteList!: SelectArray[];
 	@Input() mask: string | null = null;
@@ -47,7 +47,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.visibleValue =
-			getKeyByValue(this.autocompleteList, this.value) || '';
+			getKeyByValue(this.autocompleteList, this.value)?.toString() || '';
 		this.autocompleteListFiltered = this.autocompleteList;
 
 		this.subscriptions.add(
@@ -109,7 +109,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
 	closeHandler() {
 		this.visibleValue =
-			getKeyByValue(this.autocompleteList, this.value) ||
+			getKeyByValue(this.autocompleteList, this.value)?.toString() ||
 			this.visibleValue;
 	}
 }

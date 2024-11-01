@@ -4,15 +4,36 @@
 	*ngIf="!isUrlMode"
 ></header>
 
-<ul
-	class="notify-list"
-	*ngIf="notifyList.length"
->
+<ul class="notify-list">
 	<li
+		@notify
 		*ngFor="let notify of notifyList"
-		class="notify-list__item info"
-		[innerHTML]="notify.title"
-	></li>
+		class="notify-list__item-wrapper"
+	>
+		<div
+			class="notify-list__item"
+			[ngClass]="'notify-list__item--' + notify.type"
+		>
+			<div class="notify-list__header">
+				<h4
+					class="notify-list__title"
+					[innerHTML]="notify.title"
+				></h4>
+				<button
+					app-button
+					icon="cross"
+					mode="ghost"
+					class="notify-list__close"
+					(click)="closeNotify(notify.date)"
+				></button>
+			</div>
+			<p
+				*ngIf="notify.text"
+				class="notify-list__text"
+				[innerHTML]="notify.text"
+			></p>
+		</div>
+	</li>
 </ul>
 
 <main class="main">

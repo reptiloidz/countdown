@@ -214,19 +214,6 @@
 			</div>
 
 		</div>
-
-		<p
-			class="info"
-			*ngIf="isCreation && repeatableValue"
-		>
-			Изменение итераций будет доступно после создания события
-		</p>
-		<p
-			class="info"
-			*ngIf="!isCreation && !repeatableValue && hasManyIterations"
-		>
-			Отключены повторы события. Все итерации кроме последней будут удалены
-		</p>
 	</form>
 </div>
 

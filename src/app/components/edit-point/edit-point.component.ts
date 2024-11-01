@@ -31,7 +31,12 @@ import {
 	SwitcherItem,
 	SelectArray,
 } from 'src/app/interfaces';
-import { DataService, AuthService, ActionService } from 'src/app/services';
+import {
+	DataService,
+	AuthService,
+	ActionService,
+	NotifyService,
+} from 'src/app/services';
 import { addMonths, addYears, format } from 'date-fns';
 import {
 	getInvertedObject,
@@ -140,6 +145,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
+	private repeatableNotify: Date | undefined;
 
 	checking = new BehaviorSubject<boolean>(true);
 
@@ -149,7 +155,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private auth: AuthService,
 		private cdr: ChangeDetectorRef,
-		private action: ActionService
+		private action: ActionService,
+		private notify: NotifyService
 	) {}
 
 	ngOnInit(): void {
@@ -295,6 +302,32 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							prev.direction !== curr.direction
 						) {
 							this.differenceChanged();
+						}
+
+						if (this.repeatableNotify) {
+							if (
+								(!this.isCreation || !this.repeatableValue) &&
+								(this.isCreation ||
+									this.repeatableValue ||
+									!this.hasManyIterations)
+							) {
+								this.notify.close(this.repeatableNotify);
+								this.repeatableNotify = undefined;
+							}
+						} else {
+							if (this.isCreation && this.repeatableValue) {
+								this.repeatableNotify = this.notify.add({
+									title: 'Изменение итераций будет доступно после создания события',
+								});
+							} else if (
+								!this.isCreation &&
+								!this.repeatableValue &&
+								this.hasManyIterations
+							) {
+								this.repeatableNotify = this.notify.add({
+									title: 'Отключены повторы события. Все итерации кроме последней будут удалены',
+								});
+							}
 						}
 
 						this.cdr.detectChanges();

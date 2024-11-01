@@ -20,11 +20,13 @@ export class NotifyService {
 		this._notificationsSubject.next(newList);
 	}
 
-	add<T extends boolean>(notification: Omit<Notification<T>, 'date'>) {
+	add<T extends boolean>(notification: Omit<Notification<T>, 'date'>): Date {
 		const newNotification: Notification = {
 			date: new Date(),
 			title: notification.title,
 			text: notification.text,
+			type: notification.type || 'neutral',
+			autoremove: notification.autoremove,
 		};
 
 		this._notificationsSubject.next([
@@ -32,15 +34,23 @@ export class NotifyService {
 			newNotification,
 		]);
 
-		const newSubscription = timer(this._timer).subscribe({
-			next: () => {
-				this.update(
-					this.notifications.filter(
-						(i) => i.date !== newNotification.date
-					)
-				);
-				newSubscription.unsubscribe();
-			},
-		});
+		const newSubscription =
+			notification.autoremove &&
+			timer(this._timer).subscribe({
+				next: () => {
+					this.update(
+						this.notifications.filter(
+							(i) => i.date !== newNotification.date
+						)
+					);
+					newSubscription && newSubscription.unsubscribe();
+				},
+			});
+
+		return newNotification.date;
+	}
+
+	close(date: Date) {
+		this.update(this.notifications.filter((i) => i.date !== date));
 	}
 }
