@@ -2,7 +2,7 @@
 	display: flex;
 	height: 37px;
 	border: 1px solid rgba(var(--c-border-primary), .2);
-	border-radius: 12px;
+	border-radius: 8px;
 
 	&:has(.control__textarea) {
 		height: auto;

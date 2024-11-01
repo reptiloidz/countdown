@@ -1,5 +1,7 @@
 .checkbox {
 	--checkbox-cl: transparent;
+	--checkbox-bg-cl: transparent;
+	--checkbox-brs: 12px;
 	--checkbox-border-cl: rgba(var(--c-border-primary), .4);
 	--checkbox-check-cl: rgba(var(--c-border-primary), 1);
 	--checkbox-box-w: 28px;
@@ -7,6 +9,8 @@
 
 	display: flex;
 	align-items: baseline;
+	border-radius: var(--checkbox-brs);
+	background-color: var(--checkbox-bg-cl);
 	cursor: pointer;
 
 	&:has(:checked) {
@@ -74,5 +78,6 @@
 		--checkbox-border-cl: transparent;
 		--checkbox-box-w: 40px;
 		--checkbox-icon-w: 32px;
+		--checkbox-bg-cl: rgba(var(--c-bg-primary), .04);
 	}
 }

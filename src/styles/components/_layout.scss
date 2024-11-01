@@ -29,6 +29,12 @@ body {
 	width: 100%;
 	height: 100%;
 
+	&:has(.panel, .dashboard) {
+		.nav {
+			--nav-header-border-b-cl: transparent;
+		}
+	}
+
 	@media (max-width: 1024px) {
 		height: auto;
 	}

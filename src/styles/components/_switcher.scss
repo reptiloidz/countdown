@@ -22,7 +22,7 @@
 		display: flex;
 		padding: 4px 8px;
 		border: 1px solid var(--switcher-border-item-cl);
-		border-radius: 12px;
+		border-radius: 8px;
 		background-color: var(--switcher-item-bg-cl);
 		color: var(--switcher-item-cl);
 		cursor: pointer;
@@ -55,7 +55,7 @@
 
 	&--ghost {
 		--switcher-bg-cl: transparent;
-		--switcher-item-cl: rgba(var(--c-text-primary), .4);
+		--switcher-item-cl: rgba(var(--c-text-primary), 1);
 		--switcher-item-active-bg-cl: transparent;
 		--switcher-border-item-active-cl: rgba(var(--c-border-primary), .2);
 	}
