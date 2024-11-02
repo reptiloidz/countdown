@@ -27,15 +27,15 @@ import {
 						paddingTop: 0,
 					}),
 					animate(
-						'.2s cubic-bezier(.1, .79, .24, .95)',
+						'.1s cubic-bezier(.1, .79, .24, .95)',
 						style({
 							transform: 'none',
-							opacity: 1,
 						})
 					),
 					animate(
-						'.8s cubic-bezier(.1, .79, .24, .95)',
+						'.4s cubic-bezier(.1, .79, .24, .95)',
 						style({
+							opacity: 1,
 							paddingTop: 20,
 						})
 					),
@@ -44,7 +44,7 @@ import {
 							height: 0,
 						}),
 						animate(
-							'.8s cubic-bezier(.1, .79, .24, .95)',
+							'.4s cubic-bezier(.1, .79, .24, .95)',
 							style({
 								height: AUTO_STYLE,
 							})
