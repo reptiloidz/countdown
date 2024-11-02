@@ -49,6 +49,11 @@
 		border: 1px solid rgba(var(--point-color), .2);
 		border-radius: var(--form-col-brs);
 		background-color: rgba(var(--c-bg-primary), .02);
+
+		&--auth {
+			width: clamp(50%, 400px, 100%);
+			margin: 20px auto;
+		}
 	}
 
 	&__section-title {

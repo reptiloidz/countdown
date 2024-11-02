@@ -1,67 +1,74 @@
 <form
 	[formGroup]="form"
 	(ngSubmit)="submit()"
-	class="form"
+	class="form content"
 >
-	<app-input
-		[invalid]="hasEmailErrors"
-		placeholder="E-mail"
-		type="email"
-		formControlName="email"
-	></app-input>
-	<ng-container [formGroup]="passwordsForm">
+	<div class="form__section form__section--auth">
 		<app-input
-			#passwordControl
-			[invalid]="hasPasswordErrors"
-			placeholder="Пароль"
-			type="password"
-			formControlName="password"
-			autocomplete="password"
+			[invalid]="hasEmailErrors"
+			icon="at-email"
+			placeholder="E-mail"
+			type="email"
+			formControlName="email"
 		></app-input>
-		<app-input
-			#passwordRepeatControl
-			[invalid]="hasPasswordRepeatErrors"
-			placeholder="Повторите пароль"
-			type="password"
-			formControlName="passwordRepeat"
-			autocomplete="new-password"
-		></app-input>
-	</ng-container>
+		<ng-container [formGroup]="passwordsForm">
+			<app-input
+				#passwordControl
+				[invalid]="hasPasswordErrors"
+				icon="lock"
+				placeholder="Пароль"
+				type="password"
+				formControlName="password"
+				autocomplete="password"
+			></app-input>
+			<app-input
+				#passwordRepeatControl
+				[invalid]="hasPasswordRepeatErrors"
+				icon="lock"
+				placeholder="Повторите пароль"
+				type="password"
+				formControlName="passwordRepeat"
+				autocomplete="new-password"
+			></app-input>
+		</ng-container>
 
-	<label
-		app-checkbox
-		name="showPassword"
-		iconSize="sm"
-		(change)="switchPasswordVisibility($event)"
-	>Показать пароль</label>
+		<label
+			app-checkbox
+			name="showPassword"
+			iconSize="sm"
+			(change)="switchPasswordVisibility($event)"
+		>Показать пароль</label>
 
-	<label
-		app-checkbox
-		formControlName="privacyAgree"
-		iconSize="sm"
-	>
-		Принять условия <button
-			class="nav__item link"
-			type="button"
-			(click)="showPrivacy()"
-		>политики обработки персональных данных</button>
-	</label>
+		<label
+			app-checkbox
+			formControlName="privacyAgree"
+			iconSize="sm"
+		>
+			Принять условия <button
+				class="nav__item link"
+				type="button"
+				(click)="showPrivacy()"
+			>политики обработки персональных данных</button>
+		</label>
 
-	<ul
-		*ngIf="errorMessages.length"
-		class="info info--error"
-	>
-		<li
-			*ngFor="let errMessage of errorMessages"
-			class="info__item"
-		>{{ errMessage }}</li>
-	</ul>
-	<button
-		app-button
-		type="submit"
-		mode="positive"
-		[disabled]="form.invalid || isLoading"
-	>
-		Зарегистрироваться
-	</button>
+		<ul
+			*ngIf="errorMessages.length"
+			class="info info--error"
+		>
+			<li
+				*ngFor="let errMessage of errorMessages"
+				class="info__item"
+			>{{ errMessage }}</li>
+		</ul>
+		<button
+			app-button
+			class="form__submit"
+			type="submit"
+			icon="login"
+			mode="positive"
+			[disabled]="form.invalid || isLoading"
+		>
+			Зарегистрироваться
+		</button>
+	</div>
 </form>

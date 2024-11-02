@@ -1,45 +1,49 @@
 <form
 	[formGroup]="form"
 	(ngSubmit)="submit()"
-	class="form"
+	class="form content"
 >
-	<app-input
-		[invalid]="hasEmailErrors"
-		placeholder="E-mail"
-		type="email"
-		formControlName="email"
-	></app-input>
-	<app-input
-		[invalid]="hasPasswordErrors"
-		placeholder="Пароль"
-		type="password"
-		formControlName="password"
-	></app-input>
-	<ul
-		*ngIf="errorMessages.length"
-		class="info info--error"
-	>
-		<li
-			*ngFor="let errMessage of errorMessages"
-			class="info__item"
-		>{{ errMessage }}</li>
-	</ul>
-	<div class="form__nav">
-		<button
-			app-button
-			view="link"
-			(click)="resetPassword()"
+	<div class="form__section form__section--auth">
+		<app-input
+			[invalid]="hasEmailErrors"
+			icon="at-email"
+			placeholder="E-mail"
+			type="email"
+			formControlName="email"
+		></app-input>
+		<app-input
+			[invalid]="hasPasswordErrors"
+			icon="lock"
+			placeholder="Пароль"
+			type="password"
+			formControlName="password"
+		></app-input>
+		<ul
+			*ngIf="errorMessages.length"
+			class="info info--error"
 		>
-			Сброс пароля
-		</button>
-		<button
-			app-button
-			type="submit"
-			icon="login"
-			mode="positive"
-			[disabled]="form.invalid || isLoading"
-		>
-			Войти
-		</button>
+			<li
+				*ngFor="let errMessage of errorMessages"
+				class="info__item"
+			>{{ errMessage }}</li>
+		</ul>
+		<div class="form__nav">
+			<button
+				app-button
+				view="link"
+				(click)="resetPassword()"
+			>
+				Сброс пароля
+			</button>
+			<button
+				app-button
+				type="submit"
+				icon="login"
+				mode="positive"
+				[disabled]="form.invalid || isLoading"
+			>
+				Войти
+			</button>
+		</div>
 	</div>
 </form>

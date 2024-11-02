@@ -37,6 +37,8 @@
 			(ngSubmit)="updateProfile()"
 		>
 			<app-input
+				[invalid]="!!nameErrorMessages.length"
+				icon="user-circle"
 				class="form__control"
 				placeholder="Имя пользователя"
 				formControlName="name"
@@ -78,7 +80,9 @@
 			(ngSubmit)="updateEmail()"
 		>
 			<app-input
+				[invalid]="!!emailErrorMessages.length"
 				class="form__control"
+				icon="at-email"
 				placeholder="Почта"
 				formControlName="email"
 			></app-input>
@@ -112,11 +116,15 @@
 		>
 			<app-input
 				class="form__control"
+				[invalid]="!!passwordErrorMessages.length"
+				icon="lock"
 				placeholder="Старый пароль"
 				formControlName="password"
 			></app-input>
 			<app-input
 				class="form__control"
+				[invalid]="!!passwordErrorMessages.length"
+				icon="lock"
 				placeholder="Новый пароль"
 				formControlName="new-password"
 			></app-input>
