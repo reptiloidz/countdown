@@ -1,15 +1,9 @@
 .userpic {
-	width: 64px;
-	height: 64px;
-	background-color: #CCCCCC;
+	width: 100%;
+	background-color: rgb(var(--c-bg-userpic));
 
 	&--sm {
 		width: 16px;
 		height: 16px;
 	}
-}
-
-.userpic-wrapper {
-	display: flex;
-	align-items: center;
 }

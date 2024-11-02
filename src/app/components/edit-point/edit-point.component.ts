@@ -325,7 +325,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 								this.hasManyIterations
 							) {
 								this.repeatableNotify = this.notify.add({
-									title: 'Отключены повторы события. Все итерации кроме последней будут удалены',
+									title: 'Отключены повторы события',
+									text: 'Все итерации кроме последней будут удалены',
 								});
 							}
 						}

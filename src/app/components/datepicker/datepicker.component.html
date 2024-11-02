@@ -5,7 +5,7 @@
 	[horizontal]="horizontal"
 	[buttonLabel]="dateFormatted"
 	icon="calendar-clock"
-	navClass="drop__nav datepicker__trigger"
+	[navClass]="'drop__nav datepicker__trigger' + (dateOnly ? ' datepicker__trigger--sm' : '')"
 >
 	<ng-template #bodyTemplate>
 		<form class="datepicker__form">

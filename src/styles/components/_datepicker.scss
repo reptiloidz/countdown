@@ -5,6 +5,10 @@
 		display: flex;
 		justify-content: center;
 		width: 170px;
+
+		&--sm {
+			width: auto;
+		}
 	}
 
 	&__nav {

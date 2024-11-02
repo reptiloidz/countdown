@@ -1,15 +1,14 @@
 .info {
-	margin: 12px 0;
-	padding: 12px;
-	background-color: #DBDBDB;
+	margin: auto 0 0 4px;
+	padding: 0;
 	font-size: 14px;
+	list-style-type: square;
 
 	&__item {
 		list-style-position: inside;
 	}
 
 	&--error {
-		background-color: #FFCACA;
-		color: red;
+		color: rgb(var(--c-text-negative));
 	}
 }

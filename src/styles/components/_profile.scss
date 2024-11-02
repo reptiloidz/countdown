@@ -1,0 +1,24 @@
+.profile {
+	flex-grow: 0;
+
+	&__col {
+		align-items: flex-end;
+		width: clamp(200px, 25%, 400px);
+
+		&--lg {
+			flex-grow: 1;
+		}
+	}
+
+	&__footer {
+		display: flex;
+	}
+
+	&__submit {
+		margin-top: 15px;
+	}
+
+	&__userpic {
+		margin-bottom: auto;
+	}
+}

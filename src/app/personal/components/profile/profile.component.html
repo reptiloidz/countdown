@@ -1,156 +1,146 @@
-<div class="content content--row">
-	<div class="content__col">
-		<div class="userpic-wrapper">
-			<img
-				[src]="userpic"
-				[alt]="name || 'Юзерпик'"
-				class="userpic"
-			>
-			<h2
-				*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
-				class="loader rotating"
-			></h2>
-		</div>
+<div class="content content--row profile form">
+	<div class="content__col profile__col form__section">
+		<img
+			[src]="userpic"
+			[alt]="name || 'Юзерпик'"
+			class="profile__userpic userpic"
+		>
+		<span
+			*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
+			class="loader rotating"
+		></span>
+
+		<button
+			*ngIf="!emailVerified"
+			app-button
+			[disabled]="verifyButtonDisabled"
+			mode="ghost"
+			iconPosition="right"
+			icon="arrow-right"
+			(click)="sendEmailVerification()"
+		>Подтвердить почту</button>
+
+		<button
+			app-button
+			mode="negative"
+			(click)="removeAccount()"
+			iconPosition="right"
+			icon="arrow-right"
+		>Удалить аккаунт</button>
 	</div>
 
-	<div class="content__col form">
+	<div class="content__col profile__col--lg">
+		<h3 class="form__section-title">Логин и дата рождения</h3>
 		<form
+			class="profile__area form__section"
 			[formGroup]="formData"
-			class="form__section"
 			(ngSubmit)="updateProfile()"
 		>
-			<div class="form__row">
-				<app-input
-					class="form__control"
-					placeholder="Имя пользователя"
-					formControlName="name"
-				></app-input>
-				<app-datepicker
-					horizontal="left"
-					class="form__btn form__col"
-					(datePicked)="birthDatePicked($event)"
-					[date]="birthDatePickerValue"
-					[isNow]="false"
-					[visibleDate]="birthDatePickerValue"
-					[dateOnly]="true"
-				></app-datepicker>
+			<app-input
+				class="form__control"
+				placeholder="Имя пользователя"
+				formControlName="name"
+			></app-input>
+			<app-datepicker
+				class="form__col"
+				(datePicked)="birthDatePicked($event)"
+				[date]="birthDatePickerValue"
+				[isNow]="false"
+				[visibleDate]="birthDatePickerValue"
+				[dateOnly]="true"
+			></app-datepicker>
+			<div class="profile__footer">
+				<ul
+					*ngIf="nameErrorMessages.length"
+					class="info info--error"
+				>
+					<li
+						*ngFor="let errMessage of nameErrorMessages"
+						class="info__item"
+					>{{ errMessage }}</li>
+				</ul>
 				<button
 					app-button
-					type="button"
+					type="submit"
 					[disabled]="this.userpicLoading || formData.invalid"
-					class="form__submit"
+					class="form__submit profile__submit"
 					mode="ghost"
 					iconPosition="right"
 					icon="arrow-right"
 				>Обновить данные</button>
 			</div>
-
-
-			<ul
-				*ngIf="nameErrorMessages.length"
-				class="info info--error"
-			>
-				<li
-					*ngFor="let errMessage of nameErrorMessages"
-					class="info__item"
-				>{{ errMessage }}</li>
-			</ul>
 		</form>
 
+		<h3 class="form__section-title">E-mail</h3>
 		<form
+			class="profile__area form__section"
 			[formGroup]="formEmail"
-			class="form__section"
 			(ngSubmit)="updateEmail()"
 		>
-			<div class="form__row">
-				<app-input
-					class="form__control"
-					placeholder="Почта"
-					formControlName="email"
-				></app-input>
+			<app-input
+				class="form__control"
+				placeholder="Почта"
+				formControlName="email"
+			></app-input>
+			<div class="profile__footer">
+				<ul
+					*ngIf="emailErrorMessages.length"
+					class="info info--error"
+				>
+					<li
+						*ngFor="let errMessage of emailErrorMessages"
+						class="info__item"
+					>{{ errMessage }}</li>
+				</ul>
 				<button
 					app-button
-					type="button"
+					type="submit"
 					[disabled]="formEmail.invalid"
-					class="form__submit"
+					class="form__submit profile__submit"
 					mode="ghost"
 					iconPosition="right"
 					icon="arrow-right"
 				>Обновить e-mail</button>
 			</div>
-			<ul
-				*ngIf="emailErrorMessages.length"
-				class="info info--error"
-			>
-				<li
-					*ngFor="let errMessage of emailErrorMessages"
-					class="info__item"
-				>{{ errMessage }}</li>
-			</ul>
 		</form>
 
+		<h3 class="form__section-title">Новый пароль</h3>
 		<form
+			class="profile__area form__section"
 			[formGroup]="formPassword"
-			class="form__section"
 			(ngSubmit)="updatePassword()"
 		>
-			<div class="form__row">
-				<app-input
-					class="form__control"
-					placeholder="Старый пароль"
-					formControlName="password"
-				></app-input>
-				<app-input
-					class="form__control"
-					placeholder="Новый пароль"
-					formControlName="new-password"
-				></app-input>
+			<app-input
+				class="form__control"
+				placeholder="Старый пароль"
+				formControlName="password"
+			></app-input>
+			<app-input
+				class="form__control"
+				placeholder="Новый пароль"
+				formControlName="new-password"
+			></app-input>
+			<div class="profile__footer">
+				<ul
+					*ngIf="passwordErrorMessages.length"
+					class="info info--error"
+				>
+					<li
+						*ngFor="let errMessage of passwordErrorMessages"
+						class="info__item"
+					>{{ errMessage }}</li>
+				</ul>
 				<button
 					app-button
-					type="button"
+					type="submit"
 					[disabled]="formPassword.invalid"
-					class="form__submit"
+					class="form__submit profile__submit"
 					mode="ghost"
 					iconPosition="right"
 					icon="arrow-right"
 				>Обновить пароль</button>
 			</div>
-
-			<ul
-				*ngIf="passwordErrorMessages.length"
-				class="info info--error"
-			>
-				<li
-					*ngFor="let errMessage of passwordErrorMessages"
-					class="info__item"
-				>{{ errMessage }}</li>
-			</ul>
 		</form>
-
-		<div
-			*ngIf="!emailVerified"
-			class="form__section"
-		>
-			<button
-				app-button
-				[disabled]="verifyButtonDisabled"
-				class="form__submit"
-				mode="ghost"
-				iconPosition="right"
-				icon="arrow-right"
-			>Подтвердить почту</button>
-		</div>
-
-		<div class="form__section">
-			<button
-				app-button
-				class="form__submit"
-				mode="ghost"
-				(click)="removeAccount()"
-				iconPosition="right"
-				icon="arrow-right"
-			>Удалить аккаунт</button>
-		</div>
 	</div>
 
 </div>
