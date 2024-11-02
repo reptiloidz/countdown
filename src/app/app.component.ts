@@ -6,6 +6,8 @@ import { ActivationStart, Event, Router } from '@angular/router';
 import {
 	AUTO_STYLE,
 	animate,
+	group,
+	query,
 	style,
 	transition,
 	trigger,
@@ -16,34 +18,68 @@ import {
 	templateUrl: './app.component.html',
 	animations: [
 		trigger('notify', [
-			transition(':enter', [
-				style({
-					transform: 'translateY(100%)',
-					opacity: 0,
-					height: 0,
-					paddingTop: 0,
-				}),
-				animate(
-					'.4s .1s cubic-bezier(.1, .79, .24, .95)',
-					style({
-						transform: 'none',
-						opacity: 1,
-						height: AUTO_STYLE,
-						paddingTop: 20,
-					})
-				),
-			]),
 			transition(
-				':leave',
-				animate(
-					'.4s cubic-bezier(.1, .79, .24, .95)',
+				':enter',
+				group([
 					style({
 						transform: 'translateY(100%)',
 						opacity: 0,
-						height: 0,
 						paddingTop: 0,
-					})
-				)
+					}),
+					animate(
+						'.2s cubic-bezier(.1, .79, .24, .95)',
+						style({
+							transform: 'none',
+							opacity: 1,
+						})
+					),
+					animate(
+						'.8s cubic-bezier(.1, .79, .24, .95)',
+						style({
+							paddingTop: 20,
+						})
+					),
+					query('.notify-list__item', [
+						style({
+							height: 0,
+						}),
+						animate(
+							'.8s cubic-bezier(.1, .79, .24, .95)',
+							style({
+								height: AUTO_STYLE,
+							})
+						),
+					]),
+				])
+			),
+			transition(
+				':leave',
+				group([
+					animate(
+						'.4s cubic-bezier(.1, .79, .24, .95)',
+						style({
+							transform: 'translateY(100%)',
+							opacity: 0,
+						})
+					),
+					animate(
+						'.1s cubic-bezier(.1, .79, .24, .95)',
+						style({
+							paddingTop: 0,
+						})
+					),
+					query('.notify-list__item', [
+						style({
+							height: AUTO_STYLE,
+						}),
+						animate(
+							'.1s cubic-bezier(.1, .79, .24, .95)',
+							style({
+								height: 0,
+							})
+						),
+					]),
+				])
 			),
 		]),
 	],
