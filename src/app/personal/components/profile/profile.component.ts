@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format, parse } from 'date-fns';
@@ -28,6 +28,8 @@ import { AuthService, DataService, NotifyService } from 'src/app/services';
 	templateUrl: './profile.component.html',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+	@HostBinding('class') class = 'main__inner';
+
 	constructor(
 		private auth: AuthService,
 		private data: DataService,

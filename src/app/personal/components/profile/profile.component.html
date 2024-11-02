@@ -1,127 +1,156 @@
-<form
-	[formGroup]="formData"
-	class="form"
-	(ngSubmit)="updateProfile()"
->
-	<div class="control">
-		<input
-			formControlName="name"
-			type="text"
-			placeholder="Имя пользователя"
-		>
+<div class="content content--row">
+	<div class="content__col">
+		<div class="userpic-wrapper">
+			<img
+				[src]="userpic"
+				[alt]="name || 'Юзерпик'"
+				class="userpic"
+			>
+			<h2
+				*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
+				class="loader rotating"
+			></h2>
+		</div>
 	</div>
 
-	<app-datepicker
-		class="control"
-		(datePicked)="birthDatePicked($event)"
-		[date]="birthDatePickerValue"
-		[isNow]="false"
-		[visibleDate]="birthDatePickerValue"
-		[dateOnly]="true"
-	></app-datepicker>
-
-	<div class="userpic-wrapper">
-		<img
-			[src]="userpic"
-			[alt]="name || 'Юзерпик'"
-			class="userpic"
+	<div class="content__col form">
+		<form
+			[formGroup]="formData"
+			class="form__section"
+			(ngSubmit)="updateProfile()"
 		>
-		<h2
-			*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
-			class="loader rotating"
-		></h2>
-	</div>
-	<ul
-		*ngIf="nameErrorMessages.length"
-		class="info info--error"
-	>
-		<li
-			*ngFor="let errMessage of nameErrorMessages"
-			class="info__item"
-		>{{ errMessage }}</li>
-	</ul>
-	<button [disabled]="this.userpicLoading || formData.invalid">
-		Обновить данные
-	</button>
-</form>
+			<div class="form__row">
+				<app-input
+					class="form__control"
+					placeholder="Имя пользователя"
+					formControlName="name"
+				></app-input>
+				<app-datepicker
+					horizontal="left"
+					class="form__btn form__col"
+					(datePicked)="birthDatePicked($event)"
+					[date]="birthDatePickerValue"
+					[isNow]="false"
+					[visibleDate]="birthDatePickerValue"
+					[dateOnly]="true"
+				></app-datepicker>
+				<button
+					app-button
+					type="button"
+					[disabled]="this.userpicLoading || formData.invalid"
+					class="form__submit"
+					mode="ghost"
+					iconPosition="right"
+					icon="arrow-right"
+				>Обновить данные</button>
+			</div>
 
-<form
-	[formGroup]="formEmail"
-	class="form"
-	(ngSubmit)="updateEmail()"
->
-	<div class="control">
-		<input
-			formControlName="email"
-			type="text"
-			placeholder="Почта"
+
+			<ul
+				*ngIf="nameErrorMessages.length"
+				class="info info--error"
+			>
+				<li
+					*ngFor="let errMessage of nameErrorMessages"
+					class="info__item"
+				>{{ errMessage }}</li>
+			</ul>
+		</form>
+
+		<form
+			[formGroup]="formEmail"
+			class="form__section"
+			(ngSubmit)="updateEmail()"
 		>
-	</div>
-	<ul
-		*ngIf="emailErrorMessages.length"
-		class="info info--error"
-	>
-		<li
-			*ngFor="let errMessage of emailErrorMessages"
-			class="info__item"
-		>{{ errMessage }}</li>
-	</ul>
-	<button [disabled]="formEmail.invalid">
-		Обновить e-mail
-	</button>
-</form>
+			<div class="form__row">
+				<app-input
+					class="form__control"
+					placeholder="Почта"
+					formControlName="email"
+				></app-input>
+				<button
+					app-button
+					type="button"
+					[disabled]="formEmail.invalid"
+					class="form__submit"
+					mode="ghost"
+					iconPosition="right"
+					icon="arrow-right"
+				>Обновить e-mail</button>
+			</div>
+			<ul
+				*ngIf="emailErrorMessages.length"
+				class="info info--error"
+			>
+				<li
+					*ngFor="let errMessage of emailErrorMessages"
+					class="info__item"
+				>{{ errMessage }}</li>
+			</ul>
+		</form>
 
-<form
-	[formGroup]="formPassword"
-	class="form"
-	(ngSubmit)="updatePassword()"
->
-	<div class="control">
-		<input
-			type="text"
-			formControlName="password"
-			placeholder="Старый пароль"
+		<form
+			[formGroup]="formPassword"
+			class="form__section"
+			(ngSubmit)="updatePassword()"
 		>
-	</div>
-	<div class="control">
-		<input
-			type="text"
-			formControlName="new-password"
-			placeholder="Новый пароль"
+			<div class="form__row">
+				<app-input
+					class="form__control"
+					placeholder="Старый пароль"
+					formControlName="password"
+				></app-input>
+				<app-input
+					class="form__control"
+					placeholder="Новый пароль"
+					formControlName="new-password"
+				></app-input>
+				<button
+					app-button
+					type="button"
+					[disabled]="formPassword.invalid"
+					class="form__submit"
+					mode="ghost"
+					iconPosition="right"
+					icon="arrow-right"
+				>Обновить пароль</button>
+			</div>
+
+			<ul
+				*ngIf="passwordErrorMessages.length"
+				class="info info--error"
+			>
+				<li
+					*ngFor="let errMessage of passwordErrorMessages"
+					class="info__item"
+				>{{ errMessage }}</li>
+			</ul>
+		</form>
+
+		<div
+			*ngIf="!emailVerified"
+			class="form__section"
 		>
+			<button
+				app-button
+				[disabled]="verifyButtonDisabled"
+				class="form__submit"
+				mode="ghost"
+				iconPosition="right"
+				icon="arrow-right"
+			>Подтвердить почту</button>
+		</div>
+
+		<div class="form__section">
+			<button
+				app-button
+				class="form__submit"
+				mode="ghost"
+				(click)="removeAccount()"
+				iconPosition="right"
+				icon="arrow-right"
+			>Удалить аккаунт</button>
+		</div>
 	</div>
-	<ul
-		*ngIf="passwordErrorMessages.length"
-		class="info info--error"
-	>
-		<li
-			*ngFor="let errMessage of passwordErrorMessages"
-			class="info__item"
-		>{{ errMessage }}</li>
-	</ul>
-	<button [disabled]="formPassword.invalid">
-		Обновить пароль
-	</button>
-</form>
 
-<div
-	*ngIf="!emailVerified"
-	class="control"
->
-	<button
-		type="button"
-		[disabled]="verifyButtonDisabled"
-		(click)="sendEmailVerification()"
-	>
-		Подтвердить почту
-	</button>
-</div>
-
-<div class="control">
-	<button
-		type="button"
-		(click)="removeAccount()"
-	>
-		Удалить аккаунт
-	</button>
 </div>
