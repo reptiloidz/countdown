@@ -54,6 +54,9 @@
         <svg id="eye-open" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 12s-3.636 7-10 7-10-7-10-7 3.636-7 10-7c2.878 0 5.198 1.432 6.876 3M9 12a3 3 0 1 0 3-3"/>
         </svg>
+        <svg id="flag" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 21.111v-5s3-2.5 8 0 8 0 8 0v-12s-3 2.5-8 0-8 0-8 0M4 12V4.125"/>
+        </svg>
         <svg id="globe" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-width="1.5" d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3a9 9 0 0 0 9 9m0 0s4-3 4-9m-4 9s-4-3-4-9 4-9 4-9m0 0a8.98 8.98 0 0 0-6.708 3M12 3s2.222 1.667 3.354 5"/>
         </svg>

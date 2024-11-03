@@ -22,7 +22,7 @@ import {
 				':enter',
 				group([
 					style({
-						transform: 'translateY(100%)',
+						transform: 'translateY(10px)',
 						opacity: 0,
 						paddingTop: 0,
 					}),
@@ -58,16 +58,16 @@ import {
 					animate(
 						'.4s cubic-bezier(.1, .79, .24, .95)',
 						style({
-							transform: 'translateY(100%)',
+							transform: 'translateY(10px)',
+							paddingTop: 0,
 							opacity: 0,
 						})
 					),
-					animate(
-						'.1s cubic-bezier(.1, .79, .24, .95)',
-						style({
-							paddingTop: 0,
-						})
-					),
+					// animate(
+					// 	'.1s cubic-bezier(.1, .79, .24, .95)',
+					// 	style({
+					// 	})
+					// ),
 					query('.notify-list__item', [
 						style({
 							height: AUTO_STYLE,
