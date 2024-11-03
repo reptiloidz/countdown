@@ -9,6 +9,7 @@
 		@notify
 		*ngFor="let notify of notifyList"
 		class="notify-list__item-wrapper"
+		[attr.id]="'n-' + +notify.date"
 	>
 		<div
 			class="notify-list__item"
@@ -20,6 +21,7 @@
 					[innerHTML]="notify.title"
 				></h4>
 				<button
+					*ngIf="!notify.short"
 					app-button
 					icon="cross"
 					mode="ghost"
@@ -27,6 +29,21 @@
 					(click)="closeNotify(notify.date)"
 				></button>
 			</div>
+			<form
+				*ngIf="notify.prompt"
+				class="notify-list__text"
+				(submit)="submitNotify(notify.date)"
+			>
+				<app-input
+					icon="question-circle"
+					class="notify-list__input"
+				></app-input>
+				<button
+					app-button
+					type="submit"
+					mode="positive"
+				>{{ notify.button || 'Отправить'}}</button>
+			</form>
 			<p
 				*ngIf="notify.text"
 				class="notify-list__text"

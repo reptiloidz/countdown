@@ -5,7 +5,7 @@
 	--notify-list-item-brs: 12px;
 
 	position: fixed;
-	z-index: 3;
+	z-index: 4;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -16,7 +16,32 @@
 	list-style-type: none;
 	pointer-events: none;
 
+	&:has(.notify-list__input) {
+		&::before {
+			opacity: 1;
+			pointer-events: all;
+		}
+
+		.notify-list__text {
+			padding-top: 15px;
+		}
+	}
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: rgba(var(--c-bg-primary), .2);
+		opacity: 0;
+		transition: opacity .4s;
+		backdrop-filter: blur(6px);
+	}
+
 	&__item-wrapper {
+		z-index: 1;
 		width: clamp(400px, 50%, 1000px);
 		margin: 0;
 		padding-top: 20px;
@@ -25,7 +50,7 @@
 	&__item {
 		border-radius: var(--notify-list-item-brs);
 		box-shadow: 0 1px 8px rgba(var(--c-bg-primary), .1);
-		pointer-events: auto;
+		pointer-events: all;
 
 		&:has(.notify-list__text) {
 			.notify-list__header {
@@ -63,9 +88,15 @@
 	}
 
 	&__text {
+		display: flex;
 		padding: 10px 20px 15px;
 		border: 1px solid var(--notify-list-item-bg-cl);
 		border-radius: 0 0 var(--notify-list-item-brs) var(--notify-list-item-brs);
 		background-color: var(--notify-list-text-bg-cl);
+	}
+
+	&__input {
+		width: 100%;
+		margin-right: 10px;
 	}
 }

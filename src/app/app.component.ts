@@ -63,11 +63,6 @@ import {
 							opacity: 0,
 						})
 					),
-					// animate(
-					// 	'.1s cubic-bezier(.1, .79, .24, .95)',
-					// 	style({
-					// 	})
-					// ),
 					query('.notify-list__item', [
 						style({
 							height: AUTO_STYLE,
@@ -129,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			(+new Date()).toString()
 		);
 
-		interval(1)
+		interval(1000)
 			.pipe(
 				filter(() => +new Date() % 1000 < 100),
 				first(),
@@ -160,5 +155,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	closeNotify(date: Date) {
 		this.notify.close(date);
+	}
+
+	submitNotify(date: Date) {
+		this.notify.submit(date);
 	}
 }

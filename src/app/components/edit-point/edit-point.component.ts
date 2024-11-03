@@ -318,7 +318,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							if (this.isCreation && this.repeatableValue) {
 								this.repeatableNotify = this.notify.add({
 									title: 'Изменение итераций будет доступно после создания события',
-								});
+								}) as Date;
 							} else if (
 								!this.isCreation &&
 								!this.repeatableValue &&
@@ -327,7 +327,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 								this.repeatableNotify = this.notify.add({
 									title: 'Отключены повторы события',
 									text: 'Все итерации кроме последней будут удалены',
-								});
+								}) as Date;
 							}
 						}
 
@@ -717,9 +717,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					navigator.clipboard
 						.writeText(window.location.href)
 						.then(() => {
-							alert(
-								'URL события успешно скопирован в буфер обмена'
-							);
+							this.notify.add({
+								title: 'URL события успешно скопирован в буфер обмена',
+								short: true,
+								type: 'positive',
+							});
 						});
 				})
 				.catch((err) => {
@@ -761,6 +763,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				},
 			});
 
-		editPointEvent && alert(EditPointSuccessMessage[editPointEvent]);
+		editPointEvent &&
+			this.notify.add({
+				title: EditPointSuccessMessage[editPointEvent],
+				short: true,
+				type: 'positive',
+			});
 	}
 }

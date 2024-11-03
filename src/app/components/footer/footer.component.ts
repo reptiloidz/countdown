@@ -134,7 +134,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 					this.notify.add({
 						title: `Событие удалено`,
 						type: 'positive',
-						autoremove: true,
+						short: true,
 					});
 				},
 				error: (err) => {

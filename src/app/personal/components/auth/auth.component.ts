@@ -111,8 +111,8 @@ export class AuthComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.notify.add({
 						title: `Письмо для сброса пароля отправлено&nbsp;на ${this.emailForReset}`,
-						autoremove: true,
 						type: 'positive',
+						short: true,
 					});
 				},
 			})
@@ -136,9 +136,18 @@ export class AuthComponent implements OnInit, OnDestroy {
 	}
 
 	resetPassword() {
-		this.emailForReset =
-			prompt('Введите e-mail-адрес для сброса пароля') || '';
-		this.emailForReset && this.auth.resetPassword(this.emailForReset);
+		this.notify
+			.prompt({
+				title: 'Введите e-mail-адрес для сброса пароля',
+				prompt: true,
+				button: 'Сбросить пароль',
+			})
+			.subscribe({
+				next: (result) => {
+					this.emailForReset = result;
+					result && this.auth.resetPassword(result);
+				},
+			});
 	}
 
 	submit() {

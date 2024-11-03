@@ -22,6 +22,7 @@
 	&__text {
 		font-size: var(--button-fz);
 		line-height: normal;
+		white-space: nowrap;
 
 		&:empty {
 			display: none;
