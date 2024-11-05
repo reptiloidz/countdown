@@ -1,6 +1,7 @@
 import {
 	Component,
 	ElementRef,
+	Input,
 	OnInit,
 	Renderer2,
 	RendererStyleFlags2,
@@ -11,6 +12,7 @@ import {
 	templateUrl: './clock.component.html',
 })
 export class ClockComponent implements OnInit {
+	@Input() innerClass = '';
 	constructor(private el: ElementRef, private renderer: Renderer2) {}
 
 	ngOnInit(): void {

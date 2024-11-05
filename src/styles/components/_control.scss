@@ -51,6 +51,8 @@
 	}
 
 	&__textarea {
+		min-height: 100px;
+		max-height: 300px;
 		resize: vertical;
 	}
 

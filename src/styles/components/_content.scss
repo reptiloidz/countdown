@@ -14,6 +14,16 @@
 		z-index: -1;
 		width: 100vh;
 		overflow: hidden;
+
+		&--form {
+			position: relative;
+			top: 0;
+			overflow: hidden;
+
+			.content__clock-inner {
+				position: absolute;
+			}
+		}
 	}
 
 	&__col {
