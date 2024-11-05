@@ -1,6 +1,6 @@
 .notify-list {
 	--notify-list-title-cl: rgb(var(--c-text-primary));
-	--notify-list-header-bg-cl: rgb(var(--c-bg-neutral));
+	--notify-list-bg-cl: rgb(var(--c-bg-neutral));
 	--notify-list-text-bg-cl: rgb(var(--c-bg-inverse));
 	--notify-list-item-brs: 12px;
 
@@ -16,7 +16,7 @@
 	list-style-type: none;
 	pointer-events: none;
 
-	&:has(.notify-list__input) {
+	&:has(.notify-list__submit) {
 		&::before {
 			opacity: 1;
 			pointer-events: all;
@@ -60,12 +60,12 @@
 
 		&--positive {
 			--notify-list-title-cl: rgb(var(--c-text-inverse));
-			--notify-list-header-bg-cl: rgb(var(--c-bg-positive));
+			--notify-list-bg-cl: rgb(var(--c-bg-positive));
 		}
 
 		&--negative {
 			--notify-list-title-cl: rgb(var(--c-text-inverse));
-			--notify-list-header-bg-cl: rgb(var(--c-bg-negative));
+			--notify-list-bg-cl: rgb(var(--c-bg-negative));
 		}
 	}
 
@@ -74,7 +74,7 @@
 		align-items: center;
 		padding: 10px 20px;
 		border-radius: var(--notify-list-item-brs);
-		background-color: var(--notify-list-header-bg-cl);
+		background-color: var(--notify-list-bg-cl);
 	}
 
 	&__close {
@@ -90,7 +90,7 @@
 	&__text {
 		display: flex;
 		padding: 10px 20px 15px;
-		border: 1px solid var(--notify-list-item-bg-cl);
+		border: 3px solid var(--notify-list-bg-cl);
 		border-radius: 0 0 var(--notify-list-item-brs) var(--notify-list-item-brs);
 		background-color: var(--notify-list-text-bg-cl);
 	}
@@ -98,5 +98,9 @@
 	&__input {
 		width: 100%;
 		margin-right: 10px;
+	}
+
+	&__submit {
+		margin-left: auto;
 	}
 }

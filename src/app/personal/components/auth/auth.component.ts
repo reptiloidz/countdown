@@ -139,7 +139,6 @@ export class AuthComponent implements OnInit, OnDestroy {
 		this.notify
 			.prompt({
 				title: 'Введите e-mail-адрес для сброса пароля',
-				prompt: true,
 				button: 'Сбросить пароль',
 			})
 			.subscribe({

@@ -9,6 +9,7 @@ import {
 	Subscription,
 	concatMap,
 	take,
+	firstValueFrom,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Constants } from '../enums';
@@ -291,22 +292,26 @@ export class AuthService implements OnDestroy {
 	}
 
 	updateEmail(user: User, data: string, reAuthRequired = false) {
-		this.reAuth(reAuthRequired).then(() => {
-			updateEmail(user, data)
-				.then(() => {
-					this._eventEmailUpdatedSubject.next(data);
-				})
-				.catch((err) => {
-					if (err.code === 'auth/requires-recent-login') {
-						this.updateEmail(user, data, true);
-					} else {
-						this.notify.add({
-							title: 'Произошла ошибка',
-							type: 'negative',
-						});
-					}
-				});
-		});
+		this.reAuth(reAuthRequired)
+			.then(() => {
+				updateEmail(user, data)
+					.then(() => {
+						this._eventEmailUpdatedSubject.next(data);
+					})
+					.catch((err) => {
+						if (err.code === 'auth/requires-recent-login') {
+							this.updateEmail(user, data, true);
+						} else {
+							this.notify.add({
+								title: 'Произошла ошибка',
+								type: 'negative',
+							});
+						}
+					});
+			})
+			.catch((err) => {
+				this.wrongPasswordError(err);
+			});
 	}
 
 	updatePassword(user: User, password: string, newPassword: string) {
@@ -325,22 +330,7 @@ export class AuthService implements OnDestroy {
 					});
 			})
 			.catch((err) => {
-				let authErrMsg = '';
-
-				this._eventPasswordUpdatedSubject.next(true);
-				switch (err.code) {
-					case 'auth/wrong-password':
-						authErrMsg = 'Неверный пароль';
-						break;
-					default:
-						authErrMsg = 'Произошла ошибка';
-						break;
-				}
-
-				this.notify.add({
-					title: authErrMsg,
-					type: 'negative',
-				});
+				this.wrongPasswordError(err);
 			});
 	}
 
@@ -394,6 +384,25 @@ export class AuthService implements OnDestroy {
 			});
 	}
 
+	wrongPasswordError(err: any) {
+		let authErrMsg = '';
+
+		this._eventPasswordUpdatedSubject.next(true);
+		switch (err.code) {
+			case 'auth/wrong-password':
+				authErrMsg = 'Неверный пароль';
+				break;
+			default:
+				authErrMsg = 'Произошла ошибка';
+				break;
+		}
+
+		this.notify.add({
+			title: authErrMsg,
+			type: 'negative',
+		});
+	}
+
 	getUserData(id?: string): Observable<UserExtraData> {
 		return objectVal<any>(query(ref(this.http.db, `users/${id}`)));
 	}
@@ -413,29 +422,46 @@ export class AuthService implements OnDestroy {
 		});
 	}
 
-	async reAuth(reAuthRequired = false, password?: string): Promise<any> {
+	async reAuth(reAuthRequired = false, password?: string) {
+		if (!reAuthRequired) {
+			if (!password) {
+				return new Promise((resolve) => {
+					resolve(null);
+				});
+			} else {
+				return this.reAuthWithCred(password);
+			}
+		} else {
+			const result = await firstValueFrom(
+				this.notify.prompt({
+					title: 'Введите пароль',
+					button: 'Подтвердить пароль',
+				})
+			);
+			return this.reAuthWithCred(result);
+		}
+	}
+
+	async reAuthWithCred(password: string): Promise<any> {
 		let credential: EmailAuthCredential | null | '' = null;
 
 		// https://stackoverflow.com/questions/37811684/how-to-create-credential-object-needed-by-firebase-web-user-reauthenticatewith
 		if (this.authFB.currentUser) {
-			if (!password && !reAuthRequired) {
-				return new Promise((resolve) => {
-					resolve(null);
-				});
-			}
-
 			credential =
 				this.authFB.currentUser.email &&
 				EmailAuthProvider.credential(
 					this.authFB.currentUser.email,
-					password || prompt('Введите пароль') || ''
+					password
 				);
-		}
 
-		return this.authFB.currentUser && credential
-			? reauthenticateWithCredential(this.authFB.currentUser, credential)
-			: new Promise((resolve) => {
-					resolve(null);
-			  });
+			return credential
+				? reauthenticateWithCredential(
+						this.authFB.currentUser,
+						credential
+				  )
+				: new Promise((resolve) => {
+						resolve(null);
+				  });
+		}
 	}
 }

@@ -19,7 +19,12 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
-import { ActionService, AuthService, DataService } from 'src/app/services';
+import {
+	ActionService,
+	AuthService,
+	DataService,
+	NotifyService,
+} from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
 import { PanelComponent } from '../panel/panel.component';
 import { formatDate } from 'date-fns';
@@ -104,7 +109,8 @@ export class DatePanelComponent implements AfterViewInit {
 		private route: ActivatedRoute,
 		private auth: AuthService,
 		private cdr: ChangeDetectorRef,
-		private action: ActionService
+		private action: ActionService,
+		private notify: NotifyService
 	) {}
 
 	isCalendarPanelOpen = false;
@@ -318,14 +324,19 @@ export class DatePanelComponent implements AfterViewInit {
 		let newDatesArray = this.dates?.slice(0);
 		newDatesArray && newDatesArray.splice(i, 1);
 
-		confirm('Удалить итерацию?') &&
-			(() => {
-				this.removedIterationIndex = i;
-				this.data.editPoint(this.point?.id, {
-					...this.point,
-					dates: newDatesArray,
-				} as Point);
-			})();
+		this.notify
+			.confirm({
+				title: 'Удалить итерацию?',
+			})
+			.subscribe({
+				next: () => {
+					this.removedIterationIndex = i;
+					this.data.editPoint(this.point?.id, {
+						...this.point,
+						dates: newDatesArray,
+					} as Point);
+				},
+			});
 	}
 
 	removeCheckedIterations() {

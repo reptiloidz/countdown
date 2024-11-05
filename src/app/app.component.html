@@ -30,11 +30,12 @@
 				></button>
 			</div>
 			<form
-				*ngIf="notify.prompt"
+				*ngIf="notify.prompt || notify.confirm"
 				class="notify-list__text"
 				(submit)="submitNotify(notify.date)"
 			>
 				<app-input
+					*ngIf="notify.prompt"
 					icon="question-circle"
 					class="notify-list__input"
 				></app-input>
@@ -42,6 +43,7 @@
 					app-button
 					type="submit"
 					mode="positive"
+					class="notify-list__submit"
 				>{{ notify.button || 'Отправить'}}</button>
 			</form>
 			<p
