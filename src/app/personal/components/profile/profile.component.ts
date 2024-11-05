@@ -445,7 +445,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	removeAccount() {
-		confirm('Точно удалить учётную запись? Действие необратимо!') &&
-			this.auth.removeAccount(this._user, this._birthDatePointId);
+		this.notify
+			.confirm({
+				title: 'Точно удалить учётную запись? Действие необратимо!',
+			})
+			.subscribe({
+				next: () => {
+					this.auth.removeAccount(this._user, this._birthDatePointId);
+				},
+			});
 	}
 }

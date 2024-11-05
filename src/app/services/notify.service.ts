@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, take, timer } from 'rxjs';
 import { Notification } from '../interfaces';
 
 @Injectable({
@@ -34,7 +34,9 @@ export class NotifyService {
 		const newNotificationDate = this.add(notification);
 
 		this._promptSubject = new Subject<string>();
-		this.promptObservable$ = this._promptSubject.asObservable();
+		this.promptObservable$ = this._promptSubject
+			.asObservable()
+			.pipe(take(1));
 		requestAnimationFrame(() => {
 			this.promptInput = document.documentElement.querySelector(
 				`#n-${+newNotificationDate} input`
@@ -51,7 +53,9 @@ export class NotifyService {
 		const newNotificationDate = this.add(notification);
 
 		this._confirmSubject = new Subject<boolean>();
-		this.confirmObservable$ = this._confirmSubject.asObservable();
+		this.confirmObservable$ = this._confirmSubject
+			.asObservable()
+			.pipe(take(1));
 		requestAnimationFrame(() => {
 			this.confirmButton = document.documentElement.querySelector(
 				`#n-${+newNotificationDate} .notify-list__submit`

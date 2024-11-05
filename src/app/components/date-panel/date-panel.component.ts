@@ -345,17 +345,20 @@ export class DatePanelComponent implements AfterViewInit {
 			(item, i: any) => !this.iterationsChecked.includes(i.toString())
 		);
 
-		confirm(
-			'Удалить выбранные итерации? Если выбраны все, останется только последняя'
-		) &&
-			(() => {
-				this.data.editPoint(this.point?.id, {
-					...this.point,
-					dates: newDatesArray?.length
-						? newDatesArray
-						: [this.dates?.[this.dates?.length - 1]],
-				} as Point);
-			})();
+		this.notify
+			.confirm({
+				title: 'Удалить выбранные итерации? Если выбраны все, останется только последняя',
+			})
+			.subscribe({
+				next: () => {
+					this.data.editPoint(this.point?.id, {
+						...this.point,
+						dates: newDatesArray?.length
+							? newDatesArray
+							: [this.dates?.[this.dates?.length - 1]],
+					} as Point);
+				},
+			});
 	}
 
 	switchCalendarPanel(value?: boolean) {

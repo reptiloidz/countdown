@@ -200,26 +200,33 @@ export class DataService {
 		id?: string;
 		list?: string[];
 	} = {}) {
-		confirm(`Удалить ${id ? 'событие' : 'выбранные события'}?`) &&
-			(() => {
-				this.loading = true;
-				id && this._eventStartRemovePointSubject.next(id);
-				this.http
-					.deletePoints(id ? [id] : list || this.action.checkedPoints)
-					.then(() => {
-						this._eventRemovePointSubject.next(id);
-					})
-					.catch((err) => {
-						this.notify.add({
-							title: 'Ошибка при удалении события',
-							type: 'negative',
-						});
+		this.notify
+			.confirm({
+				title: `Удалить ${id ? 'событие' : 'выбранные события'}?`,
+			})
+			.subscribe({
+				next: () => {
+					this.loading = true;
+					id && this._eventStartRemovePointSubject.next(id);
+					this.http
+						.deletePoints(
+							id ? [id] : list || this.action.checkedPoints
+						)
+						.then(() => {
+							this._eventRemovePointSubject.next(id);
+						})
+						.catch((err) => {
+							this.notify.add({
+								title: 'Ошибка при удалении события',
+								type: 'negative',
+							});
 
-						console.error(
-							'Ошибка при удалении события:\n',
-							err.message
-						);
-					});
-			})();
+							console.error(
+								'Ошибка при удалении события:\n',
+								err.message
+							);
+						});
+				},
+			});
 	}
 }
