@@ -161,7 +161,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							(this._birthDatePointId = user.birthDatePointId);
 						this._birthDate = user?.birthDate || '';
 
-						if (user.birthDate) {
+						if (user?.birthDate) {
 							this.birthDatePickerValue = parse(
 								'00:00',
 								Constants.timeFormat,

@@ -13,7 +13,7 @@ export class NotifyService {
 	private _notificationsSubject = new BehaviorSubject<Notification[]>([]);
 	private _promptSubject!: Subject<string>;
 	private _confirmSubject!: Subject<boolean>;
-	private promptInput!: HTMLInputElement;
+	private promptInput: HTMLInputElement | undefined;
 	private confirmButton!: HTMLButtonElement;
 	promptObservable$!: Observable<string>;
 	confirmObservable$!: Observable<boolean>;
@@ -101,23 +101,30 @@ export class NotifyService {
 		return newNotification.date;
 	}
 
+	unsubscribe() {
+		this.notifications.some((item) => item.prompt) &&
+			this._promptSubject?.unsubscribe();
+		this.notifications.some((item) => item.confirm) &&
+			this._confirmSubject?.unsubscribe();
+	}
+
 	close(date: Date) {
-		this._promptSubject?.unsubscribe();
-		this._confirmSubject?.unsubscribe();
 		this.update(this.notifications.filter((i) => i.date !== date));
+		this.unsubscribe();
 	}
 
 	closeModals() {
 		this.update(this.notifications.filter((i) => !i.confirm && !i.prompt));
+		this.unsubscribe();
 	}
 
 	submit(date: Date) {
+		this.close(date);
 		if (this.promptInput) {
 			this.promptInput.value &&
 				this._promptSubject.next(this.promptInput.value);
 		} else {
 			this._confirmSubject.next(true);
 		}
-		this.close(date);
 	}
 }

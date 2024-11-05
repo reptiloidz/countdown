@@ -335,40 +335,44 @@ export class AuthService implements OnDestroy {
 	}
 
 	removeAccount(user: User, birthDatePointId: string) {
-		this.reAuth(true).then(() => {
-			this.updateUserBirthDate(user.uid, null)
-				.then(() => {
-					this.http
-						.deletePoints([birthDatePointId])
-						.then(() => {
-							deleteUser(user)
-								.then(() => {
-									this._eventAccountDeletedSubject.next();
-								})
-								.catch((err) => {
-									console.error(err);
-									this.notify.add({
-										title: 'Ошибка при удалении учётной записи',
-										type: 'negative',
+		this.reAuth(true)
+			.then(() => {
+				this.updateUserBirthDate(user.uid, null)
+					.then(() => {
+						this.http
+							.deletePoints([birthDatePointId])
+							.then(() => {
+								deleteUser(user)
+									.then(() => {
+										this._eventAccountDeletedSubject.next();
+									})
+									.catch((err) => {
+										console.error(err);
+										this.notify.add({
+											title: 'Ошибка при удалении учётной записи',
+											type: 'negative',
+										});
 									});
+							})
+							.catch((err) => {
+								console.error(err);
+								this.notify.add({
+									title: 'Ошибка при удалении события',
+									type: 'negative',
 								});
-						})
-						.catch((err) => {
-							console.error(err);
-							this.notify.add({
-								title: 'Ошибка при удалении события',
-								type: 'negative',
 							});
+					})
+					.catch((err) => {
+						console.error(err);
+						this.notify.add({
+							title: 'Ошибка при удалении события',
+							type: 'negative',
 						});
-				})
-				.catch((err) => {
-					console.error(err);
-					this.notify.add({
-						title: 'Ошибка при удалении события',
-						type: 'negative',
 					});
-				});
-		});
+			})
+			.catch((err) => {
+				this.wrongPasswordError(err);
+			});
 	}
 
 	resetPassword(email: string) {
