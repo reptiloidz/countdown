@@ -124,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			(+new Date()).toString()
 		);
 
-		interval(1000)
+		interval(1)
 			.pipe(
 				filter(() => +new Date() % 1000 < 100),
 				first(),
@@ -159,5 +159,41 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	submitNotify(date: Date) {
 		this.notify.submit(date);
+	}
+
+	toast() {
+		this.notify
+			.prompt({
+				title: 'Пример промпта?',
+			})
+			.subscribe({
+				next: (result) => {
+					console.log(result);
+				},
+			});
+
+		// this.notify.confirm({
+		// 	title: 'Пример конфёрма?',
+		// 	button: 'Да'
+		// }).subscribe({
+		// 	next: result => {
+		// 		console.log(result);
+		// 	}
+		// });
+
+		// this.notify.add({
+		// 	title: 'Нотифай',
+		// 	text: 'Описание нотифая'
+		// });
+
+		// this.notify.add({
+		// 	title: 'Саксесс',
+		// 	type: 'positive'
+		// });
+
+		// this.notify.add({
+		// 	title: 'Эррор"',
+		// 	type: 'negative'
+		// });
 	}
 }
