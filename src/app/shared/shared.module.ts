@@ -11,8 +11,11 @@ import { InputComponent } from '../components/input/input.component';
 import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 import { LetDirective } from '../directives/let.directive';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { SortKeyValuePipe } from '../pipes/sortKeyValue.pipe';
 import { AutocompleteComponent } from '../components/autocomplete/autocomplete.component';
+import { PopupComponent } from '../components/popup/popup.component';
+import { RadioComponent } from '../components/radio/radio.component';
+import { NotifyComponent } from '../components/notify/notify.component';
+import { GenerateIterationsComponent } from '../components/generate-iterations/generate-iterations.component';
 
 @NgModule({
 	declarations: [
@@ -25,8 +28,11 @@ import { AutocompleteComponent } from '../components/autocomplete/autocomplete.c
 		InputComponent,
 		CheckboxComponent,
 		LetDirective,
-		SortKeyValuePipe,
 		AutocompleteComponent,
+		PopupComponent,
+		GenerateIterationsComponent,
+		NotifyComponent,
+		RadioComponent,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective],
 	exports: [
@@ -39,6 +45,11 @@ import { AutocompleteComponent } from '../components/autocomplete/autocomplete.c
 		InputComponent,
 		CheckboxComponent,
 		LetDirective,
+		AutocompleteComponent,
+		PopupComponent,
+		GenerateIterationsComponent,
+		NotifyComponent,
+		RadioComponent,
 	],
 	providers: [[provideNgxMask()]],
 })

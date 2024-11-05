@@ -1,3 +1,4 @@
+<app-notify></app-notify>
 <header
 	app-header
 	class="nav nav--header"
@@ -9,56 +10,6 @@
 	(click)="toast()"
 	>Кнопуля</button> -->
 
-<ul class="notify-list">
-	<li
-		@notify
-		*ngFor="let notify of notifyList"
-		class="notify-list__item-wrapper"
-		[attr.id]="'n-' + +notify.date"
-	>
-		<div
-			class="notify-list__item"
-			[ngClass]="'notify-list__item--' + notify.type"
-		>
-			<div class="notify-list__header">
-				<h4
-					class="notify-list__title"
-					[innerHTML]="notify.title"
-				></h4>
-				<button
-					*ngIf="!notify.short"
-					app-button
-					icon="cross"
-					mode="ghost"
-					class="notify-list__close"
-					(click)="closeNotify(notify.date)"
-				></button>
-			</div>
-			<form
-				*ngIf="notify.prompt || notify.confirm"
-				class="notify-list__text"
-				(submit)="submitNotify(notify.date)"
-			>
-				<app-input
-					*ngIf="notify.prompt"
-					icon="question-circle"
-					class="notify-list__input"
-				></app-input>
-				<button
-					app-button
-					type="submit"
-					mode="positive"
-					class="notify-list__submit"
-				>{{ notify.button || 'Отправить'}}</button>
-			</form>
-			<p
-				*ngIf="notify.text"
-				class="notify-list__text"
-				[innerHTML]="notify.text"
-			></p>
-		</div>
-	</li>
-</ul>
 
 <main class="main">
 	<router-outlet></router-outlet>

@@ -107,6 +107,10 @@ export class NotifyService {
 		this.update(this.notifications.filter((i) => i.date !== date));
 	}
 
+	closeModals() {
+		this.update(this.notifications.filter((i) => !i.confirm && !i.prompt));
+	}
+
 	submit(date: Date) {
 		if (this.promptInput) {
 			this.promptInput.value &&

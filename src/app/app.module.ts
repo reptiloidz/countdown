@@ -14,13 +14,10 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { HttpClientModule } from '@angular/common/http';
-import { GenerateIterationsComponent } from './components/generate-iterations/generate-iterations.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
-import { PopupComponent } from './components/popup/popup.component';
-import { FilterPipe } from './pipes/filter.pipe';
 import { SharedModule } from './shared/shared.module';
 import { CheckCopiesPipe } from './pipes/check-copies.pipe';
 import { CheckAccessEditPipe } from './pipes/check-access-edit.pipe';
@@ -31,15 +28,26 @@ import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 import { ClockComponent } from './components/clock/clock.component';
 import { PanelComponent } from './components/panel/panel.component';
 import { BoardComponent } from './components/board/board.component';
-import { TimersComponent } from './components/timers/timers.component';
 import { FontProvider } from './providers/font.provider';
 import { TimeRemainTextPipe } from './pipes/time-remain-text.pipe';
 import { TimeRemainPipe } from './pipes/time-remain.pipe';
 import { DatePanelComponent } from './components/date-panel/date-panel.component';
-import { RadioComponent } from './components/radio/radio.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { SortKeyValuePipe } from './pipes/sortKeyValue.pipe';
+import { TimersComponent } from './components/timers/timers.component';
 
 @NgModule({
 	declarations: [
+		SortTrendingPipe,
+		CheckCopiesPipe,
+		CheckAccessEditPipe,
+		SortPointsPipe,
+		CheckEditablePointsPipe,
+		ColorsCheckPipe,
+		TimeRemainTextPipe,
+		TimeRemainPipe,
+		SortKeyValuePipe,
+		FilterPipe,
 		AppComponent,
 		MainListComponent,
 		MainItemComponent,
@@ -47,24 +55,12 @@ import { RadioComponent } from './components/radio/radio.component';
 		HeaderComponent,
 		FooterComponent,
 		EditPointComponent,
-		GenerateIterationsComponent,
 		PrivacyComponent,
-		PopupComponent,
-		FilterPipe,
-		CheckCopiesPipe,
-		CheckAccessEditPipe,
-		SortPointsPipe,
-		SortTrendingPipe,
-		CheckEditablePointsPipe,
-		ColorsCheckPipe,
-		TimeRemainTextPipe,
-		TimeRemainPipe,
 		ClockComponent,
 		PanelComponent,
 		BoardComponent,
-		TimersComponent,
 		DatePanelComponent,
-		RadioComponent,
+		TimersComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -91,7 +87,6 @@ import { RadioComponent } from './components/radio/radio.component';
 		provideDatabase(() => getDatabase()),
 	],
 	providers: [
-		SortTrendingPipe,
 		provideAnimations(),
 		{
 			provide: APP_INITIALIZER,

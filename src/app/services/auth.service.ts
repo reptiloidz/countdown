@@ -424,21 +424,22 @@ export class AuthService implements OnDestroy {
 
 	async reAuth(reAuthRequired = false, password?: string) {
 		if (!reAuthRequired) {
-			if (!password) {
-				return new Promise((resolve) => {
-					resolve(null);
-				});
-			} else {
-				return this.reAuthWithCred(password);
-			}
+			return new Promise((resolve) => {
+				resolve(null);
+			});
 		} else {
-			const result = await firstValueFrom(
-				this.notify.prompt({
-					title: 'Введите пароль',
-					button: 'Подтвердить пароль',
-				})
-			);
-			return this.reAuthWithCred(result);
+			if (password) {
+				return this.reAuthWithCred(password);
+			} else {
+				return this.reAuthWithCred(
+					await firstValueFrom(
+						this.notify.prompt({
+							title: 'Введите пароль',
+							button: 'Подтвердить пароль',
+						})
+					)
+				);
+			}
 		}
 	}
 
