@@ -13,13 +13,7 @@ import {
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Constants } from '../enums';
-import {
-	FbAuthResponse,
-	UserPoint,
-	Point,
-	UserProfile,
-	UserExtraData,
-} from '../interfaces';
+import { UserPoint, Point, UserProfile, UserExtraData } from '../interfaces';
 import {
 	Auth,
 	signInWithEmailAndPassword,
@@ -63,14 +57,14 @@ export class AuthService implements OnDestroy {
 		this.subscriptions.add(
 			authState(this.authFB).subscribe({
 				next: (data: any) => {
-					switch (data?.operationType) {
-						case 'signIn':
-							this.setToken(data._tokenResponse);
-							goOnline(this.http.db);
-							break;
-
-						default:
-							break;
+					if (data?.accessToken && data?.uid) {
+						this.setToken({
+							token: data.accessToken,
+							id: data.uid,
+						});
+						goOnline(this.http.db);
+					} else {
+						this.setToken();
 					}
 				},
 			})
@@ -214,7 +208,7 @@ export class AuthService implements OnDestroy {
 
 	logout() {
 		signOut(this.authFB).then(() => {
-			this.setToken(null);
+			this.setToken();
 			this.router.navigate(['/auth/']);
 		});
 	}
@@ -256,8 +250,14 @@ export class AuthService implements OnDestroy {
 		}
 	}
 
-	setToken(response: FbAuthResponse | null) {
-		if (!response) {
+	setToken({
+		token,
+		id,
+	}: {
+		token?: string;
+		id?: string;
+	} = {}) {
+		if (!token || !id) {
 			localStorage.clear();
 		} else {
 			const expDate = new Date(
@@ -267,8 +267,8 @@ export class AuthService implements OnDestroy {
 					7 * 24 * 60 * Constants.msInMinute
 			);
 
-			localStorage.setItem('fb-token', response.idToken);
-			localStorage.setItem('fb-uid', response.localId);
+			localStorage.setItem('fb-token', token);
+			localStorage.setItem('fb-uid', id);
 			localStorage.setItem('fb-token-exp', expDate.toString());
 		}
 	}
