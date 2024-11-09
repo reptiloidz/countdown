@@ -88,16 +88,23 @@
 	}
 
 	&__text {
-		display: flex;
 		padding: 10px 20px 15px;
 		border: 3px solid var(--notify-list-bg-cl);
 		border-radius: 0 0 var(--notify-list-item-brs) var(--notify-list-item-brs);
 		background-color: var(--notify-list-text-bg-cl);
 	}
 
+	&__inner {
+		display: flex;
+	}
+
 	&__input {
 		width: 100%;
 		margin-right: 10px;
+	}
+
+	&__check {
+		margin-top: 10px;
 	}
 
 	&__submit {

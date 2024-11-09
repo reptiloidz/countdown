@@ -150,7 +150,7 @@ export class DataService {
 				.catch((err) => {
 					this.notify.add({
 						title: 'Ошибка при создании события',
-						type: 'negative',
+						view: 'negative',
 					});
 
 					console.error(
@@ -182,7 +182,7 @@ export class DataService {
 				.catch((err) => {
 					this.notify.add({
 						title: 'Ошибка при редактировании события',
-						type: 'negative',
+						view: 'negative',
 					});
 
 					console.error(
@@ -218,7 +218,7 @@ export class DataService {
 						.catch((err) => {
 							this.notify.add({
 								title: 'Ошибка при удалении события',
-								type: 'negative',
+								view: 'negative',
 							});
 
 							console.error(

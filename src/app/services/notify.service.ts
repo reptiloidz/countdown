@@ -70,12 +70,14 @@ export class NotifyService {
 			date: new Date(),
 			title: notification.title,
 			text: notification.text,
-			type: notification.type || 'neutral',
+			view: notification.view || 'neutral',
 			autoremove: notification.autoremove,
 			short: notification.short,
 			prompt: notification.prompt,
 			confirm: notification.confirm,
 			button: notification.button,
+			icon: notification.icon,
+			type: notification.type,
 		};
 
 		this._notificationsSubject.next([

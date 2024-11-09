@@ -6,7 +6,6 @@ import {
 	HostBinding,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { PrivacyComponent } from 'src/app/components/privacy/privacy.component';
@@ -78,7 +77,6 @@ export class RegComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private auth: AuthService,
-		private router: Router,
 		private notify: NotifyService,
 		private popupService: PopupService
 	) {}
@@ -254,7 +252,7 @@ export class RegComponent implements OnInit, OnDestroy {
 
 						this.notify.add({
 							title: authErrMsg,
-							type: 'negative',
+							view: 'negative',
 						});
 
 						console.error('Ошибка при регистрации:\n', err.message);

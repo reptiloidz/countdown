@@ -720,7 +720,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.notify.add({
 								title: 'URL события успешно скопирован в буфер обмена',
 								short: true,
-								type: 'positive',
+								view: 'positive',
 							});
 						});
 				})
@@ -767,7 +767,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.notify.add({
 				title: EditPointSuccessMessage[editPointEvent],
 				short: true,
-				type: 'positive',
+				view: 'positive',
 			});
 	}
 }

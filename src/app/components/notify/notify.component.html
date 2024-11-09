@@ -7,7 +7,7 @@
 	>
 		<div
 			class="notify-list__item"
-			[ngClass]="'notify-list__item--' + notify.type"
+			[ngClass]="'notify-list__item--' + notify.view"
 		>
 			<div class="notify-list__header">
 				<h4
@@ -26,19 +26,35 @@
 			<form
 				*ngIf="notify.prompt || notify.confirm"
 				class="notify-list__text"
-				(submit)="submitNotify(notify.date)"
+				[formGroup]="form"
+				(ngSubmit)="submitNotify(notify.date)"
 			>
-				<app-input
-					*ngIf="notify.prompt"
-					icon="question-circle"
-					class="notify-list__input"
-				></app-input>
-				<button
-					app-button
-					type="submit"
-					mode="positive"
-					class="notify-list__submit"
-				>{{ notify.button || 'Отправить'}}</button>
+				<div class="notify-list__inner">
+					<app-input
+						#control
+						*ngIf="notify.prompt"
+						[icon]="notify.icon || 'question-circle'"
+						class="notify-list__input"
+						[type]="notify.type || 'text'"
+						[formControlName]="notify.type || 'text'"
+						[invalid]="isInvalid"
+					></app-input>
+					<button
+						app-button
+						type="submit"
+						mode="positive"
+						class="notify-list__submit"
+						[attr.disabled]="(isInvalid || isControlEmpty) || null"
+					>{{ notify.button || 'Отправить'}}</button>
+				</div>
+				<label
+					*ngIf="notify.type === 'password'"
+					class="notify-list__check"
+					app-checkbox
+					name="showPassword"
+					iconSize="sm"
+					(change)="switchPasswordVisibility($event)"
+				>Показать пароль</label>
 			</form>
 			<p
 				*ngIf="notify.text"

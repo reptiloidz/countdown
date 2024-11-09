@@ -75,7 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	toast() {
 		this.notify.add({
 			title: `Создано событие "<a href="../point/" class="notify-list__link">С днем рождения</a>"`,
-			type: 'positive',
+			view: 'positive',
 		});
 
 		// this.notify

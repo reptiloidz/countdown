@@ -10,3 +10,4 @@ export * from './dropHorizontal.type';
 export * from './iterationReasons.type';
 export * from './ngClass.type';
 export * from './differenceMode.type';
+export * from './notification.type';

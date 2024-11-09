@@ -283,7 +283,7 @@ export class AuthService implements OnDestroy {
 			.catch(() => {
 				this.notify.add({
 					title: 'Ошибка при обновлении профиля',
-					type: 'negative',
+					view: 'negative',
 				});
 			});
 	}
@@ -301,7 +301,7 @@ export class AuthService implements OnDestroy {
 						} else {
 							this.notify.add({
 								title: 'Произошла ошибка',
-								type: 'negative',
+								view: 'negative',
 							});
 						}
 					});
@@ -322,7 +322,7 @@ export class AuthService implements OnDestroy {
 						this._eventPasswordUpdatedSubject.next(true);
 						this.notify.add({
 							title: 'Ошибка при обновлении пароля',
-							type: 'negative',
+							view: 'negative',
 						});
 					});
 			})
@@ -347,7 +347,7 @@ export class AuthService implements OnDestroy {
 										console.error(err);
 										this.notify.add({
 											title: 'Ошибка при удалении учётной записи',
-											type: 'negative',
+											view: 'negative',
 										});
 									});
 							})
@@ -355,7 +355,7 @@ export class AuthService implements OnDestroy {
 								console.error(err);
 								this.notify.add({
 									title: 'Ошибка при удалении события',
-									type: 'negative',
+									view: 'negative',
 								});
 							});
 					})
@@ -363,7 +363,7 @@ export class AuthService implements OnDestroy {
 						console.error(err);
 						this.notify.add({
 							title: 'Ошибка при удалении события',
-							type: 'negative',
+							view: 'negative',
 						});
 					});
 			})
@@ -380,7 +380,7 @@ export class AuthService implements OnDestroy {
 			.catch(() => {
 				this.notify.add({
 					title: 'Не&nbsp;удалось отправить письмо для сброса пароля',
-					type: 'negative',
+					view: 'negative',
 				});
 			});
 	}
@@ -400,7 +400,7 @@ export class AuthService implements OnDestroy {
 
 		this.notify.add({
 			title: authErrMsg,
-			type: 'negative',
+			view: 'negative',
 		});
 	}
 
@@ -437,6 +437,8 @@ export class AuthService implements OnDestroy {
 						this.notify.prompt({
 							title: 'Введите пароль',
 							button: 'Подтвердить пароль',
+							type: 'password',
+							icon: 'lock',
 						})
 					)
 				);

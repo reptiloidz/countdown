@@ -12,12 +12,19 @@
 			formControlName="email"
 		></app-input>
 		<app-input
+			#passwordControl
 			[invalid]="hasPasswordErrors"
 			icon="lock"
 			placeholder="Пароль"
 			type="password"
 			formControlName="password"
 		></app-input>
+		<label
+			app-checkbox
+			name="showPassword"
+			iconSize="sm"
+			(change)="switchPasswordVisibility($event)"
+		>Показать пароль</label>
 		<ul
 			*ngIf="errorMessages.length"
 			class="info info--error"

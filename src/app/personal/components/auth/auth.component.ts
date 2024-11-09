@@ -1,7 +1,14 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	HostBinding,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { InputComponent } from 'src/app/components/input/input.component';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
 import { ValidationObject, ValidationObjectField } from 'src/app/interfaces';
 import { AuthService, NotifyService } from 'src/app/services';
@@ -12,6 +19,7 @@ import { AuthService, NotifyService } from 'src/app/services';
 })
 export class AuthComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
+	@ViewChild('passwordControl') private passwordControl!: InputComponent;
 
 	form!: FormGroup;
 	isLoading = false;
@@ -111,7 +119,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.notify.add({
 						title: `Письмо для сброса пароля отправлено&nbsp;на ${this.emailForReset}`,
-						type: 'positive',
+						view: 'positive',
 						short: true,
 					});
 				},
@@ -140,6 +148,8 @@ export class AuthComponent implements OnInit, OnDestroy {
 			.prompt({
 				title: 'Введите e-mail-адрес для сброса пароля',
 				button: 'Сбросить пароль',
+				type: 'email',
+				icon: 'at-email',
 			})
 			.subscribe({
 				next: (result) => {
@@ -147,6 +157,11 @@ export class AuthComponent implements OnInit, OnDestroy {
 					result && this.auth.resetPassword(result);
 				},
 			});
+	}
+
+	switchPasswordVisibility(event: Event) {
+		const el: HTMLInputElement | null = event.target as HTMLInputElement;
+		this.passwordControl.type = el.checked ? 'text' : 'password';
 	}
 
 	submit() {
@@ -178,7 +193,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 
 					this.notify.add({
 						title: authErrMsg,
-						type: 'negative',
+						view: 'negative',
 					});
 
 					console.error('Ошибка при авторизации:\n', err.message);
