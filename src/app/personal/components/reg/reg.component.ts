@@ -230,9 +230,13 @@ export class RegComponent implements OnInit, OnDestroy {
 					returnSecureToken: true,
 				})
 				.subscribe({
-					next: () => {
+					next: (data) => {
 						this.isLoading = false;
-						this.router.navigate(['/auth/']);
+						this.auth.login({
+							email: data.email,
+							password: this.passwordsForm.get('password')?.value,
+							returnSecureToken: true,
+						});
 					},
 					error: (err) => {
 						this.isLoading = false;

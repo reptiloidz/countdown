@@ -347,8 +347,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						})
 						.then(() => {
 							this.notify.add({
-								title: `Создано событие "<a href="../point/${point.id}">${this.birthDateEventName}</a>"`,
-								short: true,
+								title: `Создано событие "<a href="../point/${point.id}" class="notify-list__link">${this.birthDateEventName}</a>"`,
+								autoremove: true,
 								type: 'positive',
 							});
 						});

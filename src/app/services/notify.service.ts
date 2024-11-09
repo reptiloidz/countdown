@@ -101,16 +101,26 @@ export class NotifyService {
 		return newNotification.date;
 	}
 
-	unsubscribe() {
-		this.notifications.some((item) => item.prompt) &&
-			this._promptSubject?.unsubscribe();
-		this.notifications.some((item) => item.confirm) &&
-			this._confirmSubject?.unsubscribe();
+	unsubscribe(date?: Date) {
+		if (date) {
+			this.notifications.some(
+				(item) => item.prompt && date === item.date
+			) && this._promptSubject?.unsubscribe();
+			this.notifications.some(
+				(item) => item.confirm && date === item.date
+			) && this._confirmSubject?.unsubscribe();
+		} else {
+			this.notifications.some((item) => item.prompt) &&
+				this._promptSubject?.unsubscribe();
+			this.notifications.some((item) => item.confirm) &&
+				this._confirmSubject?.unsubscribe();
+		}
+		this.promptInput = undefined;
 	}
 
 	close(date: Date) {
 		this.update(this.notifications.filter((i) => i.date !== date));
-		this.unsubscribe();
+		this.unsubscribe(date);
 	}
 
 	closeModals() {
@@ -119,12 +129,12 @@ export class NotifyService {
 	}
 
 	submit(date: Date) {
-		this.close(date);
 		if (this.promptInput) {
 			this.promptInput.value &&
 				this._promptSubject.next(this.promptInput.value);
 		} else {
 			this._confirmSubject.next(true);
 		}
+		this.close(date);
 	}
 }

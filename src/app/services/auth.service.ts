@@ -187,16 +187,16 @@ export class AuthService implements OnDestroy {
 
 		this._user = value.user;
 
-		this._user &&
-			(!this._user.displayName || !this._user.photoURL) &&
-			this.updateProfile(this._user, {
+		value.user &&
+			(!value.user.displayName || !value.user.photoURL) &&
+			this.updateProfile(value.user, {
 				displayName,
 				photoURL: `https://ui-avatars.com/api/?name=${generateUserpicName(
 					displayName
 				)}&background=${randomHEXColor()}`,
 			});
 
-		this._eventLoginSubject.next(this._user?.uid || '');
+		this._eventLoginSubject.next(value.user?.uid || '');
 
 		this.setToken(value._tokenResponse);
 		goOnline(this.http.db);
