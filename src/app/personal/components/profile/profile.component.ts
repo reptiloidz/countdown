@@ -1,4 +1,10 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	HostBinding,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+} from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format, parse } from 'date-fns';
@@ -12,6 +18,7 @@ import {
 	timer,
 	skipWhile,
 } from 'rxjs';
+import { InputComponent } from 'src/app/components/input/input.component';
 import { Constants } from 'src/app/enums';
 import {
 	generateUserpicName,
@@ -28,6 +35,8 @@ import { AuthService, DataService, NotifyService } from 'src/app/services';
 	templateUrl: './profile.component.html',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+	@ViewChild('passwordControl') private passwordControl!: InputComponent;
+	@ViewChild('passwordRepeatControl') passwordRepeatControl!: InputComponent;
 	@HostBinding('class') class = 'main__inner';
 
 	constructor(
@@ -100,10 +109,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				value: false,
 				message: 'Новый пароль слишком короткий',
 			},
+			same: {
+				value: false,
+				message: 'Новый пароль совпадает со старым',
+			},
 			dirty: false,
 		},
 	};
 	passwordErrorMessages: string[] = [];
+	oldPasswordErrorMessages: string[] = [];
+	newPasswordErrorMessages: string[] = [];
 
 	ngOnInit(): void {
 		this.formData = new FormGroup({
@@ -325,13 +340,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
 										.errors?.['minlength']?.requiredLength
 								),
 							},
+							same: {
+								value: !(
+									this.formPassword.controls['password']
+										.value ===
+										this.formPassword.controls[
+											'new-password'
+										].value &&
+									this.formPassword.controls['password'].value
+								),
+							},
 							dirty: this.formPassword.controls['new-password']
 								.dirty,
 						},
 					}) as ValidationObject;
+
+					const oldPasswordValidated = {
+						password: this.passwordValidated['password'],
+					};
+					const newPasswordValidated = {
+						passwordNew: this.passwordValidated['passwordNew'],
+					};
 					this.passwordErrorMessages = getErrorMessages(
 						this.passwordValidated
 					);
+					this.oldPasswordErrorMessages =
+						getErrorMessages(oldPasswordValidated);
+					this.newPasswordErrorMessages =
+						getErrorMessages(newPasswordValidated);
 				},
 			})
 		);
@@ -369,12 +405,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	get emailVerified() {
+	get emailVerified(): boolean {
 		return this._user?.emailVerified;
+	}
+
+	get isSameEmail(): boolean {
+		return this._user.email === this.formEmail.controls['email'].value;
 	}
 
 	birthDatePicked(date: Date) {
 		this.birthDatePickerValue = date;
+	}
+
+	switchPasswordVisibility(event: Event) {
+		const el: HTMLInputElement | null = event.target as HTMLInputElement;
+		this.passwordControl.type = el.checked ? 'text' : 'password';
+		this.passwordRepeatControl.type = el.checked ? 'text' : 'password';
 	}
 
 	updateNameAndPhoto() {

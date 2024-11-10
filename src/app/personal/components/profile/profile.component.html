@@ -13,7 +13,7 @@
 		<button
 			*ngIf="!emailVerified"
 			app-button
-			[disabled]="verifyButtonDisabled"
+			[attr.disabled]="verifyButtonDisabled || null"
 			mode="ghost"
 			iconPosition="right"
 			icon="arrow-right"
@@ -64,7 +64,7 @@
 				<button
 					app-button
 					type="submit"
-					[disabled]="this.userpicLoading || formData.invalid"
+					[attr.disabled]="(this.userpicLoading || formData.invalid) || null"
 					class="form__submit profile__submit"
 					mode="ghost"
 					iconPosition="right"
@@ -100,7 +100,7 @@
 				<button
 					app-button
 					type="submit"
-					[disabled]="formEmail.invalid"
+					[attr.disabled]="(formEmail.invalid || isSameEmail) || null"
 					class="form__submit profile__submit"
 					mode="ghost"
 					iconPosition="right"
@@ -116,19 +116,29 @@
 			(ngSubmit)="updatePassword()"
 		>
 			<app-input
+				#passwordControl
 				class="form__control"
-				[invalid]="!!passwordErrorMessages.length"
+				type="password"
+				[invalid]="!!oldPasswordErrorMessages.length"
 				icon="lock"
 				placeholder="Старый пароль"
 				formControlName="password"
 			></app-input>
 			<app-input
+				#passwordRepeatControl
 				class="form__control"
-				[invalid]="!!passwordErrorMessages.length"
+				type="password"
+				[invalid]="!!newPasswordErrorMessages.length"
 				icon="lock"
 				placeholder="Новый пароль"
 				formControlName="new-password"
 			></app-input>
+			<label
+				app-checkbox
+				name="showPassword"
+				iconSize="sm"
+				(change)="switchPasswordVisibility($event)"
+			>Показать пароль</label>
 			<div class="profile__footer">
 				<ul
 					*ngIf="passwordErrorMessages.length"
@@ -142,7 +152,7 @@
 				<button
 					app-button
 					type="submit"
-					[disabled]="formPassword.invalid"
+					[attr.disabled]="(formPassword.invalid || passwordErrorMessages.length) || null"
 					class="form__submit profile__submit"
 					mode="ghost"
 					iconPosition="right"
