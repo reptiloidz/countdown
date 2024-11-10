@@ -93,6 +93,8 @@
 		&--active {
 			.tabs__btn {
 				--button-bg-cl: rgba(var(--c-bg-primary), .1);
+
+				font-weight: 900;
 			}
 		}
 

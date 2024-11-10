@@ -23,11 +23,15 @@
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
 		font-weight: 500;
 
-		&::first-letter {
-			padding: 4px 0 4px 4px;
+
+		&::before {
+			content: '';
+			display: inline-flex;
+			width: 5px;
+			height: 17px;
+			margin-right: 4px;
+			border-radius: 3px;
 			background-color: rgb(var(--point-color));
-			color: rgba(var(--c-text-button), var(--point-title-opacity));
-			font-weight: 900;
 		}
 	}
 

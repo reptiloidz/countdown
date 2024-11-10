@@ -123,13 +123,16 @@
 	}
 
 	&__item-color {
-		display: block;
+		display: flex;
+		gap: 6px;
+		align-items: baseline;
 
-		&::first-letter {
-			padding: 2px 0 2px 2px;
+		&::before {
+			content: '';
+			width: 4px;
+			height: 12px;
+			border-radius: 2px;
 			background-color: rgb(var(--point-color));
-			color: rgb(var(--c-text-inverse));
-			font-weight: 900;
 		}
 	}
 

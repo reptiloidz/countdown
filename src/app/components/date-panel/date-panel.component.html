@@ -78,6 +78,7 @@
 					<div class="tabs__nav">
 						<button
 							app-button
+							mode="ghost"
 							icon="chevron-left"
 							(click)="scrollList(0)"
 							title="Перейти к началу списка итераций"
@@ -156,6 +157,7 @@
 					<div class="tabs__nav">
 						<button
 							app-button
+							mode="ghost"
 							*ngIf="iterationsListScrollable"
 							icon="chevron-right"
 							(click)="scrollList()"
