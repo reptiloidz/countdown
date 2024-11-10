@@ -29,6 +29,15 @@
 		align-items: center;
 		justify-self: start;
 		padding-right: 20px;
+
+		&::after {
+			content: '';
+			display: block;
+			width: 16px;
+			height: 16px;
+			border-radius: 5px;
+			background-color: rgb(var(--point-color));
+		}
 	}
 
 	&__author,
@@ -64,13 +73,6 @@
 		max-width: 50%;
 		margin: auto;
 		text-wrap: balance;
-
-		&::first-letter {
-			padding: 4px 0 4px 4px;
-			background-color: rgb(var(--point-color));
-			color: rgb(var(--c-text-inverse));
-			font-weight: 900;
-		}
 	}
 
 	&__title-text {

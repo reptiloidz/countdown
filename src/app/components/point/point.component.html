@@ -13,71 +13,73 @@
 		<div class="point-page__header">
 
 			<div
-				*ngIf="(urlMode | async) !== true"
-				class="point-page__markers"
+				class="point-page__markers color"
+				[title]="pointColorName"
+				[ngClass]="point?.color ? 'color--' + point?.color : ''"
 			>
-				<div
-					class="marker"
-					[ngClass]="{
-						'marker--inactive': !point?.greenwich
-					}"
-				>
-					<svg
-						app-svg
-						name="globe"
-						aria-hidden="false"
-						[attr.aria-label]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
-						class="marker__inner"
-					></svg>
-				</div>
-				<div
-					class="marker"
-					[ngClass]="{
-						'marker--inactive': !point?.repeatable
-					}"
-				>
-					<svg
-						app-svg
-						name="refresh"
-						aria-hidden="false"
-						[attr.aria-label]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
-						class="marker__inner"
-					></svg>
-				</div>
-				<div
-					class="marker"
-					[ngClass]="{
-						'marker--inactive': !point?.public
-					}"
-				>
-					<svg
-						app-svg
-						name="users"
-						aria-hidden="false"
-						[attr.aria-label]="point?.public ? 'Публичное' : 'Приватное'"
-						class="marker__inner"
-					></svg>
-				</div>
+				<ng-container *ngIf="(urlMode | async) !== true">
+					<div
+						class="marker"
+						[ngClass]="{
+							'marker--inactive': !point?.greenwich
+						}"
+					>
+						<svg
+							app-svg
+							name="globe"
+							aria-hidden="false"
+							[attr.aria-label]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
+							class="marker__inner"
+						></svg>
+					</div>
+					<div
+						class="marker"
+						[ngClass]="{
+							'marker--inactive': !point?.repeatable
+						}"
+					>
+						<svg
+							app-svg
+							name="refresh"
+							aria-hidden="false"
+							[attr.aria-label]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
+							class="marker__inner"
+						></svg>
+					</div>
+					<div
+						class="marker"
+						[ngClass]="{
+							'marker--inactive': !point?.public
+						}"
+					>
+						<svg
+							app-svg
+							name="users"
+							aria-hidden="false"
+							[attr.aria-label]="point?.public ? 'Публичное' : 'Приватное'"
+							class="marker__inner"
+						></svg>
+					</div>
 
-				<div class="point-page__direction">
-					<svg
-						app-svg
-						[name]="point?.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
-						[attr.aria-label]="directionTitle"
-						class="direction-icon"
-						aria-hidden="false"
-						[ngClass]="[
-							isDirectionCorrect ? 'direction-icon--correct' : '',
-							point?.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
-						]"
-					></svg>
-				</div>
+					<div class="point-page__direction">
+						<svg
+							app-svg
+							[name]="point?.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
+							[attr.aria-label]="directionTitle"
+							class="direction-icon"
+							aria-hidden="false"
+							[ngClass]="[
+								isDirectionCorrect ? 'direction-icon--correct' : '',
+								point?.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
+							]"
+						></svg>
+					</div>
+				</ng-container>
 			</div>
 
 			<h1
 				*ngIf="point?.title"
-				class="point-page__title color"
-				[ngClass]="point?.color ? 'color--' + point?.color : ''"
+				class="point-page__title"
 			>
 				<div class="point-page__title-inner">
 					<span class="point-page__title-text">{{ point?.title }}</span><span

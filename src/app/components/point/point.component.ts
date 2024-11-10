@@ -24,7 +24,7 @@ import {
 	intervalToDuration,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Constants, DateText } from 'src/app/enums';
+import { Constants, DateText, PointColors } from 'src/app/enums';
 import {
 	getClosestIteration,
 	getPointDate,
@@ -121,7 +121,6 @@ export class PointComponent implements OnInit, OnDestroy {
 						if (!this.urlModeValue) {
 							this.point = point && sortDates(point);
 						}
-						this.point && this.action.pointUpdated(this.point);
 					}),
 					mergeMap(() => {
 						return this.point?.user && this.auth.isAuthenticated
@@ -137,6 +136,7 @@ export class PointComponent implements OnInit, OnDestroy {
 						}
 						this.setAllTimers(true);
 						this.dateLoading = false;
+						this.point && this.action.pointUpdated(this.point);
 					},
 					error: (err) => {
 						console.error(
@@ -251,6 +251,17 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get urlModeValue() {
 		return this.urlMode.getValue();
+	}
+
+	get pointColorNames() {
+		return PointColors;
+	}
+
+	get pointColorName(): string {
+		return (
+			(this.point && this.pointColorNames[this.point?.color]) ||
+			'Цвет события'
+		);
 	}
 
 	zeroPad(num?: number) {

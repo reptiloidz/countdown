@@ -30,6 +30,12 @@
 		backdrop-filter: blur(6px);
 	}
 
+	&__header {
+		display: flex;
+		width: 100%;
+		background-color: rgba(var(--c-bg-primary), .9);
+	}
+
 	&__inner {
 		position: relative;
 		display: flex;
@@ -42,18 +48,17 @@
 	}
 
 	&__title {
+		flex-grow: 1;
 		padding: 20px;
-		background-color: rgba(var(--c-bg-primary), .9);
 		color: rgba(var(--c-text-button), 1);
 		font-weight: 300;
 	}
 
 	&__btn {
-		position: absolute;
-		right: calc((var(--popup-w) / 2) + 50%);
-		bottom: calc(100% - var(--popup-mt));
 		z-index: 1;
 		align-self: flex-start;
+		margin-top: 20px;
+		margin-right: 20px;
 	}
 
 	&__content {
