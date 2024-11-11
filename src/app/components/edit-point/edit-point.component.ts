@@ -23,6 +23,7 @@ import {
 	startWith,
 	mergeMap,
 	filter,
+	combineLatestWith,
 } from 'rxjs';
 import {
 	Point,
@@ -230,18 +231,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					tap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
-							this.point && this.action.pointUpdated(this.point);
-							this.sortDates();
 						}
 					}),
 					mergeMap(() => this.auth.getUserData(this.point?.user)),
-					mergeMap((userData) => {
+					tap((userData) => {
 						this.userData = userData;
-						return this.auth.eventEditAccessCheck$;
-					})
+					}),
+					combineLatestWith(this.auth.eventEditAccessCheck$)
 				)
 				.subscribe({
-					next: ({ pointId, access }) => {
+					next: ([, { pointId, access }]) => {
 						this.point && this.data.putPoint(this.point);
 						if (
 							access &&
@@ -249,6 +248,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						) {
 							this.checking.next(false);
 							this.setValues();
+						}
+						if (!this.isCreation && !this.isIterationAdded) {
+							this.point && this.action.pointUpdated(this.point);
+							this.sortDates();
 						}
 					},
 					error: (err) => {
@@ -503,7 +506,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				}
 			);
 
-		this.pointDate = getPointDate({
+		const currentPointDate = getPointDate({
 			pointDate: isReset
 				? new Date()
 				: new Date(
@@ -512,8 +515,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			isGreenwich: this.isIterationAdded ? false : this.greenwichValue,
 		});
 
-		this.pointDate = isDateValid(this.pointDate)
-			? this.pointDate
+		this.pointDate = isDateValid(currentPointDate)
+			? currentPointDate
 			: new Date();
 
 		this.selectedIterationDate = this.pointDate;

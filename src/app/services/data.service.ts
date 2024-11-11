@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import {
+	Observable,
+	of,
+	Subject,
+	BehaviorSubject,
+	Subscription,
+	distinctUntilChanged,
+} from 'rxjs';
 import { Iteration, Point } from '../interfaces';
 import { ActionService, HttpService, NotifyService } from '.';
 import { EditPointEvent } from '../types';
@@ -65,7 +72,7 @@ export class DataService {
 		);
 
 		this.subscriptions.add(
-			this.eventEditPoint$.subscribe({
+			this.eventEditPoint$.pipe(distinctUntilChanged()).subscribe({
 				next: ([updatedPoint]) => {
 					const index = this._points.findIndex(
 						(item) => item.id === updatedPoint.id

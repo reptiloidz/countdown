@@ -1,5 +1,12 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, filter, first, interval, switchMap } from 'rxjs';
+import {
+	Subscription,
+	distinctUntilChanged,
+	filter,
+	first,
+	interval,
+	switchMap,
+} from 'rxjs';
 import { ActionService, NotifyService } from './services';
 import { ActivationStart, Event, Router } from '@angular/router';
 
@@ -29,7 +36,8 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.router.events
 				.pipe(
-					filter((event: Event) => event instanceof ActivationStart)
+					filter((event: Event) => event instanceof ActivationStart),
+					distinctUntilChanged()
 				)
 				.subscribe({
 					next: (data: any) => {

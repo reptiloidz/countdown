@@ -55,7 +55,7 @@
 		</app-calendar>
 	</ng-template>
 
-	<ng-container *ngIf="this.dates?.length && (this.dates?.length != 1)">
+	<ng-container *ngIf="this.dates?.length && (this.dates?.length != 1) && !loading && !dateLoading">
 		<ng-template #extraButton>
 			<label
 				app-checkbox

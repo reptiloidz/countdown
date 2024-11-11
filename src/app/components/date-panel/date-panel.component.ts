@@ -31,10 +31,10 @@ import { formatDate } from 'date-fns';
 import { Constants } from 'src/app/enums';
 import {
 	Subscription,
+	combineLatestWith,
 	distinctUntilChanged,
 	filter,
 	fromEvent,
-	mergeMap,
 	tap,
 	throttle,
 	timer,
@@ -95,10 +95,10 @@ export class DatePanelComponent implements AfterViewInit {
 	@Input() loading = false;
 	@Input() dateLoading = false;
 	@Input() urlMode = false;
-	@Input() pointDate = new Date();
 	@Input() selectedIterationDate = new Date();
 	@Input() isEditing = false;
 	@Input() isIterationAdded = false;
+	@Input() pointDate = new Date();
 
 	@Output() iterationSwitched = new EventEmitter<number>();
 	@Output() addIteration = new EventEmitter<void>();
@@ -130,14 +130,17 @@ export class DatePanelComponent implements AfterViewInit {
 		this.subscriptions.add(
 			this.action.eventUpdatedPoint$
 				.pipe(
-					distinctUntilChanged(),
 					tap((point) => {
 						this.point = point && sortDates(point);
+						!this.urlMode && this.setIterationsParam();
 					}),
-					mergeMap(() => this.route.queryParams),
-					tap((data: any) => {
+					combineLatestWith(this.route.queryParams),
+					distinctUntilChanged()
+				)
+				.subscribe({
+					next: ([, data]) => {
 						if (this.urlMode) return;
-						this.currentIterationIndex = data.iteration - 1;
+						this.currentIterationIndex = data['iteration'] - 1;
 						this.hasAccess = this.hasAccess
 							? this.hasAccess
 							: this.point
@@ -166,24 +169,16 @@ export class DatePanelComponent implements AfterViewInit {
 						setTimeout(() => {
 							this.scrollHome();
 						}, 500);
-					}),
-					distinctUntilChanged(),
-					tap((data: any) => {
+
 						if (this.urlMode) {
 							this.currentIterationIndex = 0;
-						} else if (data.iteration) {
-							this.currentIterationIndex = data.iteration - 1;
+						} else if (data['iteration']) {
+							this.currentIterationIndex = data['iteration'] - 1;
 						}
 						!this.isIterationAdded &&
 							this.iterationSwitched.emit(
 								this.currentIterationIndex
 							);
-					})
-				)
-				.subscribe({
-					next: () => {
-						!this.urlMode && this.setIterationsParam();
-						this.cdr.detectChanges();
 					},
 					error: (err) => {
 						console.error(

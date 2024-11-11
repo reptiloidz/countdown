@@ -12,7 +12,7 @@ import { SelectArray } from 'src/app/interfaces';
 import { DropComponent } from '../drop/drop.component';
 import { InputComponent } from '../input/input.component';
 import { ActionService } from 'src/app/services';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { IConfig } from 'ngx-mask';
 
 @Component({
@@ -51,12 +51,14 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 		this.autocompleteListFiltered = this.autocompleteList;
 
 		this.subscriptions.add(
-			this.action.eventAutocompleteOpened$.subscribe({
-				next: () => {
-					!this.isOpening && this.drop.closeHandler();
-					this.isOpening = false;
-				},
-			})
+			this.action.eventAutocompleteOpened$
+				.pipe(filter(() => this.isOpening))
+				.subscribe({
+					next: () => {
+						!this.isOpening && this.drop.closeHandler();
+						this.isOpening = false;
+					},
+				})
 		);
 	}
 
