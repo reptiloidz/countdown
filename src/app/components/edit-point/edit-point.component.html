@@ -207,7 +207,7 @@
 						mode="ghost"
 						icon="arrow-right"
 						iconPosition="right"
-						[disabled]="loading || (repeatableValue && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)"
+						[attr.disabled]="(loading || (repeatableValue && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"
 						[title]="repeatableValue && !isCreation ? 'Сохранить параметры итерации' :
 											'Сохранить событие'"
 					>Сохранить</button>

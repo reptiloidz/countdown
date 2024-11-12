@@ -55,7 +55,7 @@ export class ActionService {
 		this._eventFetchedPointsSubject.next();
 	}
 
-	pointUpdated(point: Point) {
+	pointUpdated(point: Point | undefined) {
 		this._eventUpdatedPointSubject.next(point);
 	}
 

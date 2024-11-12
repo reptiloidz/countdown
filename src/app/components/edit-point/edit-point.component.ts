@@ -205,9 +205,6 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							: data[0].path === 'edit'
 							? EditPointType.Edit
 							: EditPointType.CreateUrl;
-
-					this.isCreationUrl &&
-						this.form.controls['title'].setValidators(null);
 				},
 			})
 		);
@@ -435,7 +432,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get isBaseFormValid() {
-		return this.form.controls['title'].valid || this.isCreationUrl;
+		return this.form.controls['title'].valid;
 	}
 
 	get isDateFormValid() {

@@ -6,6 +6,8 @@ import {
 	ElementRef,
 	EventEmitter,
 	Input,
+	OnDestroy,
+	OnInit,
 	Output,
 	ViewChild,
 } from '@angular/core';
@@ -83,9 +85,22 @@ import {
 				)
 			),
 		]),
+		trigger('extraPanel', [
+			transition(':enter', [
+				style({
+					opacity: 0,
+				}),
+				animate(
+					'.4s .1s cubic-bezier(.1, .79, .24, .95)',
+					style({
+						opacity: 1,
+					})
+				),
+			]),
+		]),
 	],
 })
-export class DatePanelComponent implements AfterViewInit {
+export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('iterationsTabs') private iterationsTabs!: ElementRef;
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
@@ -130,11 +145,14 @@ export class DatePanelComponent implements AfterViewInit {
 		this.subscriptions.add(
 			this.action.eventUpdatedPoint$
 				.pipe(
-					tap((point) => {
+					combineLatestWith(this.route.queryParams),
+					filter(([point]) => {
+						return !!point;
+					}),
+					tap(([point]) => {
 						this.point = point && sortDates(point);
 						!this.urlMode && this.setIterationsParam();
 					}),
-					combineLatestWith(this.route.queryParams),
 					distinctUntilChanged()
 				)
 				.subscribe({
@@ -274,6 +292,7 @@ export class DatePanelComponent implements AfterViewInit {
 		this.subscriptions.unsubscribe();
 		this.iterationsTabs &&
 			this.resizeObserver?.unobserve(this.iterationsTabs?.nativeElement);
+		this.action.pointUpdated(undefined);
 	}
 
 	get pointValue() {
