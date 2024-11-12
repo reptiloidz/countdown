@@ -91,7 +91,7 @@ import {
 					opacity: 0,
 				}),
 				animate(
-					'.4s .1s cubic-bezier(.1, .79, .24, .95)',
+					'.2s',
 					style({
 						opacity: 1,
 					})

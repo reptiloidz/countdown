@@ -55,12 +55,10 @@
 		</app-calendar>
 	</ng-template>
 
-	<ng-container
-		*ngIf="this.dates?.length && (this.dates?.length != 1) && !loading && !dateLoading"
-		@extraPanel
-	>
+	<ng-container *ngIf="this.dates?.length && (this.dates?.length != 1) && !loading && !dateLoading">
 		<ng-template #extraButton>
 			<label
+				@extraPanel
 				app-checkbox
 				iconSize="sm"
 				mode="icon"
@@ -76,7 +74,10 @@
 			</label>
 		</ng-template>
 		<ng-template #extraTemplate>
-			<div class="panel__tabs">
+			<div
+				@extraPanel
+				class="panel__tabs"
+			>
 				<div *ngIf="iterationsListScrollable">
 					<div class="tabs__nav">
 						<button
