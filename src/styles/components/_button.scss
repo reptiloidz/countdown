@@ -32,6 +32,7 @@
 	&__icon {
 		--icon-stroke-w: 2px;
 
+		align-self: normal;
 		filter: contrast(1);
 	}
 
@@ -74,6 +75,16 @@
 		.button__icon {
 			--icon-stroke-w: 1.5px;
 			--icon-w: 16px;
+		}
+	}
+
+	&--md {
+		--button-gap: 2px;
+		--button-fz: 14px;
+
+		.button__icon {
+			--icon-stroke-w: 1.5px;
+			--icon-w: 24px;
 		}
 	}
 

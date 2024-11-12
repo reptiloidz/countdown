@@ -11,7 +11,7 @@
 			<app-drop
 				class="dashboard__calendar drop--nested"
 				icon="calendar"
-				buttonSize="lg"
+				buttonSize="md"
 			>
 				<ng-template #bodyTemplate>
 					<app-calendar
@@ -96,6 +96,7 @@
 				<app-switcher
 					class="filters__switcher"
 					switcherListClass="dashboard__filters-list"
+					size="sm"
 					[items]="greenwichList"
 					[value]="greenwichValue"
 					[showTitle]="true"
@@ -104,6 +105,7 @@
 				<app-switcher
 					class="filters__switcher"
 					switcherListClass="dashboard__filters-list"
+					size="sm"
 					[items]="repeatList"
 					[value]="repeatableValue"
 					[showTitle]="true"
@@ -113,6 +115,7 @@
 					*ngIf="isAuth"
 					class="filters__switcher"
 					switcherListClass="dashboard__filters-list"
+					size="sm"
 					[items]="publicList"
 					[value]="publicValue"
 					[showTitle]="true"
@@ -121,6 +124,7 @@
 				<app-switcher
 					class="filters__switcher"
 					switcherListClass="dashboard__filters-list"
+					size="sm"
 					[items]="directionList"
 					[value]="directionValue"
 					[showTitle]="true"
@@ -158,7 +162,7 @@
 									class="drop__item-color color"
 									[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
 								></span></label>
-							<div class="drop__footer">
+							<div class="drop__footer drop__footer--left">
 								<button
 									app-button
 									icon="cross"

@@ -28,7 +28,7 @@
 							app-svg
 							name="globe"
 							aria-hidden="false"
-							[attr.aria-label]="point?.greenwich ? 'По Гринвичу' : 'По местному времени'"
+							[attr.aria-label]="point?.greenwich ? 'По Гринвичу' : 'Локально'"
 							class="marker__inner"
 						></svg>
 					</div>
@@ -42,7 +42,7 @@
 							app-svg
 							name="refresh"
 							aria-hidden="false"
-							[attr.aria-label]="point?.repeatable ? 'Повторяемое' : 'Однократное'"
+							[attr.aria-label]="point?.repeatable ? 'Многократное' : 'Однократное'"
 							class="marker__inner"
 						></svg>
 					</div>
@@ -111,7 +111,7 @@
 					Сгенерированная итерация.
 				</ng-container>
 				<ng-container *ngIf="remainTextValue">{{ remainTextValue }}. </ng-container> <ng-container
-					*ngIf="iterationDate && iterationTime"
+					*ngIf="iterationDate && iterationTime && !dateLoading && !loading"
 				> {{ iterationDate }} {{
 					iterationTime }}</ng-container>
 			</div>
@@ -124,7 +124,7 @@
 		</div>
 
 		<app-timers
-			*ngIf="!dateLoading; else dateLoader"
+			*ngIf="!dateLoading && !loading; else dateLoader"
 			class="point-page__timers timers"
 			[years]="timerYears"
 			[months]="timerMonths"
@@ -134,9 +134,13 @@
 			[secs]="timerSecs"
 		></app-timers>
 		<ng-template #dateLoader>
-			<h2>
-				<div class="loader rotating"></div>
-			</h2>
+			<svg
+				app-svg
+				name="hourglass"
+				class="loader rotating"
+				aria-hidden="false"
+				aria-label="Загрузка"
+			></svg>
 		</ng-template>
 	</div>
 </div>

@@ -1,5 +1,5 @@
 .filters {
-	--filters-gap: 20px;
+	--filters-gap: 0;
 	--filters-switcher-mt: 16px;
 
 	display: flex;
@@ -12,24 +12,18 @@
 
 	&__search {
 		flex-shrink: 1;
+		margin-left: 20px;
 	}
 
 	&__switcher {
 		position: relative;
 		flex-shrink: 0;
+		align-items: center;
+		min-width: 160px;
 		margin-top: var(--filters-switcher-mt);
 
 		& + & {
 			padding-left: var(--filters-gap);
-
-			&::before {
-				content: '';
-				position: absolute;
-				left: 0;
-				width: 0;
-				height: calc(100% - var(--filters-switcher-mt));
-				border-left: 1px solid rgba(var(--c-border-primary), .1);
-			}
 		}
 	}
 }

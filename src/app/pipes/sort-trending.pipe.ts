@@ -8,11 +8,11 @@ export class SortTrendingPipe implements PipeTransform {
 	transform(sortType: SortTypes): { icon: string; title: string } {
 		return sortType.includes('Asc')
 			? {
-					icon: 'trending-up',
+					icon: 'arrow-small-up',
 					title: 'По возрастанию',
 			  }
 			: {
-					icon: 'trending-down',
+					icon: 'arrow-small-down',
 					title: 'По убыванию',
 			  };
 	}

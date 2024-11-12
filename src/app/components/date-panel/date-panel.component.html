@@ -168,6 +168,7 @@
 							title="Перейти к концу списка итераций"
 						></button>
 						<button
+							*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
 							class="tabs__remove-all"
 							app-button
 							size="sm"

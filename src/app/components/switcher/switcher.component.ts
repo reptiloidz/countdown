@@ -28,6 +28,7 @@ export class SwitcherComponent implements ControlValueAccessor {
 	@Input() items: SwitcherItem[] = [];
 	@Input() value!: string;
 	@Input() mode: 'ghost' = 'ghost';
+	@Input() size!: 'sm';
 	@Input() showTitle = false;
 	@Input() switcherListClass = '';
 	@Input() formControlName!: string;
@@ -36,7 +37,8 @@ export class SwitcherComponent implements ControlValueAccessor {
 	@HostBinding('class') get componentClass(): string | null {
 		const baseClass = 'switcher';
 		const modeClass = this.mode && `${baseClass}--${this.mode}`;
-		return [baseClass, modeClass].filter((_) => _).join(' ');
+		const sizeClass = this.size && `${baseClass}--${this.size}`;
+		return [baseClass, modeClass, sizeClass].filter((_) => _).join(' ');
 	}
 
 	private _name: string | null = null;

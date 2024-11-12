@@ -59,4 +59,10 @@
 		--switcher-item-active-bg-cl: transparent;
 		--switcher-border-item-active-cl: rgba(var(--c-border-primary), .2);
 	}
+
+	&--sm {
+		.switcher__icon {
+			--icon-w: 16px;
+		}
+	}
 }

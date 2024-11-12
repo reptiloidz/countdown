@@ -18,7 +18,7 @@
 			[attr.name]="name"
 			class="switcher__input"
 		>
-		<ng-container *ngIf="item?.icon || item?.boolean !== undefined; else textValue;">
+		<ng-container *ngIf="item?.icon || item?.boolean || item?.default !== undefined; else textValue;">
 			<svg
 				app-svg
 				class="switcher__icon"
@@ -28,6 +28,7 @@
 				}"
 				[name]="item?.boolean ? 'check' :
 					item?.boolean === false ? 'cross' :
+					item?.default ? (item?.value === value ? 'check' : 'cross') :
 					item?.icon || 'warning'
 				"
 			></svg>

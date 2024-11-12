@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { format, parse } from 'date-fns';
+import { format, parse, subYears } from 'date-fns';
 import {
 	debounce,
 	distinctUntilChanged,
@@ -59,6 +59,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	removeLoading = false;
 	verifyButtonDisabled = false;
 	birthDatePickerValue!: Date;
+	disabledAfter = subYears(new Date(), 1);
 	private _user!: User;
 	private _birthDate = '';
 	private _birthDatePointId = '';

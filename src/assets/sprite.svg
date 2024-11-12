@@ -3,8 +3,14 @@
         <svg id="arrow-right" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 12h16l-6 6m3-9-3-3"/>
         </svg>
+        <svg id="arrow-small-down" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 7v10l4-4m-6 2-2-2"/>
+        </svg>
         <svg id="arrow-small-right" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12h10l-4 4m2-6-2-2"/>
+        </svg>
+        <svg id="arrow-small-up" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 17V7l4 4m-6-2-2 2"/>
         </svg>
         <svg id="at-email" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.857 12a3.857 3.857 0 1 1-7.714 0 3.857 3.857 0 0 1 7.714 0m0 0v1.286a2.571 2.571 0 0 0 5.143 0V12a8.98 8.98 0 0 0-3-6.708M12 3a9 9 0 1 0 5.143 16.387"/>

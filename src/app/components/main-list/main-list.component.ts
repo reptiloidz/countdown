@@ -51,12 +51,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 			icon: 'redo',
 		},
 		{
-			text: 'Однократные/повторяемые',
+			text: 'Одно/многократные',
 			value: 'all',
-			icon: 'minus',
+			default: true,
 		},
 		{
-			text: 'Повторяемые',
+			text: 'Многократные',
 			value: 'true',
 			icon: 'refresh',
 		},
@@ -64,14 +64,14 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	greenwichList: SwitcherItem[] = [
 		{
-			text: 'По местному времени',
+			text: 'Локально',
 			value: 'false',
 			icon: 'home',
 		},
 		{
-			text: 'По местному/по Гринвичу',
+			text: 'Локально/по Гринвичу',
 			value: 'all',
-			icon: 'minus',
+			default: true,
 		},
 		{
 			text: 'По Гринвичу',
@@ -89,7 +89,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		{
 			text: 'Приватные/публичные',
 			value: 'all',
-			icon: 'minus',
+			default: true,
 		},
 		{
 			text: 'Публичные',
@@ -107,7 +107,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		{
 			text: 'Обратный/прямой',
 			value: 'all',
-			icon: 'minus',
+			default: true,
 		},
 		{
 			text: 'Прямой',
