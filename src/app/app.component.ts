@@ -20,6 +20,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	startTime = new Date();
 	isUrlMode = false;
 
+	// private _devIntervalValue = 1;
+	private _devIntervalValue = 100000;
+
 	constructor(
 		private notify: NotifyService,
 		private action: ActionService,
@@ -52,7 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			(+new Date()).toString()
 		);
 
-		interval(this.isProd ? 1 : 100000)
+		interval(this.isProd ? 1 : this._devIntervalValue)
 			.pipe(
 				filter(() => +new Date() % 1000 < 100),
 				first(),

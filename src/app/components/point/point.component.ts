@@ -269,10 +269,10 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setAllTimers(switchCalendarDate = false) {
-		if (this.dates?.[this.currentIterationIndex]) {
+		if (this.dates?.[this.currentIterationIndex] || this.urlModeValue) {
 			this.pointDate = getPointDate({
 				pointDate: new Date(
-					this.dates?.[this.currentIterationIndex].date || ''
+					this.dates?.[this.currentIterationIndex || 0].date || ''
 				),
 				isGreenwich: this.point?.greenwich,
 			});

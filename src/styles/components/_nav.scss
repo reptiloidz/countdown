@@ -76,7 +76,7 @@
 		padding-left: 20px;
 		border-top: 1px solid rgba(var(--c-border-primary), .2);
 
-		&:has(.nav__aside:empty) {
+		&:not(:has(.nav__aside:not(:empty))) {
 			display: none;
 		}
 
