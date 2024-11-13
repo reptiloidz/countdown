@@ -9,6 +9,7 @@ import {
 } from 'rxjs';
 import { ActionService, NotifyService } from './services';
 import { ActivationStart, Event, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'app-root',
@@ -51,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			(+new Date()).toString()
 		);
 
-		interval(1)
+		interval(this.isProd ? 1 : 100000)
 			.pipe(
 				filter(() => +new Date() % 1000 < 100),
 				first(),
@@ -71,6 +72,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	get isProd(): boolean {
+		return environment.production;
 	}
 
 	changeVisibilityHandler() {
