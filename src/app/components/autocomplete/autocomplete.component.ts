@@ -29,7 +29,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() suffix: string = '';
 	@Input() prefix: string = '';
 	@Input() filterFn = (item: SelectArray, filterValue: string) =>
-		item.value.toString().includes(filterValue);
+		item.value.toString().includes(filterValue) && !item.disabled;
 	@Input() dataSuffix = '';
 
 	autocompleteListFiltered!: SelectArray[];

@@ -7,7 +7,6 @@ import {
 	Input,
 	OnDestroy,
 	OnInit,
-	OnChanges,
 	Output,
 	TemplateRef,
 } from '@angular/core';
@@ -55,16 +54,19 @@ import { CalendarMode } from 'src/app/types';
 	templateUrl: './calendar.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
+export class CalendarComponent implements OnInit, OnDestroy {
 	private nowDate = new Date();
 	private lastDateOfCurrentMonth!: Date;
 	private firstMonday!: Date;
+	private isCalendarInited = false;
+	private _visibleDate = this.nowDate;
+
 	private subscriptions = new Subscription();
+
 	@Input() activeMode: CalendarMode =
 		(localStorage.getItem('calendarMode') as CalendarMode) || 'month';
 	@Input() points?: Point[] = [];
 	@Input() iterations?: Iteration[] = [];
-	@Input() visibleDate = this.nowDate;
 	@Input() selectedDate = this.nowDate;
 	@Input() point?: Point;
 	@Input() hideCurrentPeriod = false;
@@ -74,6 +76,21 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() rowsNumber!: number;
 	@Input() disabledBefore: Date | undefined;
 	@Input() disabledAfter: Date | undefined;
+
+	/**
+	 * При получении значения всегда обновляем календарь, если она обновилась
+	 * и записываем новую дату в _visibleDate именно при генерации
+	 */
+	@Input() get visibleDate(): Date {
+		return this._visibleDate;
+	}
+	set visibleDate(value: Date) {
+		this.isCalendarInited &&
+			+this._visibleDate !== +value &&
+			this.generateCalendar({
+				date: value,
+			});
+	}
 
 	calendarArray: CalendarDate[][] = [];
 	daysOfWeek: string[] = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
@@ -149,13 +166,18 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 				})
 		);
 
+		/**
+		 * Режим календаря выбран (для родителя),
+		 * календарь генерируется с переданной из родителя датой,
+		 * родитель уведомляется, флаг об инициализации ставится в true
+		 * (чтобы только после этой генерации срабатывала генерация из сеттера visibleDate())
+		 */
 		this.modeSelected.emit(this.activeMode);
-		this.generateCalendar();
+		this.generateCalendar({
+			date: this.selectedDate,
+		});
 		this.created.emit();
-	}
-
-	ngOnChanges() {
-		this.generateCalendar();
+		this.isCalendarInited = true;
 	}
 
 	ngOnDestroy(): void {
@@ -253,7 +275,9 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		// Делаем отложенное срабатывание перерисовки календаря,
 		// чтобы кнопка-триггер не исчезла раньше времени и дроп не закрылся
 		setTimeout(() => {
-			this.generateCalendar();
+			this.generateCalendar({
+				date,
+			});
 			this.cdr.detectChanges();
 		});
 	}
@@ -289,11 +313,29 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 		selectDate?: boolean;
 	} = {}) {
 		date = date || this.visibleDate;
+
+		/**
+		 * Делаем проверку, что есть изменения в режиме/выбранной дате,
+		 * чтобы не делать лишних перегенераций календаря
+		 */
+		if (
+			mode === this.activeMode &&
+			this._visibleDate === date &&
+			((this.selectedDate === date && selectDate) || !selectDate) &&
+			this.calendarArray.length
+		)
+			return;
+
 		if (selectDate) {
 			this.selectedDate = date;
 		}
 
-		this.visibleDate = this.getStartOfDate(date);
+		this.activeMode = mode as CalendarMode;
+
+		/**
+		 * Записываем _visibleDate напрямую, чтобы не вызывать лишних действий через геттер
+		 */
+		this._visibleDate = this.getStartOfDate(date);
 
 		this.visibleDateSelected.emit(this.visibleDate);
 		this.lastDateOfCurrentMonth = lastDayOfMonth(date);
@@ -471,27 +513,31 @@ export class CalendarComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	getAllowedPoints(item: any) {
+		// TODO: метод не используется?
 		// Фильтруем доступные события.
 		// Если выводить кнопку попапа, то уже для всех дат с событиями
 		return item.points?.filter((point: Point) => !point.public) || [];
 	}
 
 	switchCalendarMode(mode: string) {
-		this.activeMode = mode as CalendarMode;
+		this.generateCalendar({
+			date: this.selectedDate,
+			mode: mode as CalendarMode,
+		});
 		localStorage.setItem('calendarMode', mode);
-		this.visibleDate = this.selectedDate;
 		this.modeSelected.emit(this.activeMode);
-		this.generateCalendar();
 	}
 
 	switchCalendarToNow() {
-		this.visibleDate = this.nowDate;
-		this.generateCalendar();
+		this.generateCalendar({
+			date: this.nowDate,
+		});
 	}
 
 	switchCalendarToSelected() {
-		this.visibleDate = this.selectedDate;
-		this.generateCalendar();
+		this.generateCalendar({
+			date: this.selectedDate,
+		});
 	}
 
 	switchCalendarPeriod(forward = true) {
