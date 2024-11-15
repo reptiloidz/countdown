@@ -20,7 +20,7 @@
 		*ngIf="!(checking | async); else loader"
 		class="content__col"
 		[formGroup]="form"
-		(ngSubmit)="submit(repeatableValue && !isCreation)"
+		(ngSubmit)="submit(repeatableValueSaved && !isCreation)"
 	>
 		<h3>{{ pageTitle }}<span
 				*ngIf="loading"
@@ -29,7 +29,7 @@
 		<div
 			class="form"
 			[ngClass]="{
-				'form--single': !repeatableValue || isCreation,
+				'form--single': !repeatableValueSaved || isCreation,
 			}"
 		>
 			<!-- Надо ли показывать автора? Сейчас редактировать больше никто не может -->
@@ -128,7 +128,7 @@
 				</div>
 				<div class="form__row">
 					<button
-						*ngIf="repeatableValue && !isCreation"
+						*ngIf="repeatableValueSaved && !isCreation"
 						app-button
 						class="form__submit"
 						mode="ghost"
@@ -142,7 +142,7 @@
 			</div>
 
 			<h3
-				*ngIf="repeatableValue && !isCreation"
+				*ngIf="repeatableValueSaved && !isCreation"
 				class="form__section-title"
 			>Редактирование итерации</h3>
 
@@ -175,7 +175,7 @@
 				</div>
 				<div class="form__row">
 					<app-drop
-						*ngIf="repeatableValue && !isCreation"
+						*ngIf="repeatableValueSaved && !isCreation"
 						class="drop--nested form__col"
 					>
 						<ng-template
@@ -207,8 +207,8 @@
 						mode="ghost"
 						icon="arrow-right"
 						iconPosition="right"
-						[attr.disabled]="(loading || (repeatableValue && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"
-						[title]="repeatableValue && !isCreation ? 'Сохранить параметры итерации' :
+						[attr.disabled]="(loading || (repeatableValueSaved && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"
+						[title]="repeatableValueSaved && !isCreation ? 'Сохранить параметры итерации' :
 											'Сохранить событие'"
 					>Сохранить</button>
 				</div>

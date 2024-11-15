@@ -315,9 +315,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 								this.repeatableNotify = undefined;
 							}
 						} else {
-							if (this.isCreation && this.repeatableValue) {
+							if (this.repeatableValue) {
 								this.repeatableNotify = this.notify.add({
-									title: 'Изменение итераций будет доступно после создания события',
+									title: 'Изменение итераций будет доступно после сохранения события',
 								}) as Date;
 							} else if (
 								!this.isCreation &&
@@ -472,8 +472,19 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.form.controls['public'].value;
 	}
 
+	/**
+	 * Если У события изменена многократность, но еще не сохранена.
+	 * Влияет на уведомления и возможность создания новых итераций
+	 */
 	get repeatableValue() {
 		return this.form.controls['repeatable'].value;
+	}
+
+	/**
+	 * Если значение многократности сохранено
+	 */
+	get repeatableValueSaved() {
+		return this.point?.repeatable;
 	}
 
 	sortDates() {
@@ -507,7 +518,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			pointDate: isReset
 				? new Date()
 				: new Date(
-						this.dates?.[this.currentIterationIndex]?.date || ''
+						this.dates?.[this.currentIterationIndex || 0]?.date ||
+							''
 				  ),
 			isGreenwich: this.isIterationAdded ? false : this.greenwichValue,
 		});

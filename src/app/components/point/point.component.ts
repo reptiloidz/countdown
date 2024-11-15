@@ -318,7 +318,9 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	iterationSwitchHandler(iterationNumber: number) {
-		this.currentIterationIndex = iterationNumber;
+		this.currentIterationIndex = isNaN(iterationNumber)
+			? 0
+			: iterationNumber;
 		this.setAllTimers();
 	}
 }

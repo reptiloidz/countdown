@@ -165,7 +165,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 							? this.auth.checkAccessEdit(this.point)
 							: false;
 
-						if (this.dates?.length) {
+						if (this.dates?.length && this.point?.repeatable) {
 							if (
 								this.currentIterationIndex >
 									this.dates.length ||
@@ -467,7 +467,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.router.navigate([], {
 			relativeTo: this.route,
 			queryParams: {
-				iteration: i + 1,
+				iteration: isNaN(i) ? null : i + 1,
 			},
 			queryParamsHandling: 'merge',
 		});
