@@ -279,12 +279,8 @@
 
 
 <ng-template #loader>
-	<svg
+	<div
+		class="root__loading-marker"
 		*ngIf="loading"
-		app-svg
-		name="hourglass"
-		class="loader rotating"
-		aria-hidden="false"
-		aria-label="Загрузка"
-	></svg>
+	></div>
 </ng-template>

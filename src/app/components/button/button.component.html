@@ -4,7 +4,7 @@
 ></ng-container>
 <ng-container
 	*ngIf="iconPosition === 'left' && loading"
-	[ngTemplateOutlet]="iconTemplate"
+	[ngTemplateOutlet]="loaderTemplate"
 ></ng-container>
 
 <span [ngClass]="textClasses"><ng-content></ng-content></span>
@@ -15,7 +15,7 @@
 ></ng-container>
 <ng-container
 	*ngIf="iconPosition === 'right' && loading"
-	[ngTemplateOutlet]="iconTemplate"
+	[ngTemplateOutlet]="loaderTemplate"
 ></ng-container>
 
 <ng-template #iconTemplate>
@@ -30,13 +30,9 @@
 	></svg>
 </ng-template>
 <ng-template #loaderTemplate>
-	<svg
+	<app-loader
 		*ngIf="loading"
-		app-svg
-		aria-label="Загрузка"
-		name="hourglass"
-		class="rotating"
-		aria-hidden="false"
-		[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
-	></svg>
+		[iconClass]="view === 'button' ? 'button__icon' : 'link__icon'"
+		[mode]="'btn'"
+	></app-loader>
 </ng-template>

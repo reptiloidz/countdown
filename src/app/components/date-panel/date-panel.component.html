@@ -55,10 +55,9 @@
 		</app-calendar>
 	</ng-template>
 
-	<ng-container *ngIf="this.dates?.length && this.point?.repeatable && !loading && !dateLoading">
+	<ng-container *ngIf="this.dates?.length && this.point?.repeatable">
 		<ng-template #extraButton>
 			<label
-				@extraPanel
 				app-checkbox
 				iconSize="sm"
 				mode="icon"

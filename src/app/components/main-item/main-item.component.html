@@ -157,14 +157,7 @@
 	</div>
 
 	<ng-template #loader>
-		<svg
-			*ngIf="loading"
-			app-svg
-			name="hourglass"
-			class="loader rotating"
-			aria-hidden="false"
-			aria-label="Загрузка"
-		></svg>
+		<app-loader *ngIf="loading"></app-loader>
 	</ng-template>
 
 </div>

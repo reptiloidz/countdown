@@ -5,10 +5,10 @@
 			[alt]="name || 'Юзерпик'"
 			class="profile__userpic userpic"
 		>
-		<span
+		<div
+			class="root__loading-marker"
 			*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
-			class="loader rotating"
-		></span>
+		></div>
 
 		<button
 			*ngIf="!emailVerified"

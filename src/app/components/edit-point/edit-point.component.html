@@ -1,3 +1,7 @@
+<div
+	class="root__loading-marker"
+	*ngIf="loading"
+></div>
 <app-date-panel
 	*ngIf="this.dates?.length"
 	[loading]="loading"
@@ -22,10 +26,7 @@
 		[formGroup]="form"
 		(ngSubmit)="submit(repeatableValueSaved && !isCreation)"
 	>
-		<h3>{{ pageTitle }}<span
-				*ngIf="loading"
-				class="loader rotating"
-			></span></h3>
+		<h3>{{ pageTitle }}</h3>
 		<div
 			class="form"
 			[ngClass]="{
@@ -219,9 +220,7 @@
 </div>
 
 <ng-template #loader>
-	<h2>
-		<div class="loader rotating"></div>
-	</h2>
+	<div class="root__loading-marker"></div>
 </ng-template>
 
 <ng-template #pointPlaceholder>

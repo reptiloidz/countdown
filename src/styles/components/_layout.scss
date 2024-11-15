@@ -35,8 +35,44 @@ body {
 		}
 	}
 
+	&:has(.root__loading-marker) {
+		.root__loader {
+			opacity: 1;
+			pointer-events: all;
+			backdrop-filter: blur(4px);
+		}
+
+		.root__loader-icon {
+			display: flex;
+			animation-direction: reverse;
+		}
+	}
+
 	@media (max-width: 1024px) {
 		height: auto;
+	}
+
+	&__loader {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 3;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 1s, backdrop-filter 1s;
+	}
+
+	&__loader-icon {
+		display: none;
+		height: 100%;
+		animation-name: loader-display;
+		animation-duration: .4s;
+	}
+
+	&__loading-marker {
+		display: none;
 	}
 }
 

@@ -498,6 +498,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			})
 			.subscribe({
 				next: () => {
+					this.removeLoading = true;
 					this.auth.removeAccount(this._user, this._birthDatePointId);
 				},
 			});

@@ -29,3 +29,13 @@
 		transform: rotate(360deg);
 	}
 }
+
+@keyframes loader-display {
+	0% {
+		display: none;
+	}
+
+	100% {
+		display: flex;
+	}
+}

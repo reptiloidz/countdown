@@ -82,10 +82,7 @@
 				class="point-page__title"
 			>
 				<div class="point-page__title-inner">
-					<span class="point-page__title-text">{{ point?.title }}</span><span
-						*ngIf="loading"
-						class="loader rotating"
-					></span>
+					<span class="point-page__title-text">{{ point?.title }}</span>
 				</div>
 			</h1>
 
@@ -134,13 +131,7 @@
 			[secs]="timerSecs"
 		></app-timers>
 		<ng-template #dateLoader>
-			<svg
-				app-svg
-				name="hourglass"
-				class="loader rotating"
-				aria-hidden="false"
-				aria-label="Загрузка"
-			></svg>
+			<div class="root__loading-marker"></div>
 		</ng-template>
 	</div>
 </div>
