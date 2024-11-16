@@ -94,6 +94,7 @@ export class InputComponent implements ControlValueAccessor {
 
 	resetValue() {
 		this.writeValue(this.clearButtonValue);
+		this.inputRef.nativeElement.focus();
 		this.reset.emit(this.value);
 	}
 

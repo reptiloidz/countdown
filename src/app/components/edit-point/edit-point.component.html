@@ -64,6 +64,7 @@
 
 				<div class="form__row">
 					<app-switcher
+						*ngIf="!isCreationUrl"
 						[items]="directionList"
 						[value]="this.point?.direction || 'forward'"
 						formControlName="direction"
@@ -126,6 +127,13 @@
 							[title]="repeatableValue ? 'Повторяемое событие' : 'Однократное событие'"
 						></label>
 					</div>
+					<app-switcher
+						*ngIf="isCreationUrl"
+						[items]="dateModeList"
+						[value]="dateUrlMode"
+						[showTitle]="true"
+						(valueSwitched)="switchDateUrlMode($event)"
+					></app-switcher>
 				</div>
 				<div class="form__row">
 					<button
@@ -159,6 +167,7 @@
 						[dropList]="differenceModeArray"
 						(dropChanged)="differenceModeChanged($event)"
 						[value]="differenceMode"
+						class="form__col form__col--right"
 					></app-drop>
 					<app-input
 						placeholder="Прошло/осталось"

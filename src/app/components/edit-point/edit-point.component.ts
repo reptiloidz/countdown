@@ -103,6 +103,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	showIterationsInfo = false;
 	differenceMode: DifferenceMode =
 		(localStorage.getItem('differenceMode') as DifferenceMode) || 'minutes';
+	dateUrlMode: 'date' | 'timer' = 'date';
 
 	directionList: SwitcherItem[] = [
 		{
@@ -114,6 +115,19 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			text: 'Прямой отсчёт',
 			value: 'forward',
 			icon: 'rotate-right',
+		},
+	];
+
+	dateModeList: SwitcherItem[] = [
+		{
+			text: 'Дата',
+			value: 'date',
+			icon: 'calendar-clock',
+		},
+		{
+			text: 'Таймер',
+			value: 'timer',
+			icon: 'hourglass',
 		},
 	];
 
@@ -147,6 +161,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
 	private repeatableNotify: Date | undefined;
+	private timerNotify: Date | undefined;
 
 	checking = new BehaviorSubject<boolean>(true);
 
@@ -304,6 +319,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.differenceChanged();
 						}
 
+						/**
+						 * Если есть уведомление о повторяемости,
+						 * то удаляем его когда оно неактуально.
+						 * Если его нет, то показываем, когда актуально
+						 */
 						if (this.repeatableNotify) {
 							if (
 								(!this.isCreation || !this.repeatableValue) &&
@@ -315,7 +335,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 								this.repeatableNotify = undefined;
 							}
 						} else {
-							if (this.repeatableValue) {
+							if (
+								this.repeatableValue &&
+								!this.repeatableValueSaved
+							) {
 								this.repeatableNotify = this.notify.add({
 									title: 'Изменение итераций будет доступно после сохранения события',
 								}) as Date;
@@ -439,6 +462,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		return this.form.controls['difference'].valid;
 	}
 
+	get differenceValue() {
+		return this.form.controls['difference'].value;
+	}
+
 	get pageTitle() {
 		return !this.isCreation
 			? 'Редактирование'
@@ -541,7 +568,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.setVisibleDifference();
 	}
 
-	differenceChanged(diff: number = +this.form.controls['difference'].value) {
+	differenceChanged(diff: number = +this.differenceValue) {
 		const currentDate = new Date();
 		let diffMs!: number;
 		let targetDate!: Date;
@@ -635,6 +662,22 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	switchDateUrlMode(mode: string) {
+		this.dateUrlMode = mode as 'date' | 'timer';
+
+		if (this.timerNotify) {
+			if (this.dateUrlMode === 'date') {
+				this.notify.close(this.timerNotify);
+				this.timerNotify = undefined;
+			}
+		} else {
+			this.timerNotify = this.notify.add({
+				title: 'При выборе режима "таймер" отсчёт всегда будет от значения, указанного в ссылке',
+				text: 'После обновления страницы отсчёт начнётся заново',
+			}) as Date;
+		}
+	}
+
 	submit(saveIteration = false, repeats: Iteration[] = []) {
 		if (this.form.invalid) {
 			return;
@@ -708,18 +751,25 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		if (this.isCreationBase) {
 			this.data.addPoint(result);
 		} else if (this.isCreationUrl) {
-			const urlParams = {
+			const urlParams: any = {
 				color:
 					result.color !== 'gray' && result.title
 						? result.color
 						: null,
 				title: result.title,
 				description: result.description,
-				date: format(
-					parseDate(result.dates[0].date),
-					Constants.fullDateUrlFormat
-				),
+				date:
+					this.dateUrlMode === 'date'
+						? format(
+								parseDate(result.dates[0].date),
+								Constants.fullDateUrlFormat
+						  )
+						: null,
 			};
+
+			if (this.dateUrlMode === 'timer') {
+				urlParams[this.differenceMode] = this.differenceValue;
+			}
 
 			this.router
 				.navigate(['/url/'], {
