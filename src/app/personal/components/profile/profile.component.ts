@@ -418,12 +418,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.birthDatePickerValue = date;
 	}
 
-	switchPasswordVisibility(event: Event) {
-		const el: HTMLInputElement | null = event.target as HTMLInputElement;
-		this.passwordControl.type = el.checked ? 'text' : 'password';
-		this.passwordRepeatControl.type = el.checked ? 'text' : 'password';
-	}
-
 	updateNameAndPhoto() {
 		this.profileLoading = true;
 		this.auth.updateProfile(this._user, {
@@ -500,6 +494,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.removeLoading = true;
 					this.auth.removeAccount(this._user, this._birthDatePointId);
+				},
+				complete: () => {
+					this.removeLoading = false;
 				},
 			});
 	}

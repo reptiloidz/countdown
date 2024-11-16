@@ -212,12 +212,6 @@ export class RegComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	switchPasswordVisibility(event: Event) {
-		const el: HTMLInputElement | null = event.target as HTMLInputElement;
-		this.passwordControl.type = el.checked ? 'text' : 'password';
-		this.passwordRepeatControl.type = el.checked ? 'text' : 'password';
-	}
-
 	submit() {
 		if (this.form.valid) {
 			this.isLoading = true;

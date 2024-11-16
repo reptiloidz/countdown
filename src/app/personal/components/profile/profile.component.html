@@ -121,7 +121,7 @@
 				class="form__control"
 				type="password"
 				[invalid]="!!oldPasswordErrorMessages.length"
-				icon="lock"
+				[showPasswordButton]="true"
 				placeholder="Старый пароль"
 				formControlName="password"
 			></app-input>
@@ -130,16 +130,10 @@
 				class="form__control"
 				type="password"
 				[invalid]="!!newPasswordErrorMessages.length"
-				icon="lock"
+				[showPasswordButton]="true"
 				placeholder="Новый пароль"
 				formControlName="new-password"
 			></app-input>
-			<label
-				app-checkbox
-				name="showPassword"
-				iconSize="sm"
-				(change)="switchPasswordVisibility($event)"
-			>Показать пароль</label>
 			<div class="profile__footer">
 				<ul
 					*ngIf="passwordErrorMessages.length"

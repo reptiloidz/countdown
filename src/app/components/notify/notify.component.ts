@@ -230,11 +230,6 @@ export class NotifyComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	switchPasswordVisibility(event: Event) {
-		const el: HTMLInputElement | null = event.target as HTMLInputElement;
-		this.control.type = el.checked ? 'text' : 'password';
-	}
-
 	closeNotify(date: Date) {
 		this.notify.close(date);
 	}

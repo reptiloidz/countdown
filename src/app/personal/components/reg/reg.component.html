@@ -15,7 +15,7 @@
 			<app-input
 				#passwordControl
 				[invalid]="hasPasswordErrors"
-				icon="lock"
+				[showPasswordButton]="true"
 				placeholder="Пароль"
 				type="password"
 				formControlName="password"
@@ -24,20 +24,13 @@
 			<app-input
 				#passwordRepeatControl
 				[invalid]="hasPasswordRepeatErrors"
-				icon="lock"
+				[showPasswordButton]="true"
 				placeholder="Повторите пароль"
 				type="password"
 				formControlName="passwordRepeat"
 				autocomplete="new-password"
 			></app-input>
 		</ng-container>
-
-		<label
-			app-checkbox
-			name="showPassword"
-			iconSize="sm"
-			(change)="switchPasswordVisibility($event)"
-		>Показать пароль</label>
 
 		<label
 			app-checkbox

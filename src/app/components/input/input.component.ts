@@ -44,6 +44,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() maxlength!: number;
 	@Input() min!: number;
 	@Input() clearButton = false;
+	@Input() showPasswordButton = false;
 	@Input() clearButtonValue: string | number = '';
 	@Input() clearButtonTitle = '';
 	@Input() textareaRows = 5;
@@ -58,6 +59,14 @@ export class InputComponent implements ControlValueAccessor {
 	@ViewChild('inputRef') inputRef!: ElementRef;
 
 	isDisabled: boolean = false;
+
+	get showPasswordTitle(): string {
+		return this.type === 'text' ? 'Скрыть пароль' : 'Показать пароль';
+	}
+
+	get showPasswordIcon(): string {
+		return this.type === 'text' ? 'lock-off' : 'lock';
+	}
 
 	onChange: (value: string) => void = () => {};
 	onTouched: () => void = () => {};
@@ -86,6 +95,10 @@ export class InputComponent implements ControlValueAccessor {
 	resetValue() {
 		this.writeValue(this.clearButtonValue);
 		this.reset.emit(this.value);
+	}
+
+	showPassword() {
+		this.type = this.type === 'text' ? 'password' : 'text';
 	}
 
 	focusHandler(event: FocusEvent) {

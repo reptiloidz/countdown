@@ -22,7 +22,7 @@
 	(keydown)="keydownHandler($event)"
 >
 <div
-	*ngIf="icon || clearButton"
+	*ngIf="icon || clearButton || showPasswordButton"
 	class="control__addon"
 >
 	<svg
@@ -38,6 +38,14 @@
 		icon="cross"
 		[attr.title]="clearButtonTitle || null"
 		(click)="resetValue()"
+	></button>
+	<button
+		app-button
+		*ngIf="showPasswordButton"
+		mode="positive"
+		[icon]="showPasswordIcon"
+		[attr.title]="showPasswordTitle || null"
+		(click)="showPassword()"
 	></button>
 </div>
 <ng-template #textareaTemplate>

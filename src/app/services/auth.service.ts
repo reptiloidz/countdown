@@ -438,7 +438,6 @@ export class AuthService implements OnDestroy {
 							title: 'Введите пароль',
 							button: 'Подтвердить пароль',
 							type: 'password',
-							icon: 'lock',
 						})
 					)
 				);

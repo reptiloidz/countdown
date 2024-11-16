@@ -33,7 +33,8 @@
 					<app-input
 						#control
 						*ngIf="notify.prompt"
-						[icon]="notify.icon || 'question-circle'"
+						[icon]="(notify.type !== 'password') ? notify.icon || 'question-circle' : ''"
+						[showPasswordButton]="(notify.type === 'password') || false"
 						class="notify-list__input"
 						[type]="notify.type || 'text'"
 						[formControlName]="notify.type || 'text'"
@@ -47,14 +48,6 @@
 						[attr.disabled]="(isInvalid || isControlEmpty) || null"
 					>{{ notify.button || 'Отправить'}}</button>
 				</div>
-				<label
-					*ngIf="notify.type === 'password'"
-					class="notify-list__check"
-					app-checkbox
-					name="showPassword"
-					iconSize="sm"
-					(change)="switchPasswordVisibility($event)"
-				>Показать пароль</label>
 			</form>
 			<p
 				*ngIf="notify.text"
