@@ -1,0 +1,38 @@
+.no-page {
+	display: grid;
+	justify-content: center;
+	height: 100%;
+
+	&__content,
+	&__clock {
+		grid-row-start: 1;
+		grid-row-end: 1;
+		grid-column-start: 1;
+		grid-column-end: 1;
+	}
+
+	&__content {
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin: auto;
+	}
+
+	&__title {
+		font-size: 20vh;
+		line-height: 1;
+	}
+
+	&__text {
+		font-size: clamp(14px, 2vh, 20px);
+	}
+
+	&__clock {
+		padding: 20px;
+	}
+
+	&__clock-inner {
+		height: 100%;
+	}
+}

@@ -5,6 +5,7 @@ import { PointComponent } from './components/point/point.component';
 import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { AuthComponent } from './personal/components/auth/auth.component';
 import { readGuard, editGuard, authGuard } from './guards';
+import { NoPageComponent } from './components/no-page/no-page.component';
 
 const routes: Routes = [
 	{
@@ -48,6 +49,10 @@ const routes: Routes = [
 		path: '',
 		loadChildren: () =>
 			import('./personal/personal.module').then((m) => m.PersonalModule),
+	},
+	{
+		path: '**',
+		component: NoPageComponent,
 	},
 ];
 
