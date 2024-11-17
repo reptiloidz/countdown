@@ -150,6 +150,11 @@ export class PointComponent implements OnInit, OnDestroy {
 										);
 										break;
 								}
+
+								this.notify.add({
+									title: 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии',
+									autoremove: true,
+								});
 							}
 
 							const fullDate = formatDate(
@@ -211,10 +216,6 @@ export class PointComponent implements OnInit, OnDestroy {
 						this.setAllTimers(true);
 						this.dateLoading = false;
 						this.point && this.action.pointUpdated(this.point);
-						this.notify.add({
-							title: 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии',
-							autoremove: true,
-						});
 					},
 					error: (err) => {
 						console.error(
