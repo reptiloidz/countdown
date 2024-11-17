@@ -4,6 +4,7 @@ import {
 	OnDestroy,
 	HostBinding,
 	ChangeDetectionStrategy,
+	HostListener,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -16,7 +17,12 @@ import {
 	of,
 } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
-import { DataService, AuthService, ActionService } from 'src/app/services';
+import {
+	DataService,
+	AuthService,
+	ActionService,
+	NotifyService,
+} from 'src/app/services';
 import {
 	addDays,
 	addHours,
@@ -45,6 +51,16 @@ import {
 })
 export class PointComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
+	@HostListener('window:beforeunload', ['$event'])
+	handleBeforeUnload(event: Event) {
+		if (this.timerMode) {
+			event.preventDefault();
+			// @ts-ignore
+			event.returnValue = '';
+		}
+		return '';
+	}
+
 	point!: Point | undefined;
 	pointDate = new Date();
 	remainTextValue = '';
@@ -70,7 +86,8 @@ export class PointComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private route: ActivatedRoute,
 		private auth: AuthService,
-		private action: ActionService
+		private action: ActionService,
+		private notify: NotifyService
 	) {}
 
 	ngOnInit(): void {
@@ -194,6 +211,10 @@ export class PointComponent implements OnInit, OnDestroy {
 						this.setAllTimers(true);
 						this.dateLoading = false;
 						this.point && this.action.pointUpdated(this.point);
+						this.notify.add({
+							title: 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии',
+							autoremove: true,
+						});
 					},
 					error: (err) => {
 						console.error(
