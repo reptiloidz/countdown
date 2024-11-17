@@ -10,6 +10,7 @@ import {
 import { ActionService, NotifyService } from './services';
 import { ActivationStart, Event, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { Constants } from './enums';
 
 @Component({
 	selector: 'app-root',
@@ -19,9 +20,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	count = 0;
 	startTime = new Date();
 	isUrlMode = false;
-
-	// private _devIntervalValue = 1;
-	private _devIntervalValue = 100000;
 
 	constructor(
 		private notify: NotifyService,
@@ -55,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			(+new Date()).toString()
 		);
 
-		interval(this.isProd ? 1 : this._devIntervalValue)
+		interval(this.isProd ? 1 : Constants.tick)
 			.pipe(
 				filter(() => +new Date() % 1000 < 100),
 				first(),

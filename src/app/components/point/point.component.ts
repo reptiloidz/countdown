@@ -18,6 +18,12 @@ import {
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService } from 'src/app/services';
 import {
+	addDays,
+	addHours,
+	addMinutes,
+	addMonths,
+	addWeeks,
+	addYears,
 	format,
 	formatDate,
 	formatDistanceToNow,
@@ -46,6 +52,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timer = '0:00:00';
 	loading = false;
 	dateLoading = true;
+	timerMode = false;
 	currentIterationIndex!: number;
 	selectedIterationDate = new Date();
 	userData!: UserExtraData;
@@ -81,10 +88,58 @@ export class PointComponent implements OnInit, OnDestroy {
 					distinctUntilChanged(),
 					tap((data: any) => {
 						if (this.urlModeValue) {
-							const dateParsed = parseDate(data.date, true);
+							let dateParsed!: Date;
+
+							if (data.date) {
+								dateParsed = parseDate(data.date, true);
+							} else {
+								this.timerMode = true;
+
+								switch (true) {
+									case !!data.years:
+										dateParsed = addYears(
+											new Date(),
+											data.years
+										);
+										break;
+									case !!data.months:
+										dateParsed = addMonths(
+											new Date(),
+											data.months
+										);
+										break;
+									case !!data.weeks:
+										dateParsed = addWeeks(
+											new Date(),
+											data.weeks
+										);
+										break;
+									case !!data.days:
+										dateParsed = addDays(
+											new Date(),
+											data.days
+										);
+										break;
+									case !!data.hours:
+										dateParsed = addHours(
+											new Date(),
+											data.hours
+										);
+										break;
+									case !!data.minutes:
+										dateParsed = addMinutes(
+											new Date(),
+											data.minutes
+										);
+										break;
+								}
+							}
+
 							const fullDate = formatDate(
 								dateParsed,
-								Constants.fullDateFormat
+								this.timerMode
+									? Constants.reallyFullDateFormat
+									: Constants.fullDateFormat
 							);
 
 							this.point = {
@@ -97,7 +152,9 @@ export class PointComponent implements OnInit, OnDestroy {
 											fullDate ||
 											formatDate(
 												new Date(),
-												Constants.fullDateFormat
+												this.timerMode
+													? Constants.reallyFullDateFormat
+													: Constants.fullDateFormat
 											),
 										reason: 'byHand',
 									},

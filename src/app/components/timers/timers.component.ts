@@ -65,6 +65,7 @@ export class TimersComponent {
 	@Input() hoursLabel = 'Часы';
 	@Input() minsLabel = 'Минуты';
 	@Input() secsLabel = 'Секунды';
+	@Input() delayValue!: number;
 	@Input() delayRandomValue!: string | number;
 	@Input() showSec = true;
 	yearEnterValue = this.randomDelay;

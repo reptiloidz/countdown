@@ -463,7 +463,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get differenceValue() {
-		return this.form.controls['difference'].value;
+		return +this.form.controls['difference'].value;
 	}
 
 	get pageTitle() {
