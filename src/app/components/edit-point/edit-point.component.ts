@@ -772,7 +772,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			};
 
 			if (this.dateUrlMode === 'timer') {
-				urlParams[this.differenceMode] = this.differenceValue;
+				this.differenceValue
+					? (urlParams[this.differenceMode] = this.differenceValue)
+					: (urlParams['minutes'] = 0);
 			}
 
 			this.router

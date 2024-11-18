@@ -60,7 +60,7 @@
 		title="Сейчас!"
 	></button>
 	<a
-		*ngIf="pointId && !isEdit"
+		*ngIf="(pointId && !isEdit) || isUrl"
 		app-button
 		icon="upload"
 		mode="ghost"

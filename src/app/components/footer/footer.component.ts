@@ -6,9 +6,9 @@ import {
 	ActivatedRoute,
 } from '@angular/router';
 import { format, formatISO } from 'date-fns';
-import { filter, Subscription, EMPTY, mergeMap, combineLatestWith } from 'rxjs';
+import { filter, Subscription, mergeMap, combineLatestWith, of } from 'rxjs';
 import { Constants } from 'src/app/enums';
-import { getPointDate, parseDate } from 'src/app/helpers';
+import { getPointDate, getPointFromUrl, parseDate } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
 import {
 	AuthService,
@@ -28,6 +28,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 	isEdit = false;
 	isCreate = false;
 	isCreateUrl = false;
+	isUrl = false;
+	isTimer = false;
 	isMain = false;
 	hasAccess: boolean | undefined = false;
 	pointsChecked: boolean = false;
@@ -67,40 +69,50 @@ export class FooterComponent implements OnInit, OnDestroy {
 							event.snapshot.url[0]?.path === 'create';
 						this.isCreateUrl =
 							event.snapshot.url[0]?.path === 'create-url';
+						this.isUrl = event.snapshot.url[0]?.path === 'url';
 						this.isMain = !event.snapshot.url.length;
+						this.isTimer =
+							this.isUrl && !event.snapshot.queryParams.date;
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
-							: EMPTY;
+							: of(
+									Object.keys(event.snapshot.queryParams)
+										.length !== 0
+										? getPointFromUrl(
+												event.snapshot.queryParams
+										  )
+										: undefined
+							  );
 					})
 				)
 				.subscribe({
 					next: (point: Point | undefined) => {
 						this.point = point;
+						const iterationNumber = this.iteration || 1;
+						const googleLinkDate =
+							point?.dates[iterationNumber - 1]?.date &&
+							formatISO(
+								parseDate(
+									point?.dates[iterationNumber - 1]?.date,
+									this.isTimer,
+									this.isTimer
+								),
+								{ format: 'basic' }
+							) + (point?.greenwich ? 'Z' : '');
 
-						if (this.iteration) {
-							const googleLinkDate =
-								point?.dates[this.iteration - 1]?.date &&
-								formatISO(
-									parseDate(
-										point?.dates[this.iteration - 1]?.date
-									),
-									{ format: 'basic' }
-								) + (point?.greenwich ? 'Z' : '');
+						const googleLinkParams = {
+							text: point?.title || '',
+							details: point?.description || '',
+							dates: googleLinkDate
+								? googleLinkDate + '/' + googleLinkDate
+								: '',
+						};
 
-							const googleLinkParams = {
-								text: point?.title || '',
-								details: point?.description || '',
-								dates: googleLinkDate
-									? googleLinkDate + '/' + googleLinkDate
-									: '',
-							};
-
-							this.exportGoogleLink =
-								'https://calendar.google.com/calendar/u/0/r/eventedit?' +
-								new HttpParams({
-									fromObject: googleLinkParams,
-								}).toString();
-						}
+						this.exportGoogleLink =
+							'https://calendar.google.com/calendar/u/0/r/eventedit?' +
+							new HttpParams({
+								fromObject: googleLinkParams,
+							}).toString();
 						this.hasAccess =
 							point && this.auth.checkAccessEdit(point);
 					},

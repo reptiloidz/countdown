@@ -14,3 +14,4 @@ export * from './getClosestIteration';
 export * from './parseDate';
 export * from './getInvertedObject';
 export * from './getKeyByValue';
+export * from './getPointFromUrl';

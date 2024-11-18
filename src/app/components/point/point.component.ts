@@ -23,24 +23,13 @@ import {
 	ActionService,
 	NotifyService,
 } from 'src/app/services';
-import {
-	addDays,
-	addHours,
-	addMinutes,
-	addMonths,
-	addWeeks,
-	addYears,
-	format,
-	formatDate,
-	formatDistanceToNow,
-	intervalToDuration,
-} from 'date-fns';
+import { format, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText, PointColors } from 'src/app/enums';
 import {
 	getClosestIteration,
 	getPointDate,
-	parseDate,
+	getPointFromUrl,
 	sortDates,
 } from 'src/app/helpers';
 
@@ -105,89 +94,15 @@ export class PointComponent implements OnInit, OnDestroy {
 					distinctUntilChanged(),
 					tap((data: any) => {
 						if (this.urlModeValue) {
-							let dateParsed!: Date;
+							this.point = getPointFromUrl(data);
 
-							if (data.date) {
-								dateParsed = parseDate(data.date, true);
-							} else {
+							if (!data.date) {
 								this.timerMode = true;
-
-								switch (true) {
-									case !!data.years:
-										dateParsed = addYears(
-											new Date(),
-											data.years
-										);
-										break;
-									case !!data.months:
-										dateParsed = addMonths(
-											new Date(),
-											data.months
-										);
-										break;
-									case !!data.weeks:
-										dateParsed = addWeeks(
-											new Date(),
-											data.weeks
-										);
-										break;
-									case !!data.days:
-										dateParsed = addDays(
-											new Date(),
-											data.days
-										);
-										break;
-									case !!data.hours:
-										dateParsed = addHours(
-											new Date(),
-											data.hours
-										);
-										break;
-									case !!data.minutes:
-										dateParsed = addMinutes(
-											new Date(),
-											data.minutes
-										);
-										break;
-								}
-
 								this.notify.add({
 									title: 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии',
 									autoremove: true,
 								});
 							}
-
-							const fullDate = formatDate(
-								dateParsed,
-								this.timerMode
-									? Constants.reallyFullDateFormat
-									: Constants.fullDateFormat
-							);
-
-							this.point = {
-								color: data.color || 'gray',
-								title: data.title || '',
-								description: data.description || null,
-								dates: [
-									{
-										date:
-											fullDate ||
-											formatDate(
-												new Date(),
-												this.timerMode
-													? Constants.reallyFullDateFormat
-													: Constants.fullDateFormat
-											),
-										reason: 'byHand',
-									},
-								],
-								greenwich: false,
-								repeatable: false,
-								direction:
-									fullDate && dateParsed > new Date()
-										? 'backward'
-										: 'forward',
-							};
 						}
 					}),
 					mergeMap(() => this.route.params),
