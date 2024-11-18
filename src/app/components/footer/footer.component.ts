@@ -225,4 +225,6 @@ export class FooterComponent implements OnInit, OnDestroy {
 			id: this.point?.id,
 		});
 	}
+
+	share() {}
 }

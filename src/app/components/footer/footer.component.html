@@ -59,6 +59,15 @@
 		(click)="setDateNow()"
 		title="Сейчас!"
 	></button>
+	<button
+		*ngIf="(pointId && !isEdit) || isUrl"
+		app-button
+		size="lg"
+		icon="share"
+		mode="ghost"
+		(click)="share()"
+		title="Поделиться ссылкой"
+	></button>
 	<a
 		*ngIf="(pointId && !isEdit) || isUrl"
 		app-button

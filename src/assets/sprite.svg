@@ -141,6 +141,9 @@
         <svg id="search" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m20 20-4.197-4.197S14 18 10.5 18a7.5 7.5 0 1 1 7.35-6"/>
         </svg>
+        <svg id="share" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-width="1.5" d="M8.684 10.658 13 8.5m2.316 8.158L11 14.5M21 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm12 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+        </svg>
         <svg id="shield" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.5 9.5 11 14l-1.5-1.5M12 3l8 4c0 5.193-2.784 12.51-8 14-5.216-1.49-8-8.807-8-14l4-2"/>
         </svg>
