@@ -401,6 +401,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+		this.repeatableNotify && this.notify.close(this.repeatableNotify);
+		this.repeatableNotify = undefined;
+		this.timerNotify && this.notify.close(this.timerNotify);
+		this.timerNotify = undefined;
 	}
 
 	get formGroup(): any {
