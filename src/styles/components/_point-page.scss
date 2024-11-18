@@ -29,15 +29,13 @@
 		align-items: center;
 		justify-self: start;
 		padding-right: 20px;
+	}
 
-		&::after {
-			content: '';
-			display: block;
-			width: 16px;
-			height: 16px;
-			border-radius: 5px;
-			background-color: rgb(var(--point-color));
-		}
+	&__color {
+		width: 16px;
+		height: 16px;
+		border-radius: 5px;
+		background-color: rgb(var(--point-color));
 	}
 
 	&__author,

@@ -12,23 +12,18 @@
 		<!-- <app-clock class="point-page__clock"></app-clock> -->
 		<div class="point-page__header">
 
-			<div
-				class="point-page__markers color"
-				[title]="pointColorName"
-				[ngClass]="point?.color ? 'color--' + point?.color : ''"
-			>
+			<div class="point-page__markers">
 				<ng-container *ngIf="(urlMode | async) !== true">
 					<div
 						class="marker"
 						[ngClass]="{
 							'marker--inactive': !point?.greenwich
 						}"
+						[title]="point?.greenwich ? 'По Гринвичу' : 'Локально'"
 					>
 						<svg
 							app-svg
 							name="globe"
-							aria-hidden="false"
-							[attr.aria-label]="point?.greenwich ? 'По Гринвичу' : 'Локально'"
 							class="marker__inner"
 						></svg>
 					</div>
@@ -37,12 +32,11 @@
 						[ngClass]="{
 							'marker--inactive': !point?.repeatable
 						}"
+						[title]="point?.repeatable ? 'Многократное' : 'Однократное'"
 					>
 						<svg
 							app-svg
 							name="refresh"
-							aria-hidden="false"
-							[attr.aria-label]="point?.repeatable ? 'Многократное' : 'Однократное'"
 							class="marker__inner"
 						></svg>
 					</div>
@@ -51,29 +45,34 @@
 						[ngClass]="{
 							'marker--inactive': !point?.public
 						}"
+						[title]="point?.public ? 'Публичное' : 'Приватное'"
 					>
 						<svg
 							app-svg
 							name="users"
-							aria-hidden="false"
-							[attr.aria-label]="point?.public ? 'Публичное' : 'Приватное'"
 							class="marker__inner"
 						></svg>
 					</div>
 
-					<div class="point-page__direction">
+					<div
+						class="point-page__direction"
+						[title]="directionTitle"
+					>
 						<svg
 							app-svg
 							[name]="point?.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
-							[attr.aria-label]="directionTitle"
 							class="direction-icon"
-							aria-hidden="false"
 							[ngClass]="[
 								isDirectionCorrect ? 'direction-icon--correct' : '',
 								point?.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
 							]"
 						></svg>
 					</div>
+					<div
+						class="point-page__color color"
+						[title]="pointColorName"
+						[ngClass]="point?.color ? 'color--' + point?.color : ''"
+					></div>
 				</ng-container>
 			</div>
 
