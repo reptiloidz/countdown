@@ -16,7 +16,10 @@ export class NoPageComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.action._eventShortLinkChecked$.subscribe({
-				complete: () => {
+				next: () => {
+					this.loading = false;
+				},
+				error: () => {
 					this.loading = false;
 				},
 			})
