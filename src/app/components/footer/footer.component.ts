@@ -15,6 +15,7 @@ import {
 	DataService,
 	ActionService,
 	NotifyService,
+	HttpService,
 } from 'src/app/services';
 import { HttpParams } from '@angular/common/http';
 
@@ -36,6 +37,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	iteration = 0;
 	exportGoogleLink = '';
 	hasEditablePoints = false;
+	shareLinkLoading = false;
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -44,7 +46,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private action: ActionService,
 		private auth: AuthService,
-		private notify: NotifyService
+		private notify: NotifyService,
+		private http: HttpService
 	) {}
 
 	get isAuthenticated() {
@@ -226,5 +229,42 @@ export class FooterComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	share() {}
+	share() {
+		this.shareLinkLoading = true;
+		this.http.getShortLink(window.location.search.slice(1)).subscribe({
+			next: (link) => {
+				if (link) {
+					this.copyLink(link);
+				} else {
+					this.http
+						.postShortLink(window.location.search.slice(1))
+						.subscribe({
+							next: (result) => {
+								this.copyLink(result.short);
+							},
+						});
+				}
+			},
+		});
+	}
+
+	copyLink(link: string) {
+		navigator.clipboard
+			.writeText(window.location.origin + '/' + link)
+			.then(() => {
+				this.notify.add({
+					title: 'URL события успешно скопирован в буфер обмена',
+					text: window.location.origin + '/' + link,
+					short: true,
+					view: 'positive',
+				});
+				this.shareLinkLoading = false;
+			})
+			.catch(() => {
+				console.error(
+					'Надо вернуть фокус в браузер для копирования ссылки'
+				);
+				this.shareLinkLoading = false;
+			});
+	}
 }

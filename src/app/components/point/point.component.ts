@@ -128,11 +128,12 @@ export class PointComponent implements OnInit, OnDestroy {
 							this.userData = userData;
 							this.point && this.data.putPoint(this.point);
 						}
-						this.setAllTimers(true);
 						this.dateLoading = false;
+						this.setAllTimers(true);
 						this.point && this.action.pointUpdated(this.point);
 					},
 					error: (err) => {
+						this.dateLoading = false;
 						console.error(
 							'Ошибка при обновлении таймеров:\n',
 							err.message

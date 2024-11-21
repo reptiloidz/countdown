@@ -777,24 +777,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					: (urlParams['minutes'] = 0);
 			}
 
-			this.router
-				.navigate(['/url/'], {
-					queryParams: urlParams,
-				})
-				.then(() => {
-					navigator.clipboard
-						.writeText(window.location.href)
-						.then(() => {
-							this.notify.add({
-								title: 'URL события успешно скопирован в буфер обмена',
-								short: true,
-								view: 'positive',
-							});
-						});
-				})
-				.catch((err) => {
-					console.error('Ошибка при копировании URL:\n', err.message);
-				});
+			this.router.navigate(['/url/'], {
+				queryParams: urlParams,
+			});
 		} else if (saveIteration || repeats.length) {
 			if (newDatesArray) {
 				this.data.editPoint(

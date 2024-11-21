@@ -16,6 +16,7 @@ export class ActionService {
 	private _eventHasEditablePointsSubject = new Subject<boolean>();
 	private _eventIntervalSwitchedSubject = new Subject<void>();
 	private _eventAutocompleteOpenedSubject = new Subject<void>();
+	private _eventShortLinkCheckedSubject = new Subject<void>();
 	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
 	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
 	eventIterationSwitched$ =
@@ -27,6 +28,7 @@ export class ActionService {
 	eventIntervalSwitched$ = this._eventIntervalSwitchedSubject.asObservable();
 	eventAutocompleteOpened$ =
 		this._eventAutocompleteOpenedSubject.asObservable();
+	_eventShortLinkChecked$ = this._eventShortLinkCheckedSubject.asObservable();
 
 	pointsChecked: string[] = [];
 
@@ -73,5 +75,9 @@ export class ActionService {
 
 	autocompleteOpened() {
 		this._eventAutocompleteOpenedSubject.next();
+	}
+
+	shortLinkChecked() {
+		this._eventShortLinkCheckedSubject.next();
 	}
 }

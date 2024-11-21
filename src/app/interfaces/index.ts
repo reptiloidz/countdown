@@ -12,3 +12,4 @@ export * from './environment.interface';
 export * from './switcherItem.interface';
 export * from './radioItem.interface';
 export * from './selectArray.interface';
+export * from './link.interface';

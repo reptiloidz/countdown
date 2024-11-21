@@ -60,12 +60,13 @@
 		title="Сейчас!"
 	></button>
 	<button
-		*ngIf="(pointId && !isEdit) || isUrl"
+		*ngIf="isUrl"
 		app-button
 		size="lg"
 		icon="share"
 		mode="ghost"
 		(click)="share()"
+		[loading]="shareLinkLoading"
 		title="Поделиться ссылкой"
 	></button>
 	<a

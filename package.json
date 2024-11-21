@@ -38,6 +38,7 @@
 		"ngx-mask": "18.0.0",
 		"ngx-quicklink": "^0.4.2",
 		"rxjs": "~7.8.0",
+		"sqids": "^0.3.0",
 		"svg4everybody": "^2.1.9",
 		"tslib": "^2.3.0",
 		"zone.js": "~0.13.0"

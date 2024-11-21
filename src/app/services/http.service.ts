@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap, combineLatest } from 'rxjs';
-import { Point, HttpServiceInterface } from '../interfaces';
+import {
+	map,
+	Observable,
+	switchMap,
+	combineLatest,
+	take,
+	mergeMap,
+	from,
+} from 'rxjs';
+import { Point, HttpServiceInterface, Link } from '../interfaces';
 import {
 	ref,
 	getDatabase,
@@ -14,6 +22,7 @@ import {
 	update,
 } from '@angular/fire/database';
 import { Auth, user } from '@angular/fire/auth';
+import Sqids from 'sqids';
 
 @Injectable({
 	providedIn: 'root',
@@ -60,8 +69,12 @@ export class HttpService implements HttpServiceInterface {
 					})
 				);
 
-				// Из-за ограничений Firebase фильтрация данных осуществляется на клиенте, при этом выполняется 2 запроса данных
-				// TODO: Стоит ли делать так, или просто фильтровать на фронте?
+				/**
+				 * Из-за ограничений Firebase фильтрация данных осуществляется на клиенте,
+				 * при этом выполняется 2 запроса данных.
+				 * Потому что это 2 отдельных набора событий, которые пересекаются лишь частично,
+				 * либо вообще не пересекаются.
+				 */
 				return combineLatest([userPoints$, publicPoints$]).pipe(
 					map((results) => results.flat()),
 					map((points) =>
@@ -119,6 +132,49 @@ export class HttpService implements HttpServiceInterface {
 				resolve();
 			});
 		}
+	}
+
+	getShortLink(full: string): Observable<string> {
+		return objectVal<Link>(
+			query(
+				ref(this.db, 'links'),
+				orderByChild('full'),
+				equalTo(full || null)
+			)
+		).pipe(
+			take(1),
+			map((link: Link) => link && Object.values(link)[0].short)
+		);
+	}
+
+	getFullLink(short: string): Observable<string> {
+		return objectVal<Link>(
+			query(
+				ref(this.db, 'links'),
+				orderByChild('short'),
+				equalTo(short || null)
+			)
+		).pipe(
+			take(1),
+			map((link: Link) => Object.values(link)[0].full)
+		);
+	}
+
+	postShortLink(full: string): Observable<Link> {
+		return objectVal<string>(query(child(ref(this.db), 'links'))).pipe(
+			take(1),
+			mergeMap((links) => {
+				return from(
+					push(ref(this.db, 'links'), {
+						full,
+						short: new Sqids({
+							minLength: 6,
+						}).encode(links ? [Object.keys(links).length] : [0]),
+					} as Link)
+				);
+			}),
+			mergeMap((data) => objectVal<Link>(data))
+		);
 	}
 
 	get db() {

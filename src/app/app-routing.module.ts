@@ -6,6 +6,7 @@ import { EditPointComponent } from './components/edit-point/edit-point.component
 import { AuthComponent } from './personal/components/auth/auth.component';
 import { readGuard, editGuard, authGuard } from './guards';
 import { NoPageComponent } from './components/no-page/no-page.component';
+import { shortGuard } from './guards/short.guard';
 
 const routes: Routes = [
 	{
@@ -53,6 +54,7 @@ const routes: Routes = [
 	{
 		path: '**',
 		component: NoPageComponent,
+		canActivate: [shortGuard],
 	},
 ];
 
