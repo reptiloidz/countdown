@@ -397,6 +397,23 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.action.eventUpdatedPoint$.subscribe({
+				next: (point) => {
+					this.point = point;
+					this.pointDate = point?.dates[0].date
+						? parseDate(point.dates[0].date)
+						: new Date();
+					this.form.controls['title'].setValue(point?.title);
+					this.form.controls['description'].setValue(
+						point?.description
+					);
+					this.form.controls['color'].setValue(point?.color);
+					this.dateChanged();
+				},
+			})
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -736,7 +753,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				repeatable: this.repeatableValue,
 				public: this.publicValue,
 				user: this.auth.uid || '',
-				color: this.form.controls['color'].value,
+				color: this.form.controls['color'].value || 'gray',
 			});
 		} else {
 			result = Object.assign(result, {
@@ -810,17 +827,21 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				...point,
 			});
 		this.point?.id &&
-			this.router.navigate(['/edit/' + this.point?.id.toString()], {
-				queryParams: {
-					iteration: this.currentIterationIndex + 1,
-				},
-			});
-
-		editPointEvent &&
-			this.notify.add({
-				title: EditPointSuccessMessage[editPointEvent],
-				short: true,
-				view: 'positive',
-			});
+			this.router
+				.navigate(['/edit/' + this.point?.id.toString()], {
+					queryParams: {
+						iteration: isNaN(this.currentIterationIndex)
+							? null
+							: this.currentIterationIndex + 1,
+					},
+				})
+				.then(() => {
+					editPointEvent &&
+						this.notify.add({
+							title: EditPointSuccessMessage[editPointEvent],
+							short: true,
+							view: 'positive',
+						});
+				});
 	}
 }

@@ -60,7 +60,7 @@
 		title="Сейчас!"
 	></button>
 	<button
-		*ngIf="isUrl"
+		*ngIf="isPublicPoint || isUrl"
 		app-button
 		size="lg"
 		icon="share"
@@ -79,8 +79,18 @@
 		target="_blank"
 		title="Экспорт в Google Calendar"
 	></a>
+	<button
+		*ngIf="(isUrl || pointId) && !isCreateUrl || isCreate"
+		app-button
+		size="lg"
+		mode="positive"
+		icon="link"
+		(click)="copyPoint()"
+		title="Копировать как событие-ссылку"
+		class="nav__create"
+	></button>
 	<a
-		*ngIf="!isCreateUrl"
+		*ngIf="!(isUrl || pointId) && !isCreateUrl && !isCreate"
 		app-button
 		size="lg"
 		mode="positive"
@@ -89,8 +99,18 @@
 		title="Создать событие-ссылку"
 		class="nav__create"
 	></a>
+	<button
+		*ngIf="isUrl || isCreateUrl"
+		app-button
+		size="lg"
+		icon="plus"
+		mode="positive"
+		(click)="copyPoint(true)"
+		title="Сохранить в свои события"
+		class="nav__create"
+	></button>
 	<a
-		*ngIf="isAuthenticated && !isCreate"
+		*ngIf="isAuthenticated && !isCreate && !isCreateUrl && !isUrl"
 		app-button
 		size="lg"
 		mode="positive"

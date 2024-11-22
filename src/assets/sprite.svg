@@ -42,6 +42,9 @@
         <svg id="clock" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l2 2M12 3a9 9 0 1 0 7.5 4.023"/>
         </svg>
+        <svg id="copy" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6.5V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2m-3.5 9H19a2 2 0 0 0 2-2V8.5M3 19a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/>
+        </svg>
         <svg id="cross" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 5 5 19M5 5l4.5 4.5M12 12l7 7"/>
         </svg>

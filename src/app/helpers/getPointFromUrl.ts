@@ -11,7 +11,7 @@ import { Point } from '../interfaces';
 import { parseDate } from './parseDate';
 import { Constants } from '../enums';
 
-export const getPointFromUrl = (data: any): Point => {
+export const getPointFromUrl = (data: any): Point | undefined => {
 	let dateParsed!: Date;
 
 	if (data.date) {
@@ -37,6 +37,10 @@ export const getPointFromUrl = (data: any): Point => {
 				dateParsed = addMinutes(new Date(), data.minutes);
 				break;
 		}
+	}
+
+	if (!dateParsed) {
+		return undefined;
 	}
 
 	const fullDate = formatDate(

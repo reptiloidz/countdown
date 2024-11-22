@@ -292,7 +292,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.subscriptions.unsubscribe();
 		this.iterationsTabs &&
 			this.resizeObserver?.unobserve(this.iterationsTabs?.nativeElement);
-		this.action.pointUpdated(undefined);
+		this.iterationsTabs && this.action.pointUpdated(undefined);
 	}
 
 	get pointValue() {

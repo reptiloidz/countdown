@@ -58,6 +58,10 @@ export class FooterComponent implements OnInit, OnDestroy {
 		return this.auth.checkEmailVerified;
 	}
 
+	get isPublicPoint(): boolean {
+		return this.point?.public || false;
+	}
+
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.router.events
@@ -92,32 +96,35 @@ export class FooterComponent implements OnInit, OnDestroy {
 					next: (point: Point | undefined) => {
 						this.point = point;
 						const iterationNumber = this.iteration || 1;
-						const googleLinkDate =
-							point?.dates[iterationNumber - 1]?.date &&
-							formatISO(
-								parseDate(
-									point?.dates[iterationNumber - 1]?.date,
-									this.isTimer,
-									this.isTimer
-								),
-								{ format: 'basic' }
-							) + (point?.greenwich ? 'Z' : '');
 
-						const googleLinkParams = {
-							text: point?.title || '',
-							details: point?.description || '',
-							dates: googleLinkDate
-								? googleLinkDate + '/' + googleLinkDate
-								: '',
-						};
+						if (this.point && this.point.dates) {
+							const googleLinkDate =
+								point?.dates[iterationNumber - 1]?.date &&
+								formatISO(
+									parseDate(
+										point?.dates[iterationNumber - 1]?.date,
+										this.isTimer,
+										this.isTimer
+									),
+									{ format: 'basic' }
+								) + (point?.greenwich ? 'Z' : '');
 
-						this.exportGoogleLink =
-							'https://calendar.google.com/calendar/u/0/r/eventedit?' +
-							new HttpParams({
-								fromObject: googleLinkParams,
-							}).toString();
-						this.hasAccess =
-							point && this.auth.checkAccessEdit(point);
+							const googleLinkParams = {
+								text: point?.title || '',
+								details: point?.description || '',
+								dates: googleLinkDate
+									? googleLinkDate + '/' + googleLinkDate
+									: '',
+							};
+
+							this.exportGoogleLink =
+								'https://calendar.google.com/calendar/u/0/r/eventedit?' +
+								new HttpParams({
+									fromObject: googleLinkParams,
+								}).toString();
+							this.hasAccess =
+								point && this.auth.checkAccessEdit(point);
+						}
 					},
 					error: (err) => {
 						console.error(
@@ -172,6 +179,14 @@ export class FooterComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.action.eventHasEditablePoints$.subscribe({
 				next: (data) => (this.hasEditablePoints = data),
+			})
+		);
+
+		this.subscriptions.add(
+			this.action.eventUpdatedPoint$.subscribe({
+				next: (point) => {
+					this.point = point;
+				},
 			})
 		);
 	}
@@ -230,25 +245,33 @@ export class FooterComponent implements OnInit, OnDestroy {
 	}
 
 	share() {
-		this.shareLinkLoading = true;
-		this.http.getShortLink(window.location.search.slice(1)).subscribe({
-			next: (link) => {
-				if (link) {
-					this.copyLink(link);
-				} else {
-					this.http
-						.postShortLink(window.location.search.slice(1))
-						.subscribe({
-							next: (result) => {
-								this.copyLink(result.short);
-							},
-						});
-				}
-			},
-		});
+		if (this.pointId) {
+			this.copyLink(this.pointId);
+		} else {
+			this.shareLinkLoading = true;
+			this.http.getShortLink(window.location.search.slice(1)).subscribe({
+				next: (link) => {
+					if (link) {
+						this.copyLink(link);
+					} else {
+						this.http
+							.postShortLink(window.location.search.slice(1))
+							.subscribe({
+								next: (result) => {
+									this.copyLink(result.short);
+								},
+							});
+					}
+				},
+			});
+		}
 	}
 
 	copyLink(link: string) {
+		if (this.pointId) {
+			link = 'point/' + link;
+		}
+
 		navigator.clipboard
 			.writeText(window.location.origin + '/' + link)
 			.then(() => {
@@ -265,6 +288,20 @@ export class FooterComponent implements OnInit, OnDestroy {
 					'Надо вернуть фокус в браузер для копирования ссылки'
 				);
 				this.shareLinkLoading = false;
+			});
+	}
+
+	copyPoint(toPoint = false) {
+		const point = this.point;
+		if (point) {
+			point.dates = point?.dates.slice(-1);
+			point.repeatable = false;
+		}
+
+		this.router
+			.navigate([toPoint ? '/create/' : '/create-url/'])
+			.then(() => {
+				this.action.pointUpdated(point);
 			});
 	}
 }

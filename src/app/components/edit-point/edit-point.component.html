@@ -3,7 +3,7 @@
 	*ngIf="loading"
 ></div>
 <app-date-panel
-	*ngIf="this.dates?.length"
+	*ngIf="this.dates?.length && !isCreationUrl && !isCreation"
 	[loading]="loading"
 	[pointDate]="pointDate"
 	[selectedIterationDate]="selectedIterationDate"
@@ -13,7 +13,7 @@
 ></app-date-panel>
 <div class="content content--row">
 	<div
-		*ngIf="point; else pointPlaceholder"
+		*ngIf="point && !isCreationUrl && !isCreation; else pointPlaceholder"
 		app-main-item
 		class="color content__col"
 		[ngClass]="'color--' + this.form.controls['color'].value"
