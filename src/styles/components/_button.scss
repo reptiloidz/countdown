@@ -31,6 +31,7 @@
 
 	&__icon {
 		--icon-stroke-w: 2px;
+		--loader-icon-w: var(--icon-w);
 
 		align-self: normal;
 		filter: contrast(1);
