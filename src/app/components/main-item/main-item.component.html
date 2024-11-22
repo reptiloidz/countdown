@@ -60,7 +60,10 @@
 		*ngIf="isAuth && !isEdit"
 		class="point__nav"
 	>
-		<ng-container *ngIf="!loading; else loader">
+		<div
+			*ngIf="!loading; else loader"
+			class="point__nav-section"
+		>
 			<button
 				app-button
 				mode="negative"
@@ -75,7 +78,26 @@
 				app-checkbox
 				(change)="checkPoint()"
 			></label>
-		</ng-container>
+		</div>
+		<div
+			*ngIf="hasAccessEdit"
+			class="point__nav-section"
+		>
+			<button
+				app-button
+				icon="warning"
+				(click)="setDateNow()"
+				title="Сейчас!"
+			></button>
+			<a
+				app-button
+				size="sm"
+				icon="pencil"
+				mode="ghost"
+				routerLink="/{{isEdit ? 'point' : 'edit'}}/{{point.id}}"
+				title="Редактировать"
+			></a>
+		</div>
 	</div>
 
 	<div

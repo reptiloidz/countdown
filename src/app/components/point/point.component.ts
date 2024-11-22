@@ -32,6 +32,7 @@ import {
 	getPointFromUrl,
 	sortDates,
 } from 'src/app/helpers';
+import { Title } from '@angular/platform-browser';
 
 @Component({
 	selector: 'app-point',
@@ -76,7 +77,8 @@ export class PointComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private auth: AuthService,
 		private action: ActionService,
-		private notify: NotifyService
+		private notify: NotifyService,
+		private title: Title
 	) {}
 
 	ngOnInit(): void {
@@ -182,6 +184,7 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+		this.title.setTitle('Countdown');
 	}
 
 	get interval() {
@@ -310,6 +313,15 @@ export class PointComponent implements OnInit, OnDestroy {
 			formatDistanceToNow(this.pointDate, {
 				locale: ru,
 			});
+
+		this.title.setTitle(`
+			${currentInterval.years ? Math.abs(currentInterval.years) + 'г. ' : ''}${
+			currentInterval.months
+				? Math.abs(currentInterval.months) + 'м. '
+				: ''
+		}${currentInterval.days ? Math.abs(currentInterval.days) + 'д. ' : ''}
+			${this.timerHours}:${this.timerMins}:${this.timerSecs}
+		`);
 	}
 
 	iterationSwitchHandler(iterationNumber: number) {

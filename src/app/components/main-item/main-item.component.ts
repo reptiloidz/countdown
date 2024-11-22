@@ -210,4 +210,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				});
 		}
 	}
+
+	setDateNow() {}
 }
