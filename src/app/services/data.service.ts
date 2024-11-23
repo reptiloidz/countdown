@@ -10,6 +10,9 @@ import {
 import { Iteration, Point } from '../interfaces';
 import { ActionService, HttpService, NotifyService } from '.';
 import { EditPointEvent } from '../types';
+import { format } from 'date-fns';
+import { getPointDate } from '../helpers';
+import { Constants } from '../enums';
 
 @Injectable({
 	providedIn: 'root',
@@ -235,5 +238,28 @@ export class DataService {
 						});
 				},
 			});
+	}
+
+	setDateNow(point: Point) {
+		let newDatesArray = point?.dates;
+		const lastDate = {
+			date: format(
+				getPointDate({
+					isGreenwich: point.greenwich,
+					isInvert: true,
+				}),
+				Constants.fullDateFormat
+			),
+			reason: 'byHand',
+		} as Iteration;
+		if (point.repeatable) {
+			newDatesArray && newDatesArray.push(lastDate);
+		} else {
+			newDatesArray && (newDatesArray = [lastDate]);
+		}
+		this.editPoint(point.id, {
+			...point,
+			dates: newDatesArray,
+		} as Point);
 	}
 }

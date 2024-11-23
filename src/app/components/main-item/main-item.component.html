@@ -83,20 +83,20 @@
 			*ngIf="hasAccessEdit"
 			class="point__nav-section"
 		>
+			<a
+				app-button
+				size="sm"
+				icon="pencil"
+				mode="secondary"
+				routerLink="/{{isEdit ? 'point' : 'edit'}}/{{point.id}}"
+				title="Редактировать"
+			></a>
 			<button
 				app-button
 				icon="warning"
 				(click)="setDateNow()"
 				title="Сейчас!"
 			></button>
-			<a
-				app-button
-				size="sm"
-				icon="pencil"
-				mode="ghost"
-				routerLink="/{{isEdit ? 'point' : 'edit'}}/{{point.id}}"
-				title="Редактировать"
-			></a>
 		</div>
 	</div>
 

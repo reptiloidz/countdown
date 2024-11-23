@@ -44,7 +44,6 @@ body {
 
 		.root__loader-icon {
 			display: flex;
-			animation-direction: reverse;
 		}
 	}
 
@@ -67,8 +66,7 @@ body {
 	&__loader-icon {
 		display: none;
 		height: 100%;
-		animation-name: loader-display;
-		animation-duration: .4s;
+		transition: display .8s allow-discrete;
 	}
 
 	&__loading-marker {

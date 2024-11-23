@@ -5,11 +5,10 @@ import {
 	ActivationStart,
 	ActivatedRoute,
 } from '@angular/router';
-import { format, formatISO } from 'date-fns';
+import { formatISO } from 'date-fns';
 import { filter, Subscription, mergeMap, combineLatestWith, of } from 'rxjs';
-import { Constants } from 'src/app/enums';
-import { getPointDate, getPointFromUrl, parseDate } from 'src/app/helpers';
-import { Iteration, Point } from 'src/app/interfaces';
+import { getPointFromUrl, parseDate } from 'src/app/helpers';
+import { Point } from 'src/app/interfaces';
 import {
 	AuthService,
 	DataService,
@@ -202,26 +201,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 			})
 			.subscribe({
 				next: () => {
-					let newDatesArray = this.point?.dates;
-					const lastDate = {
-						date: format(
-							getPointDate({
-								isGreenwich: this.point?.greenwich,
-								isInvert: true,
-							}),
-							Constants.fullDateFormat
-						),
-						reason: 'byHand',
-					} as Iteration;
-					if (this.point?.repeatable) {
-						newDatesArray && newDatesArray.push(lastDate);
-					} else {
-						newDatesArray && (newDatesArray = [lastDate]);
-					}
-					this.data.editPoint(this.point?.id, {
-						...this.point,
-						dates: newDatesArray,
-					} as Point);
+					this.point && this.data.setDateNow(this.point);
 				},
 			});
 	}

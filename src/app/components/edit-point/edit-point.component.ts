@@ -401,16 +401,18 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.action.eventUpdatedPoint$.subscribe({
 				next: (point) => {
-					this.point = point;
-					this.pointDate = point?.dates[0].date
-						? parseDate(point.dates[0].date)
-						: new Date();
-					this.form.controls['title'].setValue(point?.title);
-					this.form.controls['description'].setValue(
-						point?.description
-					);
-					this.form.controls['color'].setValue(point?.color);
-					this.dateChanged();
+					if (point) {
+						this.point = point;
+						this.pointDate = point.dates[0].date
+							? parseDate(point.dates[0].date)
+							: new Date();
+						this.form.controls['title'].setValue(point.title);
+						this.form.controls['description'].setValue(
+							point.description
+						);
+						this.form.controls['color'].setValue(point.color);
+						this.dateChanged();
+					}
 				},
 			})
 		);

@@ -9,7 +9,12 @@ import {
 } from '@angular/core';
 import { Subscription, first } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
-import { ActionService, AuthService, DataService } from 'src/app/services';
+import {
+	ActionService,
+	AuthService,
+	DataService,
+	NotifyService,
+} from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { getClosestIteration } from 'src/app/helpers';
 import { formatDistanceToNow, intervalToDuration } from 'date-fns';
@@ -42,7 +47,8 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	constructor(
 		private data: DataService,
 		private auth: AuthService,
-		private action: ActionService
+		private action: ActionService,
+		private notify: NotifyService
 	) {}
 
 	ngOnInit(): void {
@@ -211,5 +217,15 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setDateNow() {}
+	setDateNow() {
+		this.notify
+			.confirm({
+				title: 'Обновить время события?',
+			})
+			.subscribe({
+				next: () => {
+					this.point && this.data.setDateNow(this.point);
+				},
+			});
+	}
 }

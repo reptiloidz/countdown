@@ -68,7 +68,7 @@ export class InputComponent implements ControlValueAccessor {
 		return this.type === 'text' ? 'lock-off' : 'lock';
 	}
 
-	onChange: (value: string) => void = () => {};
+	onChange: (value: string | number) => void = () => {};
 	onTouched: () => void = () => {};
 
 	writeValue(value: string | number): void {
@@ -76,7 +76,7 @@ export class InputComponent implements ControlValueAccessor {
 			this.value = value.toString();
 		}
 	}
-	registerOnChange(fn: (value: string) => void): void {
+	registerOnChange(fn: (value: string | number) => void): void {
 		this.onChange = fn;
 	}
 	registerOnTouched(fn: any): void {
@@ -94,6 +94,7 @@ export class InputComponent implements ControlValueAccessor {
 
 	resetValue() {
 		this.writeValue(this.clearButtonValue);
+		this.onChange(this.clearButtonValue);
 		this.inputRef.nativeElement.focus();
 		this.reset.emit(this.value);
 	}
