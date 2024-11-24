@@ -6,10 +6,15 @@
 	[urlMode]="urlModeValue"
 	(iterationSwitched)="iterationSwitchHandler($event)"
 ></app-date-panel>
-
-<div class="content">
+<div
+	style="--timer-percent: {{ timerPercent }}"
+	class="content color"
+	[ngClass]="[
+		point?.color ? 'color--' + point?.color : '',
+		hasTimerLine ? 'content--timer' : ''
+	]"
+>
 	<div class="point-page">
-		<!-- <app-clock class="point-page__clock"></app-clock> -->
 		<div class="point-page__header">
 
 			<div class="point-page__markers">
@@ -69,11 +74,6 @@
 						></svg>
 					</div>
 				</ng-container>
-				<div
-					class="point-page__color color"
-					[title]="pointColorName"
-					[ngClass]="point?.color ? 'color--' + point?.color : ''"
-				></div>
 			</div>
 
 			<h1
@@ -97,26 +97,57 @@
 				</ng-container>
 			</div>
 
-			<div class="point-page__remain">
-				<ng-container *ngIf="iterationReason === 'frequency'">
+			<div
+				*ngIf="!dateLoading && !loading"
+				class="point-page__description"
+			>
+				<div class="point-page__half">
+					<p class="point-page__remain">
+						<span
+							*ngIf="iterationDate && iterationTime"
+							class="point-page__color"
+							[title]="pointColorName"
+						>
+							{{ iterationDate }} {{ iterationTime }}
+						</span>
+					</p>
+					<p
+						*ngIf="point?.description"
+						class="point-page__remain-text"
+					>
+						<ng-container
+							*ngIf="point?.description"
+							[ngTemplateOutlet]="remainTemplate"
+						></ng-container>
+					</p>
+				</div>
+				<div
+					class="point-page__half point-page__half--second"
+					[ngClass]="{'point-page__remain-text' : !point?.description}"
+				>
+					<ng-container *ngIf="point?.description; else remainTemplate">
+						{{ point?.description }}
+					</ng-container>
+				</div>
+			</div>
+
+			<ng-template #remainTemplate>
+				<span>{{ remainText }}:</span>
+				<br>
+				<span>{{ remainValue }}.</span>
+				<br>
+				<span
+					*ngIf="iterationReason === 'frequency'"
+					class="point-page__icon-label"
+				>
 					<svg
 						app-svg
 						name="refresh"
 						class="point-page__icon"
 					></svg>
 					Сгенерированная итерация.
-				</ng-container>
-				<ng-container *ngIf="remainTextValue">{{ remainTextValue }}. </ng-container> <ng-container
-					*ngIf="iterationDate && iterationTime && !dateLoading && !loading"
-				> {{ iterationDate }} {{
-					iterationTime }}</ng-container>
-			</div>
-			<p
-				*ngIf="point?.description"
-				class="point-page__description"
-			>
-				{{ point?.description }}
-			</p>
+				</span>
+			</ng-template>
 		</div>
 
 		<app-timers

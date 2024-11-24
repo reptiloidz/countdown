@@ -77,7 +77,10 @@
 				@extraPanel
 				class="panel__tabs"
 			>
-				<div *ngIf="iterationsListScrollable">
+				<div
+					*ngIf="iterationsListScrollable"
+					class="tabs__nav-wrapper"
+				>
 					<div class="tabs__nav">
 						<button
 							app-button
@@ -156,50 +159,50 @@
 						</li>
 					</ul>
 				</div>
-				<div>
-					<div class="tabs__nav">
-						<button
-							app-button
-							mode="ghost"
-							*ngIf="iterationsListScrollable"
-							icon="chevron-right"
-							(click)="scrollList()"
-							title="Перейти к концу списка итераций"
-						></button>
-						<button
-							*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
-							class="tabs__remove-all"
-							app-button
-							size="sm"
-							mode="negative"
-							icon="cross"
-							[attr.disabled]="iterationsChecked.length ? null : true"
-							title="Удалить выбранные итерации"
-							(click)="removeCheckedIterations()"
-						></button>
-					</div>
-					<div
+			</div>
+			<div>
+				<div class="tabs__nav">
+					<button
+						app-button
+						mode="ghost"
+						*ngIf="iterationsListScrollable"
+						icon="chevron-right"
+						(click)="scrollList()"
+						title="Перейти к концу списка итераций"
+					></button>
+					<button
 						*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
-						class="tabs__nav"
-					>
-						<button
-							app-button
-							size="sm"
-							mode="positive"
-							icon="document-check"
-							title="Выбрать все итерации"
-							(click)="checkAllIterations()"
-						></button>
-						<button
-							app-button
-							size="sm"
-							mode="secondary"
-							[attr.disabled]="iterationsChecked.length ? null : true"
-							icon="document-cross"
-							title="Снять выбор со всех итераций"
-							(click)="checkAllIterations(false)"
-						></button>
-					</div>
+						class="tabs__remove-all"
+						app-button
+						size="sm"
+						mode="negative"
+						icon="cross"
+						[attr.disabled]="iterationsChecked.length ? null : true"
+						title="Удалить выбранные итерации"
+						(click)="removeCheckedIterations()"
+					></button>
+				</div>
+				<div
+					*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
+					class="tabs__nav"
+				>
+					<button
+						app-button
+						size="sm"
+						mode="positive"
+						icon="document-check"
+						title="Выбрать все итерации"
+						(click)="checkAllIterations()"
+					></button>
+					<button
+						app-button
+						size="sm"
+						mode="secondary"
+						[attr.disabled]="iterationsChecked.length ? null : true"
+						icon="document-cross"
+						title="Снять выбор со всех итераций"
+						(click)="checkAllIterations(false)"
+					></button>
 				</div>
 			</div>
 		</ng-template>

@@ -53,7 +53,7 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	point!: Point | undefined;
 	pointDate = new Date();
-	remainTextValue = '';
+	initialDate = new Date();
 	dateTimer = '';
 	timer = '0:00:00';
 	loading = false;
@@ -68,6 +68,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerHours!: number | string;
 	timerMins!: number | string;
 	timerSecs!: number | string;
+	timerPercent = 0;
 
 	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
@@ -207,6 +208,12 @@ export class PointComponent implements OnInit, OnDestroy {
 			: DateText.backwardFuture;
 	}
 
+	get remainValue() {
+		return formatDistanceToNow(this.pointDate, {
+			locale: ru,
+		});
+	}
+
 	get dates() {
 		return this.point?.dates;
 	}
@@ -262,6 +269,10 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	get hasTimerLine() {
+		return this.timerMode && this.pointDate > new Date();
+	}
+
 	zeroPad(num?: number) {
 		return String(num).padStart(2, '0');
 	}
@@ -280,6 +291,29 @@ export class PointComponent implements OnInit, OnDestroy {
 			this.selectedIterationDate = this.pointDate;
 		} else {
 			this.setTimer();
+		}
+
+		if (
+			this.timerMode &&
+			this.timerPercent <= 100 &&
+			this.timerPercent >= 0
+		) {
+			const newTimerPercent = Math.ceil(
+				100 /
+					((+this.pointDate - +this.initialDate) /
+						(+new Date() - +this.initialDate))
+			);
+			switch (true) {
+				case newTimerPercent >= 100:
+					this.timerPercent = 100;
+					break;
+				case newTimerPercent <= 0:
+					this.timerPercent = 0;
+					break;
+				default:
+					this.timerPercent = newTimerPercent;
+					break;
+			}
 		}
 	}
 
@@ -306,13 +340,6 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.timerDays = currentInterval.days
 			? this.zeroPad(Math.abs(currentInterval.days))
 			: undefined;
-
-		this.remainTextValue =
-			this.remainText +
-			': ' +
-			formatDistanceToNow(this.pointDate, {
-				locale: ru,
-			});
 
 		this.title.setTitle(`
 			${currentInterval.years ? Math.abs(currentInterval.years) + 'г. ' : ''}${

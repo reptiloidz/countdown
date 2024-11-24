@@ -7,6 +7,23 @@
 	padding: 20px;
 	overflow: hidden;
 
+	&::before {
+		bottom: -4px;
+		left: calc(var(--timer-percent) * 1%);
+		width: 4px;
+		height: 10px;
+		border-radius: 2px;
+		transition: left .5s;
+	}
+
+	&::after {
+		bottom: 0;
+		left: 0;
+		width: calc(var(--timer-percent) * 1%);
+		height: 1px;
+		transition: width .5s;
+	}
+
 	&__clock {
 		position: absolute;
 		top: 5%;
@@ -40,5 +57,14 @@
 		gap: 20px;
 		justify-content: center;
 		overflow: visible;
+	}
+
+	&--timer {
+		&::before,
+		&::after {
+			content: '';
+			position: absolute;
+			background-color: rgb(var(--point-color));
+		}
 	}
 }

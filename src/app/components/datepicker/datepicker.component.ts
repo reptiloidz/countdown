@@ -25,7 +25,7 @@ import {
 import { ru } from 'date-fns/locale';
 import { IConfig } from 'ngx-mask';
 import { Constants } from 'src/app/enums';
-import { parseDate } from 'src/app/helpers';
+import { isDateValid, parseDate } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { DropHorizontal, DropVertical } from 'src/app/types';
 
@@ -63,7 +63,7 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	get dateFormatted() {
-		return this.date
+		return this.date && isDateValid(this.date)
 			? format(
 					this.date,
 					this.dateOnly
