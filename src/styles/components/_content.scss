@@ -13,15 +13,19 @@
 		width: 4px;
 		height: 10px;
 		border-radius: 2px;
+		background-color: rgb(var(--point-color));
 		transition: left .5s;
 	}
 
 	&::after {
+		@include timeline(var(--point-color), timelineContent);
+
 		bottom: 0;
 		left: 0;
 		width: calc(var(--timer-percent) * 1%);
 		height: 1px;
 		transition: width .5s;
+		transform: scale(-1, 1);
 	}
 
 	&__clock {
@@ -64,7 +68,6 @@
 		&::after {
 			content: '';
 			position: absolute;
-			background-color: rgb(var(--point-color));
 		}
 	}
 }

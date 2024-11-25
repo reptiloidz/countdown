@@ -47,33 +47,12 @@
 
 		&::before,
 		&::after {
+			@include timeline(var(--tabs-item-pseudo-bg-color), timelineTabs, var(--tabs-item-pseudo-opacity), var(--tabs-item-pseudo-bg-size));
+
 			position: absolute;
 			right: 100%;
 			width: var(--tabs-gap);
 			height: 2px;
-			background-image:
-				linear-gradient(
-					45deg,
-					transparent,
-					transparent 24%,
-					rgba(var(--tabs-item-pseudo-bg-color), var(--tabs-item-pseudo-opacity)) 25%,
-					rgba(var(--tabs-item-pseudo-bg-color), var(--tabs-item-pseudo-opacity)) 49%,
-					transparent 50%
-				),
-				linear-gradient(
-					45deg,
-					transparent,
-					transparent 75%,
-					rgba(var(--tabs-item-pseudo-bg-color), var(--tabs-item-pseudo-opacity)) 75%
-				);
-			background-position: 0 0, var(--tabs-item-pseudo-bg-size) 0;
-			background-size:
-				var(--tabs-item-pseudo-bg-size) var(--tabs-item-pseudo-bg-size),
-				var(--tabs-item-pseudo-bg-size) var(--tabs-item-pseudo-bg-size);
-			animation-name: timeline;
-			animation-duration: 1s;
-			animation-timing-function: linear;
-			animation-iteration-count: infinite;
 		}
 
 		&--day {
@@ -247,15 +226,5 @@
 		.tabs__inner {
 			padding-right: 0;
 		}
-	}
-}
-
-@keyframes timeline {
-	0% {
-		background-position: var(--tabs-item-pseudo-bg-size) 0, calc(var(--tabs-item-pseudo-bg-size) * 2) 0;
-	}
-
-	100% {
-		background-position: 0 0, var(--tabs-item-pseudo-bg-size) 0;
 	}
 }
