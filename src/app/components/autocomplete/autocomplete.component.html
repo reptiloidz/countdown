@@ -10,6 +10,7 @@
 			class="control--autocomplete"
 			[placeholder]="placeholder"
 			name="autocomplete"
+			[attr.inputmode]="inputmode"
 			[(ngModel)]="visibleValue"
 			(ngModelChange)="filter($event)"
 			(focus)="openHandler()"

@@ -33,6 +33,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() formControlName!: string;
 	@Input() name!: string;
 	@Input() type = 'text';
+	@Input() inputmode: string | null = null;
 	@Input() icon!: string;
 	@Input() textarea = false;
 	@Input() mask: string | null = null;

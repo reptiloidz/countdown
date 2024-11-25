@@ -59,6 +59,7 @@
 			type="submit"
 			icon="login"
 			mode="positive"
+			[loading]="isLoading"
 			[disabled]="form.invalid || isLoading"
 		>
 			Зарегистрироваться

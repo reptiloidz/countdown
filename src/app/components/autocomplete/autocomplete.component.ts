@@ -23,6 +23,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() value: string | number = '';
 	@Input() visibleValue: string = '';
 	@Input() placeholder = '';
+	@Input() inputmode: string | null = null;
 	@Input() autocompleteList!: SelectArray[];
 	@Input() mask: string | null = null;
 	@Input() patterns!: IConfig['patterns'];
