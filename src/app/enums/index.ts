@@ -1,4 +1,4 @@
-export * from './date-text.enum';
+export * from './dateText.enum';
 export * from './constants.enum';
 export * from './iterationReasonDescriptions.enum';
 export * from './calendarMethods.enum';

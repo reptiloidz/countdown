@@ -19,11 +19,15 @@
 		position: relative;
 		flex-shrink: 0;
 		align-items: center;
-		min-width: 160px;
+		min-width: 140px;
 		margin-top: var(--filters-switcher-mt);
 
 		& + & {
 			padding-left: var(--filters-gap);
 		}
+	}
+
+	&__clear {
+		margin-left: 8px;
 	}
 }

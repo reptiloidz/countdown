@@ -7,6 +7,7 @@ import { AuthComponent } from './personal/components/auth/auth.component';
 import { readGuard, editGuard, authGuard } from './guards';
 import { NoPageComponent } from './components/no-page/no-page.component';
 import { shortGuard } from './guards/short.guard';
+import { noPointGuard } from './guards/noPoint.guard';
 
 const routes: Routes = [
 	{
@@ -17,6 +18,7 @@ const routes: Routes = [
 	{
 		path: '',
 		component: MainListComponent,
+		canActivate: [noPointGuard],
 	},
 	{
 		path: 'point/:id',
@@ -30,7 +32,7 @@ const routes: Routes = [
 	{
 		path: 'auth',
 		component: AuthComponent,
-		canActivate: [authGuard],
+		canActivate: [noPointGuard, authGuard],
 	},
 	{
 		path: 'edit/:id',
@@ -54,7 +56,7 @@ const routes: Routes = [
 	{
 		path: '**',
 		component: NoPageComponent,
-		canActivate: [shortGuard],
+		canActivate: [noPointGuard, shortGuard],
 	},
 ];
 
