@@ -15,6 +15,7 @@ import {
 	filter,
 	BehaviorSubject,
 	of,
+	interval,
 } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import {
@@ -166,6 +167,14 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
+			interval(10).subscribe({
+				next: () => {
+					this.moveTimeline();
+				},
+			})
+		);
+
+		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
 				next: ([point]) => {
 					this.loading = this.data.loading = false;
@@ -292,29 +301,6 @@ export class PointComponent implements OnInit, OnDestroy {
 		} else {
 			this.setTimer();
 		}
-
-		if (
-			this.timerMode &&
-			this.timerPercent <= 100 &&
-			this.timerPercent >= 0
-		) {
-			const newTimerPercent = Math.ceil(
-				100 /
-					((+this.pointDate - +this.initialDate) /
-						(+new Date() - +this.initialDate))
-			);
-			switch (true) {
-				case newTimerPercent >= 100:
-					this.timerPercent = 100;
-					break;
-				case newTimerPercent <= 0:
-					this.timerPercent = 0;
-					break;
-				default:
-					this.timerPercent = newTimerPercent;
-					break;
-			}
-		}
 	}
 
 	setTimer() {
@@ -349,6 +335,31 @@ export class PointComponent implements OnInit, OnDestroy {
 		}${currentInterval.days ? Math.abs(currentInterval.days) + 'д. ' : ''}
 			${this.timerHours}:${this.timerMins}:${this.timerSecs}
 		`);
+	}
+
+	moveTimeline() {
+		if (
+			this.timerMode &&
+			this.timerPercent <= 100 &&
+			this.timerPercent >= 0
+		) {
+			const newTimerPercent = +(
+				100 /
+				((+this.pointDate - +this.initialDate) /
+					(+new Date() - +this.initialDate))
+			).toFixed(3);
+			switch (true) {
+				case newTimerPercent >= 100:
+					this.timerPercent = 100;
+					break;
+				case newTimerPercent <= 0:
+					this.timerPercent = 0;
+					break;
+				default:
+					this.timerPercent = newTimerPercent;
+					break;
+			}
+		}
 	}
 
 	iterationSwitchHandler(iterationNumber: number) {

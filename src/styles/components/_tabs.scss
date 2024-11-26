@@ -85,6 +85,9 @@
 			&.tabs__item--day {
 				.tabs__btn {
 					--button-cl: rgb(var(--c-text-negative));
+				}
+
+				[data-open='true'] & .tabs__btn {
 					--button-border-cl: rgba(var(--c-border-negative), .2);
 				}
 

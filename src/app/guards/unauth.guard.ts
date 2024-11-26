@@ -9,9 +9,10 @@ export const unauthGuard = () => {
 
 	hasAccess = auth.isAuthenticated;
 
-	if (!hasAccess) {
-		router.navigate(['/auth']);
-	}
+	// Пока отключу редирект на авторизацию, мешает при коротких ссылках
+	// if (!hasAccess) {
+	// 	router.navigate(['/auth']);
+	// }
 
 	return hasAccess;
 };
