@@ -8,18 +8,16 @@
 	overflow: hidden;
 
 	&::before {
-		bottom: -4px;
 		left: calc(var(--timer-percent) * 1%);
 		width: 4px;
 		height: 10px;
-		border-radius: 2px;
+		border-radius: 2px 2px 0 0;
 		background-color: rgb(var(--point-color));
 	}
 
 	&::after {
 		@include timeline(var(--point-color), timelineContent);
 
-		bottom: 0;
 		left: 0;
 		width: calc(var(--timer-percent) * 1%);
 		height: 1px;
@@ -65,7 +63,8 @@
 		&::before,
 		&::after {
 			content: '';
-			position: absolute;
+			position: fixed;
+			bottom: 95px;
 		}
 	}
 }

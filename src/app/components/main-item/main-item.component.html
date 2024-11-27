@@ -26,6 +26,7 @@
 
 	<div class="point__timers-wrapper">
 		<app-timers
+			*ngIf="!isSm"
 			class="point__timers timers timers--sm timers--left"
 			size="sm"
 			[years]="timerYears"
@@ -43,17 +44,10 @@
 			secsLabel="Сек"
 			delayRandomValue="3000"
 		></app-timers>
-		<svg
-			app-svg
-			[name]="point.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
-			[attr.aria-label]="directionTitle"
-			class="direction-icon"
-			aria-hidden="false"
-			[ngClass]="[
-				isDirectionCorrect ? 'direction-icon--correct' : '',
-				point.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
-			]"
-		></svg>
+		<ng-container
+			*ngIf="!isSm"
+			[ngTemplateOutlet]="rotating"
+		></ng-container>
 	</div>
 
 	<div
@@ -105,6 +99,10 @@
 		class="point__markers-wrapper"
 	>
 		<div class="point__markers">
+			<ng-container
+				*ngIf="isSm"
+				[ngTemplateOutlet]="rotating"
+			></ng-container>
 			<div
 				class="marker"
 				[ngClass]="{
@@ -152,15 +150,17 @@
 			*ngIf="isAuth"
 			class="point__author"
 		>
-			<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else btnAuthor">
-				<img
-					*ngIf="point.userInfo?.photoURL"
-					class="userpic userpic--sm"
-					[src]="point.userInfo?.photoURL"
-					[alt]="point.userInfo?.displayName"
-					aria-hidden="true"
-				>
-				<span class="point__author-text">{{ point.userInfo?.displayName }}</span>
+			<ng-container *ngIf="!isSm">
+				<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else btnAuthor">
+					<img
+						*ngIf="point.userInfo?.photoURL"
+						class="userpic userpic--sm"
+						[src]="point.userInfo?.photoURL"
+						[alt]="point.userInfo?.displayName"
+						aria-hidden="true"
+					>
+					<span class="point__author-text">{{ point.userInfo?.displayName }}</span>
+				</ng-container>
 			</ng-container>
 			<ng-template #btnAuthor>
 				<button
@@ -180,6 +180,20 @@
 
 	<ng-template #loader>
 		<app-loader *ngIf="loading"></app-loader>
+	</ng-template>
+
+	<ng-template #rotating>
+		<svg
+			app-svg
+			[name]="point.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
+			[attr.aria-label]="directionTitle"
+			class="direction-icon"
+			aria-hidden="false"
+			[ngClass]="[
+						isDirectionCorrect ? 'direction-icon--correct' : '',
+						point.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
+					]"
+		></svg>
 	</ng-template>
 
 </div>

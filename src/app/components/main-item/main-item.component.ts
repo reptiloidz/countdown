@@ -115,7 +115,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get closestIterationRemain() {
 		return (
-			(this.closestIteration < new Date() ? 'Прошло' : 'Осталось') +
+			(this.closestIteration < new Date() ? 'Прошло:' : 'Осталось:') +
 			' ' +
 			formatDistanceToNow(this.closestIteration, {
 				locale: ru,

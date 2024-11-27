@@ -3,6 +3,7 @@
 	--point-markers-bg-size: 20px;
 	--point-title-opacity: .3;
 	--point-description-opacity: .3;
+	--point-title-before-h: 17px;
 
 	position: relative;
 	display: grid;
@@ -23,12 +24,12 @@
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
 		font-weight: 500;
 
-
 		&::before {
 			content: '';
 			display: inline-flex;
+			flex-shrink: 0;
 			width: 5px;
-			height: 17px;
+			height: var(--point-title-before-h);
 			margin-right: 4px;
 			border-radius: 3px;
 			background-color: rgb(var(--point-color));
@@ -128,13 +129,13 @@
 
 	&__timers-wrapper {
 		display: flex;
+		grid-area: timers;
 		align-items: center;
 		margin-bottom: 16px;
 	}
 
 	&__timers {
 		z-index: 0;
-		grid-area: timers;
 		justify-content: flex-start;
 		margin-left: 20px;
 	}
@@ -194,9 +195,17 @@
 	}
 
 	&--sm {
+		--point-title-before-h: 12px;
+
+		display: grid;
+		grid-template-areas: 'main timers markers markers' 'main timers footer footer';
+		padding: 8px 0;
+
 		.point {
 			&__title {
-				min-width: 100px;
+				display: flex;
+				align-items: baseline;
+				min-width: 200px;
 				max-width: fit-content;
 				font-size: 16px;
 			}
@@ -206,16 +215,27 @@
 			}
 
 			&__nav {
+				flex-direction: row-reverse;
 				width: auto;
-				min-width: 70px;
+				min-width: auto;
+				height: auto;
+				margin-top: 8px;
+				margin-left: auto;
 			}
 
 			&__main {
-				padding: 16px 8px;
+				padding: 0 10px;
 			}
 
 			&__markers {
-				width: 140px;
+				flex-direction: row;
+				width: auto;
+				padding: 0 8px;
+			}
+
+			&__timers-wrapper {
+				height: 36px;
+				margin: 0 8px;
 			}
 		}
 	}

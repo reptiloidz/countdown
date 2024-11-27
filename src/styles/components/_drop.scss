@@ -53,6 +53,10 @@
 				padding-top: 0;
 			}
 		}
+
+		&--sm {
+			padding: 8px;
+		}
 	}
 
 	&__inner {
@@ -144,6 +148,11 @@
 
 		&--left {
 			justify-content: flex-start;
+		}
+
+		&--no-border {
+			padding-top: 0;
+			border-top: none;
 		}
 	}
 

@@ -12,6 +12,7 @@
 				class="dashboard__calendar drop--nested"
 				icon="calendar"
 				buttonSize="md"
+				[showFooter]="false"
 			>
 				<ng-template #bodyTemplate>
 					<app-calendar
@@ -28,6 +29,7 @@
 								buttonSize="sm"
 								buttonClass="calendar__btn-nav drop__nav--sm"
 								buttonTitle="Показать события"
+								dropBodyClass="calendar__drop-body drop__body--sm"
 							>
 								<ng-template #bodyTemplate>
 									<ul
@@ -36,7 +38,6 @@
 									>
 										<li
 											app-main-item
-											[isLine]="true"
 											[isSm]="true"
 											[showSec]="false"
 											[attr.data-id]="point.id"
@@ -53,8 +54,10 @@
 											</ng-template>
 										</li>
 									</ul>
+								</ng-template>
+								<ng-template #footerTemplate>
 									<div
-										class="drop__footer drop__footer--left"
+										class="drop__footer drop__footer--left drop__footer--no-border"
 										*ngIf="date.points | checkEditablePoints"
 									>
 										<button

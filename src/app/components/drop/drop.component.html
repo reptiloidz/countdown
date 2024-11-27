@@ -54,6 +54,10 @@
 			[value]="value"
 		>
 	</div>
+	<ng-container
+		*ngIf="footerTemplate && showFooter"
+		[ngTemplateOutlet]="footerTemplate"
+	></ng-container>
 </div>
 <ng-template #selectList>
 	<ng-container *ngFor="let item of dropList">

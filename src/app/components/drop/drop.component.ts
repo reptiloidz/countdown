@@ -56,6 +56,9 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@ContentChild('bodyTemplate') bodyTemplate:
 		| TemplateRef<unknown>
 		| undefined;
+	@ContentChild('footerTemplate') footerTemplate:
+		| TemplateRef<unknown>
+		| undefined;
 	@ViewChild('triggerButton', { read: ElementRef })
 	defaultTriggerButton!: ElementRef;
 	@ViewChild('selectListRef', { read: ElementRef })
@@ -76,6 +79,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() name!: string;
 	@Input() value: string | number = '';
 	@Input() focusoutClose = false;
+	@Input() showFooter = true;
 	@Input() navClass: NgClassType = 'drop__nav';
 	@Input() innerClass: NgClassType = '';
 	@Input() listButtonTextClass = '';

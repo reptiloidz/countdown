@@ -134,6 +134,10 @@
 		list-style-type: none;
 	}
 
+	&__drop-body {
+		--drop-max-h-gap: 50px;
+	}
+
 	&--drop {
 		--calendar-button-p: 6px;
 		--calendar-min-w: 0;
