@@ -221,6 +221,7 @@
 			'tabs__item--active': i == currentIterationIndex && !isIterationAdded,
 			'tabs__item--day': (i >= firstIterationIndex) && (i < selectedIterationsNumber + firstIterationIndex) && !isIterationAdded,
 			'tabs__item--copy': i | checkCopies : point,
+			'tabs__item--copy-other': i | checkCopies : point : true,
 			'tabs__item--after': time === 'future'
 		}"
 	>

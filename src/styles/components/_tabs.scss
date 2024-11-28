@@ -78,7 +78,7 @@
 		}
 
 		&--copy {
-			& + & {
+			& + &:not(.tabs__item--copy-other) {
 				--tabs-item-pseudo-bg-color: var(--c-bg-negative);
 			}
 
@@ -91,7 +91,7 @@
 					--button-border-cl: rgba(var(--c-border-negative), .2);
 				}
 
-				& + & {
+				& + &:not(.tabs__item--copy-other) {
 					--tabs-item-pseudo-opacity: 1;
 				}
 			}
