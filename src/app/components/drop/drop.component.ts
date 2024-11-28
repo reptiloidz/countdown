@@ -44,7 +44,6 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		return [
 			'drop',
 			this.vertical === 'auto' ? '' : 'drop--' + this.vertical,
-			'drop--' + this.horizontal,
 		].join(' ');
 	}
 
@@ -89,11 +88,15 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Output() dropClosed = new EventEmitter();
 
 	private triggerOffsetTop = 0;
+	private triggerOffsetLeft = 0;
 	private footerHeight = 0;
 	private dropHeight = 0;
+	private dropWidth = 0;
 	private triggerHeight = 0;
+	private triggerWidth = 0;
 	private bottomSpace = 0;
 	private topSpace = 0;
+	private rightSpace = 0;
 	private documentClickListener: (() => void) | null = null;
 
 	constructor(
@@ -124,6 +127,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			  )
 			: this.defaultTriggerButton.nativeElement;
 		this.triggerOffsetTop = triggerElement.getBoundingClientRect().top;
+		this.triggerOffsetLeft = triggerElement.getBoundingClientRect().left;
 
 		this.footerHeight =
 			parseInt(
@@ -135,14 +139,20 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.bottomSpace =
 			window.innerHeight - this.triggerOffsetTop - this.footerHeight;
 		this.topSpace = this.triggerOffsetTop;
+		this.rightSpace = window.innerWidth - this.triggerOffsetLeft;
 
 		this.triggerHeight = parseInt(getComputedStyle(triggerElement).height);
+		this.triggerWidth = parseInt(getComputedStyle(triggerElement).width);
 
 		requestAnimationFrame(() => {
 			this.dropHeight = this.elementRef.nativeElement
 				.querySelector('.drop__body')
 				?.getBoundingClientRect().height;
+			this.dropWidth = this.elementRef.nativeElement
+				.querySelector('.drop__body')
+				?.getBoundingClientRect().width;
 
+			// Позиционирование по вертикали
 			if (
 				this.dropHeight > this.bottomSpace - this.triggerHeight &&
 				this.bottomSpace - this.triggerHeight < this.triggerOffsetTop
@@ -161,6 +171,24 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				);
 
 				this.setDropMaxH();
+			}
+
+			// Позиционирование по горизонтали
+			if (
+				this.dropWidth > this.rightSpace - this.triggerWidth &&
+				this.rightSpace - this.triggerWidth < this.triggerOffsetLeft
+			) {
+				if (this.horizontal === 'right') {
+					this.renderer.addClass(
+						this.elementRef.nativeElement,
+						'drop--left'
+					);
+				}
+			} else {
+				this.renderer.addClass(
+					this.elementRef.nativeElement,
+					'drop--right'
+				);
 			}
 
 			this.selectListRef?.nativeElement
@@ -187,6 +215,16 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 					'drop--bottom'
 				);
 			}
+
+			this.renderer.removeClass(
+				this.elementRef.nativeElement,
+				'drop--left'
+			);
+			this.renderer.removeClass(
+				this.elementRef.nativeElement,
+				'drop--right'
+			);
+
 			this.renderer.setStyle(
 				this.elementRef.nativeElement,
 				'--drop-max-h',
