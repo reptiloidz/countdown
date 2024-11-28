@@ -185,6 +185,8 @@ export class AuthService implements OnDestroy {
 
 		return await new Promise((resolve) => {
 			const displayName = user.email.split('@')[0];
+			console.log('UserCredentialImpl', value);
+
 			this._user = value.user;
 			this._eventLoginSubject.next(this._user?.uid || '');
 			this.setToken(value._tokenResponse);
@@ -203,11 +205,10 @@ export class AuthService implements OnDestroy {
 		});
 	}
 
-	logout() {
-		signOut(this.authFB).then(() => {
-			this.setToken();
-			this.router.navigate(['/auth/']);
-		});
+	async logout() {
+		await signOut(this.authFB);
+		this.setToken();
+		this.router.navigate(['/auth/']);
 	}
 
 	checkIsAuth() {

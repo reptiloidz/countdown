@@ -23,6 +23,12 @@ export class NotifyService {
 		return this._notificationsSubject.getValue();
 	}
 
+	get notificationsOpened(): boolean {
+		return !!document.documentElement.querySelectorAll(
+			'.notify-list__item-wrapper'
+		).length;
+	}
+
 	update(newList: Notification[]) {
 		this._notificationsSubject.next(newList);
 	}

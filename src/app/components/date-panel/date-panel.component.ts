@@ -371,6 +371,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 							? newDatesArray
 							: [this.dates?.[this.dates?.length - 1]],
 					} as Point);
+					this.checkAllIterations(false);
 				},
 			});
 	}

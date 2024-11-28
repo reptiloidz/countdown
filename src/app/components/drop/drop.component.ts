@@ -20,6 +20,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
+import { NotifyService } from 'src/app/services';
 import {
 	ButtonSize,
 	DropHorizontal,
@@ -102,7 +103,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	constructor(
 		private elementRef: ElementRef,
 		private renderer: Renderer2,
-		private cdr: ChangeDetectorRef
+		private cdr: ChangeDetectorRef,
+		private notify: NotifyService
 	) {}
 
 	ngOnInit(): void {
@@ -260,7 +262,9 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				const clickedInside =
 					this.elementRef.nativeElement.contains(event.target) ||
 					!document.contains(event.target as HTMLElement);
-				!clickedInside && this.closeHandler();
+				!clickedInside &&
+					!this.notify.notificationsOpened &&
+					this.closeHandler();
 			}
 		);
 	}

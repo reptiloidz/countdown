@@ -137,7 +137,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private auth: AuthService,
-		private sort: SortService
+		private sort: SortService,
+		public elementRef: ElementRef
 	) {}
 
 	ngOnInit(): void {
@@ -178,6 +179,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 					this.points = this.points.filter(
 						(point) => point.id !== id
 					);
+					this.checkPoint();
 				},
 			})
 		);
@@ -250,6 +252,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		this.action.uncheckAllPoints();
 		this.subscriptions.unsubscribe();
 	}
 
@@ -335,6 +338,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 			},
 			queryParamsHandling: 'merge',
 		});
+
+		this.checkPoint();
 	}
 
 	clearFilters() {
@@ -356,7 +361,9 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	checkPoint() {
-		this.action.getCheckedPoints(this.pointsList.nativeElement);
+		this.action.getCheckedPoints(
+			this.pointsList?.nativeElement || this.elementRef?.nativeElement
+		);
 	}
 
 	getCheckedDatePoints() {

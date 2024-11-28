@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	isMain = false;
 	isPrivacy = false;
 	isProfile = false;
+	logoutLoading = false;
 	user: User | undefined;
 	mainLinkParams!: Params;
 
@@ -109,6 +110,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	logout() {
-		this.auth.logout();
+		this.logoutLoading = true;
+		this.auth
+			.logout()
+			.then(() => {
+				this.logoutLoading = false;
+			})
+			.catch(() => {
+				this.logoutLoading = false;
+			});
 	}
 }
