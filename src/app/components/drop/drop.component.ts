@@ -177,15 +177,16 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 			// Позиционирование по горизонтали
 			if (
-				this.dropWidth > this.rightSpace - this.triggerWidth &&
-				this.rightSpace - this.triggerWidth < this.triggerOffsetLeft
+				(this.dropWidth > this.rightSpace - this.triggerWidth &&
+					this.rightSpace - this.triggerWidth <
+						this.triggerOffsetLeft &&
+					this.horizontal === 'right') ||
+				this.horizontal === 'left'
 			) {
-				if (this.horizontal === 'right') {
-					this.renderer.addClass(
-						this.elementRef.nativeElement,
-						'drop--left'
-					);
-				}
+				this.renderer.addClass(
+					this.elementRef.nativeElement,
+					'drop--left'
+				);
 			} else {
 				this.renderer.addClass(
 					this.elementRef.nativeElement,

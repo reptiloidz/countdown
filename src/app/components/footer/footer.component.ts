@@ -151,7 +151,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.data.eventRemovePoint$.subscribe({
 				next: () => {
-					this.router.navigate(['']);
+					!this.isMain && this.router.navigate(['']);
 					this.notify.add({
 						title: `Событие удалено`,
 						view: 'positive',

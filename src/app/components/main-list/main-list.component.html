@@ -39,15 +39,18 @@
 										<li
 											app-main-item
 											[isSm]="true"
-											[showSec]="false"
 											[attr.data-id]="point.id"
 											*ngFor="let point of date.points | sortPoints : sortType; let i = index"
 											[point]="point"
 										>
-											<ng-template #checkboxTemplate>
+											<ng-template
+												#checkboxTemplate
+												let-disabled="disabled"
+											>
 												<label
 													#datePointCheckbox
 													app-checkbox
+													[isDisabled]="disabled"
 													iconSize="sm"
 													(change)="getCheckedDatePoints()"
 												></label>

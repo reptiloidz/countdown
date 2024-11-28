@@ -66,12 +66,19 @@
 				title="Удалить событие"
 				(click)="delete(point.id)"
 			></button>
-			<label
-				#pointCheckbox
-				[isDisabled]="!hasAccessEdit"
-				app-checkbox
-				(change)="checkPoint()"
-			></label>
+			<ng-container
+				*ngIf="checkboxTemplate; else defaultCheckbox"
+				[ngTemplateOutlet]="checkboxTemplate"
+				[ngTemplateOutletContext]="{disabled:!hasAccessEdit}"
+			></ng-container>
+			<ng-template #defaultCheckbox>
+				<label
+					#pointCheckbox
+					[isDisabled]="!hasAccessEdit"
+					app-checkbox
+					(change)="checkPoint()"
+				></label>
+			</ng-template>
 		</div>
 		<div
 			*ngIf="hasAccessEdit"

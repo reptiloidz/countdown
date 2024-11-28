@@ -161,7 +161,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				.pipe(concatWith(this.action.eventFetchedPoints$))
 				.subscribe({
 					next: () => {
-						this.generateCalendar();
+						this.generateCalendar({
+							force: true,
+						});
 					},
 				})
 		);
@@ -307,10 +309,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		date,
 		mode = this.activeMode,
 		selectDate = false,
+		force = false,
 	}: {
 		date?: Date;
 		mode?: CalendarMode;
 		selectDate?: boolean;
+		force?: boolean;
 	} = {}) {
 		date = date || this.visibleDate;
 
@@ -322,7 +326,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			mode === this.activeMode &&
 			this._visibleDate === date &&
 			((this.selectedDate === date && selectDate) || !selectDate) &&
-			this.calendarArray.length
+			this.calendarArray.length &&
+			!force
 		)
 			return;
 
