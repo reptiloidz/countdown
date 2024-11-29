@@ -87,6 +87,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	@Output() dropChanged = new EventEmitter<string | number>();
 	@Output() dropClosed = new EventEmitter();
+	@Output() dropOpened = new EventEmitter();
 
 	private triggerOffsetTop = 0;
 	private triggerOffsetLeft = 0;
@@ -199,6 +200,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				?.scrollIntoView({
 					block: 'nearest',
 				});
+
+			this.dropOpened.emit();
 		});
 	}
 

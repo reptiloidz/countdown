@@ -30,6 +30,7 @@
 								buttonClass="calendar__btn-nav drop__nav--sm"
 								buttonTitle="Показать события"
 								dropBodyClass="calendar__drop-body drop__body--sm"
+								(dropOpened)="checkDatePoints(false)"
 							>
 								<ng-template #bodyTemplate>
 									<ul

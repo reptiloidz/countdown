@@ -125,7 +125,8 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		private auth: AuthService,
 		private cdr: ChangeDetectorRef,
 		private action: ActionService,
-		private notify: NotifyService
+		private notify: NotifyService,
+		private elementRef: ElementRef
 	) {}
 
 	isCalendarPanelOpen = false;
@@ -255,6 +256,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 					this.switchIteration(this.currentIterationIndex);
 					this.setIterationsParam();
 					this.checkIteration();
+					this.getIterationsListScrollable();
 				},
 				error: (err) => {
 					console.error(
@@ -271,21 +273,10 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	ngAfterViewInit(): void {
-		if (this.iterationsTabs && this.iterationsList) {
-			this.resizeObserver = new ResizeObserver(() => {
-				this.iterationsListScrollable =
-					this.iterationsList?.nativeElement?.clientWidth !==
-					this.iterationsTabs?.nativeElement?.clientWidth -
-						parseInt(
-							this.iterationsTabs?.nativeElement &&
-								getComputedStyle(
-									this.iterationsTabs?.nativeElement
-								).paddingLeft
-						);
-				this.cdr.detectChanges();
-			});
-			this.resizeObserver.observe(this.iterationsTabs?.nativeElement);
-		}
+		this.resizeObserver = new ResizeObserver(() => {
+			this.getIterationsListScrollable();
+		});
+		this.resizeObserver.observe(this.elementRef?.nativeElement);
 	}
 
 	ngOnDestroy(): void {
@@ -334,6 +325,21 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	get isDatesLengthPlural() {
 		return this.dates && this.dates?.length > 1;
 	}
+
+	getIterationsListScrollable() {
+		this.iterationsListScrollable =
+			this.iterationsList?.nativeElement?.clientWidth >
+			this.iterationsTabs?.nativeElement?.clientWidth -
+				parseInt(
+					this.iterationsTabs?.nativeElement &&
+						getComputedStyle(this.iterationsTabs?.nativeElement)
+							.paddingLeft +
+							getComputedStyle(this.iterationsTabs?.nativeElement)
+								.paddingRight
+				);
+		this.cdr.detectChanges();
+	}
+
 	removeIteration(i: number) {
 		let newDatesArray = this.dates?.slice(0);
 		newDatesArray && newDatesArray.splice(i, 1);
