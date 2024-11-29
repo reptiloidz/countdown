@@ -32,7 +32,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
 	loading = true;
-	isDatePointsChecked: boolean = false;
+	isDatePointsChecked = false;
 	datePointsChecked: string[] = [];
 	isAllDatesChecked = false;
 	sortType: SortTypes = 'titleAsc';
@@ -158,11 +158,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 							navigate: false,
 						});
 						this.action.pointsFetched();
-						this.action.hasEditablePoints(
-							this.points.some((point) =>
-								this.auth.checkAccessEdit(point)
-							)
-						);
+						this.getAvailablePointsVisibility();
 					},
 					error(err) {
 						console.error(
@@ -291,6 +287,20 @@ export class MainListComponent implements OnInit, OnDestroy {
 		return this.auth.isAuthenticated;
 	}
 
+	getAvailablePointsVisibility() {
+		requestAnimationFrame(() => {
+			this.action.hasEditablePoints(
+				this.points.some(
+					(point) =>
+						this.auth.checkAccessEdit(point) &&
+						document.documentElement.querySelectorAll(
+							'.point--available'
+						).length
+				)
+			);
+		});
+	}
+
 	changeRepeatFilter(value: string) {
 		this.repeatableValue = value as FilterSelected;
 		this.changeFilters();
@@ -312,7 +322,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	changeFilters() {
-		this.searchInputValue = this.searchInput.value.toString();
+		this.searchInputValue = this.searchInput?.value.toString();
 		this.colorType = this.colorList
 			? Array.from(this.colorList.nativeElement.children)
 					.filter(
@@ -338,7 +348,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			},
 			queryParamsHandling: 'merge',
 		});
-
+		this.getAvailablePointsVisibility();
 		this.checkPoint();
 	}
 

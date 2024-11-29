@@ -32,7 +32,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	isTimer = false;
 	isMain = false;
 	hasAccess: boolean | undefined = false;
-	pointsChecked: boolean = false;
+	pointsChecked = false;
 	iteration = 0;
 	exportGoogleLink = '';
 	hasEditablePoints = false;
