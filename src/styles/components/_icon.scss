@@ -15,7 +15,8 @@
 		stroke-width: var(--icon-stroke-w);
 	}
 
-	[fill] {
+	[fill],
+	:not([stroke]) {
 		fill: currentColor;
 	}
 

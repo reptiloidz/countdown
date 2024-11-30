@@ -1,5 +1,5 @@
 export enum Constants {
-	shortDateFormat = 'yyyy-MM-dd',
+	shortDateFormat = 'MM/dd/yyyy',
 	timeFormat = 'HH:mm',
 	fullDateFormat = 'MM/dd/yyyy HH:mm',
 	reallyFullDateFormat = 'MM/dd/yyyy HH:mm:ss',

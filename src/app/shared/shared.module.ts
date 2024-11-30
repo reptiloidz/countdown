@@ -17,6 +17,7 @@ import { RadioComponent } from '../components/radio/radio.component';
 import { NotifyComponent } from '../components/notify/notify.component';
 import { GenerateIterationsComponent } from '../components/generate-iterations/generate-iterations.component';
 import { LoaderComponent } from '../components/loader/loader.component';
+import { TooltipComponent } from '../components/tooltip/tooltip.component';
 
 @NgModule({
 	declarations: [
@@ -35,6 +36,7 @@ import { LoaderComponent } from '../components/loader/loader.component';
 		NotifyComponent,
 		RadioComponent,
 		LoaderComponent,
+		TooltipComponent,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective],
 	exports: [
@@ -53,6 +55,7 @@ import { LoaderComponent } from '../components/loader/loader.component';
 		NotifyComponent,
 		RadioComponent,
 		LoaderComponent,
+		TooltipComponent,
 	],
 	providers: [[provideNgxMask()]],
 })

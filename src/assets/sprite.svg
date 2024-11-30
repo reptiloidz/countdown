@@ -69,6 +69,9 @@
         <svg id="globe" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-width="1.5" d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3a9 9 0 0 0 9 9m0 0s4-3 4-9m-4 9s-4-3-4-9 4-9 4-9m0 0a8.98 8.98 0 0 0-6.708 3M12 3s2.222 1.667 3.354 5"/>
         </svg>
+        <svg xml:space="preserve" id="google" viewBox="0 0 210 210">
+            <path d="M0 105C0 47.103 47.103 0 105 0c23.383 0 45.515 7.523 64.004 21.756l-24.4 31.696C133.172 44.652 119.477 40 105 40c-35.841 0-65 29.159-65 65s29.159 65 65 65c28.867 0 53.398-18.913 61.852-45H105V85h105v20c0 57.897-47.103 105-105 105S0 162.897 0 105"/>
+        </svg>
         <svg id="hamburger" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 17h4m4 0h8M4 12h16M4 7h8m4 0h4"/>
         </svg>
