@@ -92,12 +92,19 @@
 				routerLink="/{{isEdit ? 'point' : 'edit'}}/{{point.id}}"
 				title="Редактировать"
 			></a>
-			<button
-				app-button
-				icon="warning"
-				(click)="setDateNow()"
-				title="Сейчас!"
-			></button>
+			<div
+				app-tooltip
+				vertical="top"
+				[text]="point.repeatable ? 'Добавить итерацию с текущим моментом' : 'Поменять время на текущий момент'"
+			>
+				<button
+					app-button
+					#tooltipTrigger
+					icon="warning"
+					(click)="setDateNow()"
+					title="Сейчас!"
+				></button>
+			</div>
 		</div>
 	</div>
 

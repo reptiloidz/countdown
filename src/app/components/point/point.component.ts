@@ -31,6 +31,7 @@ import {
 	getClosestIteration,
 	getPointDate,
 	getPointFromUrl,
+	parseDate,
 	sortDates,
 } from 'src/app/helpers';
 import { Title } from '@angular/platform-browser';
@@ -289,8 +290,8 @@ export class PointComponent implements OnInit, OnDestroy {
 	setAllTimers(switchCalendarDate = false) {
 		if (this.dates?.[this.currentIterationIndex] || this.urlModeValue) {
 			this.pointDate = getPointDate({
-				pointDate: new Date(
-					this.dates?.[this.currentIterationIndex || 0].date || ''
+				pointDate: parseDate(
+					this.dates?.[this.currentIterationIndex || 0].date
 				),
 				isGreenwich: this.point?.greenwich,
 			});

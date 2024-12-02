@@ -5,7 +5,6 @@ import {
 	Input,
 	TemplateRef,
 } from '@angular/core';
-import { DropHorizontal, DropVertical } from 'src/app/types';
 
 @Component({
 	selector: '[app-tooltip]',
@@ -15,15 +14,23 @@ export class TooltipComponent {
 	@ContentChild('tooltipContent') tooltipContent:
 		| TemplateRef<unknown>
 		| undefined;
+	@ContentChild('tooltipTrigger', { static: false }) triggerElement: any;
 
 	@HostBinding('class') get dropClass() {
 		return [
 			'tooltip',
 			'tooltip--' + this.vertical,
 			'tooltip--' + this.horizontal,
+			this.isTooltipOff && 'tooltip--disabled',
 		].join(' ');
 	}
 
-	@Input() vertical: DropVertical = 'bottom';
-	@Input() horizontal: DropHorizontal = 'left';
+	@Input() vertical: 'top' | 'bottom' = 'bottom';
+	@Input() horizontal: 'left' | 'right' = 'right';
+	@Input() disabled = false;
+	@Input() text!: string;
+
+	get isTooltipOff() {
+		return this.disabled || !this.triggerElement;
+	}
 }

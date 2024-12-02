@@ -23,6 +23,7 @@ import {
 } from '@angular/fire/database';
 import { Auth, user } from '@angular/fire/auth';
 import Sqids from 'sqids';
+import { parseDate } from '../helpers';
 
 @Injectable({
 	providedIn: 'root',
@@ -51,7 +52,7 @@ export class HttpService implements HttpServiceInterface {
 							? Object.keys(response).map((key) => ({
 									...response[key],
 									id: key,
-									date: new Date(response[key].date),
+									date: parseDate(response[key].date),
 							  }))
 							: [];
 					})
@@ -63,7 +64,7 @@ export class HttpService implements HttpServiceInterface {
 							? Object.keys(response).map((key) => ({
 									...response[key],
 									id: key,
-									date: new Date(response[key].date),
+									date: parseDate(response[key].date),
 							  }))
 							: [];
 					})

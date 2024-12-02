@@ -567,9 +567,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		const currentPointDate = getPointDate({
 			pointDate: isReset
 				? new Date()
-				: new Date(
-						this.dates?.[this.currentIterationIndex || 0]?.date ||
-							''
+				: parseDate(
+						this.dates?.[this.currentIterationIndex || 0]?.date
 				  ),
 			isGreenwich: this.isIterationAdded ? false : this.greenwichValue,
 		});

@@ -50,25 +50,39 @@
 		[queryParams]="{iteration}"
 		title="Редактировать"
 	></a>
-	<button
+	<div
+		app-tooltip
 		*ngIf="pointId && hasAccess && !isEdit"
-		app-button
-		size="lg"
-		icon="warning"
-		mode="primary"
-		(click)="setDateNow()"
-		title="Сейчас!"
-	></button>
-	<button
+		vertical="top"
+		[text]="point?.repeatable ? 'Добавить итерацию с текущим моментом' : 'Поменять время на текущий момент'"
+	>
+		<button
+			app-button
+			#tooltipTrigger
+			size="lg"
+			icon="warning"
+			mode="primary"
+			(click)="setDateNow()"
+			title="Сейчас!"
+		></button>
+	</div>
+	<div
+		app-tooltip
 		*ngIf="isPublicPoint || isUrl"
-		app-button
-		size="lg"
-		icon="share"
-		mode="ghost"
-		(click)="share()"
-		[loading]="shareLinkLoading"
-		title="Поделиться ссылкой"
-	></button>
+		vertical="top"
+		[text]="isUrl ? 'Создать и копировать короткую ссылку' : 'Копировать ссылку'"
+	>
+		<button
+			app-button
+			#tooltipTrigger
+			size="lg"
+			icon="share"
+			mode="ghost"
+			(click)="share()"
+			[loading]="shareLinkLoading"
+			title="Поделиться ссылкой"
+		></button>
+	</div>
 	<a
 		*ngIf="(pointId && !isEdit) || isUrl"
 		app-button
@@ -79,45 +93,66 @@
 		target="_blank"
 		title="Экспорт в Google Calendar"
 	></a>
-	<button
-		*ngIf="(isUrl || pointId) && !isCreateUrl || isCreate"
-		app-button
-		size="lg"
-		mode="positive"
-		icon="link"
-		(click)="copyPoint()"
-		title="Копировать как событие-ссылку"
+	<div
+		app-tooltip
+		vertical="top"
+		horizontal="left"
 		class="nav__create"
-	></button>
-	<a
-		*ngIf="!(isUrl || pointId) && !isCreateUrl && !isCreate"
-		app-button
-		size="lg"
-		mode="positive"
-		icon="link"
-		routerLink="/create-url"
-		title="Создать событие-ссылку"
+		text="
+			Создать событие-ссылку. Оно не привязано к учётной записи и не хранится,
+			если не поделиться им с помощью короткой ссылки
+		"
+	>
+		<button
+			*ngIf="(isUrl || pointId) && !isCreateUrl || isCreate"
+			app-button
+			#tooltipTrigger
+			size="lg"
+			mode="positive"
+			icon="link"
+			(click)="copyPoint()"
+			title="Копировать как событие-ссылку"
+		></button>
+		<a
+			*ngIf="!(isUrl || pointId) && !isCreateUrl && !isCreate"
+			app-button
+			#tooltipTrigger
+			size="lg"
+			mode="positive"
+			icon="link"
+			routerLink="/create-url"
+			title="Создать событие-ссылку"
+		></a>
+	</div>
+	<div
+		app-tooltip
+		[disabled]="!!isVerified"
+		vertical="top"
+		horizontal="left"
 		class="nav__create"
-	></a>
-	<button
-		*ngIf="isUrl || isCreateUrl"
-		app-button
-		size="lg"
-		icon="plus"
-		mode="positive"
-		(click)="copyPoint(true)"
-		title="Сохранить в свои события"
-		class="nav__create"
-	></button>
-	<a
-		*ngIf="isAuthenticated && !isCreate && !isCreateUrl && !isUrl"
-		app-button
-		size="lg"
-		mode="positive"
-		icon="plus"
-		[disabled]="!isVerified"
-		routerLink="/create"
-		[attr.title]="isVerified ? 'Создать событие' : 'Подтвердите почту, чтобы иметь доступ к созданию и редактированию'"
-		class="nav__create"
-	></a>
+		text="Подтвердите почту, чтобы иметь доступ к созданию и редактированию"
+	>
+		<button
+			*ngIf="isUrl || isCreateUrl"
+			app-button
+			#tooltipTrigger
+			size="lg"
+			icon="plus"
+			[attr.disabled]="!isVerified"
+			mode="positive"
+			(click)="copyPoint(true)"
+			title="Сохранить в свои события"
+		></button>
+		<a
+			*ngIf="isAuthenticated && !isCreate && !isCreateUrl && !isUrl"
+			app-button
+			#tooltipTrigger
+			size="lg"
+			mode="positive"
+			icon="plus"
+			[disabled]="!isVerified"
+			routerLink="/create"
+			title="Создать событие"
+		></a>
+	</div>
 </div>

@@ -4,9 +4,23 @@
 	position: relative;
 
 	&:hover {
+		&::before {
+			content: '';
+		}
+
 		.tooltip__body {
 			display: flex;
 		}
+	}
+
+	&::before {
+		position: absolute;
+		left: 50%;
+		z-index: 2;
+		border-right: calc(var(--tooltip-shift) / 2) solid transparent;
+		border-left: calc(var(--tooltip-shift) / 2) solid transparent;
+		filter: drop-shadow(0 var(--tooltip-before-shift) 0 rgba(var(--c-border-primary), .3));
+		transform: translateX(-50%);
 	}
 
 	&__body {
@@ -20,17 +34,6 @@
 		font-size: 16px;
 		font-weight: 400;
 		text-decoration: none;
-
-		&::before {
-			content: '';
-			position: absolute;
-			left: 50%;
-			z-index: 2;
-			border-right: calc(var(--tooltip-shift) / 2) solid transparent;
-			border-left: calc(var(--tooltip-shift) / 2) solid transparent;
-			filter: drop-shadow(0 var(--tooltip-body-before-shift) 0 rgba(var(--c-border-primary), .3));
-			transform: translateX(-50%);
-		}
 	}
 
 	&__content {
@@ -44,44 +47,50 @@
 	}
 
 	&--top {
-		--tooltip-body-before-shift: 1px;
+		--tooltip-before-shift: 1px;
+
+		&::before {
+			bottom: 100%;
+			margin-bottom: 1px;
+			border-top: var(--tooltip-shift) solid rgba(var(--c-border-inverse), .98);
+		}
 
 		.tooltip__body {
 			bottom: calc(100% + var(--tooltip-shift));
-
-			&::before {
-				top: 100%;
-				margin-top: -1px;
-				border-top: var(--tooltip-shift) solid rgba(var(--c-border-inverse), .98);
-			}
 		}
 	}
 
 	&--bottom {
-		--tooltip-body-before-shift: -1px;
+		--tooltip-before-shift: -1px;
+
+		&::before {
+			top: 100%;
+			margin-top: 1px;
+			border-bottom: var(--tooltip-shift) solid rgba(var(--c-border-inverse), .98);
+		}
 
 		.tooltip__body {
 			top: calc(100% + var(--tooltip-shift));
-
-			&::before {
-				bottom: 100%;
-				margin-bottom: -1px;
-				border-bottom: var(--tooltip-shift) solid rgba(var(--c-border-inverse), .98);
-			}
 		}
 	}
 
 	&--left {
+		.tooltip__body {
+			right: 0;
+			left: auto;
+		}
+	}
+
+	&--right {
 		.tooltip__body {
 			right: auto;
 			left: 0;
 		}
 	}
 
-	&--right {
-		.tooltip__body {
-			right: 0;
-			left: auto;
+	&--disabled {
+		&::before {
+			display: none;
 		}
 	}
 }

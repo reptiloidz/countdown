@@ -276,6 +276,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 		if (point) {
 			point.dates = point?.dates.slice(-1);
 			point.repeatable = false;
+			point.public = false;
+			point.greenwich = false;
 		}
 
 		this.router

@@ -1,19 +1,13 @@
 <ng-content></ng-content>
-<span class="tooltip__body">
+<span
+	class="tooltip__body"
+	*ngIf="!isTooltipOff"
+>
 	<span class="tooltip__content">
 		<ng-container
-			*ngIf="tooltipContent else loader;"
+			*ngIf="tooltipContent else tooltipContentTextTemplate;"
 			[ngTemplateOutlet]="tooltipContent"
 		></ng-container>
+		<ng-template #tooltipContentTextTemplate>{{ text }}</ng-template>
 	</span>
 </span>
-
-<ng-template #loader>
-	<svg
-		app-svg
-		name="hourglass"
-		class="rotating"
-		aria-hidden="false"
-		aria-label="Загрузка"
-	></svg>
-</ng-template>
