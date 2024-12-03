@@ -1,0 +1,28 @@
+.emoji-list {
+	margin: 10px 0;
+	padding: 0;
+	overflow: auto;
+	list-style-type: none;
+
+	&__title {
+		margin: 10px 0;
+	}
+
+	&__group-list {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(36px, 1fr));
+		align-items: center;
+		justify-items: center;
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+	}
+
+	&__text {
+		min-width: 30px;
+	}
+
+	&__button {
+		color: currentColor;
+	}
+}

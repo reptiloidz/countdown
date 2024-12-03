@@ -18,6 +18,10 @@
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
+
+		&--top {
+			align-items: flex-start;
+		}
 	}
 
 	&__col {

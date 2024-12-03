@@ -1,79 +1,77 @@
 <ng-container [formGroup]="iterationsForm">
-	<div class="generation__body">
-		<div class="generation__col">
-			<h3 class="generation__subtitle">Начало:</h3>
+	<div class="form-drop__col">
+		<h3 class="form-drop__subtitle">Начало:</h3>
+		<app-datepicker
+			class="form-drop__datepicker"
+			(datePicked)="rangeStartDatePicked($event)"
+			horizontal="left"
+			[date]="rangeStartDate"
+			[disabledAfter]="!isRepeatsAmountSet ? rangeEndDate : undefined"
+		></app-datepicker>
+
+		<ng-container *ngIf="isRepeatsAmountSet">
+			<h3 class="form-drop__subtitle">Повторы:</h3>
+			<app-input
+				class="form-drop__control-datepicker"
+				type="number"
+				mask="0*"
+				placeholder="Число повторов"
+				formControlName="rangeAmount"
+				[min]="2"
+			></app-input>
+		</ng-container>
+
+		<ng-container *ngIf="!isRepeatsAmountSet">
+			<h3 class="form-drop__subtitle">Конец:</h3>
 			<app-datepicker
-				class="generation__datepicker"
-				(datePicked)="rangeStartDatePicked($event)"
+				#rangeEndRef
+				class="form-drop__datepicker"
+				(datePicked)="rangeEndDatePicked($event)"
 				horizontal="left"
-				[date]="rangeStartDate"
-				[disabledAfter]="!isRepeatsAmountSet ? rangeEndDate : undefined"
+				[date]="rangeEndDate"
+				[disabledBefore]="rangeStartDate"
 			></app-datepicker>
-
-			<ng-container *ngIf="isRepeatsAmountSet">
-				<h3 class="generation__subtitle">Повторы:</h3>
-				<app-input
-					class="generation__control-datepicker"
-					type="number"
-					mask="0*"
-					placeholder="Число повторов"
-					formControlName="rangeAmount"
-					[min]="2"
-				></app-input>
-			</ng-container>
-
-			<ng-container *ngIf="!isRepeatsAmountSet">
-				<h3 class="generation__subtitle">Конец:</h3>
-				<app-datepicker
-					#rangeEndRef
-					class="generation__datepicker"
-					(datePicked)="rangeEndDatePicked($event)"
-					horizontal="left"
-					[date]="rangeEndDate"
-					[disabledBefore]="rangeStartDate"
-				></app-datepicker>
-			</ng-container>
-			<app-switcher
-				class="generation__mode"
-				[items]="repeatsModeList"
-				formControlName="repeatsMode"
-				[showTitle]="true"
-				(valueSwitched)="repeatsModeSwitcher()"
-			></app-switcher>
+		</ng-container>
+		<app-switcher
+			class="form-drop__mode"
+			[items]="repeatsModeList"
+			formControlName="repeatsMode"
+			[showTitle]="true"
+			(valueSwitched)="repeatsModeSwitcher()"
+		></app-switcher>
+	</div>
+	<div class="form-drop__col form-drop__col--period">
+		<h3 class="form-drop__subtitle">Каждые</h3>
+		<div class="form-drop__row">
+			<app-input
+				class="form-drop__period"
+				type="number"
+				mask="0*"
+				[min]="1"
+				formControlName="rangePeriod"
+			></app-input>
+			<app-drop
+				formControlName="periodicity"
+				[dropList]="periodicityList"
+			></app-drop>
 		</div>
-		<div class="generation__col generation__col--period">
-			<h3 class="generation__subtitle">Каждые</h3>
-			<div class="generation__row">
-				<app-input
-					class="generation__period"
-					type="number"
-					mask="0*"
-					[min]="1"
-					formControlName="rangePeriod"
-				></app-input>
-				<app-drop
-					formControlName="periodicity"
-					[dropList]="periodicityList"
-				></app-drop>
-			</div>
-			<app-radio
-				*ngIf="periodicityModeValue === 'perMonths'"
-				class="generation__month-options"
-				[items]="monthOptions"
-				formControlName="monthOptions"
-				dotSize="sm"
-				radioClass="generation__radio"
-			></app-radio>
+		<app-radio
+			*ngIf="periodicityModeValue === 'perMonths'"
+			class="form-drop__month-options"
+			[items]="monthOptions"
+			formControlName="monthOptions"
+			dotSize="sm"
+			radioClass="form-drop__radio"
+		></app-radio>
 
-			<button
-				class="generation__submit"
-				app-button
-				mode="ghost"
-				icon="arrow-right"
-				iconPosition="right"
-				[disabled]="loading || iterationsForm.invalid"
-				(click)="genRepeats()"
-			>Генерировать</button>
-		</div>
+		<button
+			class="form-drop__submit"
+			app-button
+			mode="ghost"
+			icon="arrow-right"
+			iconPosition="right"
+			[disabled]="loading || iterationsForm.invalid"
+			(click)="genRepeats()"
+		>Генерировать</button>
 	</div>
 </ng-container>

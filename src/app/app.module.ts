@@ -36,6 +36,7 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { SortKeyValuePipe } from './pipes/sortKeyValue.pipe';
 import { TimersComponent } from './components/timers/timers.component';
 import { NoPageComponent } from './components/no-page/no-page.component';
+import { PointModesComponent } from './components/point-modes/point-modes.component';
 
 @NgModule({
 	declarations: [
@@ -63,6 +64,7 @@ import { NoPageComponent } from './components/no-page/no-page.component';
 		DatePanelComponent,
 		TimersComponent,
 		NoPageComponent,
+		PointModesComponent,
 	],
 	imports: [
 		BrowserModule,

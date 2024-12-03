@@ -1,4 +1,4 @@
-import { Iteration, UserExtraData } from '.';
+import { Iteration, PointMode, UserExtraData } from '.';
 import { Direction, PointColorTypes } from '../types';
 
 export interface Point {
@@ -14,4 +14,5 @@ export interface Point {
 	userInfo?: UserExtraData;
 	public?: boolean;
 	color: PointColorTypes;
+	modes?: PointMode[];
 }

@@ -13,3 +13,4 @@ export * from './switcherItem.interface';
 export * from './radioItem.interface';
 export * from './selectArray.interface';
 export * from './link.interface';
+export * from './pointMode.interface';

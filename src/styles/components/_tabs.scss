@@ -82,11 +82,11 @@
 				--tabs-item-pseudo-bg-color: var(--c-bg-negative);
 			}
 
-			&.tabs__item--day {
-				.tabs__btn {
-					--button-cl: rgb(var(--c-text-negative));
-				}
+			.tabs__btn {
+				--button-cl: rgb(var(--c-text-negative));
+			}
 
+			&.tabs__item--day {
 				[data-open='true'] & .tabs__btn {
 					--button-border-cl: rgba(var(--c-border-negative), .2);
 				}
