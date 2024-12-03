@@ -37,6 +37,7 @@ import { SortKeyValuePipe } from './pipes/sortKeyValue.pipe';
 import { TimersComponent } from './components/timers/timers.component';
 import { NoPageComponent } from './components/no-page/no-page.component';
 import { PointModesComponent } from './components/point-modes/point-modes.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
 	declarations: [
@@ -74,6 +75,7 @@ import { PointModesComponent } from './components/point-modes/point-modes.compon
 		ReactiveFormsModule,
 		HttpClientModule,
 		SharedModule,
+		ScrollingModule,
 		provideFirebaseApp(() =>
 			initializeApp({
 				projectId: 'countdown-2971d',

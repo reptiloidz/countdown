@@ -1,0 +1,104 @@
+<ng-container [formGroup]="pointModesForm">
+	<div class="form-drop__row">
+		<div class="form-drop__col form-drop__col--secondary">
+			<app-input
+				placeholder="Первый режим"
+				formControlName="firstModeTitle"
+				[maxlength]="100"
+			></app-input>
+		</div>
+		<app-drop
+			#firstDrop
+			formControlName="firstModeEmoji"
+			dropBodyClass="form-drop__emojis"
+			[buttonLabel]="firstModeEmojiValue"
+			horizontal="left"
+			vertical="top"
+			[buttonTextClass]="['emoji-list__text']"
+		>
+			<ng-template #bodyTemplate>
+				<ng-container
+					[ngTemplateOutlet]="emojiListTemplate"
+					[ngTemplateOutletContext]="{
+						control: firstEmojiControl,
+						drop: firstDrop
+					}"
+				></ng-container>
+			</ng-template>
+		</app-drop>
+	</div>
+	<div class="form-drop__row">
+		<div class="form-drop__col">
+			<app-input
+				placeholder="Второй режим"
+				formControlName="secondModeTitle"
+				[maxlength]="100"
+			></app-input>
+		</div>
+		<app-drop
+			#secondDrop
+			formControlName="secondModeEmoji"
+			dropBodyClass="form-drop__emojis"
+			[buttonLabel]="secondModeEmojiValue"
+			horizontal="left"
+			vertical="top"
+			[buttonTextClass]="['emoji-list__text']"
+		>
+			<ng-template #bodyTemplate>
+				<ng-container
+					[ngTemplateOutlet]="emojiListTemplate"
+					[ngTemplateOutletContext]="{
+						control: secondEmojiControl,
+						drop: secondDrop
+					}"
+				></ng-container>
+			</ng-template>
+		</app-drop>
+	</div>
+</ng-container>
+
+<ng-template
+	#emojiListTemplate
+	let-control="control"
+	let-drop="drop"
+>
+	<app-input
+		#filterRef
+		placeholder="Фильтр эмодзи"
+		(input)="filterEmojis()"
+		[value]="filterEmojiValue"
+		[clearButton]="true"
+		(reset)="filterEmojis()"
+	></app-input>
+	<ul class="emoji-list">
+		<li
+			*ngFor="let group of emojis"
+			class="emoji-list__item"
+			[ngClass]="{
+					'emoji-list__item--hidden': !group.visible
+				}"
+		>
+			<h4 class="emoji-list__title">{{ group.title }}</h4>
+			<ul class="emoji-list__group">
+				<li
+					*ngFor="let emoji of group.list"
+					class="emoji-list__emoji"
+					[ngClass]="{
+							'emoji-list__emoji--hidden': !emoji.visible
+						}"
+				>
+					<button
+						app-button
+						view="link"
+						size="lg"
+						(click)="clickEmoji(emoji.emoji, control, drop)"
+						class="emoji-list__button"
+						[title]="emoji.label"
+					>
+						{{ emoji.emoji }}
+					</button>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</ng-template>

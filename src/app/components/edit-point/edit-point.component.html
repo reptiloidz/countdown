@@ -50,6 +50,7 @@
 						placeholder="Название"
 						icon="flag"
 						formControlName="title"
+						[maxlength]="100"
 					></app-input>
 				</div>
 				<div class="form__row">
@@ -59,10 +60,11 @@
 						[textareaRows]="3"
 						placeholder="Описание события"
 						formControlName="description"
+						[maxlength]="10000"
 					></app-input>
 				</div>
 
-				<div class="form__row">
+				<div class="form__row form__row--top">
 					<app-switcher
 						*ngIf="!isCreationUrl"
 						[items]="directionList"
@@ -101,6 +103,34 @@
 							</button>
 						</ng-template>
 					</app-drop>
+
+					<app-drop
+						class="drop--nested"
+						(dropOpened)="pointModesOpened()"
+					>
+						<ng-template
+							#triggerTemplate
+							let-toggle="toggle"
+						>
+							<button
+								app-button
+								class="form__btn"
+								mode="secondary"
+								icon="chevron-down"
+								(click)="toggle()"
+							>Режимы</button>
+						</ng-template>
+						<ng-template #bodyTemplate>
+							<app-point-modes
+								class="form-drop form-drop--secondary"
+								[form]="formGroup"
+								[emojis]="emojis"
+								(pointModeChanged)="pointModeChanged($event)"
+								[point]="point"
+							></app-point-modes>
+						</ng-template>
+					</app-drop>
+
 					<div
 						*ngIf="!isCreationUrl"
 						class="form__checks"
@@ -203,7 +233,7 @@
 						</ng-template>
 						<ng-template #bodyTemplate>
 							<app-generate-iterations
-								class="generation"
+								class="form-drop"
 								[loading]="loading"
 								[form]="formGroup"
 								(repeatsAreGenerated)="getRepeats($event)"

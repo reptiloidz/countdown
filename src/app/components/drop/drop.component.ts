@@ -41,12 +41,7 @@ import {
 	],
 })
 export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
-	@HostBinding('class') get dropClass() {
-		return [
-			'drop',
-			this.vertical === 'auto' ? '' : 'drop--' + this.vertical,
-		].join(' ');
-	}
+	@HostBinding('class') dropClass = 'drop';
 
 	@ViewChild('triggerTemplateRef', { read: ViewContainerRef })
 	triggerTemplateRef: ViewContainerRef | undefined;
@@ -157,15 +152,17 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 			// Позиционирование по вертикали
 			if (
-				this.dropHeight > this.bottomSpace - this.triggerHeight &&
-				this.bottomSpace - this.triggerHeight < this.triggerOffsetTop
+				this.vertical === 'top' ||
+				(this.vertical === 'auto' &&
+					this.dropHeight > this.bottomSpace - this.triggerHeight &&
+					this.bottomSpace - this.triggerHeight <
+						this.triggerOffsetTop)
 			) {
-				if (this.vertical === 'auto') {
-					this.renderer.addClass(
-						this.elementRef.nativeElement,
-						'drop--top'
-					);
-				}
+				this.renderer.addClass(
+					this.elementRef.nativeElement,
+					'drop--top'
+				);
+
 				this.setDropMaxH(true);
 			} else {
 				this.renderer.addClass(
@@ -211,17 +208,14 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.cdr.detectChanges();
 
 		requestAnimationFrame(() => {
-			if (this.vertical === 'auto') {
-				this.renderer.removeClass(
-					this.elementRef.nativeElement,
-					'drop--top'
-				);
-				this.renderer.removeClass(
-					this.elementRef.nativeElement,
-					'drop--bottom'
-				);
-			}
-
+			this.renderer.removeClass(
+				this.elementRef.nativeElement,
+				'drop--top'
+			);
+			this.renderer.removeClass(
+				this.elementRef.nativeElement,
+				'drop--bottom'
+			);
 			this.renderer.removeClass(
 				this.elementRef.nativeElement,
 				'drop--left'

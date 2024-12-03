@@ -24,6 +24,8 @@ import {
 	mergeMap,
 	filter,
 	combineLatestWith,
+	from,
+	take,
 } from 'rxjs';
 import {
 	Point,
@@ -31,6 +33,8 @@ import {
 	UserExtraData,
 	SwitcherItem,
 	SelectArray,
+	PointMode,
+	LocalEmoji,
 } from 'src/app/interfaces';
 import {
 	DataService,
@@ -54,6 +58,7 @@ import {
 	PointColorTypes,
 } from 'src/app/types';
 import { DropComponent } from '../drop/drop.component';
+import { fetchEmojis, fetchMessages } from 'emojibase';
 
 export enum EditPointType {
 	Create = 'create',
@@ -158,6 +163,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		},
 	];
 
+	emojis: {
+		title: string;
+		visible: boolean;
+		list: LocalEmoji[];
+	}[] = [];
+
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
 	private repeatableNotify: Date | undefined;
@@ -177,8 +188,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.form = new FormGroup({
-			title: new FormControl(null, [Validators.required]),
-			description: new FormControl(),
+			title: new FormControl(null, [
+				Validators.required,
+				Validators.maxLength(100),
+			]),
+			description: new FormControl(null, [Validators.maxLength(10000)]),
 			difference: new FormControl(this.difference, [
 				Validators.required,
 				Validators.pattern(
@@ -208,6 +222,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				monthOptions: new FormControl('dayOfMonth', [
 					Validators.required,
 				]),
+			}),
+			pointModesForm: new FormGroup({
+				firstModeTitle: new FormControl(null, [
+					Validators.maxLength(100),
+				]),
+				secondModeTitle: new FormControl(null, [
+					Validators.maxLength(100),
+				]),
+				firstModeEmoji: new FormControl('👷'),
+				secondModeEmoji: new FormControl('🏝'),
 			}),
 		});
 
@@ -698,6 +722,47 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				text: 'После обновления страницы отсчёт начнётся заново',
 			}) as Date;
 		}
+	}
+
+	pointModeChanged(modes: PointMode[]) {
+		console.log(modes);
+	}
+
+	pointModesOpened() {
+		from(fetchEmojis('ru'))
+			.pipe(combineLatestWith(fetchMessages('ru')), take(1))
+			.subscribe({
+				next: ([emojis, messages]) => {
+					messages.groups.forEach((item, i) => {
+						item.message !== 'компонент' &&
+							this.emojis.push({
+								title:
+									item.message.slice(0, 1).toUpperCase() +
+									item.message.slice(1),
+								list: emojis
+									.filter((emoji) => emoji.group === i)
+									.map((item) => {
+										const newItem = item as LocalEmoji;
+										newItem.visible = true;
+										return newItem;
+									}),
+								visible: true,
+							});
+					});
+
+					this.emojis.push({
+						title: 'Прочие',
+						list: emojis
+							.filter((emoji) => emoji.group === undefined)
+							.map((item) => {
+								const newItem = item as LocalEmoji;
+								newItem.visible = true;
+								return newItem;
+							}),
+						visible: true,
+					});
+				},
+			});
 	}
 
 	submit(saveIteration = false, repeats: Iteration[] = []) {
