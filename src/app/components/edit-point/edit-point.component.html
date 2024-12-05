@@ -114,13 +114,22 @@
 							#triggerTemplate
 							let-toggle="toggle"
 						>
-							<button
-								app-button
-								class="form__btn"
-								mode="secondary"
-								icon="chevron-down"
-								(click)="toggle()"
-							>{{ pointModes.length ? pointModes[0].icon + '/' + pointModes[1].icon : 'Режимы' }}</button>
+							<div
+								app-tooltip
+								horizontal="left"
+								vertical="top"
+								text="Установка режимов для чередования итераций"
+							>
+								<button
+									app-button
+									#tooltipTrigger
+									class="form__btn"
+									mode="secondary"
+									icon="chevron-down"
+									(click)="toggle()"
+								>{{ pointModes.length ? pointModes[0].icon + '/' + pointModes[1].icon : 'Режимы'
+									}}</button>
+							</div>
 						</ng-template>
 						<ng-template #bodyTemplate>
 							<app-point-modes
