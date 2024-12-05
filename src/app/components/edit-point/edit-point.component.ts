@@ -34,7 +34,7 @@ import {
 	SwitcherItem,
 	SelectArray,
 	PointMode,
-	LocalEmoji,
+	GroupEmoji,
 } from 'src/app/interfaces';
 import {
 	DataService,
@@ -163,11 +163,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		},
 	];
 
-	emojis: {
-		title: string;
-		visible: boolean;
-		list: LocalEmoji[];
-	}[] = [];
+	emojis: GroupEmoji[] = [];
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
@@ -733,33 +729,24 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			.pipe(combineLatestWith(fetchMessages('ru')), take(1))
 			.subscribe({
 				next: ([emojis, messages]) => {
+					this.emojis = [];
 					messages.groups.forEach((item, i) => {
 						item.message !== 'компонент' &&
 							this.emojis.push({
 								title:
 									item.message.slice(0, 1).toUpperCase() +
 									item.message.slice(1),
-								list: emojis
-									.filter((emoji) => emoji.group === i)
-									.map((item) => {
-										const newItem = item as LocalEmoji;
-										newItem.visible = true;
-										return newItem;
-									}),
-								visible: true,
+								list: emojis.filter(
+									(emoji) => emoji.group === i
+								),
 							});
 					});
 
 					this.emojis.push({
 						title: 'Прочие',
-						list: emojis
-							.filter((emoji) => emoji.group === undefined)
-							.map((item) => {
-								const newItem = item as LocalEmoji;
-								newItem.visible = true;
-								return newItem;
-							}),
-						visible: true,
+						list: emojis.filter(
+							(emoji) => emoji.group === undefined
+						),
 					});
 				},
 			});

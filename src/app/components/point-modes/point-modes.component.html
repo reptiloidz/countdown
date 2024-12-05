@@ -15,12 +15,13 @@
 			horizontal="left"
 			vertical="top"
 			[buttonTextClass]="['emoji-list__text']"
+			(dropOpened)="filterEmojis('firstModeEmoji', firstDrop)"
 		>
 			<ng-template #bodyTemplate>
 				<ng-container
 					[ngTemplateOutlet]="emojiListTemplate"
 					[ngTemplateOutletContext]="{
-						control: firstEmojiControl,
+						control: 'firstModeEmoji',
 						drop: firstDrop
 					}"
 				></ng-container>
@@ -43,12 +44,13 @@
 			horizontal="left"
 			vertical="top"
 			[buttonTextClass]="['emoji-list__text']"
+			(dropOpened)="filterEmojis('secondModeEmoji', secondDrop)"
 		>
 			<ng-template #bodyTemplate>
 				<ng-container
 					[ngTemplateOutlet]="emojiListTemplate"
 					[ngTemplateOutletContext]="{
-						control: secondEmojiControl,
+						control: 'secondModeEmoji',
 						drop: secondDrop
 					}"
 				></ng-container>
@@ -65,40 +67,43 @@
 	<app-input
 		#filterRef
 		placeholder="Фильтр эмодзи"
-		(input)="filterEmojis()"
+		(input)="filterEmojis(control, drop)"
+		(reset)="filterEmojis(control, drop)"
 		[value]="filterEmojiValue"
 		[clearButton]="true"
-		(reset)="filterEmojis()"
 	></app-input>
 	<ul class="emoji-list">
-		<li
-			*ngFor="let group of emojis"
-			class="emoji-list__item"
-			[ngClass]="{
-					'emoji-list__item--hidden': !group.visible
-				}"
-		>
-			<h4 class="emoji-list__title">{{ group.title }}</h4>
-			<ul class="emoji-list__group">
-				<li
-					*ngFor="let emoji of group.list"
-					class="emoji-list__emoji"
-					[ngClass]="{
-							'emoji-list__emoji--hidden': !emoji.visible
-						}"
-				>
-					<button
-						app-button
-						view="link"
-						size="lg"
-						(click)="clickEmoji(emoji.emoji, control, drop)"
-						class="emoji-list__button"
-						[title]="emoji.label"
-					>
-						{{ emoji.emoji }}
-					</button>
-				</li>
-			</ul>
-		</li>
+		<ng-container #groupContainer></ng-container>
 	</ul>
+</ng-template>
+
+<ng-template
+	#groupTemplate
+	let-control="control"
+	let-drop="drop"
+	let-group="group"
+>
+	<li
+		*ngIf="group"
+		class="emoji-list__item"
+	>
+		<h4 class="emoji-list__title">{{ group.title }}</h4>
+		<ul class="emoji-list__group">
+			<li
+				*ngFor="let emoji of group.list"
+				class="emoji-list__emoji"
+			>
+				<button
+					app-button
+					view="link"
+					size="lg"
+					(click)="clickEmoji(emoji.emoji, control, drop)"
+					class="emoji-list__button"
+					[title]="emoji.label"
+				>
+					{{ emoji.emoji }}
+				</button>
+			</li>
+		</ul>
+	</li>
 </ng-template>

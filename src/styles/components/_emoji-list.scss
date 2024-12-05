@@ -10,7 +10,7 @@
 	}
 
 	&__item {
-		&--hidden {
+		&:has(.emoji-list__group:empty) {
 			display: none;
 		}
 	}

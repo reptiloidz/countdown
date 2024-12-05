@@ -15,3 +15,4 @@ export * from './selectArray.interface';
 export * from './link.interface';
 export * from './pointMode.interface';
 export * from './localEmoji.interface';
+export * from './groupEmoji.interface';

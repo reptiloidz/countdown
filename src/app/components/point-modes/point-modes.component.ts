@@ -1,54 +1,76 @@
 import {
 	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
 	EventEmitter,
 	Input,
+	OnDestroy,
+	OnInit,
 	Output,
+	TemplateRef,
 	ViewChild,
+	ViewContainerRef,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { LocalEmoji, Point, PointMode } from 'src/app/interfaces';
+import { GroupEmoji, LocalEmoji, Point, PointMode } from 'src/app/interfaces';
 import { DropComponent } from '../drop/drop.component';
 import { InputComponent } from '../input/input.component';
+import { debounceTime, interval, Subject, Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-point-modes',
 	templateUrl: './point-modes.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PointModesComponent {
+export class PointModesComponent implements OnInit, OnDestroy {
 	@Input() form!: FormGroup;
 	@Input() point: Point | undefined;
-	@Input() emojis: {
-		title: string;
-		visible: boolean;
-		list: LocalEmoji[];
-	}[] = [];
+	@Input() emojis: GroupEmoji[] = [];
+
+	emojisCurrent: GroupEmoji[] = [];
+
 	@Output() pointModeChanged = new EventEmitter<PointMode[]>();
 	@ViewChild('filterRef') private filterRef!: InputComponent;
+	@ViewChild('groupContainer', { read: ViewContainerRef })
+	groupContainer!: ViewContainerRef;
+	@ViewChild('groupTemplate', { read: TemplateRef })
+	groupTemplate!: TemplateRef<any>;
 
+	private filterSubject = new Subject<{
+		control: string;
+		drop: DropComponent;
+	}>();
+	private subscriptions = new Subscription();
 	filterEmojiValue = '';
 	firstModeEmoji = '👷';
 	secondModeEmoji = '🏝';
+
+	constructor(private cdr: ChangeDetectorRef) {}
+
+	ngOnInit(): void {
+		this.subscriptions.add(
+			this.filterSubject
+				.pipe(debounceTime(400))
+				.subscribe(({ control, drop }) => {
+					this.applyFilter(control, drop);
+				})
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
+	}
 
 	get pointModesForm() {
 		return this.form.get('pointModesForm') as FormGroup;
 	}
 
 	get firstModeEmojiValue() {
-		return this.firstEmojiControl.value;
+		return this.pointModesForm.controls['firstModeEmoji'].value;
 	}
 
 	get secondModeEmojiValue() {
-		return this.secondEmojiControl.value;
-	}
-
-	get firstEmojiControl() {
-		return this.pointModesForm.controls['firstModeEmoji'];
-	}
-
-	get secondEmojiControl() {
-		return this.pointModesForm.controls['secondModeEmoji'];
+		return this.pointModesForm.controls['secondModeEmoji'].value;
 	}
 
 	filterEmoji(emoji: LocalEmoji): boolean {
@@ -60,18 +82,47 @@ export class PointModesComponent {
 		);
 	}
 
-	filterEmojis() {
+	filterEmojis(control: string, drop: DropComponent) {
+		this.filterSubject.next({ control, drop });
+	}
+
+	applyFilter(control: string, drop: DropComponent) {
+		this.emojisCurrent = [];
+		this.groupContainer.clear();
 		this.filterEmojiValue = this.filterRef.value
 			.toString()
 			.toLowerCase()
 			.trim();
-		this.emojis.map((group) => {
-			group.visible = group.list.some((emoji) => this.filterEmoji(emoji));
 
-			group.visible &&
-				group.list.map((emoji) => {
-					emoji.visible = this.filterEmoji(emoji);
+		requestAnimationFrame(() => {
+			this.emojis.forEach((group) => {
+				this.emojisCurrent.push({
+					title: group.title,
+					list: group.list.filter((emoji) => this.filterEmoji(emoji)),
 				});
+			});
+
+			let index = 0;
+
+			this.emojisCurrent = this.emojisCurrent || [...this.emojis];
+
+			const emojisInterval = interval(10).subscribe({
+				next: () => {
+					this.groupContainer?.createEmbeddedView(
+						this.groupTemplate,
+						{
+							group: this.emojisCurrent[index],
+							control: this.pointModesForm.controls[control],
+							drop,
+						}
+					);
+					this.cdr.detectChanges();
+					index = index + 1;
+					if (index - 1 === this.emojisCurrent.length) {
+						emojisInterval.unsubscribe();
+					}
+				},
+			});
 		});
 	}
 
