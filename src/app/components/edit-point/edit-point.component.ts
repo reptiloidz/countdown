@@ -84,6 +84,7 @@ enum EditPointSuccessMessage {
 export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
 	@ViewChild('colorDrop') private colorDrop!: DropComponent;
+	@ViewChild('modesDrop') private modesDrop!: DropComponent;
 	@HostBinding('class') class = 'main__inner';
 	type = EditPointType.Edit;
 	form!: FormGroup;
@@ -106,6 +107,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	userData!: UserExtraData;
 	isIterationSwitched = false;
 	showIterationsInfo = false;
+	pointModes: PointMode[] = [];
 	differenceMode: DifferenceMode =
 		(localStorage.getItem('differenceMode') as DifferenceMode) || 'minutes';
 	dateUrlMode: 'date' | 'timer' = 'date';
@@ -280,6 +282,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						) {
 							this.checking.next(false);
 							this.setValues();
+							this.pointModes = this.point?.modes || [];
 						}
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point && this.action.pointUpdated(this.point);
@@ -583,6 +586,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					emitEvent: false,
 				}
 			);
+		if (this.point?.modes) {
+			this.form.get('pointModesForm')?.patchValue({
+				firstModeTitle: this.point.modes[0].name,
+				secondModeTitle: this.point.modes[1].name,
+				firstModeEmoji: this.point.modes[0].icon,
+				secondModeEmoji: this.point.modes[1].icon,
+			});
+		}
 
 		const currentPointDate = getPointDate({
 			pointDate: isReset
@@ -721,7 +732,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	pointModeChanged(modes: PointMode[]) {
-		console.log(modes);
+		this.pointModes = modes;
+		this.modesDrop.closeHandler();
+	}
+
+	pointModeClosed() {
+		this.pointModes = [];
+		this.modesDrop.closeHandler();
 	}
 
 	pointModesOpened() {
@@ -807,6 +824,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				public: this.publicValue,
 				user: this.auth.uid || '',
 				color: this.form.controls['color'].value || 'gray',
+				modes: this.pointModes.length ? this.pointModes : null,
 			});
 		} else {
 			result = Object.assign(result, {
@@ -818,6 +836,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				public: this.point?.public,
 				user: this.point?.user,
 				color: this.point?.color || 'gray',
+				modes: this.point?.modes?.length ? this.point.modes : null,
 			});
 			this.isIterationSwitched = true;
 		}

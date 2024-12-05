@@ -5,6 +5,10 @@
 
 	&__row {
 		display: flex;
+
+		&--footer {
+			justify-content: space-between;
+		}
 	}
 
 	&__col {

@@ -1,4 +1,4 @@
 export interface PointMode {
-	name: string;
+	name?: string;
 	icon: string;
 }

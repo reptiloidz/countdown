@@ -1,4 +1,6 @@
 .emoji-list {
+	display: flex;
+	flex-direction: column;
 	height: 200px;
 	margin: 10px 0;
 	padding: 0;
@@ -37,5 +39,15 @@
 		&--hidden {
 			display: none;
 		}
+	}
+
+	&__loader {
+		--loader-icon-w: 20px;
+
+		margin: auto;
+	}
+
+	&--hidden {
+		display: none;
 	}
 }

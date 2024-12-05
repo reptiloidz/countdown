@@ -105,6 +105,8 @@
 					</app-drop>
 
 					<app-drop
+						#modesDrop
+						*ngIf="!isCreation"
 						class="drop--nested"
 						(dropOpened)="pointModesOpened()"
 					>
@@ -118,7 +120,7 @@
 								mode="secondary"
 								icon="chevron-down"
 								(click)="toggle()"
-							>Режимы</button>
+							>{{ pointModes.length ? pointModes[0].icon + '/' + pointModes[1].icon : 'Режимы' }}</button>
 						</ng-template>
 						<ng-template #bodyTemplate>
 							<app-point-modes
@@ -126,6 +128,7 @@
 								[form]="formGroup"
 								[emojis]="emojis"
 								(pointModeChanged)="pointModeChanged($event)"
+								(pointModeClosed)="pointModeClosed()"
 								[point]="point"
 							></app-point-modes>
 						</ng-template>

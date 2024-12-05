@@ -30,6 +30,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	emojisCurrent: GroupEmoji[] = [];
 
 	@Output() pointModeChanged = new EventEmitter<PointMode[]>();
+	@Output() pointModeClosed = new EventEmitter<void>();
 	@ViewChild('filterRef') private filterRef!: InputComponent;
 	@ViewChild('groupContainer', { read: ViewContainerRef })
 	groupContainer!: ViewContainerRef;
@@ -44,6 +45,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	filterEmojiValue = '';
 	firstModeEmoji = '👷';
 	secondModeEmoji = '🏝';
+	loading = false;
 
 	constructor(private cdr: ChangeDetectorRef) {}
 
@@ -65,12 +67,32 @@ export class PointModesComponent implements OnInit, OnDestroy {
 		return this.form.get('pointModesForm') as FormGroup;
 	}
 
+	get firstModeTitle() {
+		return this.pointModesForm.controls['firstModeTitle'];
+	}
+
+	get secondModeTitle() {
+		return this.pointModesForm.controls['secondModeTitle'];
+	}
+
+	get firstModeTitleValue() {
+		return this.firstModeTitle.value;
+	}
+
+	get secondModeTitleValue() {
+		return this.secondModeTitle.value;
+	}
+
 	get firstModeEmojiValue() {
 		return this.pointModesForm.controls['firstModeEmoji'].value;
 	}
 
 	get secondModeEmojiValue() {
 		return this.pointModesForm.controls['secondModeEmoji'].value;
+	}
+
+	trackByEmoji(_index: number, emoji: LocalEmoji): string {
+		return emoji.emoji;
 	}
 
 	filterEmoji(emoji: LocalEmoji): boolean {
@@ -83,12 +105,13 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	}
 
 	filterEmojis(control: string, drop: DropComponent) {
+		this.loading = true;
 		this.filterSubject.next({ control, drop });
 	}
 
 	applyFilter(control: string, drop: DropComponent) {
 		this.emojisCurrent = [];
-		this.groupContainer.clear();
+		this.groupContainer?.clear();
 		this.filterEmojiValue = this.filterRef.value
 			.toString()
 			.toLowerCase()
@@ -116,11 +139,12 @@ export class PointModesComponent implements OnInit, OnDestroy {
 							drop,
 						}
 					);
-					this.cdr.detectChanges();
 					index = index + 1;
-					if (index - 1 === this.emojisCurrent.length) {
+					this.loading = false;
+					if (index === this.emojisCurrent.length) {
 						emojisInterval.unsubscribe();
 					}
+					this.cdr.detectChanges();
 				},
 			});
 		});
@@ -131,7 +155,22 @@ export class PointModesComponent implements OnInit, OnDestroy {
 		drop.closeHandler();
 	}
 
-	trackByEmoji(_index: number, emoji: LocalEmoji): string {
-		return emoji.emoji;
+	resetModes() {
+		this.firstModeTitle.reset();
+		this.secondModeTitle.reset();
+		this.pointModeClosed.emit();
+	}
+
+	submitModes() {
+		this.pointModeChanged.emit([
+			{
+				icon: this.firstModeEmojiValue,
+				name: this.pointModesForm.controls['firstModeTitle'].value,
+			},
+			{
+				icon: this.secondModeEmojiValue,
+				name: this.pointModesForm.controls['secondModeTitle'].value,
+			},
+		]);
 	}
 }

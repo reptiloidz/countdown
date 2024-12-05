@@ -5,6 +5,7 @@
 				placeholder="Первый режим"
 				formControlName="firstModeTitle"
 				[maxlength]="100"
+				autocomplete="off"
 			></app-input>
 		</div>
 		<app-drop
@@ -34,6 +35,7 @@
 				placeholder="Второй режим"
 				formControlName="secondModeTitle"
 				[maxlength]="100"
+				autocomplete="off"
 			></app-input>
 		</div>
 		<app-drop
@@ -57,6 +59,22 @@
 			</ng-template>
 		</app-drop>
 	</div>
+	<div class="form-drop__row form-drop__row--footer">
+		<button
+			app-button
+			mode="negative"
+			icon="cross"
+			(click)="resetModes()"
+		>Сброс</button>
+		<button
+			app-button
+			mode="ghost"
+			iconPosition="right"
+			icon="arrow-right"
+			[attr.disabled]="(!firstModeTitleValue || !secondModeTitleValue) || null"
+			(click)="submitModes()"
+		>Сохранить</button>
+	</div>
 </ng-container>
 
 <ng-template
@@ -72,9 +90,20 @@
 		[value]="filterEmojiValue"
 		[clearButton]="true"
 	></app-input>
-	<ul class="emoji-list">
+	<ul
+		class="emoji-list"
+		[ngClass]="{
+			'emoji-list--hidden': loading
+		}"
+	>
 		<ng-container #groupContainer></ng-container>
 	</ul>
+	<div
+		class="emoji-list"
+		*ngIf="loading"
+	>
+		<app-loader class="emoji-list__loader"></app-loader>
+	</div>
 </ng-template>
 
 <ng-template
