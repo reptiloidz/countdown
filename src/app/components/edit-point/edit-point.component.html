@@ -118,12 +118,12 @@
 								app-tooltip
 								horizontal="left"
 								vertical="top"
-								text="Установка режимов для чередования итераций"
+								text="Установка режимов для чередования итераций. Актуально только для многократных событий"
 							>
 								<button
 									app-button
 									#tooltipTrigger
-									class="form__btn"
+									class="form__btn button--emoji"
 									mode="secondary"
 									icon="chevron-down"
 									(click)="toggle()"
@@ -133,7 +133,7 @@
 						</ng-template>
 						<ng-template #bodyTemplate>
 							<app-point-modes
-								class="form-drop form-drop--secondary"
+								class="form-drop form-drop--emoji"
 								[form]="formGroup"
 								[emojis]="emojis"
 								(pointModeChanged)="pointModeChanged($event)"
@@ -166,7 +166,7 @@
 							mode="custom"
 							icon="refresh"
 							formControlName="repeatable"
-							[title]="repeatableValue ? 'Повторяемое событие' : 'Однократное событие'"
+							[title]="repeatableValue ? 'Многократное событие' : 'Однократное событие'"
 						></label>
 					</div>
 					<app-switcher

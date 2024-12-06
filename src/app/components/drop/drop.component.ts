@@ -79,6 +79,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() innerClass: NgClassType = '';
 	@Input() listButtonTextClass = '';
 	@Input() buttonTextClass: string[] = [];
+	@Input() disabled = false;
 
 	@Output() dropChanged = new EventEmitter<string | number>();
 	@Output() dropClosed = new EventEmitter();

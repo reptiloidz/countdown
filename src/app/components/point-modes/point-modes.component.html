@@ -11,12 +11,15 @@
 		<app-drop
 			#firstDrop
 			formControlName="firstModeEmoji"
-			dropBodyClass="form-drop__emojis"
+			dropBodyClass="form-drop__body"
+			buttonClass="button--emoji"
 			[buttonLabel]="firstModeEmojiValue"
 			horizontal="left"
 			vertical="top"
 			[buttonTextClass]="['emoji-list__text']"
 			(dropOpened)="filterEmojis('firstModeEmoji', firstDrop)"
+			(dropClosed)="dropClosed()"
+			[disabled]="secondDropOpened"
 		>
 			<ng-template #bodyTemplate>
 				<ng-container
@@ -41,12 +44,15 @@
 		<app-drop
 			#secondDrop
 			formControlName="secondModeEmoji"
-			dropBodyClass="form-drop__emojis"
+			dropBodyClass="form-drop__body"
+			buttonClass="button--emoji"
 			[buttonLabel]="secondModeEmojiValue"
 			horizontal="left"
 			vertical="top"
 			[buttonTextClass]="['emoji-list__text']"
 			(dropOpened)="filterEmojis('secondModeEmoji', secondDrop)"
+			(dropClosed)="dropClosed()"
+			[disabled]="firstDropOpened"
 		>
 			<ng-template #bodyTemplate>
 				<ng-container
@@ -127,7 +133,7 @@
 					view="link"
 					size="lg"
 					(click)="clickEmoji(emoji.emoji, control, drop)"
-					class="emoji-list__button"
+					class="link--emoji"
 					[title]="emoji.label"
 				>
 					{{ emoji.emoji }}

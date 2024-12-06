@@ -69,6 +69,10 @@
 		--button-border-cl: transparent;
 	}
 
+	&--emoji {
+		--button-cl: currentColor;
+	}
+
 	&--sm {
 		--button-gap: 2px;
 		--button-fz: 14px;

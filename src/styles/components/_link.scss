@@ -73,4 +73,8 @@ a,
 	&--negative {
 		color: rgb(var(--c-text-negative));
 	}
+
+	&--emoji {
+		color: currentColor;
+	}
 }

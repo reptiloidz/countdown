@@ -46,6 +46,8 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	firstModeEmoji = '👷';
 	secondModeEmoji = '🏝';
 	loading = false;
+	firstDropOpened = false;
+	secondDropOpened = false;
 
 	constructor(private cdr: ChangeDetectorRef) {}
 
@@ -107,6 +109,16 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	filterEmojis(control: string, drop: DropComponent) {
 		this.loading = true;
 		this.filterSubject.next({ control, drop });
+		if (control === 'secondModeEmoji') {
+			this.secondDropOpened = true;
+		} else {
+			this.firstDropOpened = true;
+		}
+	}
+
+	dropClosed() {
+		this.firstDropOpened = false;
+		this.secondDropOpened = false;
 	}
 
 	applyFilter(control: string, drop: DropComponent) {
@@ -152,6 +164,8 @@ export class PointModesComponent implements OnInit, OnDestroy {
 
 	clickEmoji(emoji: string, control: FormControl, drop: DropComponent) {
 		control.setValue(emoji);
+		this.emojisCurrent = [];
+		this.groupContainer?.clear();
 		drop.closeHandler();
 	}
 

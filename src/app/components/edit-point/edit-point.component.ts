@@ -824,7 +824,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				public: this.publicValue,
 				user: this.auth.uid || '',
 				color: this.form.controls['color'].value || 'gray',
-				modes: this.pointModes.length ? this.pointModes : null,
+				modes:
+					this.pointModes.length && this.repeatableValue
+						? this.pointModes
+						: null,
 			});
 		} else {
 			result = Object.assign(result, {
@@ -836,7 +839,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				public: this.point?.public,
 				user: this.point?.user,
 				color: this.point?.color || 'gray',
-				modes: this.point?.modes?.length ? this.point.modes : null,
+				modes:
+					this.point?.modes?.length && this.point?.repeatable
+						? this.point.modes
+						: null,
 			});
 			this.isIterationSwitched = true;
 		}

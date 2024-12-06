@@ -25,6 +25,7 @@
 			[size]="buttonSize"
 			[icon]="icon"
 			(click)="toggleHandler()"
+			[attr.disabled]="disabled || null"
 		>{{ buttonLabel || ((dropList) ? keyOfValue || value : null) }}</button>
 	</div>
 </ng-template>

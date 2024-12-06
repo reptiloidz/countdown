@@ -67,11 +67,7 @@
 		margin-right: auto;
 	}
 
-	&__emojis {
-		width: 260px;
-	}
-
-	&--secondary {
+	&--emoji {
 		flex-direction: column;
 		min-height: 0;
 
@@ -82,6 +78,10 @@
 				margin-right: 10px;
 				border-right: 0;
 			}
+		}
+
+		.form-drop__body {
+			width: 266px;
 		}
 	}
 }
