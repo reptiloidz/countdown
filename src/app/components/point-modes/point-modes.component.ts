@@ -43,8 +43,6 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	}>();
 	private subscriptions = new Subscription();
 	filterEmojiValue = '';
-	firstModeEmoji = '👷';
-	secondModeEmoji = '🏝';
 	loading = false;
 	firstDropOpened = false;
 	secondDropOpened = false;
@@ -77,6 +75,14 @@ export class PointModesComponent implements OnInit, OnDestroy {
 		return this.pointModesForm.controls['secondModeTitle'];
 	}
 
+	get firstModeEmoji() {
+		return this.pointModesForm.controls['firstModeEmoji'];
+	}
+
+	get secondModeEmoji() {
+		return this.pointModesForm.controls['secondModeEmoji'];
+	}
+
 	get firstModeTitleValue() {
 		return this.firstModeTitle.value;
 	}
@@ -86,11 +92,11 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	}
 
 	get firstModeEmojiValue() {
-		return this.pointModesForm.controls['firstModeEmoji'].value;
+		return this.firstModeEmoji.value;
 	}
 
 	get secondModeEmojiValue() {
-		return this.pointModesForm.controls['secondModeEmoji'].value;
+		return this.secondModeEmoji.value;
 	}
 
 	trackByEmoji(_index: number, emoji: LocalEmoji): string {
@@ -119,6 +125,24 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	dropClosed() {
 		this.firstDropOpened = false;
 		this.secondDropOpened = false;
+	}
+
+	switchModes() {
+		const modes = [
+			{
+				icon: this.firstModeEmojiValue,
+				name: this.firstModeTitleValue,
+			},
+			{
+				icon: this.secondModeEmojiValue,
+				name: this.secondModeTitleValue,
+			},
+		] as PointMode[];
+
+		this.firstModeEmoji.setValue(modes[1].icon);
+		this.firstModeTitle.setValue(modes[1].name);
+		this.secondModeEmoji.setValue(modes[0].icon);
+		this.secondModeTitle.setValue(modes[0].name);
 	}
 
 	applyFilter(control: string, drop: DropComponent) {

@@ -18,6 +18,7 @@ import {
 	getFirstIteration,
 	getPointDate,
 	parseDate,
+	setIterationsMode,
 	sortDates,
 } from 'src/app/helpers';
 import { Iteration, Point } from 'src/app/interfaces';
@@ -151,7 +152,8 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						return !!point;
 					}),
 					tap(([point]) => {
-						this.point = point && sortDates(point);
+						this.point =
+							point && setIterationsMode(sortDates(point));
 						!this.urlMode && this.setIterationsParam();
 					}),
 					distinctUntilChanged()

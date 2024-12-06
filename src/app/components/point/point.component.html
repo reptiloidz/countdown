@@ -135,18 +135,21 @@
 				<span>{{ remainText }}:</span>
 				<br>
 				<span>{{ remainValue }}.</span>
-				<br>
-				<span
-					*ngIf="iterationReason === 'frequency'"
-					class="point-page__icon-label"
-				>
-					<svg
-						app-svg
-						name="refresh"
-						class="point-page__icon"
-					></svg>
-					Сгенерированная итерация.
-				</span>
+				<ng-container *ngIf="iterationReason === 'frequency'">
+					<br>
+					<span class="point-page__icon-label">
+						<svg
+							app-svg
+							name="refresh"
+							class="point-page__icon"
+						></svg>
+						Сгенерированная итерация.
+					</span>
+				</ng-container>
+				<ng-container *ngIf="iterationMode">
+					<br>
+					<span> {{ iterationMode.icon + iterationMode.name }}</span>
+				</ng-container>
 			</ng-template>
 		</div>
 

@@ -106,7 +106,7 @@
 
 					<app-drop
 						#modesDrop
-						*ngIf="!isCreation"
+						*ngIf="!isCreation && repeatableValue"
 						class="drop--nested"
 						(dropOpened)="pointModesOpened()"
 					>

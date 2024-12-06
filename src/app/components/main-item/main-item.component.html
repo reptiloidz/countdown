@@ -22,6 +22,10 @@
 			class="point__description"
 		>{{ point.description }}</p>
 		<p class="point__description">{{ closestIterationRemain }}</p>
+		<p
+			*ngIf="closestIterationMode"
+			class="point__description"
+		>{{ closestIterationMode.icon + closestIterationMode.name }}</p>
 	</a>
 
 	<div class="point__timers-wrapper">

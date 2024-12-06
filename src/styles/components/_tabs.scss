@@ -215,6 +215,15 @@
 		margin-left: auto;
 	}
 
+	&__emoji {
+		margin-left: 2px;
+		padding: 2px;
+		border-radius: 8px;
+		background-color: rgb(var(--c-bg-inverse));
+		color: initial;
+		font-weight: 400;
+	}
+
 	&--expanded {
 		--tabs-pb: 120px;
 

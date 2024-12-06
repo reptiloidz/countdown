@@ -48,6 +48,7 @@ import {
 	getPointDate,
 	isDateValid,
 	parseDate,
+	setIterationsMode,
 	sortDates,
 } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
@@ -546,7 +547,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Если У события изменена многократность, но еще не сохранена.
+	 * Если у события изменена многократность, но еще не сохранена.
 	 * Влияет на уведомления и возможность создания новых итераций
 	 */
 	get repeatableValue() {
@@ -561,7 +562,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	sortDates() {
-		const sortedDates = this.point && sortDates(this.point).dates;
+		const sortedDates =
+			this.point && setIterationsMode(sortDates(this.point)).dates;
+
 		if (this.point && sortedDates) {
 			this.point.dates = sortedDates;
 		}
@@ -776,7 +779,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 		this.differenceChanged();
 		this.loading = true;
-		let newDatesArray = this.dates?.slice(0);
+		let newDatesArray = [] as Iteration[];
+
+		this.dates?.forEach((item) => {
+			const currentItem = {
+				date: item.date,
+				reason: item.reason,
+			} as Iteration;
+			item.comment && (currentItem.comment = item.comment);
+			newDatesArray.push(currentItem);
+		});
 		let editPointEvent: EditPointEvent = 'pointEdited';
 
 		const dateTime = format(

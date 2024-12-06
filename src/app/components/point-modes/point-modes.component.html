@@ -33,6 +33,15 @@
 		</app-drop>
 	</div>
 	<div class="form-drop__row">
+		<button
+			app-button
+			title="Поменять режимы местами"
+			icon="refresh"
+			mode="secondary"
+			(click)="switchModes()"
+		></button>
+	</div>
+	<div class="form-drop__row">
 		<div class="form-drop__col">
 			<app-input
 				placeholder="Второй режим"

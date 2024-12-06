@@ -32,6 +32,7 @@ import {
 	getPointDate,
 	getPointFromUrl,
 	parseDate,
+	setIterationsMode,
 	sortDates,
 } from 'src/app/helpers';
 import { Title } from '@angular/platform-browser';
@@ -118,7 +119,8 @@ export class PointComponent implements OnInit, OnDestroy {
 					}),
 					tap((point: Point | undefined) => {
 						if (!this.urlModeValue) {
-							this.point = point && sortDates(point);
+							this.point =
+								point && setIterationsMode(sortDates(point));
 						}
 					}),
 					mergeMap(() => {
@@ -234,6 +236,10 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	get iterationReason() {
 		return this.point?.dates[this.currentIterationIndex]?.reason;
+	}
+
+	get iterationMode() {
+		return this.point?.dates[this.currentIterationIndex]?.mode;
 	}
 
 	get iterationTime() {

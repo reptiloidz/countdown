@@ -290,17 +290,17 @@ export class DatepickerComponent implements OnInit {
 
 	yearSwitched(value: string | number) {
 		this.visibleDate = parseDate(
-			`${+this.dateMonthNumber + 1}/01/${value} 00:00`
+			`01.${+this.dateMonthNumber + 1}.${value} 00:00`
 		);
 	}
 
 	monthSwitched(value: string | number) {
-		this.visibleDate = parseDate(`${+value + 1}/01/${this.dateYear} 00:00`);
+		this.visibleDate = parseDate(`01.${+value + 1}.${this.dateYear} 00:00`);
 	}
 
 	hourSwitched(value: string | number) {
 		this.date = parseDate(
-			`${+this.dateMonthNumber + 1}/${this.dateDay}/${
+			`${this.dateDay}.${+this.dateMonthNumber + 1}.${
 				this.dateYear
 			} ${value}:${this.dateMinute}`
 		);
@@ -310,7 +310,7 @@ export class DatepickerComponent implements OnInit {
 
 	minuteSwitched(value: string | number) {
 		this.date = parseDate(
-			`${+this.dateMonthNumber + 1}/${this.dateDay}/${this.dateYear} ${
+			`${this.dateDay}.${+this.dateMonthNumber + 1}.${this.dateYear} ${
 				this.dateHour
 			}:${value}`
 		);

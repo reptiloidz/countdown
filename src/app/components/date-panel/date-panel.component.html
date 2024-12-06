@@ -118,7 +118,7 @@
 						<ng-container *ngFor="let date of datesBefore; let i = index">
 							<ng-container
 								[ngTemplateOutlet]="iteration"
-								[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past' }"
+								[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past', icon: date.mode?.icon }"
 							></ng-container>
 						</ng-container>
 						<li class="tabs__item tabs__item--home">
@@ -139,7 +139,7 @@
 						<ng-container *ngFor="let date of datesAfter; let i = index">
 							<ng-container
 								[ngTemplateOutlet]="iteration"
-								[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future'  }"
+								[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future', icon: date.mode?.icon  }"
 							></ng-container>
 						</ng-container>
 						<li
@@ -212,6 +212,7 @@
 <ng-template
 	#iteration
 	let-date
+	let-icon="icon"
 	let-i="index"
 	let-time="time"
 >
@@ -240,6 +241,12 @@
 			mode="secondary"
 			(click)="switchIteration(i)"
 		>{{ i + 1 }}
+			<span
+				*ngIf="icon"
+				class="tabs__emoji"
+			>
+				{{ icon }}
+			</span>
 		</button>
 		<button
 			*ngIf="hasAccess"
@@ -268,7 +275,7 @@
 						aria-hidden="false"
 						class="tabs__item-icon"
 					></svg>
-					{{ date.date| timeRemain : point?.greenwich }}
+					{{ date.date | timeRemain : point?.greenwich }}
 				</div>
 			</div>
 		</div>
