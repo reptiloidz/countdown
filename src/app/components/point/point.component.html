@@ -11,7 +11,8 @@
 	class="content color"
 	[ngClass]="[
 		point?.color ? 'color--' + point?.color : '',
-		hasTimerLine ? 'content--timer' : ''
+		hasTimerLine ? 'content--timer' : '',
+		pausedTime ? 'content--timer-paused' : ''
 	]"
 >
 	<div class="point-page">
@@ -104,6 +105,23 @@
 				<div class="point-page__half">
 					<p class="point-page__remain">
 						<span
+							app-tooltip
+							*ngIf="iterationReason === 'frequency'"
+							vertical="top"
+							horizontal="left"
+							class="point-page__icon-label"
+						>
+							<ng-template #tooltipContent>
+								Сгенерированная итерация
+							</ng-template>
+							<svg
+								app-svg
+								#tooltipTrigger
+								name="refresh"
+								class="point-page__icon"
+							></svg>
+						</span>
+						<span
 							*ngIf="iterationDate && iterationTime"
 							class="point-page__color"
 							[title]="pointColorName"
@@ -135,17 +153,6 @@
 				<span>{{ remainText }}:</span>
 				<br>
 				<span>{{ remainValue }}.</span>
-				<ng-container *ngIf="iterationReason === 'frequency'">
-					<br>
-					<span class="point-page__icon-label">
-						<svg
-							app-svg
-							name="refresh"
-							class="point-page__icon"
-						></svg>
-						Сгенерированная итерация.
-					</span>
-				</ng-container>
 				<ng-container *ngIf="iterationMode">
 					<br>
 					<span> {{ iterationMode.icon + iterationMode.name }}</span>
@@ -166,5 +173,15 @@
 		<ng-template #dateLoader>
 			<div class="root__loading-marker"></div>
 		</ng-template>
+
+		<button
+			app-button
+			*ngIf="timerMode"
+			mode="secondary"
+			size="lg"
+			class="point-page__pause-btn"
+			(click)="pause()"
+			[icon]="pausedTime ? 'play' : 'pause'"
+		></button>
 	</div>
 </div>

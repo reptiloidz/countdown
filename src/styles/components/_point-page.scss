@@ -132,14 +132,15 @@
 	}
 
 	&__icon-label {
-		display: inline-flex;
-		gap: 4px;
-		align-items: center;
-		margin-top: 4px;
+		margin-right: 4px;
 	}
 
 	&__direction {
 		display: flex;
 		margin-left: 12px;
+	}
+
+	&__pause-btn {
+		margin: auto auto 0;
 	}
 }

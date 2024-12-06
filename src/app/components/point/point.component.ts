@@ -24,7 +24,12 @@ import {
 	ActionService,
 	NotifyService,
 } from 'src/app/services';
-import { format, formatDistanceToNow, intervalToDuration } from 'date-fns';
+import {
+	format,
+	formatDate,
+	formatDistanceToNow,
+	intervalToDuration,
+} from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText, PointColors } from 'src/app/enums';
 import {
@@ -72,6 +77,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerMins!: number | string;
 	timerSecs!: number | string;
 	timerPercent = 0;
+	pausedTime: Date | undefined;
 
 	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
@@ -153,7 +159,7 @@ export class PointComponent implements OnInit, OnDestroy {
 			this.action.eventIntervalSwitched$
 				.pipe(
 					filter(() => {
-						return !this.dateLoading;
+						return !this.dateLoading && !this.pausedTime;
 					})
 				)
 				.subscribe({
@@ -170,11 +176,13 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			interval(10).subscribe({
-				next: () => {
-					this.moveTimeline();
-				},
-			})
+			interval(10)
+				.pipe(filter(() => !this.pausedTime))
+				.subscribe({
+					next: () => {
+						this.moveTimeline();
+					},
+				})
 		);
 
 		this.subscriptions.add(
@@ -376,5 +384,27 @@ export class PointComponent implements OnInit, OnDestroy {
 			? 0
 			: iterationNumber;
 		this.setAllTimers();
+	}
+
+	pause() {
+		if (this.pausedTime && this.point) {
+			this.initialDate = new Date(
+				+this.initialDate - +this.pausedTime + +new Date()
+			);
+			const resultDate = new Date(
+				+parseDate(this.point.dates[0].date, true, true) -
+					+this.pausedTime +
+					+new Date()
+			);
+			const resultDateString = formatDate(
+				resultDate,
+				Constants.reallyFullDateFormat
+			);
+			this.point.dates[0].date = resultDateString;
+			this.pointDate = resultDate;
+			this.pausedTime = undefined;
+		} else {
+			this.pausedTime = new Date();
+		}
 	}
 }

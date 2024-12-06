@@ -67,4 +67,10 @@
 			bottom: 95px;
 		}
 	}
+
+	&--timer-paused {
+		&::after {
+			animation-play-state: paused;
+		}
+	}
 }

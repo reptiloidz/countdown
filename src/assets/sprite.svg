@@ -111,6 +111,9 @@
         <svg id="minus" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12h-5m-3 0H4"/>
         </svg>
+        <svg id="pause" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 16v2m0-12v6M9 6v12"/>
+        </svg>
         <svg id="pencil" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 20h8.5M18 10l-4-4m4 4 3-3-4-4-3 3m4 4-1 1m-3-5-6.5 6.5M5 15l-1 1v4h4l6-6"/>
         </svg>
