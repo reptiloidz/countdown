@@ -58,14 +58,12 @@
 		*ngIf="isAuth && !isEdit"
 		class="point__nav"
 	>
-		<div
-			*ngIf="!loading; else loader"
-			class="point__nav-section"
-		>
+		<div class="point__nav-section">
 			<button
 				app-button
 				mode="negative"
-				[attr.disabled]="!hasAccessEdit || null"
+				[attr.disabled]="(!hasAccessEdit || loading) || null"
+				[loading]="loading"
 				icon="cross"
 				title="Удалить событие"
 				(click)="delete(point.id)"
@@ -78,7 +76,7 @@
 			<ng-template #defaultCheckbox>
 				<label
 					#pointCheckbox
-					[isDisabled]="!hasAccessEdit"
+					[isDisabled]="!hasAccessEdit || loading"
 					app-checkbox
 					(change)="checkPoint()"
 				></label>
@@ -195,10 +193,6 @@
 			</ng-template>
 		</div>
 	</div>
-
-	<ng-template #loader>
-		<app-loader *ngIf="loading"></app-loader>
-	</ng-template>
 
 	<ng-template #rotating>
 		<svg
