@@ -87,6 +87,10 @@
 			--calendar-button-cl: rgba(var(--c-text-primary), .3);
 		}
 
+		&--readonly {
+			pointer-events: none;
+		}
+
 		&:disabled {
 			--calendar-button-cl: rgba(var(--c-text-primary), .1);
 

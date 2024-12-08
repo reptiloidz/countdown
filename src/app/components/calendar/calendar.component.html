@@ -75,6 +75,7 @@
 							'calendar__button--now': item.nowDate,
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
+							'calendar__button--readonly': urlMode
 						}"
 						[disabled]="item.disabledDate"
 						(click)="dateClicked({

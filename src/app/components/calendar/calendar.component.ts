@@ -17,6 +17,7 @@ import {
 	addMonths,
 	addYears,
 	format,
+	formatDate,
 	isAfter,
 	isBefore,
 	isMonday,
@@ -38,7 +39,7 @@ import {
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Subscription, concatWith, filter, tap } from 'rxjs';
-import { calendarModeNames } from 'src/app/enums';
+import { calendarModeNames, Constants } from 'src/app/enums';
 import { filterIterations, filterPoints } from 'src/app/helpers';
 import {
 	CalendarDate,
@@ -76,6 +77,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	@Input() rowsNumber!: number;
 	@Input() disabledBefore: Date | undefined;
 	@Input() disabledAfter: Date | undefined;
+	@Input() urlMode = false;
 
 	/**
 	 * При получении значения всегда обновляем календарь, если она обновилась
@@ -131,8 +133,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: () => {
+						// Если минута сменилась, перерисовываем календарь насильно
+						const prevDateString = formatDate(
+							this.nowDate,
+							Constants.fullDateFormat
+						);
+						const nowDateString = formatDate(
+							new Date(),
+							Constants.fullDateFormat
+						);
 						this.nowDate = new Date();
-						this.generateCalendar();
+						this.generateCalendar({
+							force: prevDateString !== nowDateString,
+						});
 						this.cdr.detectChanges();
 					},
 				})
@@ -266,6 +279,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		points: Point[];
 		iterations: Iteration[];
 	}) {
+		if (this.urlMode) return;
+
 		let data: Point[] | Iteration[] = [];
 		if (points.length) {
 			data = points;

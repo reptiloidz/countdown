@@ -84,7 +84,7 @@
 		></button>
 	</div>
 	<a
-		*ngIf="(pointId && !isEdit) || isUrl"
+		*ngIf="((pointId && !isEdit) || isUrl) && !isTimer"
 		app-button
 		icon="google"
 		mode="ghost"
