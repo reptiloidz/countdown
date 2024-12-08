@@ -3,7 +3,7 @@ import { Point } from '../interfaces';
 import { parseDate } from './parseDate';
 
 export const sortDates = (point: Point) => {
-	point.dates.sort((a, b) =>
+	point.dates?.sort((a, b) =>
 		compareAsc(parseDate(a.date), parseDate(b.date))
 	);
 

@@ -570,8 +570,19 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setValues(isReset = false) {
-		!this.isIterationSwitched &&
+	setValues(
+		{
+			isReset,
+			isFirstLoading,
+		}: {
+			isReset?: boolean;
+			isFirstLoading?: boolean;
+		} = {
+			isReset: false,
+			isFirstLoading: false,
+		}
+	) {
+		(!this.isIterationSwitched || isFirstLoading) &&
 			this.form.patchValue(
 				{
 					title: this.point?.title,
@@ -663,11 +674,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		i: number = this.currentIterationIndex,
 		isSwitched = false
 	) {
+		const isFirstLoading = !this.currentIterationIndex;
 		this.isIterationSwitched = isSwitched;
 		this.currentIterationIndex = i;
 		this.isIterationAdded = false;
 		if (this.isIterationSwitched) {
-			this.setValues();
+			this.setValues({
+				isFirstLoading,
+			});
 		}
 	}
 
@@ -678,7 +692,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	addIterationHandler() {
 		this.isIterationAdded = true;
-		this.setValues(true);
+		this.setValues({
+			isReset: true,
+		});
 	}
 
 	differenceModeChanged(value: string | number) {
