@@ -109,6 +109,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	isIterationSwitched = false;
 	showIterationsInfo = false;
 	pointModes: PointMode[] = [];
+	isModesDropOpened = false;
 	differenceMode: DifferenceMode =
 		(localStorage.getItem('differenceMode') as DifferenceMode) || 'minutes';
 	dateUrlMode: 'date' | 'timer' = 'date';
@@ -786,6 +787,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					});
 				},
 			});
+
+		this.isModesDropOpened = true;
+	}
+
+	pointModesClosed() {
+		this.isModesDropOpened = false;
 	}
 
 	submit(saveIteration = false, repeats: Iteration[] = []) {

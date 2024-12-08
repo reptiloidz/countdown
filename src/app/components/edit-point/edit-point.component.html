@@ -109,6 +109,7 @@
 						*ngIf="!isCreation && repeatableValue"
 						class="drop--nested"
 						(dropOpened)="pointModesOpened()"
+						(dropClosed)="pointModesClosed()"
 					>
 						<ng-template
 							#triggerTemplate
@@ -116,6 +117,7 @@
 						>
 							<div
 								app-tooltip
+								[disabled]="isModesDropOpened"
 								horizontal="left"
 								vertical="top"
 								text="Установка режимов для чередования итераций. Актуально только для многократных событий"
@@ -182,7 +184,7 @@
 						*ngIf="repeatableValueSaved && !isCreation"
 						app-button
 						class="form__submit"
-						mode="ghost"
+						mode="positive"
 						iconPosition="right"
 						icon="arrow-right"
 						type="button"
@@ -257,7 +259,7 @@
 						app-button
 						class="form__submit"
 						type="submit"
-						mode="ghost"
+						mode="positive"
 						icon="arrow-right"
 						iconPosition="right"
 						[attr.disabled]="(loading || (repeatableValueSaved && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"

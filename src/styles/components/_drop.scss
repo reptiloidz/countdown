@@ -31,7 +31,8 @@
 
 		> .drop__nav {
 			position: relative;
-			z-index: 2;
+			// Вернуть 2, если будут проблемы с боди и кнопкой
+			z-index: 3;
 			border-radius: var(--drop-nav-brs);
 		}
 	}
