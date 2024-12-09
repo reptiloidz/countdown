@@ -13,7 +13,13 @@ export class ButtonComponent {
 	@Input() type!: string;
 	@Input() loading = false;
 	@Input() view: 'button' | 'link' = 'button';
-	@Input() mode!: 'primary' | 'secondary' | 'negative' | 'positive' | 'ghost';
+	@Input() mode!:
+		| 'primary'
+		| 'secondary'
+		| 'negative'
+		| 'positive'
+		| 'ghost'
+		| 'ghost-positive';
 	@Input() size!: ButtonSize;
 	@Input() disabled = false;
 	@Input() textClass: string[] = [];

@@ -14,7 +14,7 @@
 			*ngIf="!emailVerified"
 			app-button
 			[attr.disabled]="verifyButtonDisabled || null"
-			mode="ghost"
+			mode="ghost-positive"
 			iconPosition="right"
 			icon="arrow-right"
 			(click)="sendEmailVerification()"
@@ -24,8 +24,7 @@
 			app-button
 			mode="negative"
 			(click)="removeAccount()"
-			iconPosition="right"
-			icon="arrow-right"
+			icon="trash"
 		>Удалить аккаунт</button>
 	</div>
 
@@ -67,7 +66,7 @@
 					type="submit"
 					[attr.disabled]="(this.userpicLoading || formData.invalid) || null"
 					class="form__submit profile__submit"
-					mode="ghost"
+					mode="ghost-positive"
 					iconPosition="right"
 					icon="arrow-right"
 				>Обновить данные</button>
@@ -103,7 +102,7 @@
 					type="submit"
 					[attr.disabled]="(formEmail.invalid || isSameEmail) || null"
 					class="form__submit profile__submit"
-					mode="ghost"
+					mode="ghost-positive"
 					iconPosition="right"
 					icon="arrow-right"
 				>Обновить e-mail</button>
@@ -149,7 +148,7 @@
 					type="submit"
 					[attr.disabled]="(formPassword.invalid || passwordErrorMessages.length) || null"
 					class="form__submit profile__submit"
-					mode="ghost"
+					mode="ghost-positive"
 					iconPosition="right"
 					icon="arrow-right"
 				>Обновить пароль</button>

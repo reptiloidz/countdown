@@ -68,7 +68,7 @@
 	</div>
 	<div
 		app-tooltip
-		*ngIf="isPublicPoint || isUrl"
+		*ngIf="(pointId || isUrl) && !isMain"
 		vertical="top"
 		[text]="isUrl ? 'Создать и копировать короткую ссылку' : 'Копировать ссылку'"
 	>

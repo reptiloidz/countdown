@@ -63,6 +63,12 @@
 		--button-border-cl: rgba(var(--c-border-primary), .2);
 	}
 
+	&--ghost-positive {
+		--button-bg-cl: transparent;
+		--button-cl: rgba(var(--c-text-positive), 1);
+		--button-border-cl: rgba(var(--c-border-positive), 1);
+	}
+
 	&--secondary {
 		--button-bg-cl: transparent;
 		--button-cl: rgba(var(--c-text-button-inverse), .6);

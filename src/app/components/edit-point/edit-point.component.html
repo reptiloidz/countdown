@@ -184,7 +184,7 @@
 						*ngIf="repeatableValueSaved && !isCreation"
 						app-button
 						class="form__submit"
-						mode="positive"
+						mode="ghost-positive"
 						iconPosition="right"
 						icon="arrow-right"
 						type="button"
@@ -259,7 +259,7 @@
 						app-button
 						class="form__submit"
 						type="submit"
-						mode="positive"
+						mode="ghost-positive"
 						icon="arrow-right"
 						iconPosition="right"
 						[attr.disabled]="(loading || (repeatableValueSaved && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"
