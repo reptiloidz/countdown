@@ -84,6 +84,7 @@ enum EditPointSuccessMessage {
 })
 export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationsList') private iterationsList!: ElementRef;
+	@ViewChild('iterationForm') private iterationForm!: ElementRef;
 	@ViewChild('colorDrop') private colorDrop!: DropComponent;
 	@ViewChild('modesDrop') private modesDrop!: DropComponent;
 	@HostBinding('class') class = 'main__inner';
@@ -692,6 +693,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	addIterationHandler() {
+		this.iterationForm.nativeElement.scrollIntoView({
+			behavior: 'smooth',
+		});
 		this.isIterationAdded = true;
 		this.setValues({
 			isReset: true,

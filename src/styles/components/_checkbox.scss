@@ -75,7 +75,7 @@
 	}
 
 	&--custom {
-		--checkbox-cl: rgba(var(--c-border-primary), .2);
+		--checkbox-cl: currentColor;
 		--checkbox-border-cl: transparent;
 		--checkbox-box-w: 40px;
 		--checkbox-icon-w: 24px;

@@ -306,7 +306,7 @@ export class PointComponent implements OnInit, OnDestroy {
 			this.pointDate = getPointDate({
 				pointDate: parseDate(
 					this.dates?.[this.currentIterationIndex || 0].date,
-					this.urlModeValue,
+					this.timerMode,
 					this.timerMode
 				),
 				isGreenwich: this.point?.greenwich,
