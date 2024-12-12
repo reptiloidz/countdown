@@ -1,9 +1,14 @@
 .points-list {
+	@include media-breakpoint-down(md) {
+		--points-list-min-w: 100%;
+	}
 	--points-list-gap: 20px;
+	--points-list-min-w: 410px;
+	--points-list-lines-min-w: 950px;
 
 	display: grid;
 	flex-grow: 1;
-	grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(var(--points-list-min-w), 1fr));
 	gap: var(--points-list-gap);
 	align-content: flex-start;
 	width: 100%;
@@ -15,6 +20,10 @@
 	}
 
 	&--lines {
-		grid-template-columns: repeat(auto-fill, minmax(950px, 1fr));
+		@include media-breakpoint-down(md) {
+			--points-list-lines-min-w: 100%;
+		}
+
+		grid-template-columns: repeat(auto-fill, minmax(var(--points-list-lines-min-w), 1fr));
 	}
 }

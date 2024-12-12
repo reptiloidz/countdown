@@ -1,10 +1,13 @@
 .content {
+	--content-py: 20px;
+	--content-px: 20px;
+
 	position: relative;
 	z-index: 0;
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
-	padding: 20px;
+	padding: var(--content-py) var(--content-px);
 	overflow: hidden;
 
 	&::before {
@@ -48,8 +51,15 @@
 	}
 
 	&--main {
-		padding-top: 60px;
-		padding-bottom: 60px;
+		@include media-breakpoint-down(lg) {
+			--content-py: 40px;
+		}
+
+		@include media-breakpoint-down(md) {
+			--content-py: 20px;
+		}
+
+		--content-py: 60px;
 	}
 
 	&--row {

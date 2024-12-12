@@ -39,4 +39,10 @@
 		margin: var(--logo-pb) 2px 0;
 		box-shadow: 0 0 1px 1px rgb(var(--c-bg-primary), .4);
 	}
+
+	&__letters {
+		@include media-breakpoint-down(sm) {
+			display: none;
+		}
+	}
 }

@@ -3,14 +3,20 @@
 		display: grid;
 		grid-template-areas: 'left right' 'bottom bottom';
 		grid-template-columns: auto 1fr;
+		padding-top: 10px;
 		padding-bottom: 10px;
+	}
+
+	@include media-breakpoint-down(md) {
+		padding-right: var(--cont-x-md);
+		padding-left: var(--cont-x-md);
 	}
 
 	position: sticky;
 	top: 0;
 	z-index: 1;
 	display: flex;
-	padding: 0 40px 20px;
+	padding: 0 var(--cont-x) 20px;
 	border-bottom: 1px solid rgba(var(--c-border-primary), .2);
 	background-color: rgb(var(--c-bg-panel));
 
@@ -47,5 +53,11 @@
 
 	&__filters-list {
 		padding: 0 6px;
+	}
+
+	&__modes {
+		@include media-breakpoint-down(md) {
+			display: none;
+		}
 	}
 }

@@ -99,110 +99,114 @@
 			</app-drop>
 
 			<div class="dashboard__filters filters">
+				<div class="filters__switchers">
+					<app-switcher
+						class="filters__switcher"
+						switcherListClass="dashboard__filters-list"
+						size="sm"
+						[items]="greenwichList"
+						[value]="greenwichValue"
+						[showTitle]="true"
+						(valueSwitched)="changeGreenwichFilter($event)"
+					></app-switcher>
+					<app-switcher
+						class="filters__switcher"
+						switcherListClass="dashboard__filters-list"
+						size="sm"
+						[items]="repeatList"
+						[value]="repeatableValue"
+						[showTitle]="true"
+						(valueSwitched)="changeRepeatFilter($event)"
+					></app-switcher>
+					<app-switcher
+						*ngIf="isAuth"
+						class="filters__switcher"
+						switcherListClass="dashboard__filters-list"
+						size="sm"
+						[items]="publicList"
+						[value]="publicValue"
+						[showTitle]="true"
+						(valueSwitched)="changePublicFilter($event)"
+					></app-switcher>
+					<app-switcher
+						class="filters__switcher"
+						switcherListClass="dashboard__filters-list"
+						size="sm"
+						[items]="directionList"
+						[value]="directionValue"
+						[showTitle]="true"
+						(valueSwitched)="changeDirectionFilter($event)"
+					></app-switcher>
+				</div>
 
-				<app-switcher
-					class="filters__switcher"
-					switcherListClass="dashboard__filters-list"
-					size="sm"
-					[items]="greenwichList"
-					[value]="greenwichValue"
-					[showTitle]="true"
-					(valueSwitched)="changeGreenwichFilter($event)"
-				></app-switcher>
-				<app-switcher
-					class="filters__switcher"
-					switcherListClass="dashboard__filters-list"
-					size="sm"
-					[items]="repeatList"
-					[value]="repeatableValue"
-					[showTitle]="true"
-					(valueSwitched)="changeRepeatFilter($event)"
-				></app-switcher>
-				<app-switcher
-					*ngIf="isAuth"
-					class="filters__switcher"
-					switcherListClass="dashboard__filters-list"
-					size="sm"
-					[items]="publicList"
-					[value]="publicValue"
-					[showTitle]="true"
-					(valueSwitched)="changePublicFilter($event)"
-				></app-switcher>
-				<app-switcher
-					class="filters__switcher"
-					switcherListClass="dashboard__filters-list"
-					size="sm"
-					[items]="directionList"
-					[value]="directionValue"
-					[showTitle]="true"
-					(valueSwitched)="changeDirectionFilter($event)"
-				></app-switcher>
-
-				<app-drop
-					[select]="true"
-					navClass=""
-					class="filters__colors"
-				>
-					<ng-template
-						#triggerTemplate
-						let-toggle="toggle"
+				<div class="filters__aside">
+					<app-drop
+						[select]="true"
+						navClass=""
+						class="filters__colors"
 					>
-						<button
-							app-button
-							view="link"
-							icon="chevron-down"
-							size="lg"
-							(click)="toggle()"
-						>Цвет</button>
-					</ng-template>
-					<ng-template #bodyTemplate>
-						<div #colorList>
-							<label
-								*ngFor="let pointColorsItem of pointColors"
-								app-checkbox
-								iconSize="sm"
-								[attr.data-color]="pointColorsItem"
-								class="drop__item"
-								(change)="changeFilters()"
-								[isChecked]="colorType | colorsCheck: pointColorsItem"
-							><span
-									[innerHTML]="pointColorNames[pointColorsItem]"
-									class="drop__item-color color"
-									[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
-								></span></label>
-							<div class="drop__footer drop__footer--left">
-								<button
-									app-button
-									icon="cross"
-									mode="secondary"
-									size="sm"
-									(click)="resetColors()"
-								>Очистить</button>
+						<ng-template
+							#triggerTemplate
+							let-toggle="toggle"
+						>
+							<button
+								app-button
+								view="link"
+								icon="chevron-down"
+								size="lg"
+								(click)="toggle()"
+							>Цвет</button>
+						</ng-template>
+						<ng-template #bodyTemplate>
+							<div #colorList>
+								<label
+									*ngFor="let pointColorsItem of pointColors"
+									app-checkbox
+									iconSize="sm"
+									[attr.data-color]="pointColorsItem"
+									class="drop__item"
+									(change)="changeFilters()"
+									[isChecked]="colorType | colorsCheck: pointColorsItem"
+								><span
+										[innerHTML]="pointColorNames[pointColorsItem]"
+										class="drop__item-color color"
+										[ngClass]="pointColorsItem ? 'color--' + pointColorsItem : ''"
+									></span></label>
+								<div class="drop__footer drop__footer--left">
+									<button
+										app-button
+										icon="cross"
+										mode="secondary"
+										size="sm"
+										(click)="resetColors()"
+									>Очистить</button>
+								</div>
 							</div>
-						</div>
-					</ng-template>
-				</app-drop>
+						</ng-template>
+					</app-drop>
 
-				<app-input
-					class="filters__search"
-					placeholder="Поиск"
-					icon="search"
-					#searchInput
-					(input)="changeFilters()"
-					[(ngModel)]="searchInputValue"
-				></app-input>
+					<app-input
+						class="filters__search"
+						placeholder="Поиск"
+						icon="search"
+						#searchInput
+						(input)="changeFilters()"
+						[(ngModel)]="searchInputValue"
+					></app-input>
 
-				<button
-					*ngIf="filtersFilled"
-					class="filters__clear"
-					app-button
-					icon="cross-circle"
-					size="sm"
-					mode="negative"
-					(click)="clearFilters()"
-					title="Очистить фильтры"
-				></button>
+					<button
+						*ngIf="filtersFilled"
+						class="filters__clear"
+						app-button
+						icon="cross-circle"
+						size="sm"
+						mode="negative"
+						(click)="clearFilters()"
+						title="Очистить фильтры"
+					></button>
+				</div>
 			</div>
+
 			<div class="dashboard__aside">
 				<app-drop
 					[select]="true"
@@ -249,6 +253,7 @@
 				</app-drop>
 
 				<app-switcher
+					class="dashboard__modes"
 					[items]="modesList"
 					[value]="modesValue"
 					(valueSwitched)="changeModes($event)"

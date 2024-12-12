@@ -1,4 +1,4 @@
-<div class="nav__aside nav__aside--top">
+<div class="nav__aside nav__aside--links">
 	<ng-container *ngIf="isAuthenticated; else unAuth">
 		<a
 			app-button
@@ -63,7 +63,7 @@
 	<span
 		aria-hidden="true"
 		class="logo__count"
-	>н
+	><span class="logo__letters">н</span>
 		<app-board
 			mode="logo"
 			initialValue="&nbsp;"
@@ -71,12 +71,12 @@
 			[delayValue]="2000"
 			class="logo__board"
 		></app-board>
-		ль</span>
+		<span class="logo__letters">ль</span></span>
 </h1>
 
 <div
 	*ngIf="!isMain"
-	class="nav__aside nav__aside--top"
+	class="nav__aside nav__aside--home"
 >
 	<a
 		app-button

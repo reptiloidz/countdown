@@ -1,4 +1,10 @@
 .timers {
+	@include media-breakpoint-down(sm) {
+		display: grid;
+		grid-template-areas: 'year month day' 'hour minute second';
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+
 	--timers-p: 20px;
 	--timers-gap: 60px;
 	--timers-item-shadow-spread: 2px;
@@ -17,6 +23,30 @@
 	&__item-wrapper {
 		position: relative;
 		display: flex;
+
+		&:nth-child(1) {
+			grid-area: year;
+		}
+
+		&:nth-child(2) {
+			grid-area: month;
+		}
+
+		&:nth-child(3) {
+			grid-area: day;
+		}
+
+		&:nth-last-child(3) {
+			grid-area: hour;
+		}
+
+		&:nth-last-child(2) {
+			grid-area: minute;
+		}
+
+		&:nth-last-child(1) {
+			grid-area: second;
+		}
 
 		&:first-child {
 			margin-left: var(--timers-gap);
@@ -64,6 +94,21 @@
 	}
 
 	&--sm {
+		@include media-breakpoint-down(sm) {
+			--timers-gap: 0;
+
+			gap: 20px 15px;
+
+			&:not(:has(.timers__item-wrapper--date)) {
+				gap: 0 15px;
+			}
+
+			.timers__item-wrapper {
+				&::after {
+					margin-left: 3px;
+				}
+			}
+		}
 		--timers-p: 0;
 		--timers-gap: 20px;
 		--timers-divider-mt: 4px;
