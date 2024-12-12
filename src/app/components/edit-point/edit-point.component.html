@@ -4,6 +4,7 @@
 ></div>
 <app-date-panel
 	*ngIf="this.dates?.length && !isCreationUrl && !isCreation"
+	#datePanel
 	[loading]="loading"
 	[pointDate]="pointDate"
 	[selectedIterationDate]="selectedIterationDate"
@@ -197,7 +198,18 @@
 			<h3
 				*ngIf="repeatableValueSaved && !isCreation"
 				class="form__section-title"
-			>Редактирование итерации</h3>
+			>{{ isIterationAdded ? 'Создание' : 'Редактирование'}} итерации
+				<button
+					app-button
+					*ngIf="!isIterationAdded"
+					icon="plus"
+					view="link"
+					size="lg"
+					mode="positive"
+					title="Добавить итерацию"
+					(click)="datePanel.addIterationClick()"
+				></button>
+			</h3>
 
 			<div
 				#iterationForm

@@ -60,6 +60,7 @@ import {
 } from 'src/app/types';
 import { DropComponent } from '../drop/drop.component';
 import { fetchEmojis, fetchMessages } from 'emojibase';
+import { DatePanelComponent } from '../date-panel/date-panel.component';
 
 enum EditPointType {
 	Create = 'create',
@@ -87,6 +88,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	@ViewChild('iterationForm') private iterationForm!: ElementRef;
 	@ViewChild('colorDrop') private colorDrop!: DropComponent;
 	@ViewChild('modesDrop') private modesDrop!: DropComponent;
+	@ViewChild('datePanel') datePanel!: DatePanelComponent;
 	@HostBinding('class') class = 'main__inner';
 	type = EditPointType.Edit;
 	form!: FormGroup;
