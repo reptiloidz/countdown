@@ -61,7 +61,7 @@ import {
 import { DropComponent } from '../drop/drop.component';
 import { fetchEmojis, fetchMessages } from 'emojibase';
 
-export enum EditPointType {
+enum EditPointType {
 	Create = 'create',
 	Edit = 'edit',
 	CreateUrl = 'create-url',
@@ -172,8 +172,31 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
-	private repeatableNotify: Date | undefined;
-	private timerNotify: Date | undefined;
+	private notifies: {
+		[key: string]: {
+			date: Date | undefined;
+			remove: () => void;
+		};
+	} = {
+		greenwich: {
+			date: undefined,
+			remove: () => {
+				this.closeNotify('greenwich');
+			},
+		},
+		repeatable: {
+			date: undefined,
+			remove: () => {
+				this.closeNotify('repeatable');
+			},
+		},
+		timer: {
+			date: undefined,
+			remove: () => {
+				this.closeNotify('timer');
+			},
+		},
+	};
 
 	checking = new BehaviorSubject<boolean>(true);
 
@@ -346,37 +369,63 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						}
 
 						/**
+						 * Если изменен флаг Гринвича, предупреждаем, что надо сохранить
+						 * изменения перед редактированием итераций
+						 */
+						if (this.notifies['greenwich'].date) {
+							if (
+								!!this.greenwichValue ===
+									!!this.point?.greenwich ||
+								!this.hasManyIterations
+							) {
+								this.notifies['greenwich'].remove();
+							}
+						} else {
+							if (
+								!!this.greenwichValue !==
+									!!this.point?.greenwich &&
+								this.hasManyIterations
+							) {
+								this.notifies['greenwich'].date =
+									this.notify.add({
+										title: 'Сохраните событие для корректного редактирования итераций',
+									}) as Date;
+							}
+						}
+
+						/**
 						 * Если есть уведомление о повторяемости,
 						 * то удаляем его когда оно неактуально.
 						 * Если его нет, то показываем, когда актуально
 						 */
-						if (this.repeatableNotify) {
+						if (this.notifies['repeatable'].date) {
 							if (
 								(!this.isCreation || !this.repeatableValue) &&
 								(this.isCreation ||
 									this.repeatableValue ||
 									!this.hasManyIterations)
 							) {
-								this.notify.close(this.repeatableNotify);
-								this.repeatableNotify = undefined;
+								this.notifies['repeatable'].remove();
 							}
 						} else {
 							if (
 								this.repeatableValue &&
 								!this.repeatableValueSaved
 							) {
-								this.repeatableNotify = this.notify.add({
-									title: 'Изменение итераций будет доступно после сохранения события',
-								}) as Date;
+								this.notifies['repeatable'].date =
+									this.notify.add({
+										title: 'Изменение итераций будет доступно после сохранения события',
+									}) as Date;
 							} else if (
 								!this.isCreation &&
 								!this.repeatableValue &&
 								this.hasManyIterations
 							) {
-								this.repeatableNotify = this.notify.add({
-									title: 'Отключены повторы события',
-									text: 'Все итерации кроме последней будут удалены',
-								}) as Date;
+								this.notifies['repeatable'].date =
+									this.notify.add({
+										title: 'Отключены повторы события',
+										text: 'Все итерации кроме последней будут удалены',
+									}) as Date;
 							}
 						}
 
@@ -446,10 +495,9 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
-		this.repeatableNotify && this.notify.close(this.repeatableNotify);
-		this.repeatableNotify = undefined;
-		this.timerNotify && this.notify.close(this.timerNotify);
-		this.timerNotify = undefined;
+		this.notifies['greenwich'].remove();
+		this.notifies['repeatable'].remove();
+		this.notifies['timer'].remove();
 	}
 
 	get formGroup(): any {
@@ -561,6 +609,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	 */
 	get repeatableValueSaved() {
 		return this.point?.repeatable;
+	}
+
+	closeNotify(name: string) {
+		this.notifies[name].date &&
+			this.notify.close(this.notifies[name].date as Date);
+		this.notifies[name].date = undefined;
 	}
 
 	sortDates() {
@@ -742,13 +796,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	switchDateUrlMode(mode: string) {
 		this.dateUrlMode = mode as 'date' | 'timer';
 
-		if (this.timerNotify) {
+		if (this.notifies['timer'].date) {
 			if (this.dateUrlMode === 'date') {
-				this.notify.close(this.timerNotify);
-				this.timerNotify = undefined;
+				this.notifies['timer'].remove();
 			}
 		} else {
-			this.timerNotify = this.notify.add({
+			this.notifies['timer'].date = this.notify.add({
 				title: 'При выборе режима "таймер" отсчёт всегда будет от значения, указанного в ссылке',
 				text: 'После обновления страницы отсчёт начнётся заново',
 			}) as Date;

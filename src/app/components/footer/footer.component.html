@@ -109,7 +109,7 @@
 			#tooltipTrigger
 			size="lg"
 			mode="positive"
-			icon="link"
+			icon="calendar-link"
 			(click)="copyPoint()"
 			title="Копировать как событие-ссылку"
 		></button>
@@ -119,7 +119,7 @@
 			#tooltipTrigger
 			size="lg"
 			mode="positive"
-			icon="link"
+			icon="calendar-link"
 			routerLink="/create-url"
 			title="Создать событие-ссылку"
 		></a>
@@ -137,7 +137,7 @@
 			app-button
 			#tooltipTrigger
 			size="lg"
-			icon="plus"
+			icon="calendar-plus"
 			[attr.disabled]="!isVerified || null"
 			mode="positive"
 			(click)="copyPoint(true)"
@@ -149,7 +149,7 @@
 			#tooltipTrigger
 			size="lg"
 			mode="positive"
-			icon="plus"
+			icon="calendar-plus"
 			[disabled]="!isVerified"
 			routerLink="/create"
 			title="Создать событие"

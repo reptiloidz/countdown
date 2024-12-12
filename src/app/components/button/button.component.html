@@ -20,7 +20,6 @@
 
 <ng-template #iconTemplate>
 	<svg
-		*ngIf="!loading"
 		app-svg
 		[name]="icon"
 		[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
@@ -30,8 +29,5 @@
 	></svg>
 </ng-template>
 <ng-template #loaderTemplate>
-	<app-loader
-		*ngIf="loading"
-		[iconClass]="view === 'button' ? 'button__icon' : 'link__icon'"
-	></app-loader>
+	<app-loader [iconClass]="view === 'button' ? 'button__icon' : 'link__icon'"></app-loader>
 </ng-template>
