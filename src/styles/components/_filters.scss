@@ -11,6 +11,10 @@
 	}
 
 	&__search {
+		@include media-breakpoint-down(lg) {
+			order: 1;
+		}
+
 		flex-shrink: 1;
 		margin-left: 20px;
 	}
@@ -28,6 +32,16 @@
 	}
 
 	&__clear {
+		@include media-breakpoint-down(lg) {
+			order: 1;
+		}
+
 		margin-left: 8px;
+	}
+
+	&__colors {
+		@include media-breakpoint-down(lg) {
+			margin-left: auto;
+		}
 	}
 }

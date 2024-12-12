@@ -1,4 +1,11 @@
 .dashboard {
+	@include media-breakpoint-down(lg) {
+		display: grid;
+		grid-template-areas: 'left right' 'bottom bottom';
+		grid-template-columns: auto 1fr;
+		padding-bottom: 10px;
+	}
+
 	position: sticky;
 	top: 0;
 	z-index: 1;
@@ -7,16 +14,12 @@
 	border-bottom: 1px solid rgba(var(--c-border-primary), .2);
 	background-color: rgb(var(--c-bg-panel));
 
-	&__filters {
-		margin-right: auto;
-		margin-left: 10px;
-	}
-
-	&__filters-list {
-		padding: 0 6px;
-	}
-
 	&__aside {
+		@include media-breakpoint-down(lg) {
+			grid-area: right;
+			margin-left: auto;
+		}
+
 		display: flex;
 		gap: 16px;
 		align-items: center;
@@ -24,6 +27,25 @@
 	}
 
 	&__calendar {
+		@include media-breakpoint-down(lg) {
+			grid-area: left;
+		}
+
 		align-self: center;
+	}
+
+	&__filters {
+		@include media-breakpoint-down(lg) {
+			grid-area: bottom;
+			width: 100%;
+			margin-left: 0;
+		}
+
+		margin-right: auto;
+		margin-left: 10px;
+	}
+
+	&__filters-list {
+		padding: 0 6px;
 	}
 }
