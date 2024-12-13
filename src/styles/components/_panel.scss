@@ -1,7 +1,18 @@
 .panel {
+	@include media-breakpoint-down(sm) {
+		--panel-px: 30px;
+	}
+
+	@include media-breakpoint-down(xs) {
+		--panel-px: 10px;
+	}
 	--panel-px: 40px;
 
 	&__body {
+		@include media-breakpoint-down(md) {
+			padding-top: 0;
+		}
+
 		padding: 10px var(--panel-px);
 		border-bottom: 1px solid rgba(var(--c-border-primary), .2);
 		background-color: rgb(var(--c-bg-panel));

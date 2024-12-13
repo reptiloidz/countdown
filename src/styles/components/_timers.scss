@@ -1,8 +1,36 @@
 .timers {
+	@include media-breakpoint-down(lg) {
+		--timers-p: 15px;
+		--timers-gap: 30px;
+		--timers-item-shadow-spread: 1.5px;
+		--timers-divider-mt: 8px;
+		--timers-divider-fz: 48px;
+	}
+
+	@include media-breakpoint-down(md) {
+		--timers-p: 10px;
+		--timers-gap: 24px;
+		--timers-item-shadow-spread: 1px;
+		--timers-divider-mt: 8px;
+		--timers-divider-fz: 32px;
+	}
+
 	@include media-breakpoint-down(sm) {
+		--timers-gap: 0;
+		--timers-divider-mt: 10px;
+
 		display: grid;
 		grid-template-areas: 'year month day' 'hour minute second';
 		grid-template-columns: 1fr 1fr 1fr;
+		gap: 36px;
+
+		&:not(:has(.timers__item-wrapper--date)) {
+			row-gap: 0;
+		}
+	}
+
+	@include media-breakpoint-down(xs) {
+		gap: 24px;
 	}
 
 	--timers-p: 20px;
@@ -63,6 +91,14 @@
 		&--date,
 		&--time {
 			&::after {
+				@include media-breakpoint-down(sm) {
+					--timers-gap: 36px;
+				}
+
+				@include media-breakpoint-down(xs) {
+					--timers-gap: 24px;
+				}
+
 				position: absolute;
 				left: 100%;
 				display: block;
@@ -99,16 +135,14 @@
 
 			gap: 20px 15px;
 
-			&:not(:has(.timers__item-wrapper--date)) {
-				gap: 0 15px;
-			}
-
 			.timers__item-wrapper {
 				&::after {
+					width: 10px;
 					margin-left: 3px;
 				}
 			}
 		}
+
 		--timers-p: 0;
 		--timers-gap: 20px;
 		--timers-divider-mt: 4px;

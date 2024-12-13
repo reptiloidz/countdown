@@ -1,4 +1,29 @@
 .board {
+	@include media-breakpoint-down(lg) {
+		--board-fz: 60px;
+		--board-h: 80px;
+		--board-px: 15px;
+		--board-brs: 6px;
+		--board-hinge-w: 6px;
+		--board-hinge-h: 24px;
+		--board-label-fz: 14px;
+		--board-label-mt: 6px;
+	}
+
+	@include media-breakpoint-down(md) {
+		--board-fz: 40px;
+		--board-h: 60px;
+		--board-px: 10px;
+		--board-brs: 4px;
+		--board-hinge-w: 4px;
+		--board-hinge-h: 16px;
+		--board-label-fz: 12px;
+		--board-label-mt: 4px;
+	}
+
+	@include media-breakpoint-down(xs) {
+		--board-label-mt: 0;
+	}
 	--board-fz: 80px;
 	--board-h: 120px;
 	--board-px: 20px;

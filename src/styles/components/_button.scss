@@ -105,6 +105,15 @@
 		--button-brs: 8px;
 
 		.button__icon {
+			@include media-breakpoint-down(sm) {
+				--icon-w: 28px;
+				--icon-stroke-w: 1.5px;
+			}
+
+			@include media-breakpoint-down(xs) {
+				--icon-w: 20px;
+			}
+
 			--icon-stroke-w: 1px;
 			--icon-w: 40px;
 		}

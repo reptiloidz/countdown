@@ -93,9 +93,12 @@
 					[src]="userData.photoURL"
 					[alt]="userData.displayName"
 					aria-hidden="true"
-				><ng-container *ngIf="userData?.displayName">
+				><span
+					*ngIf="userData?.displayName"
+					class="point-page__author-text"
+				>
 					{{ userData.displayName }}
-				</ng-container>
+				</span>
 			</div>
 
 			<div

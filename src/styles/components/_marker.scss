@@ -1,4 +1,7 @@
 .marker {
+	@include media-breakpoint-down(xs) {
+		padding: 4px;
+	}
 	--marker-opacity: 1;
 	--marker-color: rgb(var(--c-text-primary));
 	--marker-bg-cl: rgba(var(--c-bg-primary), .04);
@@ -12,6 +15,10 @@
 	opacity: var(--marker-opacity);
 
 	&__inner {
+		@include media-breakpoint-down(xs) {
+			width: 16px;
+		}
+
 		width: 24px;
 		color: rgb(var(--marker-color));
 	}
