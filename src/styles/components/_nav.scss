@@ -6,8 +6,8 @@
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: space-between;
-	padding-right: var(--cont-x);
-	padding-left: var(--cont-x);
+	padding-right: var(--cont-px);
+	padding-left: var(--cont-px);
 	background-color: rgb(var(--c-bg-panel));
 
 	&__aside {
@@ -25,18 +25,39 @@
 
 		&--links {
 			@include media-breakpoint-down(sm) {
+				max-width: 100%;
 				margin-top: 10px;
 				margin-bottom: 5px;
 			}
 
 			grid-area: bottom;
+			max-width: 35%;
+			overflow: hidden;
 		}
 	}
 
-	&__item-inner {
+	&__profile-wrapper {
+		width: 100%;
+	}
+
+	&__profile-link {
+		@include media-breakpoint-down(sm) {
+			margin-right: auto;
+		}
+
+		min-width: 0;
+	}
+
+	&__profile-inner {
 		display: flex;
 		gap: 4px;
 		align-items: center;
+	}
+
+	&__profile-text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	&__create {
@@ -56,9 +77,8 @@
 	&--header {
 		@include media-breakpoint-down(md) {
 			padding-top: 10px;
-			padding-right: var(--cont-x-md);
-			padding-bottom: 0;
-			padding-left: var(--cont-x-md);
+			// Просто так обнулять нельзя, в профиле уродство. Но в других местах большой отступ
+			// padding-bottom: 0;
 		}
 
 		@include media-breakpoint-down(sm) {
@@ -72,13 +92,13 @@
 	}
 
 	&--footer {
-		--cont-x: 20px;
+		--cont-px: 20px;
 
 		position: sticky;
 		bottom: 0;
 		z-index: 1;
-		padding-top: 10px;
-		padding-bottom: 10px;
+		padding-top: 20px;
+		padding-bottom: 20px;
 		border-top: 1px solid rgba(var(--c-border-primary), .2);
 
 		&:not(:has(.nav__aside:not(:empty))) {

@@ -42,6 +42,11 @@
 	}
 
 	&__item-wrapper {
+		@include media-breakpoint-down(sm) {
+			width: auto;
+			margin: 0 10px;
+		}
+
 		z-index: 1;
 		width: clamp(400px, 50%, 1000px);
 		margin: 0;
@@ -96,6 +101,11 @@
 	}
 
 	&__inner {
+		@include media-breakpoint-down(sm) {
+			flex-direction: column;
+			gap: 10px;
+		}
+
 		display: flex;
 	}
 

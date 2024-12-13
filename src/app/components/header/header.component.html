@@ -4,18 +4,19 @@
 			app-button
 			view="link"
 			*ngIf="isProfile"
-			class="nav__item"
+			class="nav__profile-link"
+			[textClass]="['nav__profile-wrapper']"
 			[routerLink]="'/profile'"
 			[title]="user?.email"
 		>
-			<span class="nav__item-inner">
+			<span class="nav__profile-inner">
 				<img
 					*ngIf="user?.photoURL"
 					class="userpic userpic--sm"
 					[src]="user?.photoURL"
 					[alt]="user?.displayName"
 					aria-hidden="true"
-				>{{ user?.displayName }}
+				><span class="nav__profile-text">{{ user?.displayName }}</span>
 			</span>
 		</a>
 		<button

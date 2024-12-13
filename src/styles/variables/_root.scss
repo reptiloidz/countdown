@@ -1,4 +1,13 @@
+@import '../mixins';
+
 :root {
-	--cont-x: 40px;
-	--cont-x-md: 20px;
+	@include media-breakpoint-down(md) {
+		--cont-px: 20px;
+	}
+
+	@include media-breakpoint-down(sm) {
+		--cont-px: 10px;
+	}
+
+	--cont-px: 40px;
 }

@@ -1,4 +1,8 @@
 .ol-nested {
+	@include media-breakpoint-down(sm) {
+		margin: 0;
+	}
+
 	counter-reset: item;
 	padding: 0;
 	font-size: 16px;
@@ -9,6 +13,10 @@
 		list-style-position: inside;
 
 		h2 {
+			@include media-breakpoint-down(sm) {
+				font-size: 18px;
+			}
+
 			margin: 10px 0;
 			font-size: 20px;
 

@@ -22,6 +22,7 @@ a,
 	align-items: baseline;
 	font-size: var(--link-fz);
 	font-weight: var(--link-fw);
+	text-align: left;
 
 	&__icon {
 		--icon-stroke-w: var(--link-icon-stroke-w);

@@ -1,17 +1,35 @@
 .profile {
+	@include media-breakpoint-down(sm) {
+		flex-direction: column;
+	}
+
 	flex-grow: 0;
 
 	&__col {
+		@include media-breakpoint-down(sm) {
+			flex-direction: row;
+			width: 100%;
+		}
+
 		align-items: flex-end;
-		width: clamp(200px, 25%, 400px);
+		width: clamp(240px, 25%, 400px);
 
 		&--lg {
+			@include media-breakpoint-down(sm) {
+				width: 100%;
+			}
+
 			flex-grow: 1;
 		}
 	}
 
 	&__footer {
 		display: flex;
+
+		&--aside {
+			display: block;
+			margin-right: auto;
+		}
 	}
 
 	&__submit {

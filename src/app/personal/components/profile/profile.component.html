@@ -10,22 +10,24 @@
 			*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
 		></div>
 
-		<button
-			*ngIf="!emailVerified"
-			app-button
-			[attr.disabled]="verifyButtonDisabled || null"
-			mode="ghost-positive"
-			iconPosition="right"
-			icon="arrow-right"
-			(click)="sendEmailVerification()"
-		>Подтвердить почту</button>
+		<div class="profile__footer profile__footer--aside">
+			<button
+				*ngIf="!emailVerified"
+				app-button
+				[attr.disabled]="verifyButtonDisabled || null"
+				mode="ghost-positive"
+				iconPosition="right"
+				icon="arrow-right"
+				(click)="sendEmailVerification()"
+			>Подтвердить почту</button>
 
-		<button
-			app-button
-			mode="negative"
-			(click)="removeAccount()"
-			icon="trash"
-		>Удалить аккаунт</button>
+			<button
+				app-button
+				mode="negative"
+				(click)="removeAccount()"
+				icon="trash"
+			>Удалить аккаунт</button>
+		</div>
 	</div>
 
 	<div class="content__col profile__col--lg">

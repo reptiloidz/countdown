@@ -1,4 +1,12 @@
 .popup {
+	@include media-breakpoint-down(md) {
+		--popup-w: clamp(400px, 95%, 600px);
+	}
+
+	@include media-breakpoint-down(sm) {
+		--popup-w: 100%;
+	}
+
 	--popup-w: clamp(600px, 100%, 1000px);
 	--popup-mt: 100px;
 
@@ -37,6 +45,10 @@
 	}
 
 	&__inner {
+		@include media-breakpoint-down(sm) {
+			margin: 10px;
+		}
+
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -48,6 +60,11 @@
 	}
 
 	&__title {
+		@include media-breakpoint-down(sm) {
+			padding: 10px;
+			font-size: 18px;
+		}
+
 		flex-grow: 1;
 		padding: 20px;
 		color: rgba(var(--c-text-button), 1);
@@ -55,6 +72,11 @@
 	}
 
 	&__btn {
+		@include media-breakpoint-down(sm) {
+			margin-top: 8px;
+			margin-right: 8px;
+		}
+
 		z-index: 1;
 		align-self: flex-start;
 		margin-top: 20px;
@@ -62,6 +84,10 @@
 	}
 
 	&__content {
+		@include media-breakpoint-down(sm) {
+			padding: 10px 16px;
+		}
+
 		padding: 20px 32px;
 		overflow: auto;
 	}
