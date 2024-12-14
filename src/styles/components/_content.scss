@@ -50,6 +50,12 @@
 
 	&__col {
 		width: 50%;
+
+		&--point {
+			@include media-breakpoint-down(md) {
+				display: none;
+			}
+		}
 	}
 
 	&--main {
@@ -77,6 +83,19 @@
 		gap: 20px;
 		justify-content: center;
 		overflow: visible;
+	}
+
+	&--edit {
+		@include media-breakpoint-down(md) {
+			flex-direction: column;
+		}
+
+		.content__col {
+			@include media-breakpoint-down(md) {
+				width: 100%;
+				margin-bottom: auto;
+			}
+		}
 	}
 
 	&--timer {

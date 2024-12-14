@@ -13,6 +13,10 @@
 	}
 
 	&__row {
+		@include media-breakpoint-down(sm) {
+			flex-wrap: wrap;
+		}
+
 		display: flex;
 		gap: 10px;
 		align-items: center;
