@@ -1,35 +1,4 @@
 .board {
-	@include media-breakpoint-down(lg) {
-		--board-fz: 60px;
-		--board-h: 80px;
-		--board-px: 15px;
-		--board-brs: 6px;
-		--board-hinge-w: 6px;
-		--board-hinge-h: 24px;
-		--board-label-fz: 14px;
-		--board-label-mt: 6px;
-	}
-
-	@include media-breakpoint-down(md) {
-		--board-fz: 40px;
-		--board-h: 60px;
-		--board-px: 10px;
-		--board-brs: 4px;
-		--board-hinge-w: 4px;
-		--board-hinge-h: 16px;
-		--board-label-fz: 12px;
-		--board-label-mt: 4px;
-	}
-
-	@include media-breakpoint-down(xs) {
-		--board-label-mt: 0;
-	}
-	--board-fz: 80px;
-	--board-h: 120px;
-	--board-px: 20px;
-	--board-brs: 8px;
-	--board-hinge-w: 8px;
-	--board-hinge-h: 32px;
 	--board-hinge-shadow-opacity-1: .4;
 	--board-hinge-shadow-opacity-2: .7;
 	--board-hinge-shadow-spread: 1px;
@@ -39,9 +8,15 @@
 	--board-hinge-after-shadow-x: -1px;
 	--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
 	--board-half-after-opacity: .3;
-	--board-label-fz: 16px;
-	--board-label-mt: 8px;
 	--board-bg-cl: var(--c-bg-board);
+	--board-fz: #{timer-size(40)};
+	--board-h: #{timer-size(60)};
+	--board-px: #{timer-size(10)};
+	--board-brs: #{timer-size(4)};
+	--board-hinge-w: #{timer-size(4)};
+	--board-hinge-h: #{timer-size(16)};
+	--board-label-fz: #{timer-size(12)};
+	--board-label-mt: #{timer-size(4)};
 
 	position: relative;
 	display: flex;

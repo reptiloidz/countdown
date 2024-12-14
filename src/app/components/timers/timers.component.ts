@@ -5,7 +5,7 @@ import {
 	transition,
 	trigger,
 } from '@angular/animations';
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 
 @Component({
 	selector: 'app-timers',
@@ -51,7 +51,7 @@ import { Component, Input } from '@angular/core';
 		]),
 	],
 })
-export class TimersComponent {
+export class TimersComponent implements AfterViewInit {
 	@Input() years: number | string | undefined;
 	@Input() months: number | string | undefined;
 	@Input() days: number | string | undefined;
@@ -71,6 +71,22 @@ export class TimersComponent {
 	yearEnterValue = this.randomDelay;
 	monthEnterValue = this.randomDelay;
 	dayEnterValue = this.randomDelay;
+
+	constructor(private el: ElementRef) {}
+
+	ngAfterViewInit(): void {
+		requestAnimationFrame(() => {
+			(this.el.nativeElement as HTMLElement).style.setProperty(
+				'--timers-num',
+				(
+					3 +
+					+(!this.years ? 0 : 1) +
+					+(!this.months ? 0 : 1) +
+					+(!this.days ? 0 : 1)
+				).toString()
+			);
+		});
+	}
 
 	get randomDelay() {
 		return Math.random() * 2000;

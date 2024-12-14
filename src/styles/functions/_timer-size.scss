@@ -1,0 +1,3 @@
+@function timer-size($px, $size: var(--timers-bp), $max-num: 6) {
+	@return calc(((#{$px} / #{$size}) * 100 * #{$max-num} / max(var(--timers-num), var(--timers-num-wrapper))) * 1cqw);
+}
