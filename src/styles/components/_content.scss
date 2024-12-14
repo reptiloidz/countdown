@@ -82,6 +82,14 @@
 	&--timer {
 		&::before,
 		&::after {
+			@include media-breakpoint-down(sm) {
+				bottom: 63px;
+			}
+
+			@include media-breakpoint-down(xs) {
+				bottom: 55px;
+			}
+
 			content: '';
 			position: fixed;
 			bottom: 95px;

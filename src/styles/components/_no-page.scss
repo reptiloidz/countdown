@@ -29,10 +29,17 @@
 	}
 
 	&__clock {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 		padding: 20px;
 	}
 
 	&__clock-inner {
 		height: 100%;
+
+		@media (max-aspect-ratio: 1 / 1) {
+			height: calc(100vw - 40px);
+		}
 	}
 }

@@ -1,6 +1,21 @@
 .timers {
+	@include media-breakpoint-between(md, lg) {
+		--timers-bp: 700;
+	}
+
+	--timers-bp: 600;
+	--timers-item-shadow-spread: 1px;
+
 	width: clamp(285px, 100%, 1600px);
-	container: timers / inline-size;
+	container-name: timers;
+	container-type: inline-size;
+
+	@media (min-aspect-ratio: 3 / 2) {
+		height: 100%;
+		min-height: 100px;
+		max-height: 200px;
+		container-type: size;
+	}
 
 	&__wrapper {
 		@include media-breakpoint-down(sm) {
@@ -12,36 +27,23 @@
 			}
 		}
 
-		@include media-breakpoint-up(lg) {
-			@media (height < 900px) {
-				--timers-num-wrapper: 5;
-			}
-
-			@media (height < 800px) {
-				--timers-num-wrapper: 6;
-			}
-
-			@media (height < 700px) {
-				--timers-num-wrapper: 7;
-			}
-
-			@media (height < 600px) {
-				--timers-num-wrapper: 8;
-			}
-		}
-
-		--timers-bp: 600;
 		--timers-num-wrapper: 3;
-
 		--timers-p: #{timer-size(10)};
 		--timers-gap: #{timer-size(24)};
-		--timers-item-shadow-spread: 1px;
 		--timers-divider-mt: #{timer-size(8)};
 		--timers-divider-fz: #{timer-size(32)};
 
 		display: flex;
 		justify-content: center;
+		height: 100%;
 		padding: var(--timers-p) var(--timers-p) calc(var(--timers-p) * 2);
+
+		@media (min-aspect-ratio: 3 / 2) {
+			--timers-p: #{timer-size-height(10)};
+			--timers-gap: #{timer-size-height(24)};
+			--timers-divider-mt: #{timer-size-height(8)};
+			--timers-divider-fz: #{timer-size-height(32)};
+		}
 	}
 
 	&__item {
@@ -93,11 +95,7 @@
 		&--time {
 			&::after {
 				@include media-breakpoint-down(sm) {
-					--timers-gap: 36px;
-				}
-
-				@include media-breakpoint-down(xs) {
-					--timers-gap: 24px;
+					--timers-gap: #{timer-size(24)};
 				}
 
 				position: absolute;
@@ -131,7 +129,10 @@
 	}
 
 	&--sm {
+		--timers-item-shadow-spread: 0;
+
 		width: auto;
+		min-height: 0;
 		margin: 0;
 		container: unset;
 
@@ -155,7 +156,6 @@
 			--timers-gap: 20px;
 			--timers-divider-mt: 4px;
 			--timers-divider-fz: 16px;
-			--timers-item-shadow-spread: 0;
 		}
 	}
 
