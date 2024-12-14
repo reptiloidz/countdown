@@ -3,5 +3,5 @@
 }
 
 @function timer-size-height($px, $size: var(--timers-bp)) {
-	@return calc(((#{$px} / #{$size}) * 100 * 8) * 1cqh);
+	@return calc(((#{$px} / #{$size}) * 100 * 7) * 1cqh);
 }
