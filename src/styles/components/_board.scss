@@ -62,7 +62,7 @@
 			var(--board-hinge-after-shadow-x) 0 var(--board-hinge-shadow-w-2) 0 rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-2));
 	}
 
-	@media (min-aspect-ratio: 3 / 2) {
+	@media (min-aspect-ratio: $timer-ratio) {
 		--board-fz: #{timer-size-height(40)};
 		--board-h: #{timer-size-height(60)};
 		--board-px: #{timer-size-height(10)};

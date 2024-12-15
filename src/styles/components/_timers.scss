@@ -4,13 +4,26 @@
 	}
 
 	--timers-bp: 600;
+	--timers-num: 3;
 	--timers-item-shadow-spread: 1px;
 
 	width: clamp(285px, 100%, 1600px);
 	container-name: timers;
 	container-type: inline-size;
 
-	@media (min-aspect-ratio: 3 / 2) {
+	&:has(.timers__item-wrapper--date) {
+		--timers-num: 4;
+	}
+
+	&:has(.timers__item-wrapper--date:nth-child(2)) {
+		--timers-num: 5;
+	}
+
+	&:has(.timers__item-wrapper--date:nth-child(3)) {
+		--timers-num: 6;
+	}
+
+	@media (min-aspect-ratio: $timer-ratio) {
 		height: 100%;
 		min-height: 100px;
 		max-height: 200px;
@@ -27,7 +40,6 @@
 			}
 		}
 
-		--timers-num-wrapper: 3;
 		--timers-p: #{timer-size(10)};
 		--timers-gap: #{timer-size(24)};
 		--timers-divider-mt: #{timer-size(8)};
@@ -38,7 +50,7 @@
 		height: 100%;
 		padding: var(--timers-p) var(--timers-p) calc(var(--timers-p) * 2);
 
-		@media (min-aspect-ratio: 3 / 2) {
+		@media (min-aspect-ratio: $timer-ratio) {
 			--timers-p: #{timer-size-height(10)};
 			--timers-gap: #{timer-size-height(24)};
 			--timers-divider-mt: #{timer-size-height(8)};
