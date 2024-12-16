@@ -2,11 +2,12 @@
 	--calendar-nav-shift: 4px;
 	--calendar-button-cl: rgb(var(--c-text-primary));
 	--calendar-head-cl: rgb(var(--c-text-primary));
-	--calendar-button-p: 16px;
+	--calendar-button-p: 16px 15px;
 	--calendar-min-w: 60px;
 
 	display: flex;
 	flex-direction: column;
+	min-height: 0;
 
 	&__header {
 		margin-bottom: 12px;
@@ -38,11 +39,47 @@
 	}
 
 	&__table-wrapper {
+		@include media-breakpoint-down(md) {
+			width: 100%;
+			overflow: auto;
+		}
+
 		align-self: flex-start;
 	}
 
 	&__table {
 		min-width: 100%;
+
+		&--year,
+		&--day {
+			.calendar__row {
+				--calendar-row-cols: 4;
+			}
+		}
+
+		&--month {
+			@include media-breakpoint-down(md) {
+				--calendar-button-p: 16px 4px;
+				--calendar-min-w: 0;
+			}
+
+			.calendar__row {
+				--calendar-row-cols: 7;
+			}
+		}
+
+		&--hour {
+			.calendar__row {
+				--calendar-row-cols: 5;
+			}
+		}
+	}
+
+	&__row {
+		@include media-breakpoint-down(md) {
+			display: grid;
+			grid-template-columns: repeat(var(--calendar-row-cols), 1fr);
+		}
 	}
 
 	&__cell {
@@ -54,6 +91,12 @@
 
 	&__head {
 		color: var(--calendar-head-cl);
+
+		&:nth-child(n + 8) {
+			@include media-breakpoint-down(md) {
+				display: none;
+			}
+		}
 
 		&--weekend {
 			--calendar-head-cl: rgb(var(--c-text-weekend));

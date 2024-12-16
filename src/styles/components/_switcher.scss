@@ -1,4 +1,7 @@
 .switcher {
+	@include media-breakpoint-down(sm) {
+		font-size: 14px;
+	}
 	--switcher-item-cl: rgb(var(--c-text-button));
 	--switcher-item-bg-cl: transparent;
 	--switcher-bg-cl: rgba(var(--c-bg-primary), .2);

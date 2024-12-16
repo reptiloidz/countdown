@@ -74,6 +74,7 @@ export class PanelComponent {
 	@Output() panelVisibilitySwitched = new EventEmitter<boolean>();
 
 	hasFirstUpdateHappened = false;
+	panelAnimated = false;
 
 	updateHeight() {
 		requestAnimationFrame(() => {
@@ -117,5 +118,9 @@ export class PanelComponent {
 		}
 
 		this.panelVisibilitySwitched.emit(this.open);
+	}
+
+	panelAnimatedHandler() {
+		this.panelAnimated = !this.open;
 	}
 }

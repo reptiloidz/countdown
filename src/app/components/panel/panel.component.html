@@ -15,7 +15,11 @@
 		#panelContentRef
 		*ngIf="bodyTemplate"
 		[@panelContent]="open ? 'open' : 'closed'"
+		(@panelContent.done)="panelAnimatedHandler()"
 		class="panel__content"
+		[ngClass]="{
+			'panel__content--hidden': panelAnimated && !open
+		}"
 	>
 		<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
 	</div>

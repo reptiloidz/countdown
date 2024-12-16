@@ -49,9 +49,12 @@
 </div>
 
 <div class="calendar__table-wrapper">
-	<table class="calendar__table">
+	<table
+		class="calendar__table"
+		[ngClass]="['calendar__table--' + activeMode]"
+	>
 		<thead *ngIf="activeMode === 'month'">
-			<tr>
+			<tr class="calendar__row">
 				<th
 					class="calendar__head"
 					[ngClass]="{
@@ -62,7 +65,10 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr *ngFor="let period of calendarArray">
+			<tr
+				*ngFor="let period of calendarArray"
+				class="calendar__row"
+			>
 				<td
 					class="calendar__cell"
 					*ngFor="let item of period"

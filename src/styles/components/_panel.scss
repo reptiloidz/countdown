@@ -25,6 +25,10 @@
 		&.ng-animating {
 			overflow: hidden;
 		}
+
+		&--hidden {
+			display: none;
+		}
 	}
 
 	&__buttons {
