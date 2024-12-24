@@ -19,7 +19,7 @@ export class PopupComponent implements OnInit {
 	@ViewChild('popupContent', {
 		read: ViewContainerRef,
 	})
-	private popupContent!: ViewContainerRef;
+	popupContent!: ViewContainerRef;
 
 	title = '';
 	isVisible = false;
@@ -34,17 +34,26 @@ export class PopupComponent implements OnInit {
 		this.subscriptions.add(
 			this.popupService.eventPopupOpen$.subscribe({
 				next: (data) => {
-					this.show(data.title, data.component);
+					this.show(data.title, data.component, data.inputs);
 				},
 			})
 		);
 	}
 
-	show(title: string, component: any) {
+	show(title: string, component: any, inputs?: Record<string, any>) {
 		this.isVisible = true;
 		this.title = title;
 		this.cdr.detectChanges();
-		this.popupContent?.createComponent(component);
+
+		const componentRef = this.popupContent.createComponent(component);
+
+		if (inputs) {
+			for (const [key, value] of Object.entries(inputs)) {
+				(componentRef.instance as any)[key] = value;
+			}
+		}
+
+		this.cdr.detectChanges();
 	}
 
 	close() {

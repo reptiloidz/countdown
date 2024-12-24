@@ -38,6 +38,7 @@ import { TimersComponent } from './components/timers/timers.component';
 import { NoPageComponent } from './components/no-page/no-page.component';
 import { PointModesComponent } from './components/point-modes/point-modes.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { DatePointsPopupComponent } from './components/date-points-popup/date-points-popup.component';
 
 @NgModule({
 	declarations: [
@@ -66,6 +67,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 		TimersComponent,
 		NoPageComponent,
 		PointModesComponent,
+		DatePointsPopupComponent,
 	],
 	imports: [
 		BrowserModule,

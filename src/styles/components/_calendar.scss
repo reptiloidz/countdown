@@ -1,4 +1,8 @@
 .calendar {
+	@include media-breakpoint-down(md) {
+		--calendar-min-w: 0;
+	}
+
 	--calendar-nav-shift: 4px;
 	--calendar-button-cl: rgb(var(--c-text-primary));
 	--calendar-head-cl: rgb(var(--c-text-primary));
@@ -17,6 +21,12 @@
 		display: flex;
 		gap: 20px;
 		align-items: center;
+
+		&--drop {
+			@include media-breakpoint-down(md) {
+				--drop-d: none;
+			}
+		}
 	}
 
 	&__nav-set {
@@ -41,6 +51,7 @@
 	&__table-wrapper {
 		@include media-breakpoint-down(md) {
 			width: 100%;
+			min-width: 274px;
 			overflow: auto;
 		}
 
@@ -170,6 +181,12 @@
 		width: 20px;
 		height: 20px;
 		padding: 0;
+
+		&--popup {
+			@include media-breakpoint-up(lg) {
+				display: none;
+			}
+		}
 	}
 
 	&__date-ul {

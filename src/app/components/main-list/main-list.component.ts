@@ -8,9 +8,14 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
-import { PointColors, SortTypeNames } from 'src/app/enums';
+import { Constants, PointColors, SortTypeNames } from 'src/app/enums';
 import { Point, SwitcherItem } from 'src/app/interfaces';
-import { DataService, ActionService, AuthService } from 'src/app/services';
+import {
+	DataService,
+	ActionService,
+	AuthService,
+	PopupService,
+} from 'src/app/services';
 import { SortService } from 'src/app/services/sort.service';
 import {
 	Direction,
@@ -19,6 +24,8 @@ import {
 	SortTypes,
 } from 'src/app/types';
 import { InputComponent } from '../input/input.component';
+import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
+import { format } from 'date-fns';
 
 @Component({
 	selector: 'app-main-list',
@@ -138,7 +145,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private auth: AuthService,
 		private sort: SortService,
-		public elementRef: ElementRef
+		public elementRef: ElementRef,
+		private popupService: PopupService
 	) {}
 
 	ngOnInit(): void {
@@ -448,5 +456,15 @@ export class MainListComponent implements OnInit, OnDestroy {
 		} else {
 			this.colorType = [];
 		}
+	}
+
+	openDatePointPopup(date: { date: Date; points: Point[] }) {
+		this.popupService.show(
+			format(date.date, Constants.fullDateFormat),
+			DatePointsPopupComponent,
+			{
+				points: date.points,
+			}
+		);
 	}
 }

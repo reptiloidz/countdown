@@ -10,6 +10,7 @@ export class PopupService {
 	private _eventPopupOpenSubject = new Subject<{
 		title: string;
 		component: any;
+		inputs?: Record<string, any>;
 	}>();
 	eventPopupOpen$ = this._eventPopupOpenSubject.asObservable();
 
@@ -17,9 +18,9 @@ export class PopupService {
 		this.renderer = rendererFactory.createRenderer(null, null);
 	}
 
-	show(title: string, component: any) {
+	show(title: string, component: any, inputs?: Record<string, any>) {
 		this.renderer.addClass(document.documentElement, 'ov-hidden');
-		this._eventPopupOpenSubject.next({ title, component });
+		this._eventPopupOpenSubject.next({ title, component, inputs });
 	}
 
 	hide() {

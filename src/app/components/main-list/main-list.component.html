@@ -25,8 +25,18 @@
 							let-date="date"
 							let-mode="mode"
 						>
+							<button
+								app-button
+								*ngIf="date.points.length"
+								class="calendar__btn-nav calendar__btn-nav--popup"
+								mode="ghost"
+								size="sm"
+								icon="chevron-down"
+								(click)="openDatePointPopup(date)"
+							></button>
 							<app-drop
 								*ngIf="date.points.length"
+								class="calendar__nav--drop"
 								buttonSize="sm"
 								buttonClass="calendar__btn-nav drop__nav--sm"
 								buttonTitle="Показать события"
