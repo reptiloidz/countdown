@@ -171,8 +171,8 @@
 		--drop-body-mt: 0;
 
 		&.drop--left {
-			--drop-body-brs-br: 0;
-			--drop-body-brs-bl: var(--drop-brs);
+			--drop-body-brs-br: var(--drop-top-left-body-brs-br, 0);
+			--drop-body-brs-bl: var(--drop-top-left-body-brs-bl, var(--drop-brs));
 		}
 
 		&.drop--right {
@@ -189,8 +189,8 @@
 		--drop-nav-border-bottom-cl: transparent;
 
 		&.drop--left {
-			--drop-body-brs-tr: 0;
-			--drop-body-brs-tl: var(--drop-brs);
+			--drop-body-brs-tr: var(--drop-bottom-left-body-brs-tr, 0);
+			--drop-body-brs-tl: var(--drop-bottom-left-body-brs-tl, var(--drop-brs));
 		}
 	}
 
@@ -202,7 +202,8 @@
 
 	&--left {
 		> .drop__body {
-			right: 0;
+			right: var(--drop-left-body-r, 0);
+			left: var(--drop-left-body-l, auto);
 		}
 	}
 

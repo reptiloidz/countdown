@@ -5,6 +5,7 @@ import {
 	OnDestroy,
 	OnInit,
 	HostBinding,
+	TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
@@ -36,6 +37,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('datePointsList') private datePointsList!: ElementRef;
 	@ViewChild('searchInput') private searchInput!: InputComponent;
 	@ViewChild('colorList') private colorList!: ElementRef;
+	@ViewChild('empty', { read: TemplateRef, static: true })
+	emptyRef!: TemplateRef<unknown>;
+	@ViewChild('listTemplate', { read: TemplateRef, static: true })
+	listTemplate!: TemplateRef<any>;
+	@ViewChild('footerRef', { read: TemplateRef, static: true })
+	footerRef!: TemplateRef<any>;
 	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
 	loading = true;
@@ -463,7 +470,10 @@ export class MainListComponent implements OnInit, OnDestroy {
 			format(date.date, Constants.fullDateFormat),
 			DatePointsPopupComponent,
 			{
-				points: date.points,
+				pointsList: date.points,
+				sortType: this.sortType,
+				listRef: this.listTemplate,
+				footerRef: this.footerRef,
 			}
 		);
 	}

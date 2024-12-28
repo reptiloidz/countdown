@@ -1,4 +1,12 @@
 .datepicker {
+	@include media-breakpoint-down(md) {
+		--drop-left-body-l: 0;
+		--drop-left-body-r: auto;
+		--drop-bottom-left-body-brs-tr: var(--drop-brs);
+		--drop-top-left-body-brs-br: var(--drop-brs);
+		--drop-top-left-body-brs-bl: 0;
+		--drop-bottom-left-body-brs-tl: 0;
+	}
 	--drop-max-h-gap: 30px;
 
 	&__trigger {

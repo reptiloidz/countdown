@@ -48,60 +48,21 @@
 										class="calendar__date-ul"
 										#datePointsList
 									>
-										<li
-											app-main-item
-											[isSm]="true"
-											[attr.data-id]="point.id"
-											*ngFor="let point of date.points | sortPoints : sortType; let i = index"
-											[point]="point"
-										>
-											<ng-template
-												#checkboxTemplate
-												let-disabled="disabled"
-											>
-												<label
-													#datePointCheckbox
-													app-checkbox
-													[isDisabled]="disabled"
-													iconSize="sm"
-													(change)="getCheckedDatePoints()"
-												></label>
-											</ng-template>
-										</li>
+										<ng-container
+											[ngTemplateOutlet]="listTemplate"
+											[ngTemplateOutletContext]="{
+											pointsList: date.points
+										}"
+										></ng-container>
 									</ul>
 								</ng-template>
 								<ng-template #footerTemplate>
-									<div
-										class="drop__footer drop__footer--left drop__footer--no-border"
-										*ngIf="date.points | checkEditablePoints"
-									>
-										<button
-											app-button
-											size="sm"
-											mode="positive"
-											icon="document-check"
-											title="Выбрать все доступные события"
-											(click)="checkDatePoints(true)"
-										></button>
-										<ng-container *ngIf="isDatePointsChecked">
-											<button
-												app-button
-												size="sm"
-												mode="secondary"
-												icon="document-cross"
-												title="Снять отметки со всех событий"
-												(click)="checkDatePoints(false)"
-											></button>
-											<button
-												app-button
-												size="sm"
-												mode="negative"
-												icon="cross"
-												title="Удалить выбранные события"
-												(click)="removeDateCheckedPoints()"
-											></button>
-										</ng-container>
-									</div>
+									<ng-container
+										[ngTemplateOutlet]="footerRef"
+										[ngTemplateOutletContext]="{
+											dateFooterPoints: date.points
+										}"
+									></ng-container>
 								</ng-template>
 							</app-drop>
 						</ng-template>
@@ -302,10 +263,73 @@
 	</h2>
 </ng-template>
 
-
 <ng-template #loader>
 	<div
 		class="root__loading-marker"
 		*ngIf="loading"
 	></div>
+</ng-template>
+
+<ng-template
+	#listTemplate
+	let-pointsList="pointsList"
+	let-sortType="sortType"
+>
+	<li
+		app-main-item
+		[isSm]="true"
+		[attr.data-id]="point.id"
+		*ngFor="let point of pointsList | sortPoints : sortType; let i = index"
+		[point]="point"
+	>
+		<ng-template
+			#checkboxTemplate
+			let-disabled="disabled"
+		>
+			<label
+				#datePointCheckbox
+				app-checkbox
+				[isDisabled]="disabled"
+				iconSize="sm"
+				(change)="getCheckedDatePoints()"
+			></label>
+		</ng-template>
+	</li>
+</ng-template>
+
+<ng-template
+	#footerRef
+	let-dateFooterPoints="dateFooterPoints"
+>
+	<div
+		class="drop__footer drop__footer--left drop__footer--no-border"
+		*ngIf="dateFooterPoints | checkEditablePoints"
+	>
+		<button
+			app-button
+			size="sm"
+			mode="positive"
+			icon="document-check"
+			title="Выбрать все доступные события"
+			(click)="checkDatePoints(true)"
+		></button>
+		<ng-container *ngIf="isDatePointsChecked">
+			<button
+				app-button
+				size="sm"
+				mode="secondary"
+				icon="document-cross"
+				title="Снять отметки со всех событий"
+				(click)="checkDatePoints(false)"
+			></button>
+			<button
+				app-button
+				size="sm"
+				mode="negative"
+				icon="cross"
+				title="Удалить выбранные события"
+				(click)="removeDateCheckedPoints()"
+			></button>
+		</ng-container>
+	</div>
 </ng-template>
