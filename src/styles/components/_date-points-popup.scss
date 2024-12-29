@@ -1,0 +1,14 @@
+.date-points-popup {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	&__content {
+		overflow: auto;
+	}
+
+	&__footer {
+		margin-top: auto;
+		padding: 10px 0 0;
+	}
+}

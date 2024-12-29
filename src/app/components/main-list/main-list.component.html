@@ -51,18 +51,22 @@
 										<ng-container
 											[ngTemplateOutlet]="listTemplate"
 											[ngTemplateOutletContext]="{
-											pointsList: date.points
-										}"
+												pointsList: date.points,
+												isSm: true
+											}"
 										></ng-container>
 									</ul>
 								</ng-template>
 								<ng-template #footerTemplate>
-									<ng-container
-										[ngTemplateOutlet]="footerRef"
-										[ngTemplateOutletContext]="{
-											dateFooterPoints: date.points
-										}"
-									></ng-container>
+									<div
+										class="drop__footer drop__footer--left drop__footer--no-border"
+										*ngIf="date.points | checkEditablePoints"
+									>
+										<ng-container
+											[ngTemplateOutlet]="footerRef"
+											[ngTemplateOutletContext]="{ size: 'sm' }"
+										></ng-container>
+									</div>
 								</ng-template>
 							</app-drop>
 						</ng-template>
@@ -274,10 +278,11 @@
 	#listTemplate
 	let-pointsList="pointsList"
 	let-sortType="sortType"
+	let-isSm="isSm"
 >
 	<li
 		app-main-item
-		[isSm]="true"
+		[isSm]="isSm"
 		[attr.data-id]="point.id"
 		*ngFor="let point of pointsList | sortPoints : sortType; let i = index"
 		[point]="point"
@@ -299,37 +304,32 @@
 
 <ng-template
 	#footerRef
-	let-dateFooterPoints="dateFooterPoints"
+	let-size="size"
 >
-	<div
-		class="drop__footer drop__footer--left drop__footer--no-border"
-		*ngIf="dateFooterPoints | checkEditablePoints"
-	>
+	<button
+		app-button
+		[size]="size"
+		mode="positive"
+		icon="document-check"
+		title="Выбрать все доступные события"
+		(click)="checkDatePoints(true)"
+	></button>
+	<ng-container *ngIf="isDatePointsChecked">
 		<button
 			app-button
-			size="sm"
-			mode="positive"
-			icon="document-check"
-			title="Выбрать все доступные события"
-			(click)="checkDatePoints(true)"
+			[size]="size"
+			mode="secondary"
+			icon="document-cross"
+			title="Снять отметки со всех событий"
+			(click)="checkDatePoints(false)"
 		></button>
-		<ng-container *ngIf="isDatePointsChecked">
-			<button
-				app-button
-				size="sm"
-				mode="secondary"
-				icon="document-cross"
-				title="Снять отметки со всех событий"
-				(click)="checkDatePoints(false)"
-			></button>
-			<button
-				app-button
-				size="sm"
-				mode="negative"
-				icon="cross"
-				title="Удалить выбранные события"
-				(click)="removeDateCheckedPoints()"
-			></button>
-		</ng-container>
-	</div>
+		<button
+			app-button
+			[size]="size"
+			mode="negative"
+			icon="cross"
+			title="Удалить выбранные события"
+			(click)="removeDateCheckedPoints()"
+		></button>
+	</ng-container>
 </ng-template>
