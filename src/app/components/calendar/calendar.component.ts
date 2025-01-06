@@ -209,34 +209,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	get visiblePeriod() {
-		let result = '';
+		let dateFormat = '';
 		switch (this.activeMode) {
 			case 'year':
-				result = format(this.visibleDate, "yyyy 'г.'", {
-					locale: ru,
-				});
+				dateFormat = "yyyy 'г.'";
 				break;
 			case 'day':
-				result = format(this.visibleDate, "yyyy 'г.' / dd MMMM", {
-					locale: ru,
-				});
+				dateFormat = "yyyy 'г.' / dd MMM";
 				break;
 			case 'hour':
-				result = format(
-					this.visibleDate,
-					"yyyy 'г.' / dd MMMM / HH 'ч'",
-					{
-						locale: ru,
-					}
-				);
+				dateFormat = "yyyy 'г.' / dd MMM / HH 'ч'";
 				break;
 			default:
-				result = format(this.visibleDate, "yyyy 'г.' / LLL", {
-					locale: ru,
-				});
+				dateFormat = "yyyy 'г.' / LLL";
 				break;
 		}
-		return result;
+		return format(this.visibleDate, dateFormat, {
+			locale: ru,
+		});
 	}
 
 	get weekDaysArray() {

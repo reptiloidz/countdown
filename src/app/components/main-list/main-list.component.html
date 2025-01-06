@@ -44,18 +44,14 @@
 								(dropOpened)="checkDatePoints(false)"
 							>
 								<ng-template #bodyTemplate>
-									<ul
-										class="calendar__date-ul"
-										#datePointsList
-									>
-										<ng-container
-											[ngTemplateOutlet]="listTemplate"
-											[ngTemplateOutletContext]="{
-												pointsList: date.points,
-												isSm: true
-											}"
-										></ng-container>
-									</ul>
+									<ng-container
+										[ngTemplateOutlet]="listTemplate"
+										[ngTemplateOutletContext]="{
+											pointsList: date.points,
+											isSm: true,
+											ulClass: 'calendar__date-ul'
+										}"
+									></ng-container>
 								</ng-template>
 								<ng-template #footerTemplate>
 									<div
@@ -279,27 +275,33 @@
 	let-pointsList="pointsList"
 	let-sortType="sortType"
 	let-isSm="isSm"
+	let-ulClass="ulClass"
 >
-	<li
-		app-main-item
-		[isSm]="isSm"
-		[attr.data-id]="point.id"
-		*ngFor="let point of pointsList | sortPoints : sortType; let i = index"
-		[point]="point"
+	<ul
+		#datePointsList
+		[class]="ulClass"
 	>
-		<ng-template
-			#checkboxTemplate
-			let-disabled="disabled"
+		<li
+			app-main-item
+			[isSm]="isSm"
+			[attr.data-id]="point.id"
+			*ngFor="let point of pointsList | sortPoints : sortType; let i = index"
+			[point]="point"
 		>
-			<label
-				#datePointCheckbox
-				app-checkbox
-				[isDisabled]="disabled"
-				iconSize="sm"
-				(change)="getCheckedDatePoints()"
-			></label>
-		</ng-template>
-	</li>
+			<ng-template
+				#checkboxTemplate
+				let-disabled="disabled"
+			>
+				<label
+					#datePointCheckbox
+					app-checkbox
+					[isDisabled]="disabled"
+					iconSize="sm"
+					(change)="getCheckedDatePoints()"
+				></label>
+			</ng-template>
+		</li>
+	</ul>
 </ng-template>
 
 <ng-template

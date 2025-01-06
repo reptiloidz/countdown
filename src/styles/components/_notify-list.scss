@@ -43,8 +43,10 @@
 
 	&__item-wrapper {
 		@include media-breakpoint-down(sm) {
-			width: auto;
+			width: 100%;
 			margin: 0 10px;
+			padding-right: 10px;
+			padding-left: 10px;
 		}
 
 		z-index: 1;

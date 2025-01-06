@@ -17,6 +17,7 @@ html {
 *::after,
 *::before {
 	box-sizing: inherit;
+	scrollbar-width: thin;
 }
 
 // stylelint-enable scss/selector-nest-combinators

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
-import { Constants, PointColors, SortTypeNames } from 'src/app/enums';
+import { PointColors, SortTypeNames } from 'src/app/enums';
 import { Point, SwitcherItem } from 'src/app/interfaces';
 import {
 	DataService,
@@ -19,6 +19,7 @@ import {
 } from 'src/app/services';
 import { SortService } from 'src/app/services/sort.service';
 import {
+	CalendarMode,
 	Direction,
 	FilterSelected,
 	PointColorTypes,
@@ -27,6 +28,7 @@ import {
 import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
 import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 @Component({
 	selector: 'app-main-list',
@@ -43,6 +45,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 	listTemplate!: TemplateRef<any>;
 	@ViewChild('footerRef', { read: TemplateRef, static: true })
 	footerRef!: TemplateRef<any>;
+	@ViewChild('datePointsPopupRef')
+	private datePointsPopupRef!: DatePointsPopupComponent;
 	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
 	loading = true;
@@ -466,8 +470,25 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	openDatePointPopup(date: { date: Date; points: Point[] }) {
+		let popupDateFormat = '';
+		switch (localStorage.getItem('calendarMode') as CalendarMode) {
+			case 'year':
+				popupDateFormat = "yyyy 'г.'";
+				break;
+			case 'day':
+				popupDateFormat = "yyyy 'г.' / dd MMM";
+				break;
+			case 'hour':
+				popupDateFormat = "yyyy 'г.' / dd MMM / HH 'ч'";
+				break;
+			default:
+				popupDateFormat = "yyyy 'г.' / LLL";
+				break;
+		}
 		this.popupService.show(
-			format(date.date, Constants.fullDateFormat),
+			format(date.date, popupDateFormat, {
+				locale: ru,
+			}),
 			DatePointsPopupComponent,
 			{
 				pointsList: date.points,

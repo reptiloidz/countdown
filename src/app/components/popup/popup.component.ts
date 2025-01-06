@@ -38,6 +38,14 @@ export class PopupComponent implements OnInit {
 				},
 			})
 		);
+
+		this.subscriptions.add(
+			this.popupService.eventPopupClose$.subscribe({
+				next: () => {
+					this.close();
+				},
+			})
+		);
 	}
 
 	show(title: string, component: any, inputs?: Record<string, any>) {
@@ -60,6 +68,7 @@ export class PopupComponent implements OnInit {
 		this.isVisible = false;
 		this.popupContent?.clear();
 		this.popupService.hide();
+		this.cdr.detectChanges();
 	}
 
 	@HostListener('document:keydown.escape')

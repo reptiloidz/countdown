@@ -1,9 +1,12 @@
-<ul class="date-points-popup__content points-list">
-	<ng-container
-		[ngTemplateOutlet]="listRef"
-		[ngTemplateOutletContext]="{ pointsList, sortType, isSm: false }"
-	></ng-container>
-</ul>
+<ng-container
+	[ngTemplateOutlet]="listRef"
+	[ngTemplateOutletContext]="{
+		pointsList,
+		sortType,
+		isSm: false,
+		ulClass: 'date-points-popup__content points-list'
+	}"
+></ng-container>
 <div class="date-points-popup__footer">
 	<ng-container
 		[ngTemplateOutlet]="footerRef"

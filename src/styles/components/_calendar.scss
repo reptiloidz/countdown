@@ -18,6 +18,10 @@
 	}
 
 	&__nav {
+		@include media-breakpoint-down(xs) {
+			gap: 10px;
+		}
+
 		display: flex;
 		gap: 20px;
 		align-items: center;
@@ -39,6 +43,11 @@
 	}
 
 	&__status {
+		@include media-breakpoint-down(xs) {
+			margin-left: 0;
+			font-size: 12px;
+		}
+
 		margin-left: 12px;
 		font-weight: 300;
 	}
