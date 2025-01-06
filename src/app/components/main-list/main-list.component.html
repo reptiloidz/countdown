@@ -71,7 +71,12 @@
 			</app-drop>
 
 			<div class="dashboard__filters filters">
-				<div class="filters__switchers">
+				<div
+					class="filters__switchers"
+					[ngClass]="{
+						'filters__switchers--hidden': !isFiltersVisible
+					}"
+				>
 					<app-switcher
 						class="filters__switcher"
 						switcherListClass="dashboard__filters-list"
@@ -180,6 +185,13 @@
 			</div>
 
 			<div class="dashboard__aside">
+				<label
+					app-checkbox
+					mode="custom"
+					icon="filters"
+					[(ngModel)]="isFiltersVisible"
+					class="dashboard__filters-toggle"
+				></label>
 				<app-drop
 					[select]="true"
 					horizontal="left"

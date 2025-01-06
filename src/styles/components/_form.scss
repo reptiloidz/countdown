@@ -73,6 +73,10 @@
 		display: flex;
 		gap: 8px;
 		margin-top: 20px;
+
+		&--top {
+			margin-top: 0;
+		}
 	}
 
 	&__btn {
@@ -84,11 +88,9 @@
 	}
 
 	&__button-mobile {
-		@include media-breakpoint-down(md) {
-			display: block;
+		@include media-breakpoint-up(lg) {
+			display: none;
 		}
-
-		display: none;
 	}
 
 	&--single {

@@ -13,11 +13,20 @@
 		@include media-breakpoint-down(sm) {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
+			height: 122px;
+			overflow: hidden;
+			transition: height .3s;
 		}
 
 		display: flex;
 		grid-area: top;
 		justify-content: space-between;
+
+		&--hidden {
+			@include media-breakpoint-down(sm) {
+				height: 0;
+			}
+		}
 	}
 
 	&__aside {

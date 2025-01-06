@@ -61,6 +61,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	directionValue: Direction | 'all' = 'all';
 	modesValue: 'list' | 'grid' = 'grid';
 	searchInputValue = '';
+	isFiltersVisible = false;
 
 	repeatList: SwitcherItem[] = [
 		{

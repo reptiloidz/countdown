@@ -27,7 +27,7 @@
 		[formGroup]="form"
 		(ngSubmit)="submit(repeatableValueSaved && !isCreation)"
 	>
-		<h3 class="form__section-title">
+		<h3 class="form__section-title form__section-title--top">
 			<a
 				*ngIf="!isCreationUrl"
 				[routerLink]="['/point', point?.id]"

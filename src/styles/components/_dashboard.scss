@@ -50,6 +50,12 @@
 		padding: 0 6px;
 	}
 
+	&__filters-toggle {
+		@include media-breakpoint-up(md) {
+			display: none;
+		}
+	}
+
 	&__modes {
 		@include media-breakpoint-down(md) {
 			display: none;

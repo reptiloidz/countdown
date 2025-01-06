@@ -72,6 +72,9 @@
         <svg id="eye-open" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M22 12s-3.636 7-10 7-10-7-10-7 3.636-7 10-7c2.878 0 5.198 1.432 6.876 3M9 12a3 3 0 1 0 3-3"/>
         </svg>
+        <svg id="filters" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12 4 4h11m5 0-5 8v9l-6-3v-2"/>
+        </svg>
         <svg id="flag" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 21.111v-5s3-2.5 8 0 8 0 8 0v-12s-3 2.5-8 0-8 0-8 0M4 12V4.125"/>
         </svg>
