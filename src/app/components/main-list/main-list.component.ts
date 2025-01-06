@@ -471,6 +471,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	openDatePointPopup(date: { date: Date; points: Point[] }) {
 		let popupDateFormat = '';
+		this.isDatePointsChecked = false;
 		switch (localStorage.getItem('calendarMode') as CalendarMode) {
 			case 'year':
 				popupDateFormat = "yyyy 'г.'";

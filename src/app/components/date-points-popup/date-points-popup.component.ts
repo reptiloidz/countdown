@@ -9,7 +9,8 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { Subscription, switchMap } from 'rxjs';
+import { ActivationStart, Event, Router } from '@angular/router';
+import { filter, Subscription, switchMap } from 'rxjs';
 import { Point } from 'src/app/interfaces';
 import { DataService, PopupService } from 'src/app/services';
 import { SortTypes } from 'src/app/types';
@@ -33,7 +34,8 @@ export class DatePointsPopupComponent implements OnInit, OnDestroy {
 	constructor(
 		private data: DataService,
 		private popupService: PopupService,
-		private cdr: ChangeDetectorRef
+		private cdr: ChangeDetectorRef,
+		private router: Router
 	) {}
 
 	ngOnInit(): void {
@@ -51,6 +53,18 @@ export class DatePointsPopupComponent implements OnInit, OnDestroy {
 						if (!this.pointsList.length) {
 							this.popupService.close();
 						}
+					},
+				})
+		);
+
+		this.subscriptions.add(
+			this.router.events
+				.pipe(
+					filter((event: Event) => event instanceof ActivationStart)
+				)
+				.subscribe({
+					next: () => {
+						this.popupService.close();
 					},
 				})
 		);

@@ -83,6 +83,14 @@
 		margin-left: auto;
 	}
 
+	&__button-mobile {
+		@include media-breakpoint-down(md) {
+			display: block;
+		}
+
+		display: none;
+	}
+
 	&--single {
 		.form {
 			&__section {

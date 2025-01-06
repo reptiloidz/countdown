@@ -27,7 +27,21 @@
 		[formGroup]="form"
 		(ngSubmit)="submit(repeatableValueSaved && !isCreation)"
 	>
-		<h3>{{ pageTitle }}</h3>
+		<h3 class="form__section-title">
+			<a
+				*ngIf="!isCreationUrl"
+				[routerLink]="['/point', point?.id]"
+				app-button
+				icon="plus"
+				view="link"
+				size="lg"
+				mode="positive"
+				icon="chevron-left"
+				title="Вернуться к событию"
+				class="form__button-mobile"
+			></a>
+			{{ pageTitle }}
+		</h3>
 		<div
 			class="form"
 			[ngClass]="{
