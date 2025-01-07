@@ -4,18 +4,29 @@
 		grid-template-areas: 'top' 'bottom';
 	}
 
+	@include media-breakpoint-down(sm) {
+		grid-template-rows: 1fr auto;
+		transition: grid-template-rows .3s;
+	}
+
 	--filters-mt: 16px;
 
 	display: flex;
 	align-items: center;
+	overflow: hidden;
+
+	&:has(&__switchers--hidden) {
+		@include media-breakpoint-down(sm) {
+			grid-template-rows: 0fr auto;
+		}
+	}
 
 	&__switchers {
 		@include media-breakpoint-down(sm) {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			height: 122px;
 			overflow: hidden;
-			transition: height .3s;
+			transition: transform .3s;
 		}
 
 		display: flex;
@@ -24,7 +35,8 @@
 
 		&--hidden {
 			@include media-breakpoint-down(sm) {
-				height: 0;
+				pointer-events: none;
+				transform: translateY(-100%);
 			}
 		}
 	}
