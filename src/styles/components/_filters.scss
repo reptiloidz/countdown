@@ -36,7 +36,7 @@
 		&--hidden {
 			@include media-breakpoint-down(sm) {
 				pointer-events: none;
-				transform: translateY(-100%);
+				transform: scaleY(0);
 			}
 		}
 	}
