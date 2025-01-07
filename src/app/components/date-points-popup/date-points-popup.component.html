@@ -7,7 +7,10 @@
 		ulClass: 'date-points-popup__content points-list'
 	}"
 ></ng-container>
-<div class="date-points-popup__footer">
+<div
+	class="date-points-popup__footer"
+	*ngIf="pointsList | checkEditablePoints"
+>
 	<ng-container
 		[ngTemplateOutlet]="footerRef"
 		[ngTemplateOutletContext]="{ size: 'md' }"
