@@ -21,10 +21,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install
-    - run: npm run build
     - run: npm cache clean --force
     - run: rm -rf node_modules package-lock.json
+    - run: npm install
+    - run: npm run build
     #- run: npm test
 
     - name: Deploy to external server via SFTP
