@@ -6746,7 +6746,7 @@ ngx-mask@18.0.0:
   dependencies:
     tslib "^2.3.0"
 
-ngx-quicklink@^0.4.7:
+ngx-quicklink@^0.4.0:
   version "0.4.7"
   resolved "https://registry.yarnpkg.com/ngx-quicklink/-/ngx-quicklink-0.4.7.tgz#4d92de4fd159eafae8cdff60ea04b3f7dc246025"
   integrity sha512-0QFViuuKeZWbQcCPm0s/6UaWjL2jwGOfqZfcx1bG34KU5s3gJRMOs3Or7Mz8jBchCRylO4VZIMHT9IqkK0yQ5g==
