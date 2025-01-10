@@ -1,5 +1,5 @@
 .button {
-	--button-bg-cl: rgba(var(--c-bg-primary), .6);
+	--button-bg-cl: rgba(var(--c-bg-primary), 0.6);
 	--button-border-cl: transparent;
 	--button-cl: rgb(var(--c-text-button));
 	--button-gap: 4px;
@@ -43,7 +43,7 @@
 		pointer-events: none;
 
 		.button__icon {
-			opacity: .3;
+			opacity: 0.3;
 		}
 	}
 
@@ -59,8 +59,8 @@
 
 	&--ghost {
 		--button-bg-cl: transparent;
-		--button-cl: rgba(var(--c-text-button-inverse), .4);
-		--button-border-cl: rgba(var(--c-border-primary), .2);
+		--button-cl: rgba(var(--c-text-button-inverse), 0.4);
+		--button-border-cl: rgba(var(--c-border-primary), 0.2);
 	}
 
 	&--ghost-positive {
@@ -71,7 +71,7 @@
 
 	&--secondary {
 		--button-bg-cl: transparent;
-		--button-cl: rgba(var(--c-text-button-inverse), .6);
+		--button-cl: rgba(var(--c-text-button-inverse), 0.6);
 		--button-border-cl: transparent;
 	}
 

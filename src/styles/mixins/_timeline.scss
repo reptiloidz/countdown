@@ -1,16 +1,16 @@
-@mixin timeline($color: var(--c-bg-primary), $animationName: timeline, $opacity: .5, $size: 20px) {
-	background-image:
-		linear-gradient(45deg,
-		transparent,
-		transparent 24%,
-		rgba(#{$color}, #{$opacity}) 25%,
-		rgba(#{$color}, #{$opacity}) 49%,
-		transparent 50%),
-		linear-gradient(45deg,
-		transparent,
-		transparent 75%,
-		rgba(#{$color}, #{$opacity}) 75%);
-	background-position: 0 0, #{$size} 0;
+@mixin timeline($color: var(--c-bg-primary), $animationName: timeline, $opacity: 0.5, $size: 20px) {
+	background-image: linear-gradient(
+			45deg,
+			transparent,
+			transparent 24%,
+			rgba(#{$color}, #{$opacity}) 25%,
+			rgba(#{$color}, #{$opacity}) 49%,
+			transparent 50%
+		),
+		linear-gradient(45deg, transparent, transparent 75%, rgba(#{$color}, #{$opacity}) 75%);
+	background-position:
+		0 0,
+		#{$size} 0;
 	background-size:
 		#{$size} #{$size},
 		#{$size} #{$size};
@@ -21,11 +21,15 @@
 
 	@keyframes #{$animationName} {
 		0% {
-			background-position: #{$size} 0, calc(#{$size} * 2) 0;
+			background-position:
+				#{$size} 0,
+				calc(#{$size} * 2) 0;
 		}
 
 		100% {
-			background-position: 0 0, #{$size} 0;
+			background-position:
+				0 0,
+				#{$size} 0;
 		}
 	}
 }

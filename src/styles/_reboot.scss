@@ -2,7 +2,6 @@
 // REBOOT STYLES
 // ===============================================
 
-
 /*
 	Change from `box-sizing: content-box` so that `width` is not affected
 	by `padding` or `border`.
@@ -22,15 +21,12 @@ html {
 
 // stylelint-enable scss/selector-nest-combinators
 
-
 // ===============================================
 // NORMALIZE
 // ===============================================
 
-
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
-
 
 // DOCUMENT
 // -----------------------------------------------
@@ -54,10 +50,8 @@ html {
 // -----------------------------------------------
 // DOCUMENT
 
-
 // SECTIONS
 // -----------------------------------------------
-
 
 body {
 	// Remove the margin in all browsers.
@@ -69,7 +63,8 @@ body {
 	*/
 	font-family:
 		system-ui,
-		-apple-system, /* Firefox supports this but not yet `system-ui` */
+		-apple-system,
+		// Firefox supports this but not yet `system-ui`
 		'Segoe UI',
 		'Roboto',
 		'Helvetica',
@@ -99,7 +94,6 @@ address {
 // -----------------------------------------------
 // SECTIONS
 
-
 // CONTENT GROUPING
 // -----------------------------------------------
 
@@ -116,7 +110,6 @@ hr {
 
 // -----------------------------------------------
 // CONTENT GROUPING
-
 
 // TEXT-LEVEL SEMANTICS
 // -----------------------------------------------
@@ -151,14 +144,7 @@ code,
 kbd,
 samp,
 pre {
-	font-family:
-		ui-monospace,
-		'SFMono-Regular',
-		'Consolas',
-		'Liberation Mono',
-		'Menlo',
-		monospace; /* 1 */
-
+	font-family: ui-monospace, 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace; /* 1 */
 	font-size: 1em; /* 2 */
 }
 
@@ -180,16 +166,15 @@ sup {
 }
 
 sub {
-	bottom: -.25em;
+	bottom: -0.25em;
 }
 
 sup {
-	top: -.5em;
+	top: -0.5em;
 }
 
 // -----------------------------------------------
 // TEXT-LEVEL SEMANTICS
-
 
 // TABULAR DATA
 // -----------------------------------------------
@@ -212,7 +197,6 @@ td {
 
 // -----------------------------------------------
 // TABULAR DATA
-
 
 // FORMS
 // -----------------------------------------------
@@ -237,7 +221,8 @@ textarea {
 	1. Remove the inheritance of text transform in Firefox.
 */
 button,
-select { /* 1 */
+select {
+	/* 1 */
 	text-transform: none;
 }
 
@@ -316,7 +301,6 @@ progress {
 // -----------------------------------------------
 // FORMS
 
-
 // INTERACTIVE
 // -----------------------------------------------
 
@@ -329,18 +313,14 @@ summary {
 // -----------------------------------------------
 // INTERACTIVE
 
-
 // -----------------------------------------------
 // MISC
-
 
 // ===============================================
 // BOOTSTRAP REBOOT
 // ===============================================
 
-
 /*! twbs/bootstrap v5.0.0 | MIT License | https://github.com/twbs/bootstrap */
-
 
 // TEXT-LEVEL SEMANTICS
 // -----------------------------------------------
@@ -358,7 +338,6 @@ pre {
 
 // -----------------------------------------------
 // TEXT-LEVEL SEMANTICS
-
 
 // FORMS
 // -----------------------------------------------
@@ -385,7 +364,6 @@ button {
 button:focus:not(:focus-visible) {
 	outline: 0;
 }
-
 
 textarea {
 	/*
@@ -424,7 +402,6 @@ fieldset {
 
 // -----------------------------------------------
 // FORMS
-
 
 // MISC
 // -----------------------------------------------

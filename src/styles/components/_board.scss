@@ -1,13 +1,13 @@
 .board {
-	--board-hinge-shadow-opacity-1: .4;
-	--board-hinge-shadow-opacity-2: .7;
+	--board-hinge-shadow-opacity-1: 0.4;
+	--board-hinge-shadow-opacity-2: 0.7;
 	--board-hinge-shadow-spread: 1px;
 	--board-hinge-shadow-w-1: 1px;
 	--board-hinge-shadow-w-2: 8px;
 	--board-hinge-before-shadow-x: 1px;
 	--board-hinge-after-shadow-x: -1px;
-	--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
-	--board-half-after-opacity: .3;
+	--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), 0.5);
+	--board-half-after-opacity: 0.3;
 	--board-bg-cl: var(--c-bg-board);
 	--board-fz: #{timer-size(40)};
 	--board-h: #{timer-size(60)};
@@ -37,29 +37,32 @@
 		width: calc(var(--board-hinge-w) - 1px);
 		height: calc(var(--board-hinge-h) - 4px);
 		background-color: rgb(var(--board-bg-cl));
-		background-image:
-			linear-gradient(
-				180deg,
-				rgba(var(--c-bg-primary), 0) 0%,
-				rgba(var(--c-bg-primary), .1) 10%,
-				rgba(var(--c-bg-primary), 0) 50%,
-				rgba(var(--c-bg-primary), .3) 90%,
-				rgba(var(--c-bg-primary), 0) 100%
-			);
+		background-image: linear-gradient(
+			180deg,
+			rgba(var(--c-bg-primary), 0) 0%,
+			rgba(var(--c-bg-primary), 0.1) 10%,
+			rgba(var(--c-bg-primary), 0) 50%,
+			rgba(var(--c-bg-primary), 0.3) 90%,
+			rgba(var(--c-bg-primary), 0) 100%
+		);
 	}
 
 	&::before {
 		left: 0;
 		box-shadow:
-			var(--board-hinge-before-shadow-x) 0 var(--board-hinge-shadow-w-1) var(--board-hinge-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-1)),
-			var(--board-hinge-before-shadow-x) 0 var(--board-hinge-shadow-w-2) 0 rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-2));
+			var(--board-hinge-before-shadow-x) 0 var(--board-hinge-shadow-w-1) var(--board-hinge-shadow-spread)
+				rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-1)),
+			var(--board-hinge-before-shadow-x) 0 var(--board-hinge-shadow-w-2) 0
+				rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-2));
 	}
 
 	&::after {
 		right: 0;
 		box-shadow:
-			var(--board-hinge-after-shadow-x) 0 var(--board-hinge-shadow-w-1) var(--board-hinge-shadow-spread) rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-1)),
-			var(--board-hinge-after-shadow-x) 0 var(--board-hinge-shadow-w-2) 0 rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-2));
+			var(--board-hinge-after-shadow-x) 0 var(--board-hinge-shadow-w-1) var(--board-hinge-shadow-spread)
+				rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-1)),
+			var(--board-hinge-after-shadow-x) 0 var(--board-hinge-shadow-w-2) 0
+				rgba(var(--c-bg-primary), var(--board-hinge-shadow-opacity-2));
 	}
 
 	@media (min-aspect-ratio: $timer-ratio) {
@@ -86,20 +89,19 @@
 		width: calc(100% - (var(--board-hinge-w) * 2));
 		height: calc(var(--board-h) / 2);
 		background-color: rgb(var(--board-bg-cl));
-		background-image:
-			linear-gradient(
-				180deg,
-				rgba(var(--c-bg-primary), 0) 0%,
-				rgba(var(--c-bg-primary), .03) 80%,
-				rgba(var(--c-bg-primary), .05) 100%
-			);
+		background-image: linear-gradient(
+			180deg,
+			rgba(var(--c-bg-primary), 0) 0%,
+			rgba(var(--c-bg-primary), 0.03) 80%,
+			rgba(var(--c-bg-primary), 0.05) 100%
+		);
 		color: rgb(var(--c-text-primary));
 		font-family: monospace;
 		font-size: var(--board-fz);
 		transition: transform 1s;
 		transform-origin: bottom;
 		animation-duration: 200ms;
-		animation-timing-function: cubic-bezier(.36, .25, .76, .52);
+		animation-timing-function: cubic-bezier(0.36, 0.25, 0.76, 0.52);
 		animation-fill-mode: forwards;
 
 		&::before,
@@ -116,12 +118,7 @@
 			height: calc(100% - (var(--board-hinge-h) / 2));
 			border-radius: var(--board-brs) var(--board-brs) 0 0;
 			background-color: inherit;
-			background-image:
-				linear-gradient(
-					180deg,
-					rgba(var(--c-bg-primary), 0) 0%,
-					rgba(var(--c-bg-primary), .03) 100%
-				);
+			background-image: linear-gradient(180deg, rgba(var(--c-bg-primary), 0) 0%, rgba(var(--c-bg-primary), 0.03) 100%);
 			box-shadow: var(--board-half-shadow);
 		}
 
@@ -139,12 +136,11 @@
 		&--bottom {
 			grid-row-start: 2;
 			grid-row-end: 2;
-			background-image:
-				linear-gradient(
-					180deg,
-					rgba(var(--c-bg-primary), .02) 0%,
-					rgba(var(--c-bg-primary), .02) 100%
-				);
+			background-image: linear-gradient(
+				180deg,
+				rgba(var(--c-bg-primary), 0.02) 0%,
+				rgba(var(--c-bg-primary), 0.02) 100%
+			);
 			box-shadow: none;
 			transform: none;
 			transform-origin: top;
@@ -154,7 +150,7 @@
 				bottom: 0;
 				border-radius: 0 0 var(--board-brs) var(--board-brs);
 				background-image: inherit;
-				box-shadow: inset 0 -1px 0 0 rgba(var(--c-bg-primary), .2);
+				box-shadow: inset 0 -1px 0 0 rgba(var(--c-bg-primary), 0.2);
 			}
 
 			&::after {
@@ -215,7 +211,7 @@
 
 		width: 100%;
 		margin-top: var(--board-label-mt);
-		color: rgba(var(--c-text-primary), .4);
+		color: rgba(var(--c-text-primary), 0.4);
 		font-size: clamp(7px, var(--board-label-fz), 20px);
 		text-align: center;
 		transform: translateZ(0);
@@ -230,8 +226,8 @@
 		--board-fz: 16px;
 		--board-label-fz: 8px;
 		--board-label-mt: 1px;
-		--board-half-after-opacity: .1;
-		--board-hinge-shadow-opacity-1: .1;
+		--board-half-after-opacity: 0.1;
+		--board-hinge-shadow-opacity-1: 0.1;
 		--board-hinge-shadow-spread: 0;
 	}
 
@@ -244,29 +240,28 @@
 		--board-fz: 55px;
 		--board-label-fz: 8px;
 		--board-label-mt: 1px;
-		--board-half-after-opacity: .4;
-		--board-hinge-shadow-opacity-1: .2;
-		--board-hinge-shadow-opacity-2: .1;
+		--board-half-after-opacity: 0.4;
+		--board-hinge-shadow-opacity-1: 0.2;
+		--board-hinge-shadow-opacity-2: 0.1;
 		--board-hinge-shadow-spread: 1px;
 		--board-hinge-shadow-w-1: 0;
 		--board-hinge-shadow-w-2: 4px;
 		--board-hinge-before-shadow-x: 0;
 		--board-hinge-after-shadow-x: 0;
 		--board-bg-cl: 220, 220, 220;
-		--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), .5);
+		--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), 0.5);
 
 		&::before,
 		&::after {
 			z-index: 0;
-			background-image:
-				linear-gradient(
-					180deg,
-					rgba(var(--c-bg-inverse), 0) 0%,
-					rgba(var(--c-bg-inverse), 1) 10%,
-					rgba(var(--c-bg-inverse), 0) 50%,
-					rgba(var(--c-bg-inverse), .4) 90%,
-					rgba(var(--c-bg-inverse), 0) 100%
-				);
+			background-image: linear-gradient(
+				180deg,
+				rgba(var(--c-bg-inverse), 0) 0%,
+				rgba(var(--c-bg-inverse), 1) 10%,
+				rgba(var(--c-bg-inverse), 0) 50%,
+				rgba(var(--c-bg-inverse), 0.4) 90%,
+				rgba(var(--c-bg-inverse), 0) 100%
+			);
 		}
 	}
 }
@@ -278,15 +273,17 @@
 	}
 
 	100% {
-		box-shadow: var(--board-half-shadow), 0 calc(var(--board-h) / -4) 20px 0 rgba(var(--c-bg-primary), .1);
-		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, .75, 0, .001, 1, 1, .1, .1, .1, .1, 0, 1);
+		box-shadow:
+			var(--board-half-shadow),
+			0 calc(var(--board-h) / -4) 20px 0 rgba(var(--c-bg-primary), 0.1);
+		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, 0.75, 0, 0.001, 1, 1, 0.1, 0.1, 0.1, 0.1, 0, 1);
 	}
 }
 
 @keyframes halfBottom {
 	0% {
-		box-shadow: 0 calc(var(--board-h) / 4) 20px 1px rgba(var(--c-bg-primary), .4);
-		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, .75, 0, -.001, 1, 1, .1, .1, .1, .1, 0, 1);
+		box-shadow: 0 calc(var(--board-h) / 4) 20px 1px rgba(var(--c-bg-primary), 0.4);
+		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, 0.75, 0, -0.001, 1, 1, 0.1, 0.1, 0.1, 0.1, 0, 1);
 	}
 
 	100% {

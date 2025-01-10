@@ -1,6 +1,6 @@
 .radio {
 	--radio-cl: transparent;
-	--radio-border-cl: rgba(var(--c-border-primary), .4);
+	--radio-border-cl: rgba(var(--c-border-primary), 0.4);
 	--radio-check-cl: rgba(var(--c-border-primary), 1);
 	--radio-box-s: 28px;
 	--radio-box-before-s: 16px;
@@ -16,8 +16,8 @@
 	}
 
 	&:has(:disabled) {
-		--radio-border-cl: rgba(var(--c-border-primary), .1);
-		--radio-check-cl: rgba(var(--c-border-primary), .3);
+		--radio-border-cl: rgba(var(--c-border-primary), 0.1);
+		--radio-check-cl: rgba(var(--c-border-primary), 0.3);
 
 		pointer-events: none;
 	}

@@ -63,9 +63,9 @@
 		width: 100%;
 		margin-top: 10px;
 		padding: 15px;
-		border: 1px solid rgba(var(--point-color), .2);
+		border: 1px solid rgba(var(--point-color), 0.2);
 		border-radius: var(--form-col-brs);
-		background-color: rgba(var(--c-bg-primary), .02);
+		background-color: rgba(var(--c-bg-primary), 0.02);
 
 		&--auth {
 			width: clamp(50%, 400px, 100%);

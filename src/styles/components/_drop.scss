@@ -1,9 +1,9 @@
 .drop {
-	--drop-bg-cl: rgba(var(--c-bg-drop), .2);
+	--drop-bg-cl: rgba(var(--c-bg-drop), 0.2);
 	--drop-brs: 8px;
 	--drop-nav-brs: var(--drop-brs) var(--drop-brs) 0 1px;
-	--drop-nav-border-top-cl: rgba(var(--c-border-primary), .4);
-	--drop-nav-border-bottom-cl: rgba(var(--c-border-primary), .4);
+	--drop-nav-border-top-cl: rgba(var(--c-border-primary), 0.4);
+	--drop-nav-border-bottom-cl: rgba(var(--c-border-primary), 0.4);
 	--drop-body-brs-tl: 0;
 	--drop-body-brs-tr: var(--drop-brs);
 	--drop-body-brs-br: var(--drop-brs);
@@ -43,7 +43,7 @@
 		position: absolute;
 		min-width: calc(100% + 6px);
 		padding: 12px;
-		border: 1px solid rgba(var(--c-border-primary), .4);
+		border: 1px solid rgba(var(--c-border-primary), 0.4);
 		overflow: hidden;
 
 		&--list {
@@ -78,9 +78,9 @@
 		border-width: 1px;
 		border-style: solid;
 		border-top-color: var(--drop-nav-border-top-cl);
-		border-right-color: rgba(var(--c-border-primary), .4);
+		border-right-color: rgba(var(--c-border-primary), 0.4);
 		border-bottom-color: var(--drop-nav-border-bottom-cl);
-		border-left-color: rgba(var(--c-border-primary), .4);
+		border-left-color: rgba(var(--c-border-primary), 0.4);
 		background-color: rgb(var(--c-bg-inverse));
 
 		&--sm {
@@ -100,7 +100,7 @@
 		padding: 10px;
 
 		& + & {
-			border-top: 1px solid rgba(var(--c-border-primary), .1);
+			border-top: 1px solid rgba(var(--c-border-primary), 0.1);
 		}
 
 		&--selected {
@@ -110,7 +110,7 @@
 		}
 
 		&:disabled {
-			--button-cl: rgb(var(--c-text-primary), .2);
+			--button-cl: rgb(var(--c-text-primary), 0.2);
 
 			pointer-events: none;
 		}
@@ -145,7 +145,7 @@
 		display: flex;
 		justify-content: center;
 		padding-top: 8px;
-		border-top: 1px solid rgba(var(--c-border-primary), .1);
+		border-top: 1px solid rgba(var(--c-border-primary), 0.1);
 
 		&--left {
 			justify-content: flex-start;
@@ -163,7 +163,7 @@
 		}
 
 		--drop-nav-brs: 1px 0 var(--drop-brs) var(--drop-brs);
-		--drop-nav-border-bottom-cl: rgba(var(--c-border-primary), .4);
+		--drop-nav-border-bottom-cl: rgba(var(--c-border-primary), 0.4);
 		--drop-nav-border-top-cl: transparent;
 		--drop-body-brs-tl: var(--drop-brs);
 		--drop-body-brs-tr: var(--drop-brs);

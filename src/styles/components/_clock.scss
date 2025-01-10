@@ -1,6 +1,6 @@
 .clock {
 	--clock-s: 100px;
-	--clock-cl: rgba(var(--c-bg-primary), .02);
+	--clock-cl: rgba(var(--c-bg-primary), 0.02);
 	--clock-arrow-w: 1;
 	--clock-arrow-h: 40;
 
@@ -25,7 +25,7 @@
 		height: calc(var(--clock-arrow-h) * 1%);
 		border-radius: calc(25% * var(--clock-arrow-h)) / calc(25% * var(--clock-arrow-w));
 		background-color: var(--clock-cl);
-		transition: transform .4s cubic-bezier(.1, .79, .24, .95);
+		transition: transform 0.4s cubic-bezier(0.1, 0.79, 0.24, 0.95);
 		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * -1deg));
 		transform-origin: bottom;
 

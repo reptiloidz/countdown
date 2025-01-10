@@ -1,5 +1,5 @@
 .widget {
-	--widget-bg-cl: rgba(var(--c-bg-widget), .2);
+	--widget-bg-cl: rgba(var(--c-bg-widget), 0.2);
 	--widget-brs: 8px;
 
 	display: flex;
@@ -17,7 +17,7 @@
 		.widget__nav {
 			position: relative;
 			z-index: 2;
-			border: 1px solid rgba(var(--c-border-primary), .4);
+			border: 1px solid rgba(var(--c-border-primary), 0.4);
 			border-bottom-color: transparent;
 			border-radius: var(--widget-brs) var(--widget-brs) 0 0;
 		}
@@ -27,7 +27,7 @@
 		display: flex;
 		align-self: stretch;
 		padding: 12px;
-		border: 1px solid rgba(var(--c-border-primary), .4);
+		border: 1px solid rgba(var(--c-border-primary), 0.4);
 	}
 
 	&__nav,

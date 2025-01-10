@@ -3,7 +3,7 @@
 	--checkbox-bg-cl: transparent;
 	--checkbox-brs: 12px;
 	--checkbox-box-brs: 4px;
-	--checkbox-border-cl: rgba(var(--c-border-primary), .4);
+	--checkbox-border-cl: rgba(var(--c-border-primary), 0.4);
 	--checkbox-check-cl: rgba(var(--c-border-primary), 1);
 	--checkbox-box-w: 28px;
 	--checkbox-icon-w: 20px;
@@ -19,8 +19,8 @@
 	}
 
 	&:has(:disabled) {
-		--checkbox-border-cl: rgba(var(--c-border-primary), .1);
-		--checkbox-check-cl: rgba(var(--c-border-primary), .3);
+		--checkbox-border-cl: rgba(var(--c-border-primary), 0.1);
+		--checkbox-check-cl: rgba(var(--c-border-primary), 0.3);
 
 		pointer-events: none;
 	}
@@ -79,11 +79,11 @@
 		--checkbox-border-cl: transparent;
 		--checkbox-box-w: 40px;
 		--checkbox-icon-w: 24px;
-		--checkbox-bg-cl: rgba(var(--c-bg-primary), .04);
+		--checkbox-bg-cl: rgba(var(--c-bg-primary), 0.04);
 		--checkbox-box-brs: var(--checkbox-brs);
 
 		&:has(:checked) {
-			--checkbox-border-cl: rgba(var(--c-border-primary), .4);
+			--checkbox-border-cl: rgba(var(--c-border-primary), 0.4);
 		}
 	}
 }

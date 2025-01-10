@@ -9,10 +9,10 @@
 	height: var(--logo-h);
 	padding: 0 10px var(--logo-pb);
 	border-radius: 8px;
-	background-color: rgba(var(--c-bg-primary), .2);
+	background-color: rgba(var(--c-bg-primary), 0.2);
 	color: rgb(var(--c-text-primary));
 	font-weight: 400;
-	letter-spacing: .5px;
+	letter-spacing: 0.5px;
 	text-transform: uppercase;
 
 	&__text {
@@ -37,7 +37,7 @@
 	&__board {
 		align-self: center;
 		margin: var(--logo-pb) 2px 0;
-		box-shadow: 0 0 1px 1px rgb(var(--c-bg-primary), .4);
+		box-shadow: 0 0 1px 1px rgb(var(--c-bg-primary), 0.4);
 	}
 
 	&__letters {

@@ -8,7 +8,7 @@ html {
 }
 
 body {
-	--body-bg-color-1: rgba(var(--c-bg-primary), .03);
+	--body-bg-color-1: rgba(var(--c-bg-primary), 0.03);
 	--body-bg-color-2: transparent;
 	--body-bg-size: 20px;
 
@@ -61,13 +61,15 @@ body {
 		z-index: 3;
 		opacity: 0;
 		pointer-events: none;
-		transition: opacity 1s, backdrop-filter 1s;
+		transition:
+			opacity 1s,
+			backdrop-filter 1s;
 	}
 
 	&__loader-icon {
 		display: none;
 		height: 100%;
-		transition: display .8s allow-discrete;
+		transition: display 0.8s allow-discrete;
 	}
 
 	&__loading-marker {

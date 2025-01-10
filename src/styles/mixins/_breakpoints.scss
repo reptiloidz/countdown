@@ -2,7 +2,6 @@
 // BREAKPOINT VIEWPORT SIZES AND MEDIA QUERIES
 // ===============================================
 
-
 /*
 	Breakpoints are defined as a map of (name: minimum width), order from small to large:
 
@@ -10,7 +9,6 @@
 
 	The map defined in the `$grid-breakpoints` global variable is used as the `$breakpoints` argument by default.
 */
-
 
 /*
 	Name of the next breakpoint, or null for the last breakpoint.
@@ -29,7 +27,6 @@
 	@return if($n != null and $n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
 }
 
-
 /*
 	Minimum breakpoint width. Null for the smallest (first) breakpoint.
 
@@ -42,7 +39,6 @@
 
 	@return if($min != 0, $min, null);
 }
-
 
 /*
 	Maximum breakpoint width. Null for the largest (last) breakpoint.
@@ -59,9 +55,8 @@
 @function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
 	$next: breakpoint-next($name, $breakpoints);
 
-	@return if($next, breakpoint-min($next, $breakpoints) - .02, null);
+	@return if($next, breakpoint-min($next, $breakpoints) - 0.02, null);
 }
-
 
 /*
 	Returns a blank string if smallest breakpoint, otherwise returns the name with a dash in front.
@@ -76,7 +71,6 @@
 @function breakpoint-prefix($name, $breakpoints: $grid-breakpoints) {
 	@return if(breakpoint-min($name, $breakpoints) == null, '', '#{$name}\\:');
 }
-
 
 /*
 	Media of at least the minimum breakpoint width. No query for the smallest breakpoint.
@@ -95,7 +89,6 @@
 	}
 }
 
-
 /*
 	Media of at most the maximum breakpoint width. No query for the largest breakpoint.
 	Makes the @content apply to the given breakpoint and narrower.
@@ -112,7 +105,6 @@
 		@content;
 	}
 }
-
 
 /*
 	Media that spans multiple breakpoint widths.
@@ -137,7 +129,6 @@
 		}
 	}
 }
-
 
 /*
 	Media between the breakpoint's minimum and maximum widths.

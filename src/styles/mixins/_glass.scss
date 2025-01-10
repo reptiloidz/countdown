@@ -11,7 +11,7 @@
 		backdrop-filter: blur(#{$blur} + px);
 
 		@supports not (backdrop-filter: blur(1px)) {
-			background-color: rgba(var(--c-bg-inverse), .8);
+			background-color: rgba(var(--c-bg-inverse), 0.8);
 		}
 	}
 }

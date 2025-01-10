@@ -16,7 +16,7 @@
 	z-index: 1;
 	display: flex;
 	padding: 0 var(--cont-px) 20px;
-	border-bottom: 1px solid rgba(var(--c-border-primary), .2);
+	border-bottom: 1px solid rgba(var(--c-border-primary), 0.2);
 	background-color: rgb(var(--c-bg-panel));
 
 	&__aside {

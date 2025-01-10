@@ -1,5 +1,5 @@
 .nav {
-	--nav-header-border-b-cl: rgba(var(--c-border-primary), .2);
+	--nav-header-border-b-cl: rgba(var(--c-border-primary), 0.2);
 
 	display: flex;
 	flex-grow: 0;
@@ -113,7 +113,7 @@
 		z-index: 1;
 		padding-top: 20px;
 		padding-bottom: 20px;
-		border-top: 1px solid rgba(var(--c-border-primary), .2);
+		border-top: 1px solid rgba(var(--c-border-primary), 0.2);
 
 		&:not(:has(.nav__aside:not(:empty))) {
 			display: none;

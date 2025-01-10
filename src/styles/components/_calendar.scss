@@ -135,11 +135,11 @@
 		cursor: pointer;
 
 		&--selected {
-			background-color: rgba(var(--c-bg-primary), .05);
+			background-color: rgba(var(--c-bg-primary), 0.05);
 		}
 
 		&--now {
-			border-color: rgba(var(--c-border-primary), .1);
+			border-color: rgba(var(--c-border-primary), 0.1);
 		}
 
 		&--weekend {
@@ -147,7 +147,7 @@
 		}
 
 		&--other {
-			--calendar-button-cl: rgba(var(--c-text-primary), .3);
+			--calendar-button-cl: rgba(var(--c-text-primary), 0.3);
 		}
 
 		&--readonly {
@@ -155,7 +155,7 @@
 		}
 
 		&:disabled {
-			--calendar-button-cl: rgba(var(--c-text-primary), .1);
+			--calendar-button-cl: rgba(var(--c-text-primary), 0.1);
 
 			pointer-events: none;
 		}
@@ -171,7 +171,7 @@
 		min-width: 18px;
 		height: 18px;
 		border-radius: 4px;
-		background-color: rgba(var(--c-bg-icon), .4);
+		background-color: rgba(var(--c-bg-icon), 0.4);
 		color: rgb(var(--c-text-button));
 		font-family: monospace;
 		font-size: 11px;

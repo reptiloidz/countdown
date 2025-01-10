@@ -14,12 +14,12 @@
 		}
 
 		padding: 10px var(--panel-px);
-		border-bottom: 1px solid rgba(var(--c-border-primary), .2);
+		border-bottom: 1px solid rgba(var(--c-border-primary), 0.2);
 		background-color: rgb(var(--c-bg-panel));
 	}
 
 	&__content {
-		transition: height .3s cubic-bezier(.1, .79, .24, .95);
+		transition: height 0.3s cubic-bezier(0.1, 0.79, 0.24, 0.95);
 
 		&--animating,
 		&.ng-animating {

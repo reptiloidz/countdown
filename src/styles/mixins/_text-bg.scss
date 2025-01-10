@@ -5,10 +5,18 @@
 
 	@for $i from 1 through $num {
 		@for $k from 1 through $num {
-			$shadows: $shadows, #{$i * $j}px #{$k * $j}px rgb(var(--c-bg-body));
-			$shadows: $shadows, -#{$i * $j}px -#{$k * $j}px rgb(var(--c-bg-body));
-			$shadows: $shadows, -#{$i * $j}px #{$k * $j}px rgb(var(--c-bg-body));
-			$shadows: $shadows, #{$i * $j}px -#{$k * $j}px rgb(var(--c-bg-body));
+			$shadows:
+				$shadows,
+				#{$i * $j}px #{$k * $j}px rgb(var(--c-bg-body));
+			$shadows:
+				$shadows,
+				-#{$i * $j}px -#{$k * $j}px rgb(var(--c-bg-body));
+			$shadows:
+				$shadows,
+				-#{$i * $j}px #{$k * $j}px rgb(var(--c-bg-body));
+			$shadows:
+				$shadows,
+				#{$i * $j}px -#{$k * $j}px rgb(var(--c-bg-body));
 		}
 	}
 

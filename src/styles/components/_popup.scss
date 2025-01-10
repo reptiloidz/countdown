@@ -34,14 +34,14 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
-		background-color: rgba(var(--c-bg-primary), .2);
+		background-color: rgba(var(--c-bg-primary), 0.2);
 		backdrop-filter: blur(6px);
 	}
 
 	&__header {
 		display: flex;
 		width: 100%;
-		background-color: rgba(var(--c-bg-primary), .9);
+		background-color: rgba(var(--c-bg-primary), 0.9);
 	}
 
 	&__inner {

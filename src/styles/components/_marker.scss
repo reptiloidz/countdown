@@ -4,7 +4,7 @@
 	}
 	--marker-opacity: 1;
 	--marker-color: rgb(var(--c-text-primary));
-	--marker-bg-cl: rgba(var(--c-bg-primary), .04);
+	--marker-bg-cl: rgba(var(--c-bg-primary), 0.04);
 
 	position: relative;
 	display: flex;
@@ -25,6 +25,6 @@
 
 	&--inactive {
 		--marker-bg-cl: transparent;
-		--marker-opacity: .2;
+		--marker-opacity: 0.2;
 	}
 }

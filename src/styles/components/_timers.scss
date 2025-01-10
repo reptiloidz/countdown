@@ -60,7 +60,7 @@
 
 	&__item {
 		z-index: 1;
-		box-shadow: 0 0 1px var(--timers-item-shadow-spread) rgb(var(--c-bg-primary), .5);
+		box-shadow: 0 0 1px var(--timers-item-shadow-spread) rgb(var(--c-bg-primary), 0.5);
 	}
 
 	&__item-wrapper {

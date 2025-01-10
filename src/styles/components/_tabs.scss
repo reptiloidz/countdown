@@ -1,14 +1,14 @@
 .tabs {
 	--tabs-gap: 50px;
-	--tabs-item-pseudo-opacity: .1;
-	--tabs-date-cl: rgba(var(--c-text-primary), .4);
+	--tabs-item-pseudo-opacity: 0.1;
+	--tabs-date-cl: rgba(var(--c-text-primary), 0.4);
 	--tabs-item-pseudo-bg-color: var(--c-bg-primary);
 	--tabs-item-pseudo-bg-size: 20px;
 	--tabs-pb: 20px;
 
 	padding: 0 20px;
 	overflow: auto hidden;
-	transition: padding .2s .1s;
+	transition: padding 0.2s 0.1s;
 	scroll-behavior: smooth;
 	scroll-padding: 50%;
 
@@ -19,7 +19,7 @@
 		margin: 0;
 		padding: 4px var(--tabs-gap) var(--tabs-pb) var(--tabs-gap);
 		list-style-type: none;
-		transition: padding .2s .1s;
+		transition: padding 0.2s 0.1s;
 	}
 
 	&__item {
@@ -47,7 +47,12 @@
 
 		&::before,
 		&::after {
-			@include timeline(var(--tabs-item-pseudo-bg-color), timelineTabs, var(--tabs-item-pseudo-opacity), var(--tabs-item-pseudo-bg-size));
+			@include timeline(
+				var(--tabs-item-pseudo-bg-color),
+				timelineTabs,
+				var(--tabs-item-pseudo-opacity),
+				var(--tabs-item-pseudo-bg-size)
+			);
 
 			position: absolute;
 			right: 100%;
@@ -64,14 +69,14 @@
 			}
 
 			[data-open='true'] & .tabs__btn {
-				--button-border-cl: rgba(var(--c-border-primary), .2);
+				--button-border-cl: rgba(var(--c-border-primary), 0.2);
 			}
 			// stylelint-enable scss/selector-nest-combinators
 		}
 
 		&--active {
 			.tabs__btn {
-				--button-bg-cl: rgba(var(--c-bg-primary), .1);
+				--button-bg-cl: rgba(var(--c-bg-primary), 0.1);
 
 				font-weight: 900;
 			}
@@ -89,13 +94,13 @@
 
 			&.tabs__item--day {
 				[data-open='true'] & .tabs__btn {
-					--button-border-cl: rgba(var(--c-border-negative), .2);
+					--button-border-cl: rgba(var(--c-border-negative), 0.2);
 				}
 			}
 
 			&.tabs__item--active {
 				.tabs__btn {
-					--button-bg-cl: rgba(var(--c-bg-negative), .1);
+					--button-bg-cl: rgba(var(--c-bg-negative), 0.1);
 				}
 			}
 		}
@@ -138,7 +143,7 @@
 
 	&__btn {
 		--button-fz: 12px;
-		--button-bg-cl: rgba(var(--c-bg-primary), .01);
+		--button-bg-cl: rgba(var(--c-bg-primary), 0.01);
 
 		position: relative;
 		min-width: 34px;
