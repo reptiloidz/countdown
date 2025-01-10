@@ -5492,10 +5492,10 @@ humanize-ms@^1.2.1:
   dependencies:
     ms "^2.0.0"
 
-husky@^9.1.7:
-  version "9.1.7"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-9.1.7.tgz#d46a38035d101b46a70456a850ff4201344c0b2d"
-  integrity sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==
+husky@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-5.0.0.tgz#dc8ba8e9da6f6b726aac2795167cbdb7fda5871a"
+  integrity sha512-KWAa3/Zsx5uHE+oYAOGp50S2vEoiw6psjSYnBKTtbgnVPQcgO/G1ZTv/qTjwTmg6zGGKRz63+X7CuGp4xHOMhA==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
@@ -6746,7 +6746,7 @@ ngx-mask@18.0.0:
   dependencies:
     tslib "^2.3.0"
 
-ngx-quicklink@^0.4.2:
+ngx-quicklink@^0.4.7:
   version "0.4.7"
   resolved "https://registry.yarnpkg.com/ngx-quicklink/-/ngx-quicklink-0.4.7.tgz#4d92de4fd159eafae8cdff60ea04b3f7dc246025"
   integrity sha512-0QFViuuKeZWbQcCPm0s/6UaWjL2jwGOfqZfcx1bG34KU5s3gJRMOs3Or7Mz8jBchCRylO4VZIMHT9IqkK0yQ5g==
