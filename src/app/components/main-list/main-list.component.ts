@@ -1,30 +1,11 @@
-import {
-	ElementRef,
-	ViewChild,
-	Component,
-	OnDestroy,
-	OnInit,
-	HostBinding,
-	TemplateRef,
-} from '@angular/core';
+import { ElementRef, ViewChild, Component, OnDestroy, OnInit, HostBinding, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { PointColors, SortTypeNames } from 'src/app/enums';
 import { Point, SwitcherItem } from 'src/app/interfaces';
-import {
-	DataService,
-	ActionService,
-	AuthService,
-	PopupService,
-} from 'src/app/services';
+import { DataService, ActionService, AuthService, PopupService } from 'src/app/services';
 import { SortService } from 'src/app/services/sort.service';
-import {
-	CalendarMode,
-	Direction,
-	FilterSelected,
-	PointColorTypes,
-	SortTypes,
-} from 'src/app/types';
+import { CalendarMode, Direction, FilterSelected, PointColorTypes, SortTypes } from 'src/app/types';
 import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
 import { format } from 'date-fns';
@@ -83,17 +64,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	greenwichList: SwitcherItem[] = [
 		{
-			text: 'Локально',
+			text: 'Местное',
 			value: 'false',
 			icon: 'home',
 		},
 		{
-			text: 'Локально/по Гринвичу',
+			text: 'Местное/глобальное',
 			value: 'all',
 			default: true,
 		},
 		{
-			text: 'По Гринвичу',
+			text: 'Глобальное',
 			value: 'true',
 			icon: 'globe',
 		},
@@ -158,7 +139,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private sort: SortService,
 		public elementRef: ElementRef,
-		private popupService: PopupService
+		private popupService: PopupService,
 	) {}
 
 	ngOnInit(): void {
@@ -167,7 +148,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 				.pipe(
 					tap(() => {
 						this.loading = false;
-					})
+					}),
 				)
 				.pipe(distinctUntilChanged())
 				.subscribe({
@@ -181,23 +162,18 @@ export class MainListComponent implements OnInit, OnDestroy {
 						this.getAvailablePointsVisibility();
 					},
 					error(err) {
-						console.error(
-							'Ошибка при загрузке списка:',
-							err.message
-						);
+						console.error('Ошибка при загрузке списка:', err.message);
 					},
-				})
+				}),
 		);
 
 		this.subscriptions.add(
 			this.data.eventRemovePoint$.subscribe({
-				next: (id) => {
-					this.points = this.points.filter(
-						(point) => point.id !== id
-					);
+				next: id => {
+					this.points = this.points.filter(point => point.id !== id);
 					this.checkPoint();
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -236,30 +212,18 @@ export class MainListComponent implements OnInit, OnDestroy {
 						this.colorType = [];
 					}
 
-					localStorage.setItem(
-						'searchInputValue',
-						this.searchInputValue
-					);
+					localStorage.setItem('searchInputValue', this.searchInputValue);
 					localStorage.setItem('sort', this.sortType);
-					localStorage.setItem(
-						'repeatableValue',
-						this.repeatableValue
-					);
+					localStorage.setItem('repeatableValue', this.repeatableValue);
 					localStorage.setItem('greenwichValue', this.greenwichValue);
 					localStorage.setItem('publicValue', this.publicValue);
 					localStorage.setItem('directionValue', this.directionValue);
-					localStorage.setItem(
-						'colorValue',
-						this.colorType.join('+') || 'all'
-					);
+					localStorage.setItem('colorValue', this.colorType.join('+') || 'all');
 				},
-				error: (err) => {
-					console.error(
-						'Ошибка при получении параметров:\n',
-						err.message
-					);
+				error: err => {
+					console.error('Ошибка при получении параметров:\n', err.message);
 				},
-			})
+			}),
 		);
 
 		this.data.fetchAllPoints();
@@ -311,12 +275,9 @@ export class MainListComponent implements OnInit, OnDestroy {
 		requestAnimationFrame(() => {
 			this.action.hasEditablePoints(
 				this.points.some(
-					(point) =>
-						this.auth.checkAccessEdit(point) &&
-						document.documentElement.querySelectorAll(
-							'.point--available'
-						).length
-				)
+					point =>
+						this.auth.checkAccessEdit(point) && document.documentElement.querySelectorAll('.point--available').length,
+				),
 			);
 		});
 	}
@@ -345,24 +306,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.searchInputValue = this.searchInput?.value.toString();
 		this.colorType = this.colorList
 			? Array.from(this.colorList.nativeElement.children)
-					.filter(
-						(item: any) => item?.querySelector('input')?.checked
-					)
+					.filter((item: any) => item?.querySelector('input')?.checked)
 					.map((item: any) => item.getAttribute('data-color'))
 			: [];
 
 		this.router.navigate([], {
 			relativeTo: this.route,
 			queryParams: {
-				repeat:
-					this.repeatableValue === 'all'
-						? null
-						: this.repeatableValue,
-				greenwich:
-					this.greenwichValue === 'all' ? null : this.greenwichValue,
+				repeat: this.repeatableValue === 'all' ? null : this.repeatableValue,
+				greenwich: this.greenwichValue === 'all' ? null : this.greenwichValue,
 				public: this.publicValue === 'all' ? null : this.publicValue,
-				direction:
-					this.directionValue === 'all' ? null : this.directionValue,
+				direction: this.directionValue === 'all' ? null : this.directionValue,
 				search: this.searchInputValue || null,
 				color: this.colorType.join('+') || null,
 			},
@@ -383,23 +337,16 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	changeModes(value?: string) {
-		this.modesValue =
-			((value || localStorage.getItem('modesValue')) as
-				| 'list'
-				| 'grid') || 'grid';
+		this.modesValue = ((value || localStorage.getItem('modesValue')) as 'list' | 'grid') || 'grid';
 		value && localStorage.setItem('modesValue', value);
 	}
 
 	checkPoint() {
-		this.action.getCheckedPoints(
-			this.pointsList?.nativeElement || this.elementRef?.nativeElement
-		);
+		this.action.getCheckedPoints(this.pointsList?.nativeElement || this.elementRef?.nativeElement);
 	}
 
 	getCheckedDatePoints() {
-		this.datePointsChecked = Array.from(
-			this.datePointsList.nativeElement.children
-		)
+		this.datePointsChecked = Array.from(this.datePointsList.nativeElement.children)
 			.filter((item: any) => item?.querySelector('input')?.checked)
 			.map((item: any) => item.getAttribute('data-id'));
 
@@ -412,8 +359,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		setTimeout(() => {
 			Array.from(this.datePointsList.nativeElement.children).map(
 				(item: any) =>
-					item?.querySelector('input:not(:disabled)') &&
-					(item.querySelector('input:not(:disabled)').checked = check)
+					item?.querySelector('input:not(:disabled)') && (item.querySelector('input:not(:disabled)').checked = check),
 			);
 			this.getCheckedDatePoints();
 		});
@@ -434,7 +380,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			points: Point[];
 			sortType?: SortTypes;
 			navigate?: boolean;
-		} = { points: this.points }
+		} = { points: this.points },
 	) {
 		this.sortType = sortType ? sortType : this.sortType;
 
@@ -460,9 +406,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	resetColors() {
 		if (this.colorList) {
 			Array.from(this.colorList.nativeElement.children).map(
-				(item: any) =>
-					item?.querySelector('input') &&
-					(item.querySelector('input').checked = false)
+				(item: any) => item?.querySelector('input') && (item.querySelector('input').checked = false),
 			);
 			this.changeFilters();
 		} else {
@@ -497,7 +441,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 				sortType: this.sortType,
 				listRef: this.listTemplate,
 				footerRef: this.footerRef,
-			}
+			},
 		);
 	}
 }
