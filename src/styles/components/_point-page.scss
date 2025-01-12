@@ -169,8 +169,13 @@
 
 	&__half {
 		width: 50%;
-		padding: 0 10px;
+		padding-right: 10px;
 		text-align: right;
+
+		&:last-child {
+			padding-right: 0;
+			padding-left: 10px;
+		}
 
 		&--second {
 			border-left: 1px solid rgba(var(--c-border-primary));
