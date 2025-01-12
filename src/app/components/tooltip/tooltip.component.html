@@ -3,6 +3,16 @@
 	class="tooltip__body"
 	*ngIf="!isTooltipOff"
 >
+	<button
+		*ngIf="isOnboardingOn"
+		app-button
+		icon="cross"
+		size="sm"
+		title="Закрыть"
+		class="tooltip__close"
+		mode="ghost"
+		(click)="closeOnboarding()"
+	></button>
 	<span class="tooltip__content">
 		<ng-container
 			*ngIf="tooltipContent else tooltipContentTextTemplate;"

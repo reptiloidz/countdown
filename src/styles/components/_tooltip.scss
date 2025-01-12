@@ -4,6 +4,8 @@
 	position: relative;
 
 	&:hover {
+		z-index: 3;
+
 		&::before {
 			content: '';
 		}
@@ -41,6 +43,10 @@
 	}
 
 	&__content {
+		@include media-breakpoint-down(xs) {
+			max-width: 170px;
+		}
+
 		position: relative;
 		z-index: 1;
 		width: max-content;
@@ -49,6 +55,14 @@
 		border: 1px solid rgba(var(--c-border-primary), 0.2);
 		border-radius: inherit;
 		text-align: left;
+	}
+
+	&__close {
+		--button-bg-cl: rgb(var(--c-bg-inverse));
+
+		position: absolute;
+		right: 0;
+		bottom: calc(100% + 4px);
 	}
 
 	&--top {
@@ -96,6 +110,16 @@
 	&--disabled {
 		&::before {
 			display: none;
+		}
+	}
+
+	&--onboarding {
+		&::before {
+			content: '';
+		}
+
+		.tooltip__body {
+			display: flex;
 		}
 	}
 }

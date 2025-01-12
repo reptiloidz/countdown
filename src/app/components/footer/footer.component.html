@@ -54,6 +54,8 @@
 		app-tooltip
 		*ngIf="pointId && hasAccess && !isEdit"
 		vertical="top"
+		onboarding="now"
+		onboardingBefore="confirm"
 		[text]="point?.repeatable ? 'Добавить итерацию с текущим моментом' : 'Поменять время на текущее'"
 	>
 		<button
@@ -70,6 +72,9 @@
 		app-tooltip
 		*ngIf="(pointId || isUrl) && !isMain"
 		vertical="top"
+		horizontal="left"
+		onboarding="copyshort"
+		onboardingBefore="createlink"
 		[text]="isUrl ? 'Создать и копировать короткую ссылку' : 'Копировать ссылку'"
 	>
 		<button
@@ -98,6 +103,8 @@
 		vertical="top"
 		horizontal="left"
 		class="nav__create"
+		onboarding="createlink"
+		onboardingBefore="now"
 		text="
 			Создать событие-ссылку. Не требует регистрации, дает доступ по ссылке (можно создать короткую).
 		"
@@ -129,6 +136,7 @@
 		vertical="top"
 		horizontal="left"
 		class="nav__create"
+		onboarding="confirm"
 		text="Подтвердите почту, чтобы иметь доступ к созданию и редактированию"
 	>
 		<button
