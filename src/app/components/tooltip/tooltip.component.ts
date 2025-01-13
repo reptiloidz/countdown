@@ -23,7 +23,7 @@ export class TooltipComponent {
 	@Input() disabled = false;
 	@Input() text!: string;
 	@Input() onboarding!: string;
-	@Input() onboardingBefore!: string;
+	@Input() onboardingBefore!: string | null;
 
 	get isTooltipOff() {
 		return this.disabled || !this.triggerElement;

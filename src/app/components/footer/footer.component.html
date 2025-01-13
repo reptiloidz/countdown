@@ -55,7 +55,7 @@
 		*ngIf="pointId && hasAccess && !isEdit"
 		vertical="top"
 		onboarding="now"
-		onboardingBefore="confirm"
+		[onboardingBefore]="!isVerified ? 'confirm' : null"
 		[text]="point?.repeatable ? 'Добавить итерацию с текущим моментом' : 'Поменять время на текущее'"
 	>
 		<button
@@ -104,7 +104,7 @@
 		horizontal="left"
 		class="nav__create"
 		onboarding="createlink"
-		onboardingBefore="now"
+		[onboardingBefore]="pointId && hasAccess && !isEdit ? 'now' : null"
 		text="
 			Создать событие-ссылку. Не требует регистрации, дает доступ по ссылке (можно создать короткую).
 		"
