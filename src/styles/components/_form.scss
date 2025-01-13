@@ -1,9 +1,8 @@
 .form {
-	--form-col-brs: 15px;
-
-	@media (max-width: 1024px) {
+	@include media-breakpoint-down(md) {
 		width: 100%;
 	}
+	--form-col-brs: 15px;
 
 	&__nav {
 		display: flex;
@@ -23,7 +22,12 @@
 		justify-content: space-between;
 		width: 100%;
 
-		&--top {
+		&--settings {
+			@include media-breakpoint-down(sm) {
+				display: grid;
+				grid-template-columns: auto auto;
+			}
+
 			align-items: flex-start;
 		}
 	}
@@ -47,6 +51,11 @@
 	}
 
 	&__color {
+		@include media-breakpoint-down(sm) {
+			margin-right: 0;
+			margin-left: auto;
+		}
+
 		margin-right: auto;
 		margin-bottom: auto;
 	}

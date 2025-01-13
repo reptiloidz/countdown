@@ -104,7 +104,13 @@
 		horizontal="left"
 		class="nav__create"
 		onboarding="createlink"
-		[onboardingBefore]="pointId && hasAccess && !isEdit ? 'now' : null"
+		[onboardingBefore]="
+			pointId && hasAccess && !isEdit
+			? 'now'
+			: !isVerified
+			? 'confirm'
+			: null
+		"
 		text="
 			Создать событие-ссылку. Не требует регистрации, дает доступ по ссылке (можно создать короткую).
 		"
