@@ -121,6 +121,9 @@
 						[select]="true"
 						navClass=""
 						class="filters__colors"
+						[ngClass]="{
+							'filters__colors--selected': colorType.length
+						}"
 					>
 						<ng-template
 							#triggerTemplate

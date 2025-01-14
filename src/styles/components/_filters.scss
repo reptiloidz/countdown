@@ -99,5 +99,18 @@
 		}
 
 		grid-area: bottom;
+
+		&--selected {
+			&::after {
+				content: '';
+				position: absolute;
+				top: 4px;
+				right: -6px;
+				width: 4px;
+				height: 4px;
+				border-radius: 50%;
+				background-color: rgba(var(--c-bg-primary), 0.3);
+			}
+		}
 	}
 }
