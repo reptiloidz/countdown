@@ -143,7 +143,6 @@
 		horizontal="left"
 		class="nav__create"
 		onboarding="confirm"
-		text="Подтвердите почту, чтобы иметь доступ к созданию и редактированию"
 	>
 		<button
 			*ngIf="isUrl || isCreateUrl"
@@ -167,5 +166,15 @@
 			routerLink="/create"
 			title="Создать событие"
 		></a>
+		<ng-template #tooltipContent>
+			<ng-container *ngIf="isAuthenticated">
+				<a routerLink="/profile">Подтвердите почту</a>,
+				чтобы иметь доступ к созданию и
+				редактированию</ng-container>
+			<ng-container *ngIf="!isAuthenticated">
+				<a routerLink="/reg">Зарегистрируйтесь</a>,
+				чтобы иметь доступ к созданию и
+				редактированию</ng-container>
+		</ng-template>
 	</div>
 </div>
