@@ -27,37 +27,12 @@ import {
 	from,
 	take,
 } from 'rxjs';
-import {
-	Point,
-	Iteration,
-	UserExtraData,
-	SwitcherItem,
-	SelectArray,
-	PointMode,
-	GroupEmoji,
-} from 'src/app/interfaces';
-import {
-	DataService,
-	AuthService,
-	ActionService,
-	NotifyService,
-} from 'src/app/services';
-import { addMonths, addYears, format } from 'date-fns';
-import {
-	getInvertedObject,
-	getPointDate,
-	isDateValid,
-	parseDate,
-	setIterationsMode,
-	sortDates,
-} from 'src/app/helpers';
+import { Point, Iteration, UserExtraData, SwitcherItem, SelectArray, PointMode, GroupEmoji } from 'src/app/interfaces';
+import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
+import { addMonths, addYears, format, getYear, setYear } from 'date-fns';
+import { getInvertedObject, getPointDate, isDateValid, parseDate, setIterationsMode, sortDates } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
-import {
-	CalendarMode,
-	DifferenceMode,
-	EditPointEvent,
-	PointColorTypes,
-} from 'src/app/types';
+import { CalendarMode, DifferenceMode, EditPointEvent, PointColorTypes } from 'src/app/types';
 import { DropComponent } from '../drop/drop.component';
 import { fetchEmojis, fetchMessages } from 'emojibase';
 import { DatePanelComponent } from '../date-panel/date-panel.component';
@@ -113,8 +88,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	showIterationsInfo = false;
 	pointModes: PointMode[] = [];
 	isModesDropOpened = false;
-	differenceMode: DifferenceMode =
-		(localStorage.getItem('differenceMode') as DifferenceMode) || 'minutes';
+	differenceMode: DifferenceMode = (localStorage.getItem('differenceMode') as DifferenceMode) || 'minutes';
 	dateUrlMode: 'date' | 'timer' = 'date';
 
 	directionList: SwitcherItem[] = [
@@ -209,21 +183,16 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private cdr: ChangeDetectorRef,
 		private action: ActionService,
-		private notify: NotifyService
+		private notify: NotifyService,
 	) {}
 
 	ngOnInit(): void {
 		this.form = new FormGroup({
-			title: new FormControl(null, [
-				Validators.required,
-				Validators.maxLength(100),
-			]),
+			title: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
 			description: new FormControl(null, [Validators.maxLength(10000)]),
 			difference: new FormControl(this.difference, [
 				Validators.required,
-				Validators.pattern(
-					`^-?[0-9]{1,${this.validatorDifferenceMaxLength}}$`
-				),
+				Validators.pattern(`^-?[0-9]{1,${this.validatorDifferenceMaxLength}}$`),
 			]),
 			direction: new FormControl('backward', [Validators.required]),
 			greenwich: new FormControl(false),
@@ -231,31 +200,15 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			public: new FormControl(false),
 			color: new FormControl('gray'),
 			iterationsForm: new FormGroup({
-				rangePeriod: new FormControl(1, [
-					Validators.required,
-					Validators.min(1),
-				]),
-				repeatsMode: new FormControl('setRepeatsAmount', [
-					Validators.required,
-				]),
-				rangeAmount: new FormControl(2, [
-					Validators.required,
-					Validators.min(2),
-				]),
-				periodicity: new FormControl('perMinutes', [
-					Validators.required,
-				]),
-				monthOptions: new FormControl('dayOfMonth', [
-					Validators.required,
-				]),
+				rangePeriod: new FormControl(1, [Validators.required, Validators.min(1)]),
+				repeatsMode: new FormControl('setRepeatsAmount', [Validators.required]),
+				rangeAmount: new FormControl(2, [Validators.required, Validators.min(2)]),
+				periodicity: new FormControl('perMinutes', [Validators.required]),
+				monthOptions: new FormControl('dayOfMonth', [Validators.required]),
 			}),
 			pointModesForm: new FormGroup({
-				firstModeTitle: new FormControl(null, [
-					Validators.maxLength(100),
-				]),
-				secondModeTitle: new FormControl(null, [
-					Validators.maxLength(100),
-				]),
+				firstModeTitle: new FormControl(null, [Validators.maxLength(100)]),
+				secondModeTitle: new FormControl(null, [Validators.maxLength(100)]),
 				firstModeEmoji: new FormControl('👷'),
 				secondModeEmoji: new FormControl('🏝'),
 			}),
@@ -268,10 +221,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						data[0].path === 'create'
 							? EditPointType.Create
 							: data[0].path === 'edit'
-							? EditPointType.Edit
-							: EditPointType.CreateUrl;
+								? EditPointType.Edit
+								: EditPointType.CreateUrl;
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -286,9 +239,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					distinctUntilChanged(),
 					mergeMap(() => this.route.params),
 					mergeMap((data: any) => {
-						return data['id']
-							? this.data.fetchPoint(data['id'])
-							: of(undefined);
+						return data['id'] ? this.data.fetchPoint(data['id']) : of(undefined);
 					}),
 					tap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
@@ -296,18 +247,15 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						}
 					}),
 					mergeMap(() => this.auth.getUserData(this.point?.user)),
-					tap((userData) => {
+					tap(userData => {
 						this.userData = userData;
 					}),
-					combineLatestWith(this.auth.eventEditAccessCheck$)
+					combineLatestWith(this.auth.eventEditAccessCheck$),
 				)
 				.subscribe({
 					next: ([, { pointId, access }]) => {
 						this.point && this.data.putPoint(this.point);
-						if (
-							access &&
-							(pointId === this.point?.id || !pointId)
-						) {
+						if (access && (pointId === this.point?.id || !pointId)) {
 							this.checking.next(false);
 							this.setValues();
 							this.pointModes = this.point?.modes || [];
@@ -317,13 +265,10 @@ export class EditPointComponent implements OnInit, OnDestroy {
 							this.sortDates();
 						}
 					},
-					error: (err) => {
-						console.error(
-							'Ошибка при создании/редактировании:\n',
-							err.message
-						);
+					error: err => {
+						console.error('Ошибка при создании/редактировании:\n', err.message);
 					},
-				})
+				}),
 		);
 
 		this.subscriptions.add(
@@ -359,14 +304,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					// 		}
 					// 	}
 					// }),
-					debounce(() => timer(this._debounceTime))
+					debounce(() => timer(this._debounceTime)),
 				)
 				.subscribe({
 					next: ([curr, prev]) => {
-						if (
-							prev.difference !== curr.difference ||
-							prev.direction !== curr.direction
-						) {
+						if (prev.difference !== curr.difference || prev.direction !== curr.direction) {
 							this.differenceChanged();
 						}
 
@@ -375,23 +317,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						 * изменения перед редактированием итераций
 						 */
 						if (this.notifies['greenwich'].date) {
-							if (
-								!!this.greenwichValue ===
-									!!this.point?.greenwich ||
-								!this.hasManyIterations
-							) {
+							if (!!this.greenwichValue === !!this.point?.greenwich || !this.hasManyIterations) {
 								this.notifies['greenwich'].remove();
 							}
 						} else {
-							if (
-								!!this.greenwichValue !==
-									!!this.point?.greenwich &&
-								this.hasManyIterations
-							) {
-								this.notifies['greenwich'].date =
-									this.notify.add({
-										title: 'Сохраните событие для корректного редактирования итераций',
-									}) as Date;
+							if (!!this.greenwichValue !== !!this.point?.greenwich && this.hasManyIterations) {
+								this.notifies['greenwich'].date = this.notify.add({
+									title: 'Сохраните событие для корректного редактирования итераций',
+								}) as Date;
 							}
 						}
 
@@ -403,43 +336,29 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						if (this.notifies['repeatable'].date) {
 							if (
 								(!this.isCreation || !this.repeatableValue) &&
-								(this.isCreation ||
-									this.repeatableValue ||
-									!this.hasManyIterations)
+								(this.isCreation || this.repeatableValue || !this.hasManyIterations)
 							) {
 								this.notifies['repeatable'].remove();
 							}
 						} else {
-							if (
-								this.repeatableValue &&
-								!this.repeatableValueSaved
-							) {
-								this.notifies['repeatable'].date =
-									this.notify.add({
-										title: 'Изменение итераций будет доступно после сохранения события',
-									}) as Date;
-							} else if (
-								!this.isCreation &&
-								!this.repeatableValue &&
-								this.hasManyIterations
-							) {
-								this.notifies['repeatable'].date =
-									this.notify.add({
-										title: 'Отключены повторы события',
-										text: 'Все итерации кроме последней будут удалены',
-									}) as Date;
+							if (this.repeatableValue && !this.repeatableValueSaved) {
+								this.notifies['repeatable'].date = this.notify.add({
+									title: 'Изменение итераций будет доступно после сохранения события',
+								}) as Date;
+							} else if (!this.isCreation && !this.repeatableValue && this.hasManyIterations) {
+								this.notifies['repeatable'].date = this.notify.add({
+									title: 'Отключены повторы события',
+									text: 'Все итерации кроме последней будут удалены',
+								}) as Date;
 							}
 						}
 
 						this.cdr.detectChanges();
 					},
-					error: (err) => {
-						console.error(
-							'Ошибка при изменении в поле формы:\n',
-							err.message
-						);
+					error: err => {
+						console.error('Ошибка при изменении в поле формы:\n', err.message);
 					},
-				})
+				}),
 		);
 
 		this.subscriptions.add(
@@ -447,20 +366,20 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.dateChanged(this.pointDate);
 				},
-				error: (err) => {
+				error: err => {
 					console.error('Ошибка при работе таймера:\n', err.message);
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
 			this.data.eventAddPoint$.subscribe({
-				next: (point) => {
+				next: point => {
 					this.point = point;
 					this.action.pointUpdated(this.point);
 					this.success(undefined, 'pointAdded');
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -472,26 +391,22 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					this.success(point, editPointEvent);
 					this.cdr.detectChanges();
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
 			this.action.eventUpdatedPoint$.subscribe({
-				next: (point) => {
+				next: point => {
 					if (point) {
 						this.point = point;
-						this.pointDate = point.dates[0].date
-							? parseDate(point.dates[0].date)
-							: new Date();
+						this.pointDate = point.dates[0].date ? parseDate(point.dates[0].date) : new Date();
 						this.form.controls['title'].setValue(point.title);
-						this.form.controls['description'].setValue(
-							point.description
-						);
+						this.form.controls['description'].setValue(point.description);
 						this.form.controls['color'].setValue(point.color);
 						this.dateChanged();
 					}
 				},
-			})
+			}),
 		);
 	}
 
@@ -507,10 +422,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get isCreation() {
-		return (
-			this.type === EditPointType.Create ||
-			this.type === EditPointType.CreateUrl
-		);
+		return this.type === EditPointType.Create || this.type === EditPointType.CreateUrl;
 	}
 
 	get isCreationBase() {
@@ -566,11 +478,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	get pageTitle() {
-		return !this.isCreation
-			? 'Редактирование'
-			: this.isCreationBase
-			? 'Создание'
-			: 'Создание события-ссылки';
+		return !this.isCreation ? 'Редактирование' : this.isCreationBase ? 'Создание' : 'Создание события-ссылки';
 	}
 
 	get visibleDifference() {
@@ -614,14 +522,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	closeNotify(name: string) {
-		this.notifies[name].date &&
-			this.notify.close(this.notifies[name].date as Date);
+		this.notifies[name].date && this.notify.close(this.notifies[name].date as Date);
 		this.notifies[name].date = undefined;
 	}
 
 	sortDates() {
-		const sortedDates =
-			this.point && setIterationsMode(sortDates(this.point)).dates;
+		const sortedDates = this.point && setIterationsMode(sortDates(this.point)).dates;
 
 		if (this.point && sortedDates) {
 			this.point.dates = sortedDates;
@@ -638,7 +544,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		} = {
 			isReset: false,
 			isFirstLoading: false,
-		}
+		},
 	) {
 		(!this.isIterationSwitched || isFirstLoading) &&
 			this.form.patchValue(
@@ -647,16 +553,13 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					description: this.point?.description,
 					direction: this.point?.direction || 'backward',
 					greenwich: this.point?.greenwich || false,
-					repeatable:
-						this.point?.repeatable ||
-						this.isIterationAdded ||
-						false,
+					repeatable: this.point?.repeatable || this.isIterationAdded || false,
 					public: this.point?.public || false,
 					color: this.point?.color || 'gray',
 				},
 				{
 					emitEvent: false,
-				}
+				},
 			);
 		if (this.point?.modes) {
 			this.form.get('pointModesForm')?.patchValue({
@@ -668,17 +571,11 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		}
 
 		const currentPointDate = getPointDate({
-			pointDate: isReset
-				? new Date()
-				: parseDate(
-						this.dates?.[this.currentIterationIndex || 0]?.date
-				  ),
+			pointDate: isReset ? new Date() : parseDate(this.dates?.[this.currentIterationIndex || 0]?.date),
 			isGreenwich: this.isIterationAdded ? false : this.greenwichValue,
 		});
 
-		this.pointDate = isDateValid(currentPointDate)
-			? currentPointDate
-			: new Date();
+		this.pointDate = isDateValid(currentPointDate) ? currentPointDate : new Date();
 
 		this.selectedIterationDate = this.pointDate;
 
@@ -686,9 +583,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	}
 
 	dateChanged(date?: Date) {
-		this.difference = this.convertToMinutes(
-			+(date || this.pointDate) - +new Date()
-		);
+		this.difference = this.convertToMinutes(+(date || this.pointDate) - +new Date());
 
 		this.setVisibleDifference();
 	}
@@ -719,6 +614,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				break;
 		}
 
+		if (getYear(targetDate) < 1) {
+			targetDate = setYear(targetDate, 1);
+			this.dateChanged(targetDate);
+		} else if (getYear(targetDate) > 9999) {
+			targetDate = setYear(targetDate, 9999);
+			this.dateChanged(targetDate);
+		}
+
 		!targetDate && (targetDate = new Date(currentDate.getTime() + diffMs));
 		// Пришлось упростить, когда добавил вывод отрицательных значений
 		// const targetDate = this.isForward
@@ -728,10 +631,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		isDateValid(targetDate) && (this.pointDate = targetDate);
 	}
 
-	switchIteration(
-		i: number = this.currentIterationIndex,
-		isSwitched = false
-	) {
+	switchIteration(i: number = this.currentIterationIndex, isSwitched = false) {
 		const isFirstLoading = !this.currentIterationIndex;
 		this.isIterationSwitched = isSwitched;
 		this.currentIterationIndex = i;
@@ -829,20 +729,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					messages.groups.forEach((item, i) => {
 						item.message !== 'компонент' &&
 							this.emojis.push({
-								title:
-									item.message.slice(0, 1).toUpperCase() +
-									item.message.slice(1),
-								list: emojis.filter(
-									(emoji) => emoji.group === i
-								),
+								title: item.message.slice(0, 1).toUpperCase() + item.message.slice(1),
+								list: emojis.filter(emoji => emoji.group === i),
 							});
 					});
 
 					this.emojis.push({
 						title: 'Прочие',
-						list: emojis.filter(
-							(emoji) => emoji.group === undefined
-						),
+						list: emojis.filter(emoji => emoji.group === undefined),
 					});
 				},
 			});
@@ -863,7 +757,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 		this.loading = true;
 		let newDatesArray = [] as Iteration[];
 
-		this.dates?.forEach((item) => {
+		this.dates?.forEach(item => {
 			const currentItem = {
 				date: item.date,
 				reason: item.reason,
@@ -879,7 +773,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				isGreenwich: this.greenwichValue,
 				isInvert: true,
 			}),
-			Constants.fullDateFormat
+			Constants.fullDateFormat,
 		);
 
 		const lastDate = {
@@ -918,10 +812,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				public: this.publicValue,
 				user: this.auth.uid || '',
 				color: this.form.controls['color'].value || 'gray',
-				modes:
-					this.pointModes.length && this.repeatableValue
-						? this.pointModes
-						: null,
+				modes: this.pointModes.length && this.repeatableValue ? this.pointModes : null,
 			});
 		} else {
 			result = Object.assign(result, {
@@ -933,10 +824,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 				public: this.point?.public,
 				user: this.point?.user,
 				color: this.point?.color || 'gray',
-				modes:
-					this.point?.modes?.length && this.point?.repeatable
-						? this.point.modes
-						: null,
+				modes: this.point?.modes?.length && this.point?.repeatable ? this.point.modes : null,
 			});
 			this.isIterationSwitched = true;
 		}
@@ -945,25 +833,14 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.data.addPoint(result);
 		} else if (this.isCreationUrl) {
 			const urlParams: any = {
-				color:
-					result.color !== 'gray' && result.title
-						? result.color
-						: null,
+				color: result.color !== 'gray' && result.title ? result.color : null,
 				title: result.title,
 				description: result.description,
-				date:
-					this.dateUrlMode === 'date'
-						? format(
-								parseDate(result.dates[0].date),
-								Constants.fullDateUrlFormat
-						  )
-						: null,
+				date: this.dateUrlMode === 'date' ? format(parseDate(result.dates[0].date), Constants.fullDateUrlFormat) : null,
 			};
 
 			if (this.dateUrlMode === 'timer') {
-				this.differenceValue
-					? (urlParams[this.differenceMode] = this.differenceValue)
-					: (urlParams['minutes'] = 0);
+				this.differenceValue ? (urlParams[this.differenceMode] = this.differenceValue) : (urlParams['minutes'] = 0);
 			}
 
 			this.router.navigate(['/url/'], {
@@ -980,7 +857,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						id: this.point?.id,
 					} as Point,
 					editPointEvent,
-					lastDate
+					lastDate,
 				);
 			}
 		} else {
@@ -1002,9 +879,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			this.router
 				.navigate(['/edit/' + this.point?.id.toString()], {
 					queryParams: {
-						iteration: isNaN(this.currentIterationIndex)
-							? null
-							: this.currentIterationIndex + 1,
+						iteration: isNaN(this.currentIterationIndex) ? null : this.currentIterationIndex + 1,
 					},
 				})
 				.then(() => {
