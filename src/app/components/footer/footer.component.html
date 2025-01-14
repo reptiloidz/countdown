@@ -74,7 +74,10 @@
 		vertical="top"
 		horizontal="left"
 		onboarding="copyshort"
-		onboardingBefore="createlink"
+		[onboardingBefore]="
+			pointId && hasAccess && !isEdit ? 'now' :
+			'createlink'
+		"
 		[text]="isUrl ? 'Создать и копировать короткую ссылку' : 'Копировать ссылку'"
 	>
 		<button
@@ -168,11 +171,17 @@
 		></a>
 		<ng-template #tooltipContent>
 			<ng-container *ngIf="isAuthenticated">
-				<a routerLink="/profile">Подтвердите почту</a>,
+				<a
+					routerLink="/profile"
+					class="link--inline"
+				>Подтвердите почту</a>,
 				чтобы иметь доступ к созданию и
 				редактированию</ng-container>
 			<ng-container *ngIf="!isAuthenticated">
-				<a routerLink="/reg">Зарегистрируйтесь</a>,
+				<a
+					routerLink="/reg"
+					class="link--inline"
+				>Зарегистрируйтесь</a>,
 				чтобы иметь доступ к созданию и
 				редактированию</ng-container>
 		</ng-template>

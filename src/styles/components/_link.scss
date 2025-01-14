@@ -59,6 +59,10 @@ a,
 		--link-fz: 40px;
 	}
 
+	&--inline {
+		display: inline;
+	}
+
 	&--primary {
 		color: rgb(var(--c-text-primary));
 	}
