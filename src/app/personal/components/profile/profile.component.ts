@@ -1,32 +1,11 @@
-import {
-	Component,
-	HostBinding,
-	OnDestroy,
-	OnInit,
-	ViewChild,
-} from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format, parse, subYears } from 'date-fns';
-import {
-	debounce,
-	distinctUntilChanged,
-	Subscription,
-	concatMap,
-	switchMap,
-	tap,
-	timer,
-	skipWhile,
-} from 'rxjs';
+import { debounce, distinctUntilChanged, Subscription, concatMap, switchMap, tap, timer, skipWhile } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { Constants } from 'src/app/enums';
-import {
-	generateUserpicName,
-	getErrorMessages,
-	mergeDeep,
-	parseDate,
-	randomHEXColor,
-} from 'src/app/helpers';
+import { generateUserpicName, getErrorMessages, mergeDeep, parseDate, randomHEXColor } from 'src/app/helpers';
 import { ValidationObject } from 'src/app/interfaces';
 import { AuthService, DataService, NotifyService } from 'src/app/services';
 
@@ -42,7 +21,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	constructor(
 		private auth: AuthService,
 		private data: DataService,
-		private notify: NotifyService
+		private notify: NotifyService,
 	) {}
 
 	birthDateEventName = 'Я родился';
@@ -129,27 +108,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.formEmail = new FormGroup({
 			email: new FormControl(null, [
 				Validators.required,
-				Validators.pattern(
-					'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
-				),
+				Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'),
 			]),
 		});
 
 		this.formPassword = new FormGroup({
-			password: new FormControl(null, [
-				Validators.required,
-				Validators.minLength(8),
-			]),
-			'new-password': new FormControl(null, [
-				Validators.required,
-				Validators.minLength(8),
-			]),
+			password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+			'new-password': new FormControl(null, [Validators.required, Validators.minLength(8)]),
 		});
 
 		this.subscriptions.add(
 			this.auth.currentUser
 				.pipe(
-					tap((data) => {
+					tap(data => {
 						this.emailLoading = false;
 						this._user = data as User;
 					}),
@@ -158,34 +129,29 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					}),
 					tap(() => {
 						this.profileLoading = false;
-						this.formEmail.controls['email'].setValue(
-							this._user?.email
-						);
-						this.formData.controls['name'].setValue(
-							this._user?.displayName
-						);
+						this.formEmail.controls['email'].setValue(this._user?.email);
+						this.formData.controls['name'].setValue(this._user?.displayName);
 						this.name = this._user?.displayName as string;
 						this.userpic = this._user?.photoURL as string;
 					}),
 					concatMap(() => {
 						return this.auth.getUserData(this._user.uid);
-					})
+					}),
 				)
 				.subscribe({
-					next: (user) => {
-						user?.birthDatePointId &&
-							(this._birthDatePointId = user.birthDatePointId);
+					next: user => {
+						user?.birthDatePointId && (this._birthDatePointId = user.birthDatePointId);
 						this._birthDate = user?.birthDate || '';
 
 						if (user?.birthDate) {
-							this.birthDatePickerValue = parse(
-								'00:00',
-								Constants.timeFormat,
-								parseDate(user.birthDate)
-							);
+							this.birthDatePickerValue = parse('00:00', Constants.timeFormat, parseDate(user.birthDate));
 						}
 					},
-				})
+					error: () => {
+						this.profileLoading = false;
+						this.emailLoading = false;
+					},
+				}),
 		);
 
 		this.subscriptions.add(
@@ -199,10 +165,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this._profileChanged = true;
 						return isSkipped;
 					}),
-					distinctUntilChanged()
+					distinctUntilChanged(),
 				)
 				.subscribe({
-					next: (data) => {
+					next: data => {
 						data?.displayName &&
 							this.notify.add({
 								title: `Данные пользователя ${data.displayName} (${this._user?.email}) обновлены.`,
@@ -210,23 +176,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
 								view: 'positive',
 							});
 					},
-				})
+				}),
 		);
 
 		this.subscriptions.add(
-			this.auth.eventEmailUpdated$
-				.pipe(distinctUntilChanged())
-				.subscribe({
-					next: () => {
-						this.emailLoading = false;
-						this.auth.verifyEmail(this._user);
-					},
-				})
+			this.auth.eventEmailUpdated$.pipe(distinctUntilChanged()).subscribe({
+				next: () => {
+					this.emailLoading = false;
+					this.auth.verifyEmail(this._user);
+				},
+				error: () => {
+					this.emailLoading = false;
+				},
+			}),
 		);
 
 		this.subscriptions.add(
 			this.auth.eventPasswordUpdated$.subscribe({
-				next: (passwordError) => {
+				next: passwordError => {
 					this.passwordLoading = false;
 					if (!passwordError) {
 						this.notify.add({
@@ -236,13 +203,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						});
 
 						this.formPassword.controls['password'].setValue(null);
-						this.formPassword.controls['new-password'].setValue(
-							null
-						);
+						this.formPassword.controls['new-password'].setValue(null);
 						this.passwordErrorMessages = [];
 					}
 				},
-			})
+				error: () => {
+					this.passwordLoading = false;
+				},
+			}),
 		);
 
 		this.subscriptions.add(
@@ -257,7 +225,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						view: 'positive',
 					});
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -265,32 +233,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				.pipe(
 					tap(() => {
 						this.userpicLoading = true;
-					})
+					}),
 				)
 				.pipe(debounce(() => timer(this._debounceTime)))
 				.subscribe({
-					next: (data) => {
+					next: data => {
 						if (this.name !== data) {
 							this.name = data;
 							this.userpic = `https://ui-avatars.com/api/?name=${generateUserpicName(
-								data
+								data,
 							)}&background=${randomHEXColor()}`;
 							this.nameValidated = mergeDeep(this.nameValidated, {
 								name: {
 									required: {
-										value: !this.formData.controls['name']
-											.errors?.['required'],
+										value: !this.formData.controls['name'].errors?.['required'],
 									},
 									dirty: this.formData.controls['name'].dirty,
 								},
 							}) as ValidationObject;
-							this.nameErrorMessages = getErrorMessages(
-								this.nameValidated
-							);
+							this.nameErrorMessages = getErrorMessages(this.nameValidated);
 						}
 						this.userpicLoading = false;
 					},
-				})
+					error: () => {
+						this.userpicLoading = false;
+					},
+				}),
 		);
 
 		this.subscriptions.add(
@@ -299,21 +267,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.emailValidated = mergeDeep(this.emailValidated, {
 						email: {
 							correct: {
-								value: !this.formEmail.controls['email']
-									.errors?.['pattern'],
+								value: !this.formEmail.controls['email'].errors?.['pattern'],
 							},
 							required: {
-								value: !this.formEmail.controls['email']
-									.errors?.['required'],
+								value: !this.formEmail.controls['email'].errors?.['required'],
 							},
 							dirty: this.formEmail.controls['email'].dirty,
 						},
 					}) as ValidationObject;
-					this.emailErrorMessages = getErrorMessages(
-						this.emailValidated
-					);
+					this.emailErrorMessages = getErrorMessages(this.emailValidated);
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -322,37 +286,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.passwordValidated = mergeDeep(this.passwordValidated, {
 						password: {
 							required: {
-								value: !this.formPassword.controls['password']
-									.errors?.['required'],
+								value: !this.formPassword.controls['password'].errors?.['required'],
 							},
 							dirty: this.formPassword.controls['password'].dirty,
 						},
 						passwordNew: {
 							required: {
-								value: !this.formPassword.controls[
-									'new-password'
-								].errors?.['required'],
+								value: !this.formPassword.controls['new-password'].errors?.['required'],
 							},
 							enough: {
 								value: !(
-									this.formPassword.controls['new-password']
-										.errors?.['minlength']?.actualLength <
-									this.formPassword.controls['new-password']
-										.errors?.['minlength']?.requiredLength
+									this.formPassword.controls['new-password'].errors?.['minlength']?.actualLength <
+									this.formPassword.controls['new-password'].errors?.['minlength']?.requiredLength
 								),
 							},
 							same: {
 								value: !(
-									this.formPassword.controls['password']
-										.value ===
-										this.formPassword.controls[
-											'new-password'
-										].value &&
+									this.formPassword.controls['password'].value === this.formPassword.controls['new-password'].value &&
 									this.formPassword.controls['password'].value
 								),
 							},
-							dirty: this.formPassword.controls['new-password']
-								.dirty,
+							dirty: this.formPassword.controls['new-password'].dirty,
 						},
 					}) as ValidationObject;
 
@@ -362,21 +316,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					const newPasswordValidated = {
 						passwordNew: this.passwordValidated['passwordNew'],
 					};
-					this.passwordErrorMessages = getErrorMessages(
-						this.passwordValidated
-					);
-					this.oldPasswordErrorMessages =
-						getErrorMessages(oldPasswordValidated);
-					this.newPasswordErrorMessages =
-						getErrorMessages(newPasswordValidated);
+					this.passwordErrorMessages = getErrorMessages(this.passwordValidated);
+					this.oldPasswordErrorMessages = getErrorMessages(oldPasswordValidated);
+					this.newPasswordErrorMessages = getErrorMessages(newPasswordValidated);
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
 			// Рассчитываем, что на этой странице создаётся только событие ДР и выводим ссылку на него
 			this.data.eventAddPoint$.subscribe({
-				next: (point) => {
+				next: point => {
 					this.auth
 						.updateUserBirthDate(this._user.uid, {
 							birthDate: this._birthDate,
@@ -390,7 +340,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							});
 						});
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -398,7 +348,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.verifyButtonDisabled = false;
 				},
-			})
+			}),
 		);
 	}
 
@@ -431,10 +381,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		if (!this.birthDatePickerValue) {
 			return;
 		}
-		const bdFinalValue = format(
-			this.birthDatePickerValue,
-			Constants.fullDateFormat
-		);
+		const bdFinalValue = format(this.birthDatePickerValue, Constants.fullDateFormat);
 
 		if (bdFinalValue == this._birthDate) {
 			this.auth.eventBirthDateAdded();
@@ -470,10 +417,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	updateEmail() {
 		this.emailLoading = true;
-		this.auth.updateEmail(
-			this._user,
-			this.formEmail.controls['email'].value
-		);
+		this.auth.updateEmail(this._user, this.formEmail.controls['email'].value);
 	}
 
 	updatePassword() {
@@ -481,7 +425,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.auth.updatePassword(
 			this._user,
 			this.formPassword.controls['password'].value,
-			this.formPassword.controls['new-password'].value
+			this.formPassword.controls['new-password'].value,
 		);
 	}
 
@@ -495,7 +439,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.removeLoading = true;
 					this.auth.removeAccount(this._user, this._birthDatePointId);
 				},
-				complete: () => {
+				error: () => {
 					this.removeLoading = false;
 				},
 			});
