@@ -1,35 +1,9 @@
-import {
-	Component,
-	OnInit,
-	OnDestroy,
-	HostBinding,
-	ChangeDetectionStrategy,
-	HostListener,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-	Subscription,
-	distinctUntilChanged,
-	tap,
-	mergeMap,
-	filter,
-	BehaviorSubject,
-	of,
-	interval,
-} from 'rxjs';
+import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
-import {
-	DataService,
-	AuthService,
-	ActionService,
-	NotifyService,
-} from 'src/app/services';
-import {
-	format,
-	formatDate,
-	formatDistanceToNow,
-	intervalToDuration,
-} from 'date-fns';
+import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
+import { format, formatDate, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText, PointColors } from 'src/app/enums';
 import {
@@ -88,7 +62,7 @@ export class PointComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private action: ActionService,
 		private notify: NotifyService,
-		private title: Title
+		private title: Title,
 	) {}
 
 	ngOnInit(): void {
@@ -97,7 +71,7 @@ export class PointComponent implements OnInit, OnDestroy {
 				next: (data: any) => {
 					this.urlMode.next(data[0].path === 'url');
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -119,24 +93,21 @@ export class PointComponent implements OnInit, OnDestroy {
 					}),
 					mergeMap(() => this.route.params),
 					mergeMap((data: any) => {
-						return data['id']
-							? this.data.fetchPoint(data['id'])
-							: of(undefined);
+						return data['id'] ? this.data.fetchPoint(data['id']) : of(undefined);
 					}),
 					tap((point: Point | undefined) => {
 						if (!this.urlModeValue) {
-							this.point =
-								point && setIterationsMode(sortDates(point));
+							this.point = point && setIterationsMode(sortDates(point));
 						}
 					}),
 					mergeMap(() => {
 						return this.point?.user && this.auth.isAuthenticated
 							? this.auth.getUserData(this.point.user)
 							: of(undefined);
-					})
+					}),
 				)
 				.subscribe({
-					next: (userData) => {
+					next: userData => {
 						if (!this.urlModeValue && userData) {
 							this.userData = userData;
 							this.point && this.data.putPoint(this.point);
@@ -145,14 +116,11 @@ export class PointComponent implements OnInit, OnDestroy {
 						this.setAllTimers(true);
 						this.point && this.action.pointUpdated(this.point);
 					},
-					error: (err) => {
+					error: err => {
 						this.dateLoading = false;
-						console.error(
-							'Ошибка при обновлении таймеров:\n',
-							err.message
-						);
+						console.error('Ошибка при обновлении таймеров:\n', err.message);
 					},
-				})
+				}),
 		);
 
 		this.subscriptions.add(
@@ -160,19 +128,16 @@ export class PointComponent implements OnInit, OnDestroy {
 				.pipe(
 					filter(() => {
 						return !this.dateLoading && !this.pausedTime;
-					})
+					}),
 				)
 				.subscribe({
 					next: () => {
 						this.setAllTimers();
 					},
-					error: (err) => {
-						console.error(
-							'Ошибка при обновлении таймеров:\n',
-							err.message
-						);
+					error: err => {
+						console.error('Ошибка при обновлении таймеров:\n', err.message);
 					},
-				})
+				}),
 		);
 
 		this.subscriptions.add(
@@ -182,7 +147,7 @@ export class PointComponent implements OnInit, OnDestroy {
 					next: () => {
 						this.moveTimeline();
 					},
-				})
+				}),
 		);
 
 		this.subscriptions.add(
@@ -193,13 +158,10 @@ export class PointComponent implements OnInit, OnDestroy {
 					this.action.pointUpdated(this.point);
 					this.setAllTimers();
 				},
-				error: (err) => {
-					console.error(
-						'Ошибка при обновлении события после сброса таймера:\n',
-						err.message
-					);
+				error: err => {
+					console.error('Ошибка при обновлении события после сброса таймера:\n', err.message);
 				},
-			})
+			}),
 		);
 	}
 
@@ -224,8 +186,8 @@ export class PointComponent implements OnInit, OnDestroy {
 				? DateText.forwardPast
 				: DateText.backwardPast
 			: isForward
-			? DateText.forwardFuture
-			: DateText.backwardFuture;
+				? DateText.forwardFuture
+				: DateText.backwardFuture;
 	}
 
 	get remainValue() {
@@ -259,22 +221,14 @@ export class PointComponent implements OnInit, OnDestroy {
 
 		return (
 			this.point &&
-			((getClosestIteration(this.point).date < currentDate &&
-				this.point?.direction === 'forward') ||
-				(getClosestIteration(this.point).date > currentDate &&
-					this.point?.direction === 'backward'))
+			((getClosestIteration(this.point).date < currentDate && this.point?.direction === 'forward') ||
+				(getClosestIteration(this.point).date > currentDate && this.point?.direction === 'backward'))
 		);
 	}
 
 	get directionTitle() {
-		return `${
-			this.point?.direction === 'forward'
-				? 'Прямой отсчёт'
-				: 'Обратный отсчёт'
-		}${
-			this.isDirectionCorrect
-				? ''
-				: '. Но есть нюанс. Подробнее в описании'
+		return `${this.point?.direction === 'forward' ? 'Прямой отсчёт' : 'Обратный отсчёт'}${
+			this.isDirectionCorrect ? '' : '. Но есть нюанс. Подробнее в описании'
 		}`;
 	}
 
@@ -287,10 +241,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	get pointColorName(): string {
-		return (
-			(this.point && this.pointColorNames[this.point?.color]) ||
-			'Цвет события'
-		);
+		return (this.point && this.pointColorNames[this.point?.color]) || 'Цвет события';
 	}
 
 	get hasTimerLine() {
@@ -304,11 +255,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	setAllTimers(switchCalendarDate = false) {
 		if (this.dates?.[this.currentIterationIndex] || this.urlModeValue) {
 			this.pointDate = getPointDate({
-				pointDate: parseDate(
-					this.dates?.[this.currentIterationIndex || 0].date,
-					this.timerMode,
-					this.timerMode
-				),
+				pointDate: parseDate(this.dates?.[this.currentIterationIndex || 0].date, this.timerMode, this.timerMode),
 				isGreenwich: this.point?.greenwich,
 			});
 		}
@@ -323,47 +270,28 @@ export class PointComponent implements OnInit, OnDestroy {
 	setTimer() {
 		const currentInterval = this.interval;
 
-		this.timerHours = this.zeroPad(
-			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
-		);
+		this.timerHours = this.zeroPad((currentInterval.hours && Math.abs(currentInterval.hours)) || 0);
 
-		this.timerMins = this.zeroPad(
-			(currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0
-		);
-		this.timerSecs = this.zeroPad(
-			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
-		);
+		this.timerMins = this.zeroPad((currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0);
+		this.timerSecs = this.zeroPad((currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0);
 
-		this.timerYears = currentInterval.years
-			? this.zeroPad(Math.abs(currentInterval.years))
-			: undefined;
-		this.timerMonths = currentInterval.months
-			? this.zeroPad(Math.abs(currentInterval.months))
-			: undefined;
-		this.timerDays = currentInterval.days
-			? this.zeroPad(Math.abs(currentInterval.days))
-			: undefined;
+		this.timerYears = currentInterval.years ? this.zeroPad(Math.abs(currentInterval.years)) : undefined;
+		this.timerMonths = currentInterval.months ? this.zeroPad(Math.abs(currentInterval.months)) : undefined;
+		this.timerDays = currentInterval.days ? this.zeroPad(Math.abs(currentInterval.days)) : undefined;
 
 		this.title.setTitle(`
 			${currentInterval.years ? Math.abs(currentInterval.years) + 'г. ' : ''}${
-			currentInterval.months
-				? Math.abs(currentInterval.months) + 'м. '
-				: ''
-		}${currentInterval.days ? Math.abs(currentInterval.days) + 'д. ' : ''}
+				currentInterval.months ? Math.abs(currentInterval.months) + 'м. ' : ''
+			}${currentInterval.days ? Math.abs(currentInterval.days) + 'д. ' : ''}
 			${this.timerHours}:${this.timerMins}:${this.timerSecs}
 		`);
 	}
 
 	moveTimeline() {
-		if (
-			this.timerMode &&
-			this.timerPercent <= 100 &&
-			this.timerPercent >= 0
-		) {
+		if (this.timerMode && this.timerPercent <= 100 && this.timerPercent >= 0) {
 			const newTimerPercent = +(
 				100 /
-				((+this.pointDate - +this.initialDate) /
-					(+new Date() - +this.initialDate))
+				((+this.pointDate - +this.initialDate) / (+new Date() - +this.initialDate))
 			).toFixed(3);
 			switch (true) {
 				case newTimerPercent >= 100:
@@ -380,29 +308,19 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	iterationSwitchHandler(iterationNumber: number) {
-		this.currentIterationIndex = isNaN(iterationNumber)
-			? 0
-			: iterationNumber;
+		this.currentIterationIndex = isNaN(iterationNumber) ? 0 : iterationNumber;
 		this.setAllTimers();
 	}
 
 	pause() {
 		if (this.pausedTime && this.point) {
-			this.initialDate = new Date(
-				+this.initialDate - +this.pausedTime + +new Date()
-			);
-			const resultDate = new Date(
-				+parseDate(this.point.dates[0].date, true, true) -
-					+this.pausedTime +
-					+new Date()
-			);
-			const resultDateString = formatDate(
-				resultDate,
-				Constants.reallyFullDateFormat
-			);
+			this.initialDate = new Date(+this.initialDate - +this.pausedTime + +new Date());
+			const resultDate = new Date(+parseDate(this.point.dates[0].date, true, true) - +this.pausedTime + +new Date());
+			const resultDateString = formatDate(resultDate, Constants.reallyFullDateFormat);
 			this.point.dates[0].date = resultDateString;
 			this.pointDate = resultDate;
 			this.pausedTime = undefined;
+			this.selectedIterationDate = this.pointDate;
 		} else {
 			this.pausedTime = new Date();
 		}
