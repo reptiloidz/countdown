@@ -753,7 +753,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		this.differenceChanged();
+		// Нужно ли это? При differenceChanged берется не дата, а разница
+		// this.differenceChanged();
 		this.loading = true;
 		let newDatesArray = [] as Iteration[];
 
