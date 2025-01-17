@@ -93,6 +93,8 @@
 		margin-right: 20px;
 		color: var(--notify-list-title-cl);
 		font-weight: 400;
+		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 
 	&__text {
@@ -100,6 +102,8 @@
 		border: 3px solid var(--notify-list-bg-cl);
 		border-radius: 0 0 var(--notify-list-item-brs) var(--notify-list-item-brs);
 		background-color: var(--notify-list-text-bg-cl);
+		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 
 	&__inner {

@@ -69,6 +69,8 @@
 		padding: 20px;
 		color: rgba(var(--c-text-button), 1);
 		font-weight: 300;
+		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 
 	&__btn {
@@ -91,5 +93,7 @@
 		flex-grow: 1;
 		padding: 20px 32px;
 		overflow: auto;
+		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 }

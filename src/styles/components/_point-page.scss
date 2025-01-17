@@ -138,6 +138,8 @@
 		border-color: rgb(var(--c-bg-body));
 		background-color: rgb(var(--c-bg-body));
 		box-decoration-break: clone;
+		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 
 	&__clock {
@@ -171,6 +173,8 @@
 		width: 50%;
 		padding-right: 10px;
 		text-align: right;
+		word-break: break-word;
+		overflow-wrap: break-word;
 
 		&:last-child {
 			padding-right: 0;

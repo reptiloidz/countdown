@@ -71,7 +71,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 	pointDate = new Date();
 	difference = 0;
 	loading = false;
-	validatorDifferenceMaxLength = 8;
+	validatorDifferenceMaxLength = 10;
 	currentIterationIndex!: number;
 	firstIterationIndex = 0;
 	removedIterationIndex = 0;
@@ -164,6 +164,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			date: undefined,
 			remove: () => {
 				this.closeNotify('repeatable');
+			},
+		},
+		repeatableOff: {
+			date: undefined,
+			remove: () => {
+				this.closeNotify('repeatableOff');
 			},
 		},
 		timer: {
@@ -329,15 +335,12 @@ export class EditPointComponent implements OnInit, OnDestroy {
 						}
 
 						/**
-						 * Если есть уведомление о повторяемости,
+						 * Если есть уведомление о включенных повторах,
 						 * то удаляем его когда оно неактуально.
 						 * Если его нет, то показываем, когда актуально
 						 */
 						if (this.notifies['repeatable'].date) {
-							if (
-								(!this.isCreation || !this.repeatableValue) &&
-								(this.isCreation || this.repeatableValue || !this.hasManyIterations)
-							) {
+							if (!this.repeatableValue) {
 								this.notifies['repeatable'].remove();
 							}
 						} else {
@@ -345,8 +348,21 @@ export class EditPointComponent implements OnInit, OnDestroy {
 								this.notifies['repeatable'].date = this.notify.add({
 									title: 'Изменение итераций будет доступно после сохранения события',
 								}) as Date;
-							} else if (!this.isCreation && !this.repeatableValue && this.hasManyIterations) {
-								this.notifies['repeatable'].date = this.notify.add({
+							}
+						}
+
+						/**
+						 * Если есть уведомление о выключенных повторах,
+						 * то удаляем его когда оно неактуально.
+						 * Если его нет, то показываем, когда актуально
+						 */
+						if (this.notifies['repeatableOff'].date) {
+							if (this.repeatableValue) {
+								this.notifies['repeatableOff'].remove();
+							}
+						} else {
+							if (!this.isCreation && !this.repeatableValue && this.hasManyIterations) {
+								this.notifies['repeatableOff'].date = this.notify.add({
 									title: 'Отключены повторы события',
 									text: 'Все итерации кроме последней будут удалены',
 								}) as Date;

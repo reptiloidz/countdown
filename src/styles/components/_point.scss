@@ -28,8 +28,12 @@
 			font-size: 16px;
 		}
 
+		@include text-truncate(3);
+
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
 		font-weight: 500;
+		word-break: break-word;
+		overflow-wrap: break-word;
 
 		&::before {
 			content: '';
@@ -44,9 +48,13 @@
 	}
 
 	&__description {
+		@include text-truncate(3);
+
 		margin-top: 10px;
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
 		font-size: 12px;
+		word-break: break-word;
+		overflow-wrap: break-word;
 
 		& + & {
 			margin-top: 4px;

@@ -55,6 +55,8 @@
 		border: 1px solid rgba(var(--c-border-primary), 0.2);
 		border-radius: inherit;
 		text-align: left;
+		word-break: break-word;
+		overflow-wrap: break-word;
 	}
 
 	&__close {

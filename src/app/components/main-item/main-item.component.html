@@ -15,11 +15,15 @@
 		class="point__main"
 	>
 		<h2 class="point__title">
-			<span class="point__title-text">{{ point.title }}</span>
+			<span
+				class="point__title-text"
+				[title]="point.title"
+			>{{ point.title }}</span>
 		</h2>
 		<p
 			*ngIf="point.description && !isSm"
 			class="point__description"
+			[title]="point.description"
 		>{{ point.description }}</p>
 		<p class="point__description">{{ closestIterationRemain }}</p>
 		<p
