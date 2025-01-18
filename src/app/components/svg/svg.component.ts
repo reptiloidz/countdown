@@ -1,11 +1,4 @@
-import {
-	Component,
-	ElementRef,
-	HostBinding,
-	Input,
-	OnInit,
-	Renderer2,
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
 
 @Component({
 	selector: '[app-svg]',
@@ -23,7 +16,7 @@ export class SvgComponent implements OnInit {
 	@Input() title?: string;
 	@Input() height: number | null = null;
 	@Input() width: number | null = null;
-	@Input() 'aria-hidden'?: string | null = 'true';
+	@Input() ariaHidden: 'true' | 'false' = 'true';
 
 	@HostBinding('attr.role') get role(): string | null {
 		return this.title ? 'img' : null;
@@ -39,15 +32,15 @@ export class SvgComponent implements OnInit {
 		return this.height || this.width ? this.height : 16;
 	}
 
-	@HostBinding('attr.aria-hidden') get ariaHidden(): string | null {
-		return this['aria-hidden'] || null;
+	@HostBinding('attr.aria-hidden') get ariaHiddenAttr(): string {
+		return this.ariaHidden;
 	}
 
 	useElement: HTMLElement | null = null;
 
 	constructor(
 		private elementRef: ElementRef<SVGElement>,
-		private renderer: Renderer2
+		private renderer: Renderer2,
 	) {}
 
 	ngOnInit(): void {
@@ -64,16 +57,10 @@ export class SvgComponent implements OnInit {
 		this.useElement?.remove?.();
 		this.useElement = null;
 
-		childElements
-			.filter((element) => element?.tagName?.toLowerCase() !== 'title')
-			.forEach((element) => element?.remove());
+		childElements.filter(element => element?.tagName?.toLowerCase() !== 'title').forEach(element => element?.remove());
 
 		this.useElement = this.renderer.createElement('use');
-		this.renderer.setAttribute(
-			this.useElement,
-			'xlink:href',
-			`assets/sprite.svg#${this.name}`
-		);
+		this.renderer.setAttribute(this.useElement, 'xlink:href', `assets/sprite.svg#${this.name}`);
 		if (this.useElement) {
 			svgElement.append(this.useElement);
 		}

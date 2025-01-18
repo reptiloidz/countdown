@@ -133,7 +133,7 @@
 					app-svg
 					name="globe"
 					[attr.aria-label]="point.greenwich ? 'Глобальное' : 'Местное'"
-					aria-hidden="false"
+					ariaHidden="false"
 					class="marker__inner"
 				></svg>
 			</div>
@@ -146,7 +146,7 @@
 				<svg
 					app-svg
 					name="refresh"
-					aria-hidden="false"
+					ariaHidden="false"
 					[attr.aria-label]="point.repeatable ? 'Многократное' : 'Однократное'"
 					class="marker__inner"
 				></svg>
@@ -160,7 +160,7 @@
 				<svg
 					app-svg
 					name="users"
-					aria-hidden="false"
+					ariaHidden="false"
 					[attr.aria-label]="point.public ? 'Публичное' : 'Приватное'"
 					class="marker__inner"
 				></svg>
@@ -204,7 +204,7 @@
 			[name]="point.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
 			[attr.aria-label]="directionTitle"
 			class="direction-icon point__direction"
-			aria-hidden="false"
+			ariaHidden="false"
 			[ngClass]="[
 						isDirectionCorrect ? 'direction-icon--correct' : '',
 						point.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
