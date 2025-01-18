@@ -6,5 +6,5 @@ export enum Constants {
 	fullDateUrlFormat = 'yyyy-M-d-H-m',
 	msInMinute = 60000,
 	msInSecond = 1000,
-	tick = 100000,
+	tick = 1,
 }
