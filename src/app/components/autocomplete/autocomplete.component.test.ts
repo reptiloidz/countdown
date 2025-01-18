@@ -5,12 +5,8 @@ import { DropComponent } from '../drop/drop.component';
 import { InputComponent } from '../input/input.component';
 import { of } from 'rxjs';
 import { SelectArray } from 'src/app/interfaces';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { LetDirective } from 'src/app/directives/let.directive';
-import { ButtonComponent } from '../button/button.component';
-import { SvgComponent } from '../svg/svg.component';
-import { CommonModule } from '@angular/common';
 
 describe('AutocompleteComponent', () => {
 	let component: AutocompleteComponent;
@@ -30,8 +26,8 @@ describe('AutocompleteComponent', () => {
 		};
 
 		TestBed.configureTestingModule({
-			imports: [FormsModule, ReactiveFormsModule, CommonModule, NgxMaskDirective],
-			declarations: [AutocompleteComponent, DropComponent, InputComponent, LetDirective, ButtonComponent, SvgComponent],
+			imports: [FormsModule, NgxMaskDirective],
+			declarations: [AutocompleteComponent, DropComponent, InputComponent],
 			providers: [{ provide: ActionService, useValue: mockActionService }, [provideNgxMask()]],
 		}).compileComponents();
 

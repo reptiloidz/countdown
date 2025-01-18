@@ -1,13 +1,4 @@
-import {
-	Component,
-	ElementRef,
-	HostBinding,
-	Input,
-	OnChanges,
-	OnDestroy,
-	OnInit,
-	SimpleChanges,
-} from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { filter, timer } from 'rxjs';
 
 const ANIMATION_SPEED = 200;
@@ -18,9 +9,7 @@ const ANIMATION_SPEED = 200;
 })
 export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 	@HostBinding('class') get componentClass() {
-		return ['board', this.mode !== 'base' && `board--${this.mode}`].join(
-			' '
-		);
+		return ['board', this.mode !== 'base' ? `board--${this.mode}` : null].filter(_ => _).join(' ');
 	}
 
 	@Input() value: string | number = '';
@@ -46,24 +35,17 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 
 	ngOnInit(): void {
 		this.intersectionCallback = (entries: IntersectionObserverEntry[]) => {
-			entries.forEach((entry) => {
+			entries.forEach(entry => {
 				entry.isIntersecting
-					? (entry.target as HTMLElement).classList.add(
-							'board--visible'
-					  )
-					: (entry.target as HTMLElement).classList.remove(
-							'board--visible'
-					  );
+					? (entry.target as HTMLElement).classList.add('board--visible')
+					: (entry.target as HTMLElement).classList.remove('board--visible');
 			});
 		};
 
-		this.intersectionObserver = new IntersectionObserver(
-			this.intersectionCallback,
-			{
-				threshold: 0,
-				rootMargin: '-80px 0px -90px 0px',
-			}
-		);
+		this.intersectionObserver = new IntersectionObserver(this.intersectionCallback, {
+			threshold: 0,
+			rootMargin: '-80px 0px -90px 0px',
+		});
 
 		this.intersectionObserver.observe(this.el.nativeElement);
 	}
@@ -80,22 +62,15 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.intersectionObserver.disconnect();
+		if (this.intersectionObserver) {
+			this.intersectionObserver.disconnect();
+		}
 	}
 
 	switchBoard() {
 		if (this.delay) {
-			timer(
-				this.delayValue ||
-					Math.random() * (+this.delayRandomValue || 1000)
-			)
-				.pipe(
-					filter(
-						() =>
-							this.hasInitialSwitched ||
-							this.initialValue !== this.value
-					)
-				)
+			timer(this.delayValue || Math.random() * (+this.delayRandomValue || 1000))
+				.pipe(filter(() => this.hasInitialSwitched || this.initialValue !== this.value))
 				.subscribe(() => {
 					this.animateBoard();
 				});
