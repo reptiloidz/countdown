@@ -158,8 +158,8 @@ describe('CalendarComponent', () => {
 
 	it('should emit an event when calendar mode switched', () => {
 		jest.spyOn(component.modeSelected, 'emit');
-		component.switchCalendarMode('week');
-		expect(component.modeSelected.emit).toHaveBeenCalledWith('week');
+		component.switchCalendarMode('day');
+		expect(component.modeSelected.emit).toHaveBeenCalledWith('day');
 	});
 
 	it('should visibleDate changed to now', () => {
