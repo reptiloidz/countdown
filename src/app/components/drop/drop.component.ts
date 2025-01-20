@@ -21,12 +21,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { NotifyService } from 'src/app/services';
-import {
-	ButtonSize,
-	DropHorizontal,
-	DropVertical,
-	NgClassType,
-} from 'src/app/types';
+import { ButtonSize, DropHorizontal, DropVertical, NgClassType } from 'src/app/types';
 
 @Component({
 	selector: 'app-drop',
@@ -45,15 +40,9 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	@ViewChild('triggerTemplateRef', { read: ViewContainerRef })
 	triggerTemplateRef: ViewContainerRef | undefined;
-	@ContentChild('triggerTemplate') triggerTemplate:
-		| TemplateRef<unknown>
-		| undefined;
-	@ContentChild('bodyTemplate') bodyTemplate:
-		| TemplateRef<unknown>
-		| undefined;
-	@ContentChild('footerTemplate') footerTemplate:
-		| TemplateRef<unknown>
-		| undefined;
+	@ContentChild('triggerTemplate') triggerTemplate: TemplateRef<unknown> | undefined;
+	@ContentChild('bodyTemplate') bodyTemplate: TemplateRef<unknown> | undefined;
+	@ContentChild('footerTemplate') footerTemplate: TemplateRef<unknown> | undefined;
 	@ViewChild('triggerButton', { read: ElementRef })
 	defaultTriggerButton!: ElementRef;
 	@ViewChild('selectListRef', { read: ElementRef })
@@ -101,7 +90,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		private elementRef: ElementRef,
 		private renderer: Renderer2,
 		private cdr: ChangeDetectorRef,
-		private notify: NotifyService
+		private notify: NotifyService,
 	) {}
 
 	ngOnInit(): void {
@@ -121,22 +110,14 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.addDocumentClickListener();
 
 		const triggerElement = this.triggerTemplate
-			? this.triggerTemplateRef?.element.nativeElement.querySelector(
-					'button, input'
-			  )
+			? this.triggerTemplateRef?.element.nativeElement.querySelector('button, input')
 			: this.defaultTriggerButton.nativeElement;
 		this.triggerOffsetTop = triggerElement.getBoundingClientRect().top;
 		this.triggerOffsetLeft = triggerElement.getBoundingClientRect().left;
 
-		this.footerHeight =
-			parseInt(
-				getComputedStyle(
-					document.querySelector('footer') as HTMLElement
-				).height
-			) || 0;
+		this.footerHeight = parseInt(getComputedStyle(document.querySelector('footer') as HTMLElement).height) || 0;
 
-		this.bottomSpace =
-			window.innerHeight - this.triggerOffsetTop - this.footerHeight;
+		this.bottomSpace = window.innerHeight - this.triggerOffsetTop - this.footerHeight;
 		this.topSpace = this.triggerOffsetTop;
 		this.rightSpace = window.innerWidth - this.triggerOffsetLeft;
 
@@ -144,32 +125,21 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.triggerWidth = parseInt(getComputedStyle(triggerElement).width);
 
 		requestAnimationFrame(() => {
-			this.dropHeight = this.elementRef.nativeElement
-				.querySelector('.drop__body')
-				?.getBoundingClientRect().height;
-			this.dropWidth = this.elementRef.nativeElement
-				.querySelector('.drop__body')
-				?.getBoundingClientRect().width;
+			this.dropHeight = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().height;
+			this.dropWidth = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().width;
 
 			// Позиционирование по вертикали
 			if (
 				this.vertical === 'top' ||
 				(this.vertical === 'auto' &&
 					this.dropHeight > this.bottomSpace - this.triggerHeight &&
-					this.bottomSpace - this.triggerHeight <
-						this.triggerOffsetTop)
+					this.bottomSpace - this.triggerHeight < this.triggerOffsetTop)
 			) {
-				this.renderer.addClass(
-					this.elementRef.nativeElement,
-					'drop--top'
-				);
+				this.renderer.addClass(this.elementRef.nativeElement, 'drop--top');
 
 				this.setDropMaxH(true);
 			} else {
-				this.renderer.addClass(
-					this.elementRef.nativeElement,
-					'drop--bottom'
-				);
+				this.renderer.addClass(this.elementRef.nativeElement, 'drop--bottom');
 
 				this.setDropMaxH();
 			}
@@ -177,27 +147,18 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			// Позиционирование по горизонтали
 			if (
 				(this.dropWidth > this.rightSpace - this.triggerWidth &&
-					this.rightSpace - this.triggerWidth <
-						this.triggerOffsetLeft &&
+					this.rightSpace - this.triggerWidth < this.triggerOffsetLeft &&
 					this.horizontal === 'right') ||
 				this.horizontal === 'left'
 			) {
-				this.renderer.addClass(
-					this.elementRef.nativeElement,
-					'drop--left'
-				);
+				this.renderer.addClass(this.elementRef.nativeElement, 'drop--left');
 			} else {
-				this.renderer.addClass(
-					this.elementRef.nativeElement,
-					'drop--right'
-				);
+				this.renderer.addClass(this.elementRef.nativeElement, 'drop--right');
 			}
 
-			this.selectListRef?.nativeElement
-				?.querySelector('.drop__item--selected')
-				?.scrollIntoView({
-					block: 'nearest',
-				});
+			this.selectListRef?.nativeElement?.querySelector('.drop__item--selected')?.scrollIntoView({
+				block: 'nearest',
+			});
 
 			this.dropOpened.emit();
 		});
@@ -209,29 +170,12 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.cdr.detectChanges();
 
 		requestAnimationFrame(() => {
-			this.renderer.removeClass(
-				this.elementRef.nativeElement,
-				'drop--top'
-			);
-			this.renderer.removeClass(
-				this.elementRef.nativeElement,
-				'drop--bottom'
-			);
-			this.renderer.removeClass(
-				this.elementRef.nativeElement,
-				'drop--left'
-			);
-			this.renderer.removeClass(
-				this.elementRef.nativeElement,
-				'drop--right'
-			);
+			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--top');
+			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--bottom');
+			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--left');
+			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--right');
 
-			this.renderer.setStyle(
-				this.elementRef.nativeElement,
-				'--drop-max-h',
-				null,
-				RendererStyleFlags2.DashCase
-			);
+			this.renderer.setStyle(this.elementRef.nativeElement, '--drop-max-h', null, RendererStyleFlags2.DashCase);
 			this.dropClosed.emit();
 		});
 	}
@@ -241,7 +185,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 			this.elementRef.nativeElement,
 			'--drop-max-h',
 			(isTop ? this.topSpace : this.bottomSpace) - this.triggerHeight,
-			RendererStyleFlags2.DashCase
+			RendererStyleFlags2.DashCase,
 		);
 	}
 
@@ -253,19 +197,12 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		}
 	}
 
-	private addDocumentClickListener() {
-		this.documentClickListener = this.renderer.listen(
-			'document',
-			'click',
-			(event: MouseEvent) => {
-				const clickedInside =
-					this.elementRef.nativeElement.contains(event.target) ||
-					!document.contains(event.target as HTMLElement);
-				!clickedInside &&
-					!this.notify.notificationsOpened &&
-					this.closeHandler();
-			}
-		);
+	addDocumentClickListener() {
+		this.documentClickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+			const clickedInside =
+				this.elementRef.nativeElement.contains(event.target) || !document.contains(event.target as HTMLElement);
+			!clickedInside && !this.notify.notificationsOpened && this.closeHandler();
+		});
 	}
 
 	private removeDocumentClickListener() {
