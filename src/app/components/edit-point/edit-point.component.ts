@@ -7,6 +7,7 @@ import {
 	ElementRef,
 	ChangeDetectorRef,
 	HostBinding,
+	AfterViewInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -58,9 +59,9 @@ enum EditPointSuccessMessage {
 	templateUrl: './edit-point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,
 })
-export class EditPointComponent implements OnInit, OnDestroy {
-	@ViewChild('iterationsList') private iterationsList!: ElementRef;
-	@ViewChild('iterationForm') private iterationForm!: ElementRef;
+export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
+	@ViewChild('iterationsList', { static: true }) iterationsList!: ElementRef;
+	@ViewChild('iterationForm', { static: true }) iterationForm!: ElementRef;
 	@ViewChild('colorDrop') private colorDrop!: DropComponent;
 	@ViewChild('modesDrop') private modesDrop!: DropComponent;
 	@ViewChild('datePanel') datePanel!: DatePanelComponent;
@@ -148,7 +149,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 
 	private _debounceTime = 500;
 	private subscriptions = new Subscription();
-	private notifies: {
+	notifies: {
 		[key: string]: {
 			date: Date | undefined;
 			remove: () => void;
@@ -244,9 +245,7 @@ export class EditPointComponent implements OnInit, OnDestroy {
 					filter(() => !this.isCreation && !this.isIterationAdded),
 					distinctUntilChanged(),
 					mergeMap(() => this.route.params),
-					mergeMap((data: any) => {
-						return data['id'] ? this.data.fetchPoint(data['id']) : of(undefined);
-					}),
+					mergeMap((data: any) => (data['id'] ? this.data.fetchPoint(data['id']) : of(undefined))),
 					tap((point: Point | undefined) => {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
@@ -425,6 +424,8 @@ export class EditPointComponent implements OnInit, OnDestroy {
 			}),
 		);
 	}
+
+	ngAfterViewInit(): void {}
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
