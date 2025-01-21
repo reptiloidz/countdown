@@ -53,6 +53,20 @@ describe('EditPointComponent', () => {
 			fetchPoint: jest.fn(() => of(mockPoint)),
 		} as unknown as jest.Mocked<DataService>;
 
+		authServiceMock = {
+			getUserData: jest.fn(),
+			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
+		} as unknown as jest.Mocked<AuthService>;
+
+		actionServiceMock = {
+			pointUpdated: jest.fn(),
+		} as unknown as jest.Mocked<ActionService>;
+
+		notifyServiceMock = {
+			add: jest.fn(() => mockDate),
+			close: jest.fn(),
+		} as unknown as jest.Mocked<NotifyService>;
+
 		await TestBed.configureTestingModule({
 			declarations: [EditPointComponent, DropComponent, DatePanelComponent],
 			imports: [BrowserAnimationsModule, ReactiveFormsModule],
@@ -88,20 +102,6 @@ describe('EditPointComponent', () => {
 			],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
-
-		authServiceMock = {
-			getUserData: jest.fn(),
-			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
-		} as unknown as jest.Mocked<AuthService>;
-
-		actionServiceMock = {
-			pointUpdated: jest.fn(),
-		} as unknown as jest.Mocked<ActionService>;
-
-		notifyServiceMock = {
-			add: jest.fn(() => mockDate),
-			close: jest.fn(),
-		} as unknown as jest.Mocked<NotifyService>;
 
 		router = TestBed.inject(Router);
 		route = TestBed.inject(ActivatedRoute);
