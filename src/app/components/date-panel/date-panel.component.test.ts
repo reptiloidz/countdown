@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DataService, ActionService, NotifyService, AuthService } from 'src/app/services';
 import { of, Subject } from 'rxjs';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
-import { Point } from 'src/app/interfaces';
+import { Iteration, Point } from 'src/app/interfaces';
 import { PanelComponent } from '../panel/panel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonComponent } from '../button/button.component';
@@ -108,58 +108,58 @@ describe('DatePanelComponent', () => {
 			expect(component.showIterationsInfo).toBeFalsy();
 		});
 
-		// it('should subscribe to action.eventUpdatedPoint$', () => {
-		// 	actionService.pointUpdated(mockPoint);
+		it.skip('should subscribe to action.eventUpdatedPoint$', () => {
+			actionService.pointUpdated(mockPoint);
 
-		// 	component.ngOnInit();
+			component.ngOnInit();
 
-		// 	expect(component.point).toEqual(mockPoint);
-		// 	expect(component.setIterationsParam).toHaveBeenCalled();
-		// });
+			expect(component.point).toEqual(mockPoint);
+			expect(component.setIterationsParam).toHaveBeenCalled();
+		});
 
-		// it('should handle point updates', () => {
-		// 	actionService.pointUpdated(mockPoint);
+		it.skip('should handle point updates', () => {
+			actionService.pointUpdated(mockPoint);
 
-		// 	component.ngOnInit();
+			component.ngOnInit();
 
-		// 	expect(component.point).toEqual(mockPoint);
-		// 	expect(component.setIterationsParam).toHaveBeenCalled();
-		// });
+			expect(component.point).toEqual(mockPoint);
+			expect(component.setIterationsParam).toHaveBeenCalled();
+		});
 
-		// it('should handle iteration switching', () => {
-		// 	actionService.pointUpdated(mockPoint);
+		it.skip('should handle iteration switching', () => {
+			actionService.pointUpdated(mockPoint);
 
-		// 	component.ngOnInit();
+			component.ngOnInit();
 
-		// 	expect(component.switchIteration).toHaveBeenCalled();
-		// });
+			expect(component.switchIteration).toHaveBeenCalled();
+		});
 
-		// it('should handle scroll events', () => {
-		// 	jest
-		// 		.spyOn(document, 'addEventListener')
-		// 		.mockImplementation((event: string, handler: EventListenerOrEventListenerObject) => {
-		// 			if (event === 'wheel' && typeof handler === 'function') {
-		// 				handler(new WheelEvent('wheel', { deltaY: 100 }));
-		// 			}
-		// 		});
+		it.skip('should handle scroll events', () => {
+			jest
+				.spyOn(document, 'addEventListener')
+				.mockImplementation((event: string, handler: EventListenerOrEventListenerObject) => {
+					if (event === 'wheel' && typeof handler === 'function') {
+						handler(new WheelEvent('wheel', { deltaY: 100 }));
+					}
+				});
 
-		// 	component.ngOnInit();
+			component.ngOnInit();
 
-		// 	expect(component.iterationsTabs.nativeElement.scrollLeft).toBe(100);
-		// });
+			expect(component.iterationsTabs.nativeElement.scrollLeft).toBe(100);
+		});
 
-		// it('should handle edit point events', () => {
-		// 	const newIteration: Iteration = {
-		// 		date: '25.01.2025 11:40',
-		// 		reason: 'byHand',
-		// 	};
-		// 	component.ngOnInit();
+		it.skip('should handle edit point events', () => {
+			const newIteration: Iteration = {
+				date: '25.01.2025 11:40',
+				reason: 'byHand',
+			};
+			component.ngOnInit();
 
-		// 	expect(component.switchIteration).toHaveBeenCalled();
-		// 	expect(component.setIterationsParam).toHaveBeenCalled();
-		// 	expect(component.checkIteration).toHaveBeenCalled();
-		// 	expect(component.getIterationsListScrollable).toHaveBeenCalled();
-		// });
+			expect(component.switchIteration).toHaveBeenCalled();
+			expect(component.setIterationsParam).toHaveBeenCalled();
+			expect(component.checkIteration).toHaveBeenCalled();
+			expect(component.getIterationsListScrollable).toHaveBeenCalled();
+		});
 
 		it('should toggle calendar panel', () => {
 			component.ngOnInit();

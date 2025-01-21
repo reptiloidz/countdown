@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FooterComponent } from './footer.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ActivationStart, Router } from '@angular/router';
 import { DataService, ActionService, NotifyService, AuthService, HttpService } from 'src/app/services';
 import { BehaviorSubject, of, Subject } from 'rxjs';
-import { Point } from 'src/app/interfaces';
+import { Iteration, Point } from 'src/app/interfaces';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { EditPointEvent } from 'src/app/types';
 
 const mockPoint: Point = {
 	id: '1',
@@ -26,8 +27,6 @@ const mockPoint: Point = {
 	title: 'title',
 };
 
-const mockDate = new Date();
-
 describe('FooterComponent', () => {
 	let component: FooterComponent;
 	let fixture: ComponentFixture<FooterComponent>;
@@ -42,24 +41,37 @@ describe('FooterComponent', () => {
 	beforeEach(async () => {
 		dataServiceMock = {
 			putPoint: jest.fn(),
+			editPoint: jest.fn(),
+			removePoints: jest.fn(),
 			eventAddPoint$: new Subject(),
 			eventEditPoint$: new Subject(),
 			eventRemovePoint$: new Subject(),
 			fetchPoint: jest.fn(() => of(mockPoint)),
+			setDateNow: jest.fn(),
 		} as unknown as jest.Mocked<DataService>;
 
 		authServiceMock = {
+			isAuthenticated: true,
+			checkEmailVerified: true,
+			checkAccessEdit: jest.fn().mockReturnValue(true),
 			getUserData: jest.fn(),
 			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
 		} as unknown as jest.Mocked<AuthService>;
 
 		actionServiceMock = {
+			eventPointsChecked$: new Subject(),
+			eventHasEditablePoints$: new Subject(),
+			eventUpdatedPoint$: new BehaviorSubject(mockPoint),
+			hasEditablePoints: jest.fn(),
+			checkAllPoints: jest.fn(),
+			uncheckAllPoints: jest.fn(),
 			pointUpdated: jest.fn(),
 		} as unknown as jest.Mocked<ActionService>;
 
 		notifyServiceMock = {
-			add: jest.fn(() => mockDate),
+			add: jest.fn(),
 			close: jest.fn(),
+			confirm: jest.fn().mockReturnValue(of(true)),
 		} as unknown as jest.Mocked<NotifyService>;
 
 		httpServiceMock = {
@@ -82,6 +94,8 @@ describe('FooterComponent', () => {
 					useValue: {
 						snapshot: { params: { id: '1' } },
 						queryParams: of({ iteration: '1' }),
+						url: of([{ path: 'edit' }]),
+						params: of({ id: 'someId' }), // добавлено значение для params
 					},
 				},
 				{
@@ -90,30 +104,19 @@ describe('FooterComponent', () => {
 				},
 				{
 					provide: ActionService,
-					useValue: {
-						eventPointsChecked$: new Subject(),
-						eventHasEditablePoints$: new Subject(),
-						eventUpdatedPoint$: new Subject(),
-						checkAllPoints: jest.fn(),
-						uncheckAllPoints: jest.fn(),
-						pointUpdated: jest.fn(),
-					},
+					useValue: actionServiceMock,
 				},
-				{ provide: NotifyService, useValue: { add: jest.fn(), confirm: jest.fn().mockReturnValue(of(true)) } },
+				{
+					provide: NotifyService,
+					useValue: notifyServiceMock,
+				},
 				{
 					provide: AuthService,
-					useValue: {
-						isAuthenticated: true,
-						checkEmailVerified: true,
-						checkAccessEdit: jest.fn().mockReturnValue(true),
-					},
+					useValue: authServiceMock,
 				},
 				{
 					provide: HttpService,
-					useValue: {
-						getShortLink: jest.fn().mockReturnValue(of('shortLink')),
-						postShortLink: jest.fn().mockReturnValue(of({ short: 'shortLink' })),
-					},
+					useValue: httpServiceMock,
 				},
 			],
 			schemas: [NO_ERRORS_SCHEMA],
@@ -149,66 +152,80 @@ describe('FooterComponent', () => {
 			expect(component.shareLinkLoading).toBeFalsy();
 		});
 
-		// it('should fetch point and set properties', () => {
-		// 	dataServiceMock.fetchPoint.mockReturnValue(of(mockPoint));
-		// 	jest.spyOn(dataServiceMock, 'fetchPoint');
+		it('should fetch point and set properties', () => {
+			dataServiceMock.fetchPoint.mockReturnValue(of(mockPoint));
+			jest.spyOn(dataServiceMock, 'fetchPoint');
+			const mockActivationStart = new ActivationStart({
+				url: [],
+				params: { id: '1' },
+			} as any);
 
-		// 	// Set pointId from route param
-		// 	component.pointId = route.snapshot.params['id'];
-		// 	expect(dataServiceMock.fetchPoint).toHaveBeenCalledWith('1');
-		// 	expect(component.point).toEqual(mockPoint);
-		// 	expect(component.hasAccess).toBeTruthy();
-		// });
+			(router.events as Subject<ActivationStart>).next(mockActivationStart);
+
+			expect(dataServiceMock.fetchPoint).toHaveBeenCalledWith('1');
+			expect(component.point).toEqual(mockPoint);
+			expect(component.hasAccess).toBeTruthy();
+		});
 	});
 
-	// it('should handle point updates', () => {
-	// 	const updatedPoint = { ...mockPoint, title: 'updated title' };
-	// 	actionServiceMock.pointUpdated(updatedPoint);
+	it('should update point when pointUpdated is called', () => {
+		const updatedPoint: Point = { ...mockPoint, title: 'updated title' };
 
-	// 	component.ngOnInit();
+		jest.spyOn(actionServiceMock, 'pointUpdated').mockImplementation(point => {
+			(actionServiceMock.eventUpdatedPoint$ as Subject<Point | undefined>).next(point);
+		});
 
-	// 	expect(component.point).toEqual(updatedPoint);
-	// });
+		actionServiceMock.pointUpdated(updatedPoint);
 
-	// it('should handle edit point events', () => {
-	// 	const newPoint = { ...mockPoint, title: 'new title' };
-	// 	dataServiceMock.editPoint('1', newPoint);
+		expect(component.point).toEqual(updatedPoint);
+		expect(actionServiceMock.pointUpdated).toHaveBeenCalledWith(updatedPoint);
+	});
 
-	// 	component.ngOnInit();
+	it('should handle edit point events', () => {
+		const newPoint = { ...mockPoint, title: 'new title' };
 
-	// 	expect(component.point).toEqual(newPoint);
-	// });
+		jest.spyOn(dataServiceMock, 'editPoint').mockImplementation(point => {
+			(dataServiceMock.eventEditPoint$ as Subject<[Point, EditPointEvent, Iteration?]>).next([newPoint, 'pointEdited']);
+		});
 
-	// it('should handle remove point events', () => {
-	// 	jest.spyOn(router, 'navigate');
+		dataServiceMock.editPoint('1', newPoint);
 
-	// 	dataServiceMock.removePoints({ id: '1' });
+		expect(component.point).toEqual(newPoint);
+	});
 
-	// 	component.ngOnInit();
+	it('should handle remove point events', () => {
+		jest.spyOn(router, 'navigate');
+		jest.spyOn(dataServiceMock, 'removePoints').mockImplementation(point => {
+			(dataServiceMock.eventRemovePoint$ as Subject<string | undefined>).next(point?.id);
+		});
 
-	// 	expect(router.navigate).toHaveBeenCalledWith(['']);
-	// 	expect(notifyServiceMock.add).toHaveBeenCalledWith({
-	// 		title: 'Событие удалено',
-	// 		view: 'positive',
-	// 		short: true,
-	// 	});
-	// });
+		dataServiceMock.removePoints({ id: '1' });
 
-	// it('should handle points checked events', () => {
-	// 	actionServiceMock.checkAllPoints();
+		expect(router.navigate).toHaveBeenCalledWith(['']);
+		expect(notifyServiceMock.add).toHaveBeenCalledWith({
+			title: 'Событие удалено',
+			view: 'positive',
+			short: true,
+		});
+	});
 
-	// 	component.ngOnInit();
+	it('should handle points checked events', () => {
+		jest.spyOn(actionServiceMock, 'checkAllPoints').mockImplementation(() => {
+			(actionServiceMock.eventPointsChecked$ as Subject<boolean>).next(true);
+		});
+		component.checkAllPoints();
 
-	// 	expect(component.pointsChecked).toBeTruthy();
-	// });
+		expect(component.pointsChecked).toBeTruthy();
+	});
 
-	// it('should handle has editable points events', () => {
-	// 	actionServiceMock.hasEditablePoints(true);
+	it('should handle has editable points events', () => {
+		jest.spyOn(actionServiceMock, 'hasEditablePoints').mockImplementation(() => {
+			(actionServiceMock.eventHasEditablePoints$ as Subject<boolean>).next(true);
+		});
+		actionServiceMock.hasEditablePoints(true);
 
-	// 	component.ngOnInit();
-
-	// 	expect(component.hasEditablePoints).toBeTruthy();
-	// });
+		expect(component.hasEditablePoints).toBeTruthy();
+	});
 
 	describe('ngOnDestroy', () => {
 		it('should unsubscribe from all subscriptions', () => {
@@ -220,100 +237,100 @@ describe('FooterComponent', () => {
 		});
 	});
 
-	// describe('setDateNow', () => {
-	// 	it('should call setDateNow on data service', () => {
-	// 		component.point = mockPoint;
-	// 		component.setDateNow();
+	describe('setDateNow', () => {
+		it('should call setDateNow on data service', () => {
+			component.point = mockPoint;
+			component.setDateNow();
 
-	// 		expect(notifyServiceMock.confirm).toHaveBeenCalled();
-	// 		expect(dataServiceMock.setDateNow).toHaveBeenCalledWith(mockPoint);
-	// 	});
-	// });
+			expect(notifyServiceMock.confirm).toHaveBeenCalled();
+			expect(dataServiceMock.setDateNow).toHaveBeenCalledWith(mockPoint);
+		});
+	});
 
-	// describe('checkAllPoints', () => {
-	// 	it('should call checkAllPoints on action service', () => {
-	// 		component.checkAllPoints();
+	describe('checkAllPoints', () => {
+		it('should call checkAllPoints on action service', () => {
+			component.checkAllPoints();
 
-	// 		expect(actionServiceMock.checkAllPoints).toHaveBeenCalled();
-	// 	});
-	// });
+			expect(actionServiceMock.checkAllPoints).toHaveBeenCalled();
+		});
+	});
 
-	// describe('uncheckAllPoints', () => {
-	// 	it('should call uncheckAllPoints on action service', () => {
-	// 		component.uncheckAllPoints();
+	describe('uncheckAllPoints', () => {
+		it('should call uncheckAllPoints on action service', () => {
+			component.uncheckAllPoints();
 
-	// 		expect(actionServiceMock.uncheckAllPoints).toHaveBeenCalled();
-	// 	});
-	// });
+			expect(actionServiceMock.uncheckAllPoints).toHaveBeenCalled();
+		});
+	});
 
-	// describe('removeAllCheckedPoints', () => {
-	// 	it('should call removePoints on data service', () => {
-	// 		component.removeAllCheckedPoints();
+	describe('removeAllCheckedPoints', () => {
+		it('should call removePoints on data service', () => {
+			component.removeAllCheckedPoints();
 
-	// 		expect(dataServiceMock.removePoints).toHaveBeenCalled();
-	// 	});
-	// });
+			expect(dataServiceMock.removePoints).toHaveBeenCalled();
+		});
+	});
 
-	// describe('removePoint', () => {
-	// 	it('should call removePoints on data service with point id', () => {
-	// 		component.point = mockPoint;
-	// 		component.removePoint();
+	describe('removePoint', () => {
+		it('should call removePoints on data service with point id', () => {
+			component.point = mockPoint;
+			component.removePoint();
 
-	// 		expect(dataServiceMock.removePoints).toHaveBeenCalledWith({ id: mockPoint.id });
-	// 	});
-	// });
+			expect(dataServiceMock.removePoints).toHaveBeenCalledWith({ id: mockPoint.id });
+		});
+	});
 
-	// describe('share', () => {
-	// 	it('should copy link if pointId is present', () => {
-	// 		jest.spyOn(component, 'copyLink');
-	// 		component.pointId = '1';
-	// 		component.share();
+	describe.skip('share', () => {
+		it('should copy link if pointId is present', () => {
+			jest.spyOn(component, 'copyLink');
+			component.pointId = '1';
+			component.share();
 
-	// 		expect(component.copyLink).toHaveBeenCalledWith('1');
-	// 	});
+			expect(component.copyLink).toHaveBeenCalledWith('1');
+		});
 
-	// 	it('should get short link if pointId is not present', () => {
-	// 		jest.spyOn(component, 'copyLink');
-	// 		component.pointId = '';
-	// 		component.share();
+		it('should get short link if pointId is not present', () => {
+			jest.spyOn(component, 'copyLink');
+			component.pointId = '';
+			component.share();
 
-	// 		expect(httpServiceMock.getShortLink).toHaveBeenCalled();
-	// 	});
-	// });
+			expect(httpServiceMock.getShortLink).toHaveBeenCalled();
+		});
+	});
 
-	// describe('copyLink', () => {
-	// 	it('should copy link to clipboard', async () => {
-	// 		const writeTextMock = jest.fn().mockResolvedValue(undefined);
-	// 		Object.defineProperty(navigator, 'clipboard', {
-	// 			value: { writeText: writeTextMock },
-	// 			configurable: true
-	// 		});
+	describe.skip('copyLink', () => {
+		it('should copy link to clipboard', async () => {
+			const writeTextMock = jest.fn().mockResolvedValue(undefined);
+			Object.defineProperty(navigator, 'clipboard', {
+				value: { writeText: writeTextMock },
+				configurable: true,
+			});
 
-	// 		await component.copyLink('link');
+			await component.copyLink('link');
 
-	// 		expect(writeTextMock).toHaveBeenCalledWith(window.location.origin + '/point/link');
-	// 		expect(notifyServiceMock.add).toHaveBeenCalledWith({
-	// 			title: 'URL события успешно скопирован в буфер обмена',
-	// 			text: window.location.origin + '/point/link',
-	// 			short: true,
-	// 			view: 'positive',
-	// 		});
-	// 	});
-	// });
+			expect(writeTextMock).toHaveBeenCalledWith(window.location.origin + '/point/link');
+			expect(notifyServiceMock.add).toHaveBeenCalledWith({
+				title: 'URL события успешно скопирован в буфер обмена',
+				text: window.location.origin + '/point/link',
+				short: true,
+				view: 'positive',
+			});
+		});
+	});
 
-	// describe('copyPoint', () => {
-	// 	it('should navigate to create and update point', () => {
-	// 		component.point = mockPoint;
-	// 		component.copyPoint();
+	describe.skip('copyPoint', () => {
+		it('should navigate to create and update point', () => {
+			component.point = mockPoint;
+			component.copyPoint();
 
-	// 		expect(router.navigate).toHaveBeenCalledWith(['/create-url/']);
-	// 		expect(actionServiceMock.pointUpdated).toHaveBeenCalledWith({
-	// 			...mockPoint,
-	// 			dates: [mockPoint.dates[1]],
-	// 			repeatable: false,
-	// 			public: false,
-	// 			greenwich: false,
-	// 		});
-	// 	});
-	// });
+			expect(router.navigate).toHaveBeenCalledWith(['/create-url/']);
+			expect(actionServiceMock.pointUpdated).toHaveBeenCalledWith({
+				...mockPoint,
+				dates: [mockPoint.dates[1]],
+				repeatable: false,
+				public: false,
+				greenwich: false,
+			});
+		});
+	});
 });

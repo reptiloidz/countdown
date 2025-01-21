@@ -39,13 +39,15 @@ describe('EditPointComponent', () => {
 	let route: ActivatedRoute;
 	let cdr: ChangeDetectorRef;
 
-	beforeEach(async () => {
+	beforeAll(() => {
 		(window as any).ResizeObserver = jest.fn(() => ({
 			observe: jest.fn(),
 			unobserve: jest.fn(),
 			disconnect: jest.fn(),
 		}));
+	});
 
+	beforeEach(async () => {
 		dataServiceMock = {
 			putPoint: jest.fn(),
 			eventAddPoint$: new Subject(),
@@ -95,7 +97,7 @@ describe('EditPointComponent', () => {
 					useValue: {
 						url: of([{ path: 'edit' }]),
 						queryParams: of({}),
-						params: of({ id: 'someId' }), // добавлено значение для params
+						params: of({ id: 'someId' }),
 					},
 				},
 				ChangeDetectorRef,
