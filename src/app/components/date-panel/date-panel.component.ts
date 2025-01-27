@@ -83,7 +83,7 @@ import { animate, query, style, transition, trigger } from '@angular/animations'
 })
 export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('iterationsTabs') iterationsTabs!: ElementRef;
-	@ViewChild('iterationsList') private iterationsList!: ElementRef;
+	@ViewChild('iterationsList') iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 
 	private subscriptions = new Subscription();

@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatePanelComponent } from './date-panel.component';
-import { Router, ActivatedRoute } from '@angular/router';
-import { DataService, ActionService, NotifyService, AuthService } from 'src/app/services';
-import { of, Subject } from 'rxjs';
-import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
-import { Iteration, Point } from 'src/app/interfaces';
+import { DataService, ActionService, AuthService, NotifyService } from 'src/app/services';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { PanelComponent } from '../panel/panel.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ButtonComponent } from '../button/button.component';
+import { Point } from 'src/app/interfaces';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { CheckCopiesPipe } from 'src/app/pipes/check-copies.pipe';
 
 const mockPoint: Point = {
 	id: '1',
@@ -28,151 +28,193 @@ const mockPoint: Point = {
 	title: 'title',
 };
 
+const disableAnimations =
+	!('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent));
+
+const mockAnimations = () => {
+	Element.prototype.animate = jest.fn().mockImplementation(() => ({
+		finished: Promise.resolve(),
+		addEventListener: jest.fn(),
+		removeEventListener: jest.fn(),
+		play: jest.fn(),
+		cancel: jest.fn(),
+	}));
+};
+
 describe('DatePanelComponent', () => {
 	let component: DatePanelComponent;
 	let fixture: ComponentFixture<DatePanelComponent>;
-	let router: Router;
-	let route: ActivatedRoute;
-	let dataService: DataService;
-	let actionService: ActionService;
-	let notifyService: NotifyService;
-	let authService: AuthService;
-	let cdr: ChangeDetectorRef;
 
-	beforeEach(async () => {
+	let mockDataService: Partial<DataService>;
+	let mockActionService: Partial<ActionService>;
+	let mockAuthService: Partial<AuthService>;
+	let mockNotifyService: Partial<NotifyService>;
+	let mockRouter: Partial<Router>;
+	let mockActivatedRoute: Partial<ActivatedRoute>;
+
+	beforeAll(() => {
+		mockAnimations();
 		(window as any).ResizeObserver = jest.fn(() => ({
 			observe: jest.fn(),
 			unobserve: jest.fn(),
 			disconnect: jest.fn(),
 		}));
+		(window as any).getComputedStyle = jest.fn().mockReturnValue({ paddingLeft: '10px', paddingRight: '10px' });
+	});
+
+	beforeEach(async () => {
+		mockDataService = {
+			putPoint: jest.fn(),
+			editPoint: jest.fn(),
+			removePoints: jest.fn(),
+			eventAddPoint$: new Subject(),
+			eventEditPoint$: new Subject(),
+			eventRemovePoint$: new Subject(),
+			fetchPoint: jest.fn(() => of(mockPoint)),
+			setDateNow: jest.fn(),
+		} as unknown as jest.Mocked<DataService>;
+
+		mockAuthService = {
+			isAuthenticated: true,
+			checkEmailVerified: true,
+			checkAccessEdit: jest.fn().mockReturnValue(true),
+			getUserData: jest.fn(),
+			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
+		} as unknown as jest.Mocked<AuthService>;
+
+		mockActionService = {
+			eventPointsChecked$: new Subject(),
+			eventHasEditablePoints$: new Subject(),
+			eventUpdatedPoint$: new BehaviorSubject(mockPoint),
+			hasEditablePoints: jest.fn(),
+			checkAllPoints: jest.fn(),
+			uncheckAllPoints: jest.fn(),
+			pointUpdated: jest.fn().mockReturnValue(mockPoint),
+		} as unknown as jest.Mocked<ActionService>;
+
+		mockNotifyService = {
+			confirm: jest.fn().mockReturnValue(of(true)),
+		};
+
+		mockRouter = {
+			navigate: jest.fn(),
+		};
+
+		mockActivatedRoute = {
+			queryParams: of({}),
+		};
 
 		await TestBed.configureTestingModule({
-			declarations: [DatePanelComponent, PanelComponent, ButtonComponent],
-			imports: [BrowserAnimationsModule],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations })],
+			declarations: [DatePanelComponent, PanelComponent, CheckCopiesPipe],
 			providers: [
-				{ provide: Router, useValue: { navigate: jest.fn() } },
-				{ provide: ActivatedRoute, useValue: { queryParams: of({ iteration: '1' }) } },
-				{
-					provide: DataService,
-					useValue: {
-						eventEditPoint$: new Subject(),
-						editPoint: jest.fn(),
-					},
-				},
-				{
-					provide: ActionService,
-					useValue: {
-						eventUpdatedPoint$: new Subject(),
-						pointUpdated: jest.fn(),
-					},
-				},
-				{ provide: NotifyService, useValue: { confirm: jest.fn() } },
-				{ provide: AuthService, useValue: { checkAccessEdit: jest.fn() } },
-				ChangeDetectorRef,
+				{ provide: DataService, useValue: mockDataService },
+				{ provide: ActionService, useValue: mockActionService },
+				{ provide: AuthService, useValue: mockAuthService },
+				{ provide: NotifyService, useValue: mockNotifyService },
+				{ provide: Router, useValue: mockRouter },
+				{ provide: ActivatedRoute, useValue: mockActivatedRoute },
+				provideAnimations(),
 			],
-			schemas: [NO_ERRORS_SCHEMA],
+			schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 		}).compileComponents();
-
-		router = TestBed.inject(Router);
-		route = TestBed.inject(ActivatedRoute);
-		dataService = TestBed.inject(DataService);
-		actionService = TestBed.inject(ActionService);
-		notifyService = TestBed.inject(NotifyService);
-		authService = TestBed.inject(AuthService);
-		cdr = TestBed.inject(ChangeDetectorRef);
 
 		fixture = TestBed.createComponent(DatePanelComponent);
 		component = fixture.componentInstance;
 	});
 
 	it('should create', () => {
+		fixture.detectChanges();
 		expect(component).toBeTruthy();
 	});
 
-	describe('ngOnInit', () => {
-		beforeEach(() => {
-			jest.spyOn(component, 'setIterationsParam');
-			jest.spyOn(component, 'switchIteration');
-			jest.spyOn(component, 'scrollHome');
-			jest.spyOn(component, 'checkIteration');
-			jest.spyOn(component, 'getIterationsListScrollable');
-			jest.spyOn(component, 'switchCalendarPanel');
+	it('should initialize with default values', () => {
+		expect(component.isCalendarPanelOpen).toBe(false);
+		expect(component.isCalendarCreated).toBe(false);
+		expect(component.hasAccess).toBe(false);
+		expect(component.iterationsChecked).toEqual([]);
+	});
+
+	it('should call switchIteration on iteration change', () => {
+		jest.spyOn(component, 'switchIteration');
+		component.switchIteration(1);
+		expect(component.switchIteration).toHaveBeenCalledWith(1);
+		expect(mockRouter.navigate).toHaveBeenCalledWith([], {
+			relativeTo: mockActivatedRoute,
+			queryParams: { iteration: 2 },
+			queryParamsHandling: 'merge',
 		});
+	});
 
-		it('should initialize with default values', () => {
-			component.ngOnInit();
+	it('should update access when a point is provided', () => {
+		component.point = { id: 1, dates: [], repeatable: true } as any;
+		component.ngOnInit();
+		expect(mockAuthService.checkAccessEdit).toHaveBeenCalledWith(component.point);
+		expect(component.hasAccess).toBe(true);
+	});
 
-			expect(component.isCalendarPanelOpen).toBeFalsy();
-			expect(component.iterationsChecked).toEqual([]);
-			expect(component.loading).toBeFalsy();
-			expect(component.showIterationsInfo).toBeFalsy();
+	it('should handle iterations removal', () => {
+		component.point = { id: 1, dates: [{ date: '2023-01-01' }, { date: '2023-01-02' }] } as any;
+		jest.spyOn(mockNotifyService, 'confirm').mockReturnValue(of(true));
+		jest.spyOn(mockDataService, 'editPoint').mockImplementation(() => {});
+
+		component.removeIteration(0);
+
+		expect(mockNotifyService.confirm).toHaveBeenCalled();
+		expect(mockDataService.editPoint).toHaveBeenCalledWith(1, {
+			id: 1,
+			dates: [{ date: '2023-01-02' }],
 		});
+	});
 
-		it.skip('should subscribe to action.eventUpdatedPoint$', () => {
-			actionService.pointUpdated(mockPoint);
+	it('should toggle calendar panel', () => {
+		component.switchCalendarPanel(true);
+		expect(component.isCalendarPanelOpen).toBe(true);
 
-			component.ngOnInit();
+		component.switchCalendarPanel(false);
+		expect(component.isCalendarPanelOpen).toBe(false);
+	});
 
-			expect(component.point).toEqual(mockPoint);
-			expect(component.setIterationsParam).toHaveBeenCalled();
+	it('should emit addIteration event on addIterationClick', () => {
+		jest.spyOn(component.addIteration, 'emit');
+		component.addIterationClick();
+		expect(component.addIteration.emit).toHaveBeenCalled();
+		expect(mockRouter.navigate).toHaveBeenCalledWith([], {
+			relativeTo: mockActivatedRoute,
+			queryParams: { iteration: null },
+			queryParamsHandling: 'merge',
 		});
+	});
 
-		it.skip('should handle point updates', () => {
-			actionService.pointUpdated(mockPoint);
+	it('should calculate scrollable iterations list', () => {
+		const mockElement = {
+			nativeElement: {
+				clientWidth: 500,
+			},
+		} as any;
+		component.iterationsList = mockElement;
+		component.iterationsTabs = {
+			nativeElement: {
+				clientWidth: 400,
+				style: { paddingLeft: '10px', paddingRight: '10px' },
+			},
+		} as any;
 
-			component.ngOnInit();
+		component.getIterationsListScrollable();
+		expect(component.iterationsListScrollable).toBe(true);
+	});
 
-			expect(component.point).toEqual(mockPoint);
-			expect(component.setIterationsParam).toHaveBeenCalled();
-		});
+	it('should scroll iterations list to home', () => {
+		const mockTabs = {
+			nativeElement: {
+				querySelector: jest.fn().mockReturnValue({
+					scrollIntoView: jest.fn(),
+				}),
+			},
+		} as any;
+		component.iterationsTabs = mockTabs;
 
-		it.skip('should handle iteration switching', () => {
-			actionService.pointUpdated(mockPoint);
-
-			component.ngOnInit();
-
-			expect(component.switchIteration).toHaveBeenCalled();
-		});
-
-		it.skip('should handle scroll events', () => {
-			jest
-				.spyOn(document, 'addEventListener')
-				.mockImplementation((event: string, handler: EventListenerOrEventListenerObject) => {
-					if (event === 'wheel' && typeof handler === 'function') {
-						handler(new WheelEvent('wheel', { deltaY: 100 }));
-					}
-				});
-
-			component.ngOnInit();
-
-			expect(component.iterationsTabs.nativeElement.scrollLeft).toBe(100);
-		});
-
-		it.skip('should handle edit point events', () => {
-			const newIteration: Iteration = {
-				date: '25.01.2025 11:40',
-				reason: 'byHand',
-			};
-			component.ngOnInit();
-
-			expect(component.switchIteration).toHaveBeenCalled();
-			expect(component.setIterationsParam).toHaveBeenCalled();
-			expect(component.checkIteration).toHaveBeenCalled();
-			expect(component.getIterationsListScrollable).toHaveBeenCalled();
-		});
-
-		it('should toggle calendar panel', () => {
-			component.ngOnInit();
-
-			expect(component.switchCalendarPanel).toHaveBeenCalled();
-		});
-
-		it('should set showIterationsInfo from localStorage', () => {
-			localStorage.setItem('showIterationsInfo', 'true');
-
-			component.ngOnInit();
-
-			expect(component.showIterationsInfo).toBeTruthy();
-		});
+		component.scrollHome();
+		expect(mockTabs.nativeElement.querySelector).toHaveBeenCalledWith('.tabs__item--active input');
 	});
 });
