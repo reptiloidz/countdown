@@ -28,9 +28,6 @@ const mockPoint: Point = {
 	title: 'title',
 };
 
-const disableAnimations =
-	!('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent));
-
 const mockAnimations = () => {
 	Element.prototype.animate = jest.fn().mockImplementation(() => ({
 		finished: Promise.resolve(),
@@ -105,7 +102,7 @@ describe('DatePanelComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations })],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
 			declarations: [DatePanelComponent, PanelComponent, CheckCopiesPipe],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },

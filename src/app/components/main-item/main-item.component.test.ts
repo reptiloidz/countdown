@@ -9,9 +9,6 @@ import { TimersComponent } from '../timers/timers.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 
-const disableAnimations =
-	!('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent));
-
 const mockAnimations = () => {
 	Element.prototype.animate = jest.fn().mockImplementation(() => ({
 		finished: Promise.resolve(),
@@ -55,12 +52,11 @@ describe('MainItemComponent', () => {
 			unobserve: jest.fn(),
 			disconnect: jest.fn(),
 		}));
-		(window as any).getComputedStyle = jest.fn().mockReturnValue({ paddingLeft: '10px', paddingRight: '10px' });
 	});
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations })],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
 			declarations: [MainItemComponent, CheckboxComponent, CheckAccessEditPipe, LetDirective, TimersComponent],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
