@@ -1,11 +1,4 @@
-import {
-	Component,
-	EventEmitter,
-	Input,
-	OnInit,
-	Output,
-	ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
 	Day,
@@ -36,13 +29,7 @@ import {
 import { ru } from 'date-fns/locale';
 import { Constants } from 'src/app/enums';
 import { getPointDate, parseDate } from 'src/app/helpers';
-import {
-	Iteration,
-	Point,
-	RadioItem,
-	SelectArray,
-	SwitcherItem,
-} from 'src/app/interfaces';
+import { Iteration, Point, RadioItem, SelectArray, SwitcherItem } from 'src/app/interfaces';
 import { DatepickerComponent } from '../datepicker/datepicker.component';
 
 @Component({
@@ -54,10 +41,10 @@ export class GenerateIterationsComponent implements OnInit {
 	@Input() loading = false;
 	@Input() point: Point | undefined;
 	@Output() repeatsAreGenerated = new EventEmitter<Iteration[]>();
-	@ViewChild('rangeEndRef') rangeEndRef!: DatepickerComponent;
+	@ViewChild('rangeEndRef', { static: false }) rangeEndRef!: DatepickerComponent;
 
 	rangeStartDate = new Date();
-	rangeEndDate = addMinutes(new Date(), 10);
+	rangeEndDate = addMinutes(this.rangeStartDate, 10);
 	repeats: Iteration[] = [];
 	monthOptions: RadioItem[] = [];
 
@@ -110,10 +97,7 @@ export class GenerateIterationsComponent implements OnInit {
 	}
 
 	get isRepeatsAmountSet() {
-		return (
-			this.iterationsForm.controls['repeatsMode'].value ===
-			'setRepeatsAmount'
-		);
+		return this.iterationsForm.controls['repeatsMode'].value === 'setRepeatsAmount';
 	}
 
 	get rangeAmountValue() {
@@ -170,45 +154,25 @@ export class GenerateIterationsComponent implements OnInit {
 
 	get dayFullWeekNumber(): number {
 		return (
-			differenceInWeeks(
-				this.rangeStartDate,
-				startOfMonth(this.rangeStartDate)
-			) + (this.wasSameWeekdayInFirstWeek ? 1 : 0)
+			differenceInWeeks(this.rangeStartDate, startOfMonth(this.rangeStartDate)) +
+			(this.wasSameWeekdayInFirstWeek ? 1 : 0)
 		);
 	}
 
 	get lastDayWeek(): boolean {
-		return !differenceInWeeks(
-			this.rangeStartDate,
-			endOfMonth(this.rangeStartDate)
-		);
+		return !differenceInWeeks(this.rangeStartDate, endOfMonth(this.rangeStartDate));
 	}
 
 	get lastDayOfMonth(): boolean {
-		return (
-			differenceInDays(
-				endOfMonth(this.rangeStartDate),
-				this.rangeStartDate
-			) === 0
-		);
+		return differenceInDays(endOfMonth(this.rangeStartDate), this.rangeStartDate) === 0;
 	}
 
 	get secondFromTheEndDayMonth(): boolean {
-		return (
-			differenceInDays(
-				endOfMonth(this.rangeStartDate),
-				this.rangeStartDate
-			) === 1
-		);
+		return differenceInDays(endOfMonth(this.rangeStartDate), this.rangeStartDate) === 1;
 	}
 
 	get thirdFromTheEndDayMonth(): boolean {
-		return (
-			differenceInDays(
-				endOfMonth(this.rangeStartDate),
-				this.rangeStartDate
-			) === 2
-		);
+		return differenceInDays(endOfMonth(this.rangeStartDate), this.rangeStartDate) === 2;
 	}
 
 	get wasSameWeekdayInFirstWeek(): boolean {
@@ -216,10 +180,7 @@ export class GenerateIterationsComponent implements OnInit {
 			getWeekOfMonth(this.rangeStartDate, {
 				weekStartsOn: 1,
 			}) -
-				differenceInWeeks(
-					this.rangeStartDate,
-					startOfMonth(this.rangeStartDate)
-				) >
+				differenceInWeeks(this.rangeStartDate, startOfMonth(this.rangeStartDate)) >
 			1
 		);
 	}
@@ -228,11 +189,7 @@ export class GenerateIterationsComponent implements OnInit {
 		let startDayParams: RadioItem[] = [];
 		let dayNumberSelected = false;
 
-		if (
-			!this.lastDayOfMonth &&
-			!this.secondFromTheEndDayMonth &&
-			!this.thirdFromTheEndDayMonth
-		) {
+		if (!this.lastDayOfMonth && !this.secondFromTheEndDayMonth && !this.thirdFromTheEndDayMonth) {
 			startDayParams.push({
 				text: `${getDate(this.rangeStartDate)}-е число месяца`,
 				value: 'dayOfMonth',
@@ -269,12 +226,13 @@ export class GenerateIterationsComponent implements OnInit {
 		this.dayWeekNumber &&
 			this.dayWeekNumber < 5 &&
 			startDayParams.push({
-				text: `${this.dayWeekNumber}-${this.getEnding(
-					getDay(this.rangeStartDate),
-					true
-				)} ${format(this.rangeStartDate, 'EEEE', {
-					locale: ru,
-				})}`,
+				text: `${this.dayWeekNumber}-${this.getEnding(getDay(this.rangeStartDate), true)} ${format(
+					this.rangeStartDate,
+					'EEEE',
+					{
+						locale: ru,
+					},
+				)}`,
 				value: 'dayWeekNumber',
 			});
 
@@ -282,29 +240,26 @@ export class GenerateIterationsComponent implements OnInit {
 			this.dayFullWeekNumber < 5 &&
 			!isMonday(startOfMonth(this.rangeStartDate)) &&
 			startDayParams.push({
-				text: `${this.dayFullWeekNumber}-${this.getEnding(
-					getDay(this.rangeStartDate),
-					true
-				)} ${format(this.rangeStartDate, 'EEEE', {
-					locale: ru,
-				})} (считая с первой полной недели)`,
+				text: `${this.dayFullWeekNumber}-${this.getEnding(getDay(this.rangeStartDate), true)} ${format(
+					this.rangeStartDate,
+					'EEEE',
+					{
+						locale: ru,
+					},
+				)} (считая с первой полной недели)`,
 				value: 'dayFullWeekNumber',
 			});
 
 		this.lastDayWeek &&
 			startDayParams.push({
-				text: `Последн${this.getEnding(
-					getDay(this.rangeStartDate)
-				)} ${format(this.rangeStartDate, 'EEEE', {
+				text: `Последн${this.getEnding(getDay(this.rangeStartDate))} ${format(this.rangeStartDate, 'EEEE', {
 					locale: ru,
 				})} месяца`,
 				value: 'lastDayWeek',
 			});
 
 		this.monthOptions = startDayParams;
-		this.iterationsForm.controls['monthOptions'].setValue(
-			this.monthOptions.find((item) => item.checked)?.value
-		);
+		this.iterationsForm.controls['monthOptions'].setValue(this.monthOptions.find(item => item.checked)?.value);
 	}
 
 	getEnding(number: number, short = false) {
@@ -323,18 +278,11 @@ export class GenerateIterationsComponent implements OnInit {
 	}
 
 	genRepeats() {
-		!+this.rangePeriodValue &&
-			this.iterationsForm.controls['rangePeriod'].setValue(1);
-		this.isRepeatsAmountSet &&
-			+this.rangeAmountValue < 2 &&
-			this.iterationsForm.controls['rangeAmount'].setValue(2);
+		!+this.rangePeriodValue && this.iterationsForm.controls['rangePeriod'].setValue(1);
+		this.isRepeatsAmountSet && +this.rangeAmountValue < 2 && this.iterationsForm.controls['rangeAmount'].setValue(2);
 
 		if (this.isRepeatsAmountSet) {
-			for (
-				let i = 0;
-				i < this.iterationsForm.controls['rangeAmount'].value;
-				i++
-			) {
+			for (let i = 0; i < this.iterationsForm.controls['rangeAmount'].value; i++) {
 				this.repeats.push({
 					date: this.getDateTime(i),
 					reason: 'frequency',
@@ -378,10 +326,7 @@ export class GenerateIterationsComponent implements OnInit {
 	}
 
 	getNextMatchMonth(k: number) {
-		const sameDayOfNextMonth = addMonths(
-			this.rangeStartDate,
-			this.rangePeriodValue * k
-		);
+		const sameDayOfNextMonth = addMonths(this.rangeStartDate, this.rangePeriodValue * k);
 		const lastDay = lastDayOfMonth(sameDayOfNextMonth);
 		const weekDay = getDay(this.rangeStartDate) as Day;
 
@@ -394,13 +339,7 @@ export class GenerateIterationsComponent implements OnInit {
 				return this.setRangeStartTime(subDays(lastDay, 2));
 			case 'dayWeekNumber':
 				return this.setRangeStartTime(
-					addWeeks(
-						nextDay(
-							subDays(startOfMonth(sameDayOfNextMonth), 1),
-							weekDay
-						),
-						this.dayWeekNumber - 1
-					)
+					addWeeks(nextDay(subDays(startOfMonth(sameDayOfNextMonth), 1), weekDay), this.dayWeekNumber - 1),
 				);
 			case 'dayFullWeekNumber':
 				return this.setRangeStartTime(
@@ -409,16 +348,13 @@ export class GenerateIterationsComponent implements OnInit {
 							endOfWeek(startOfMonth(sameDayOfNextMonth), {
 								locale: ru,
 							}),
-							weekDay
+							weekDay,
 						),
-						this.dayFullWeekNumber -
-							(isMonday(startOfMonth(sameDayOfNextMonth)) ? 2 : 1)
-					)
+						this.dayFullWeekNumber - (isMonday(startOfMonth(sameDayOfNextMonth)) ? 2 : 1),
+					),
 				);
 			case 'lastDayWeek':
-				return this.setRangeStartTime(
-					previousDay(addDays(lastDay, 1), weekDay)
-				);
+				return this.setRangeStartTime(previousDay(addDays(lastDay, 1), weekDay));
 			default:
 				return this.setRangeStartTime(sameDayOfNextMonth);
 		}
@@ -426,10 +362,7 @@ export class GenerateIterationsComponent implements OnInit {
 
 	setRangeStartTime(date: Date) {
 		return getPointDate({
-			pointDate: addMinutes(
-				addHours(startOfDay(date), getHours(this.rangeStartDate)),
-				getMinutes(this.rangeStartDate)
-			),
+			pointDate: addMinutes(addHours(startOfDay(date), getHours(this.rangeStartDate)), getMinutes(this.rangeStartDate)),
 			isGreenwich: this.point?.greenwich,
 			isInvert: true,
 		});

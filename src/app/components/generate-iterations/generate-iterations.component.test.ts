@@ -10,10 +10,12 @@ import { DropComponent } from '../drop/drop.component';
 import { InputComponent } from '../input/input.component';
 import { RadioComponent } from '../radio/radio.component';
 import { ButtonComponent } from '../button/button.component';
+import { Iteration } from 'src/app/interfaces';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 const currentDate = new Date();
 
-describe.skip('GenerateIterationsComponent', () => {
+describe('GenerateIterationsComponent', () => {
 	let component: GenerateIterationsComponent;
 	let fixture: ComponentFixture<GenerateIterationsComponent>;
 
@@ -28,7 +30,7 @@ describe.skip('GenerateIterationsComponent', () => {
 				RadioComponent,
 				ButtonComponent,
 			],
-			imports: [FormsModule, ReactiveFormsModule],
+			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective],
 			schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 			providers: [
 				FormBuilder,
@@ -38,6 +40,7 @@ describe.skip('GenerateIterationsComponent', () => {
 					useExisting: forwardRef(() => InputComponent),
 					multi: true,
 				},
+				[provideNgxMask()],
 			],
 		}).compileComponents();
 
@@ -62,8 +65,10 @@ describe.skip('GenerateIterationsComponent', () => {
 
 	it('should initialize default values on ngOnInit', () => {
 		component.ngOnInit();
+		const rangeStartDate = component.rangeStartDate;
+
 		expect(component.rangeStartDate).toBeDefined();
-		expect(component.rangeEndDate).toEqual(addMinutes(currentDate, 10));
+		expect(component.rangeEndDate).toEqual(addMinutes(rangeStartDate, 10));
 		expect(component.repeats).toEqual([]);
 	});
 
@@ -87,18 +92,20 @@ describe.skip('GenerateIterationsComponent', () => {
 	it('should generate repeats based on rangeAmount when isRepeatsAmountSet is true', () => {
 		component.iterationsForm.controls['repeatsMode'].setValue('setRepeatsAmount');
 		component.iterationsForm.controls['rangeAmount'].setValue(3);
+		const emitSpy = jest.spyOn(component.repeatsAreGenerated, 'emit');
 		component.genRepeats();
-		expect(component.repeats.length).toEqual(3);
+		expect(emitSpy.mock.calls[0][0]?.length).toEqual(3);
 	});
 
 	it('should generate repeats recursively until rangeEndDate when isRepeatsAmountSet is false', () => {
 		component.iterationsForm.controls['repeatsMode'].setValue('setRangeEnd');
 		component.rangeEndDate = addMinutes(component.rangeStartDate, 30);
+		const emitSpy = jest.spyOn(component.repeatsAreGenerated, 'emit');
 		component.genRepeats();
-		expect(component.repeats.length).toBeGreaterThan(0);
-		expect(format(new Date(component.repeats[component.repeats.length - 1].date), Constants.fullDateFormat)).toEqual(
-			format(component.rangeEndDate, Constants.fullDateFormat),
-		);
+		const repeats: Iteration[] = emitSpy.mock.calls[0][0] || [];
+		expect(repeats?.length).toBeGreaterThan(0);
+		repeats.length &&
+			expect(repeats[repeats?.length - 1].date).toEqual(format(component.rangeEndDate, Constants.fullDateFormat));
 	});
 
 	it('should update monthOptions on rangeStartDatePicked', () => {
@@ -120,8 +127,15 @@ describe.skip('GenerateIterationsComponent', () => {
 	});
 
 	it('should fix disabled date in datepicker when repeatsModeSwitcher is called', () => {
+		component.rangeEndRef = {
+			fixDisabledDate: jest.fn(),
+		} as unknown as DatepickerComponent;
+		fixture.detectChanges();
 		const fixDisabledDateSpy = jest.spyOn(component.rangeEndRef, 'fixDisabledDate');
+		jest.useFakeTimers();
 		component.repeatsModeSwitcher();
+		jest.runAllTimers();
 		expect(fixDisabledDateSpy).toHaveBeenCalled();
+		jest.useRealTimers();
 	});
 });
