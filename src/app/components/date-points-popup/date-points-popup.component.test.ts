@@ -7,6 +7,11 @@ import { DatePointsPopupComponent } from './date-points-popup.component';
 import { Point } from 'src/app/interfaces';
 import { CheckEditablePointsPipe } from 'src/app/pipes/check-editable-points.pipe';
 
+const initialPoints: Point[] = [
+	{ id: '1', title: 'Point 1', dates: [], repeatable: false, greenwich: false, color: 'red', direction: 'forward' },
+	{ id: '2', title: 'Point 2', dates: [], repeatable: false, greenwich: false, color: 'red', direction: 'forward' },
+];
+
 describe('DatePointsPopupComponent', () => {
 	let component: DatePointsPopupComponent;
 	let fixture: ComponentFixture<DatePointsPopupComponent>;
@@ -15,10 +20,10 @@ describe('DatePointsPopupComponent', () => {
 	let mockPopupService: jest.Mocked<PopupService>;
 	let mockRouter: jest.Mocked<Router>;
 
-	beforeEach(() => {
+	beforeEach(async () => {
 		mockDataService = {
 			eventRemovePoint$: new Subject(),
-			eventFetchAllPoints$: new BehaviorSubject([]),
+			eventFetchAllPoints$: new BehaviorSubject(initialPoints),
 			removePoints: jest.fn(),
 			fetchAllPoints: jest.fn(),
 		} as unknown as jest.Mocked<DataService>;
@@ -39,7 +44,7 @@ describe('DatePointsPopupComponent', () => {
 			events: new Subject(),
 		} as unknown as jest.Mocked<Router>;
 
-		TestBed.configureTestingModule({
+		await TestBed.configureTestingModule({
 			declarations: [DatePointsPopupComponent, CheckEditablePointsPipe],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
@@ -52,56 +57,38 @@ describe('DatePointsPopupComponent', () => {
 		});
 
 		fixture = TestBed.createComponent(DatePointsPopupComponent);
-		component = new DatePointsPopupComponent(
-			mockDataService,
-			mockPopupService,
-			TestBed.inject(ChangeDetectorRef),
-			mockRouter,
-		);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
 	});
 
-	afterEach(() => {
-		component.ngOnDestroy();
-	});
+	// afterEach(() => {
+	// 	component.ngOnDestroy();
+	// });
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it.skip('should filter points list and close popup if empty on point removal event', () => {
-		const initialPoints: Point[] = [
-			{ id: '1', title: 'Point 1', dates: [], repeatable: false, greenwich: false, color: 'red', direction: 'forward' },
-			{ id: '2', title: 'Point 2', dates: [], repeatable: false, greenwich: false, color: 'red', direction: 'forward' },
-		];
+	it('should filter points list and close popup if empty on point removal event', () => {
 		const updatedPoints: Point[] = [
 			{ id: '1', title: 'Point 1', dates: [], repeatable: false, greenwich: false, color: 'red', direction: 'forward' },
 		];
-
-		component.pointsList = initialPoints;
-
 		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
 		jest.spyOn(cdr, 'detectChanges');
+		component.pointsList = initialPoints;
 
-		jest.spyOn(mockDataService, 'removePoints').mockImplementation(() => {
+		jest.spyOn(mockDataService, 'removePoints').mockImplementation(data => {
+			data?.id && (mockDataService.eventRemovePoint$ as Subject<string>).next(data.id);
 			(mockDataService.eventFetchAllPoints$ as Subject<Point[]>).next(updatedPoints);
 		});
 		mockDataService.removePoints({
-			list: ['1', '2'],
+			id: '2',
 		});
-		// fixture.detectChanges();
-		// cdr.detectChanges();
-
-		// jest.spyOn(mockDataService, 'fetchAllPoints').mockImplementation(() => {
-		// 	(mockDataService.eventFetchAllPoints$ as Subject<Point[]>).next(updatedPoints);
-		// });
-		// mockDataService.fetchAllPoints();
-
-		cdr.detectChanges();
 		fixture.detectChanges();
-		console.log('pointsList', component.pointsList);
+		cdr.detectChanges();
 
-		expect(component.pointsList.length).toBe(1);
-		expect(component.pointsList[0].id).toBe(1);
+		expect(+component.pointsList.length).toBe(1);
+		component.pointsList.length && expect(component.pointsList[0]?.id).toBe('1');
 		expect(cdr.detectChanges).toHaveBeenCalled();
 		expect(mockPopupService.close).not.toHaveBeenCalled();
 
