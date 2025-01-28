@@ -18,7 +18,7 @@ import { ru } from 'date-fns/locale';
 export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('pointsList') private pointsList!: ElementRef;
 	@ViewChild('datePointsList') private datePointsList!: ElementRef;
-	@ViewChild('searchInput') private searchInput!: InputComponent;
+	@ViewChild('searchInput', { static: false }) searchInput!: InputComponent;
 	@ViewChild('colorList') private colorList!: ElementRef;
 	@ViewChild('empty', { read: TemplateRef, static: true })
 	emptyRef!: TemplateRef<unknown>;
