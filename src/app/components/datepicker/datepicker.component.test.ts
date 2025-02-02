@@ -55,6 +55,7 @@ describe('DatepickerComponent', () => {
 	});
 
 	it('should format month correctly', () => {
+		component.visibleDate = new Date(2025, 0, 1);
 		expect(component.dateMonth).toBe('январь');
 	});
 
@@ -115,6 +116,7 @@ describe('DatepickerComponent', () => {
 		fixture = TestBed.createComponent(DatepickerComponent);
 		component = fixture.componentInstance;
 		component.ngOnInit();
+		component.date = new Date(2025, 0, 19);
 		component.visibleDateSelected();
 		fixture.detectChanges();
 		expect(component.dateYear).toBe('2025');
