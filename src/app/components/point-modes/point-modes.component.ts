@@ -31,7 +31,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 
 	@Output() pointModeChanged = new EventEmitter<PointMode[]>();
 	@Output() pointModeClosed = new EventEmitter<void>();
-	@ViewChild('filterRef') private filterRef!: InputComponent;
+	@ViewChild('filterRef') filterRef!: InputComponent;
 	@ViewChild('groupContainer', { read: ViewContainerRef })
 	groupContainer!: ViewContainerRef;
 	@ViewChild('groupTemplate', { read: TemplateRef })
@@ -51,11 +51,9 @@ export class PointModesComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.filterSubject
-				.pipe(debounceTime(400))
-				.subscribe(({ control, drop }) => {
-					this.applyFilter(control, drop);
-				})
+			this.filterSubject.pipe(debounceTime(400)).subscribe(({ control, drop }) => {
+				this.applyFilter(control, drop);
+			}),
 		);
 	}
 
@@ -107,8 +105,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 		return (
 			!this.filterEmojiValue ||
 			emoji.label.includes(this.filterEmojiValue) ||
-			(!!emoji.tags?.length &&
-				emoji.tags.some((item) => item.includes(this.filterEmojiValue)))
+			(!!emoji.tags?.length && emoji.tags.some(item => item.includes(this.filterEmojiValue)))
 		);
 	}
 
@@ -148,16 +145,13 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	applyFilter(control: string, drop: DropComponent) {
 		this.emojisCurrent = [];
 		this.groupContainer?.clear();
-		this.filterEmojiValue = this.filterRef.value
-			.toString()
-			.toLowerCase()
-			.trim();
+		this.filterEmojiValue = this.filterRef.value.toString().toLowerCase().trim();
 
 		requestAnimationFrame(() => {
-			this.emojis.forEach((group) => {
+			this.emojis.forEach(group => {
 				this.emojisCurrent.push({
 					title: group.title,
-					list: group.list.filter((emoji) => this.filterEmoji(emoji)),
+					list: group.list.filter(emoji => this.filterEmoji(emoji)),
 				});
 			});
 
@@ -167,14 +161,11 @@ export class PointModesComponent implements OnInit, OnDestroy {
 
 			const emojisInterval = interval(10).subscribe({
 				next: () => {
-					this.groupContainer?.createEmbeddedView(
-						this.groupTemplate,
-						{
-							group: this.emojisCurrent[index],
-							control: this.pointModesForm.controls[control],
-							drop,
-						}
-					);
+					this.groupContainer?.createEmbeddedView(this.groupTemplate, {
+						group: this.emojisCurrent[index],
+						control: this.pointModesForm.controls[control],
+						drop,
+					});
 					index = index + 1;
 					this.loading = false;
 					if (index === this.emojisCurrent.length) {
