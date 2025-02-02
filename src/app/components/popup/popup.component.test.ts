@@ -15,7 +15,6 @@ describe('PopupComponent', () => {
 	let component: PopupComponent;
 	let fixture: ComponentFixture<PopupComponent>;
 	let popupService: PopupService;
-	let cdr: ChangeDetectorRef;
 
 	beforeEach(async () => {
 		const popupServiceMock = {
@@ -32,7 +31,6 @@ describe('PopupComponent', () => {
 		fixture = TestBed.createComponent(PopupComponent);
 		component = fixture.componentInstance;
 		popupService = TestBed.inject(PopupService);
-		cdr = TestBed.inject(ChangeDetectorRef);
 		fixture.detectChanges();
 	});
 

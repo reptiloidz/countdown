@@ -2,18 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SwitcherComponent } from './switcher.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Component } from '@angular/core';
-
-@Component({
-	template: `<app-switcher [items]="items" [(ngModel)]="value"></app-switcher>`,
-})
-class TestHostComponent {
-	items = [
-		{ value: 'one', text: 'One' },
-		{ value: 'two', text: 'Two' },
-	];
-	value = 'one';
-}
 
 describe('SwitcherComponent', () => {
 	let component: SwitcherComponent;

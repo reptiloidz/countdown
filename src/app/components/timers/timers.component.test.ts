@@ -1,25 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimersComponent } from './timers.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component } from '@angular/core';
-
-@Component({ selector: 'app-board', template: '' })
-class MockBoardComponent {
-	value: any;
-	mode: any;
-	label: any;
-	delayValue: any;
-	delayRandomValue: any;
-}
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { BoardComponent } from '../board/board.component';
 
 describe('TimersComponent', () => {
 	let component: TimersComponent;
 	let fixture: ComponentFixture<TimersComponent>;
 
+	beforeAll(() => {
+		(window as any).IntersectionObserver = jest.fn(() => ({
+			observe: jest.fn(),
+			unobserve: jest.fn(),
+			disconnect: jest.fn(),
+		}));
+	});
+
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [TimersComponent, MockBoardComponent],
+			declarations: [TimersComponent, BoardComponent],
 			imports: [NoopAnimationsModule],
+			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 	});
 
