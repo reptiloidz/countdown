@@ -117,6 +117,7 @@ describe('CalendarComponent', () => {
 
 	it('should highlight dates with data points', () => {
 		let result = 0;
+		component.visibleDate = new Date(2025, 0, 15);
 		component.calendarArray.forEach(week => {
 			week.forEach(day => {
 				if (day && day.points.length > 0) {
