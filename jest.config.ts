@@ -25,7 +25,9 @@ const config: Config = {
 	// collectCoverageFrom: undefined,
 
 	// The directory where Jest should output its coverage files
-	collectCoverageFrom: ['src/app/components/**/*.{ts,html}', 'src/app/services/**/*.{ts}'],
+	collectCoverageFrom: [
+		'src/app/{components, personal/components, services, directives, guards, helpers, pipes }/**/*.{ts,html}',
+	],
 
 	// An array of regexp pattern strings used to skip coverage collection
 	// coveragePathIgnorePatterns: [
