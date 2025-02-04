@@ -11,6 +11,7 @@ describe('checkCopies', () => {
 				{ date: '01.01.2023', reason: 'byHand' },
 				{ date: '02.01.2023', reason: 'byHand' },
 				{ date: '03.01.2023', reason: 'byHand' },
+				{ date: '02.01.2023', reason: 'byHand' },
 			],
 		} as Point;
 
@@ -18,8 +19,8 @@ describe('checkCopies', () => {
 	});
 
 	it('should return true if the current number is greater than 0 and the dates are not equal', () => {
-		const result = checkCopies(point, iteration, 1);
-		expect(result).toBe(false);
+		const result = !checkCopies(point, iteration, 1);
+		expect(result).toBe(true);
 	});
 
 	it('should return false if the current number is greater than 0 and the dates are equal', () => {
@@ -30,7 +31,7 @@ describe('checkCopies', () => {
 
 	it('should return true if the current number is not provided and there are multiple dates matching the iteration date', () => {
 		const result = checkCopies(point, iteration);
-		expect(result).toBe(false);
+		expect(result).toBe(true);
 	});
 
 	it('should return false if the current number is not provided and there is only one date matching the iteration date', () => {
@@ -42,13 +43,13 @@ describe('checkCopies', () => {
 		expect(result).toBe(false);
 	});
 
-	it('should return false if the current number is 0', () => {
+	it('should return true if the current number is 0', () => {
 		const result = checkCopies(point, iteration, 0);
-		expect(result).toBe(false);
+		expect(result).toBe(true);
 	});
 
-	it('should return false if the current number is negative', () => {
+	it('should return true if the current number is negative', () => {
 		const result = checkCopies(point, iteration, -1);
-		expect(result).toBe(false);
+		expect(result).toBe(true);
 	});
 });

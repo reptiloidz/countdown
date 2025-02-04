@@ -9,9 +9,22 @@ describe('authGuard', () => {
 
 	beforeEach(() => {
 		const authServiceMock = {
-			isAuthenticated: false,
+			get token(): string | null {
+				if (localStorage.getItem('fb-token')) {
+					const expDate = new Date(localStorage.getItem('fb-token-exp') ?? '');
+					if (expDate > new Date()) {
+						return localStorage.getItem('fb-token');
+					} else {
+						return null;
+					}
+				} else {
+					return null;
+				}
+			},
+			get isAuthenticated() {
+				return !!this.token;
+			},
 			setToken: jest.fn(),
-			token: '',
 		};
 
 		const routerMock = {
@@ -37,12 +50,9 @@ describe('authGuard', () => {
 		expect(result).toBe(true);
 	});
 
-	it.skip('should return false and navigate to home if the user is authenticated', () => {
+	it('should return false and navigate to home if the user is authenticated', () => {
 		localStorage.setItem('fb-token', 'token');
 		localStorage.setItem('fb-token-exp', 'Tue Feb 11 2025 00:58:19 GMT+0500 (Екатеринбург, стандартное время)');
-		console.log(authService.token);
-		console.log(authService.isAuthenticated);
-		console.log(localStorage.getItem('fb-token'));
 
 		let result: boolean = true;
 		TestBed.runInInjectionContext(() => {
