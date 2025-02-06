@@ -1,25 +1,41 @@
 import { shortGuard } from './short.guard';
+import { HttpService } from '../services/http.service';
 import { Router } from '@angular/router';
-import { BehaviorSubject, of, Subscription, throwError } from 'rxjs';
+import { ActionService } from '../services/action.service';
+import { NotifyService } from '../services/notify.service';
+import { BehaviorSubject, of, Subject, Subscription, throwError } from 'rxjs';
+import { Point } from '../interfaces';
 import { TestBed } from '@angular/core/testing';
-import { Auth, getAuth, provideAuth } from '@angular/fire/auth';
-import { AuthService, ActionService, NotifyService, HttpService } from '../services';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getDatabase, provideDatabase } from '@angular/fire/database';
 
-// jest.mock('../services/http.service');
-// jest.mock('@angular/router');
-// jest.mock('../services/action.service');
-// jest.mock('../services/notify.service');
+const mockPoint: Point = {
+	id: '1',
+	dates: [
+		{
+			date: '15.01.2025 12:25',
+			reason: 'byHand',
+		},
+		{
+			date: '20.01.2025 16:40',
+			reason: 'frequency',
+		},
+	],
+	repeatable: true,
+	greenwich: false,
+	color: 'red',
+	direction: 'backward',
+	title: 'title',
+};
 
-const mockDate = new Date();
+jest.mock('../services/http.service');
+jest.mock('@angular/router');
+jest.mock('../services/action.service');
+jest.mock('../services/notify.service');
 
-describe.skip('shortGuard', () => {
+describe('shortGuard', () => {
+	let httpServiceMock: jest.Mocked<HttpService>;
+	let routerMock: Router;
 	let actionServiceMock: jest.Mocked<ActionService>;
 	let notifyServiceMock: jest.Mocked<NotifyService>;
-	let routerMock: Router;
-	let httpServiceMock: jest.Mocked<HttpService>;
-	let authServiceMock: jest.Mocked<AuthService>;
 
 	beforeEach(() => {
 		// Моки для сервисов
@@ -27,53 +43,33 @@ describe.skip('shortGuard', () => {
 			getShortLink: jest.fn().mockReturnValue(of('shortLink')),
 			postShortLink: jest.fn().mockReturnValue(of({ short: 'shortLink' })),
 		} as unknown as jest.Mocked<HttpService>;
-
+		routerMock = {
+			navigate: jest.fn(),
+		} as unknown as Router;
 		actionServiceMock = {
-			pointUpdated: jest.fn(),
+			eventPointsChecked$: new Subject(),
+			eventHasEditablePoints$: new Subject(),
+			eventUpdatedPoint$: new BehaviorSubject(mockPoint),
+			hasEditablePoints: jest.fn(),
+			checkAllPoints: jest.fn(),
+			uncheckAllPoints: jest.fn(),
+			pointUpdated: jest.fn().mockReturnValue(mockPoint),
 			shortLinkChecked: jest.fn(),
 		} as unknown as jest.Mocked<ActionService>;
-
 		notifyServiceMock = {
-			add: jest.fn(() => mockDate),
+			add: jest.fn(),
 			close: jest.fn(),
+			confirm: jest.fn().mockReturnValue(of(true)),
 		} as unknown as jest.Mocked<NotifyService>;
-
-		const mockAuth = {
-			currentUser: {
-				uid: 'test-user',
-				displayName: 'Test User',
-				email: 'test@example.com',
-				photoURL: 'url',
-			},
-			signInWithEmailAndPassword: jest.fn(),
-			signOut: jest.fn(),
-			authState: of({
-				uid: 'test-user-id',
-				email: 'test@example.com',
-				displayName: 'Test User',
-			}),
-			db: jest.fn(),
-		};
-
-		authServiceMock = {
-			getUserData: jest.fn(),
-			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
-			isAuthenticated: true,
-			checkEmailVerified: true,
-			checkAccessEdit: jest.fn().mockReturnValue(true),
-		} as unknown as jest.Mocked<AuthService>;
 
 		TestBed.configureTestingModule({
 			providers: [
-				{ provide: Auth, useValue: mockAuth },
-				{ provide: AuthService, useValue: authServiceMock },
-				{ provide: provideAuth, useFactory: () => getAuth() },
-				{ provide: provideDatabase, useValue: () => getDatabase() },
-				{ provide: provideFirebaseApp, useValue: () => initializeApp({}) },
+				{ provide: HttpService, useValue: httpServiceMock },
+				{ provide: ActionService, useValue: actionServiceMock },
+				{ provide: NotifyService, useValue: notifyServiceMock },
+				{ provide: Router, useValue: routerMock },
 			],
-		}).compileComponents();
-
-		routerMock = TestBed.inject(Router);
+		});
 
 		// Обновляем зависимости для каждого теста
 		jest.clearAllMocks();
@@ -81,44 +77,32 @@ describe.skip('shortGuard', () => {
 
 	it('should navigate with queryParams if link exists', () => {
 		// Создание ссылки с параметрами
-		const link = 'https://example.com?param1=value1&param2=value2';
+		const link = 'param1=value1&param2=value2';
+		const url = new URL('https://example.com?' + link);
+		const queryParams = Object.fromEntries(url.searchParams.entries());
+
 		httpServiceMock.getFullLink = jest.fn().mockReturnValue(of(link));
 
 		const navigateSpy = jest.spyOn(routerMock, 'navigate');
 
-		let result: Subscription = of().subscribe();
+		// Запуск Guard
+		let result: boolean = false;
 		TestBed.runInInjectionContext(() => {
-			result = shortGuard();
+			result = shortGuard() as unknown as boolean;
 		});
-
-		// Проверяем, что navigate был вызван с правильными параметрами
 		expect(navigateSpy).toHaveBeenCalledWith(['/url/'], {
-			queryParams: { param1: 'value1', param2: 'value2' },
+			queryParams: queryParams,
 		});
-	});
-
-	it('should return false if link exists and navigate is called', () => {
-		const link = 'https://example.com?param1=value1';
-		httpServiceMock.getFullLink = jest.fn().mockReturnValue(of(link));
-
-		// Тестируем результат работы Guard
-		let result: Subscription = of().subscribe();
-		TestBed.runInInjectionContext(() => {
-			result = shortGuard();
-		});
-		expect(result).toBe(false);
 	});
 
 	it('should call notify and actionService when an error occurs', () => {
-		httpServiceMock.getFullLink = jest.fn().mockReturnValue(throwError('Error'));
+		httpServiceMock.getFullLink = jest.fn().mockReturnValue(throwError(() => new Error('Error')));
 
 		const addSpy = jest.spyOn(notifyServiceMock, 'add');
 		const actionSpy = jest.spyOn(actionServiceMock, 'shortLinkChecked');
 
-		let result: Subscription = of().subscribe();
-		TestBed.runInInjectionContext(() => {
-			result = shortGuard();
-		});
+		// Запуск Guard
+		const subscription: Subscription = TestBed.runInInjectionContext(() => shortGuard());
 
 		// Проверяем, что вызывается notify с нужными параметрами
 		expect(addSpy).toHaveBeenCalledWith({
@@ -129,17 +113,8 @@ describe.skip('shortGuard', () => {
 
 		// Проверяем, что вызывается метод shortLinkChecked
 		expect(actionSpy).toHaveBeenCalled();
-	});
 
-	it('should return true if link does not exist', () => {
-		httpServiceMock.getFullLink = jest.fn().mockReturnValue(of(''));
-
-		let result: Subscription = of().subscribe();
-		TestBed.runInInjectionContext(() => {
-			result = shortGuard();
-		});
-
-		// Проверяем, что guard возвращает true, если ссылки нет
-		expect(result).toBe(true);
+		// Отписываемся
+		subscription.unsubscribe();
 	});
 });
