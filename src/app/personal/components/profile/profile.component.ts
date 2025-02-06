@@ -364,6 +364,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		return this._user.email === this.formEmail.controls['email'].value;
 	}
 
+	get user() {
+		return this._user;
+	}
+
+	get birthDatePointId() {
+		return this._birthDatePointId;
+	}
+
 	birthDatePicked(date: Date) {
 		this.birthDatePickerValue = date;
 	}
