@@ -103,13 +103,13 @@ describe('getPointFromUrl', () => {
 
 	it('should format the date correctly', () => {
 		(parseDate as jest.Mock).mockReturnValue(mockDate);
-		(format as jest.Mock).mockReturnValue('2023-12-31T00:00:00.000Z'); // format вместо formatDate
+		(format as jest.Mock).mockReturnValue(mockDateFormat);
 		const data = { date: '2023-12-31' };
 
 		const result = getPointFromUrl(data);
 
 		expect(format).toHaveBeenCalledWith(mockDate, Constants.fullDateFormat);
-		expect(result?.dates[0].date).toBe('2023-12-31T00:00:00.000Z');
+		expect(result?.dates[0].date).toBe(mockDateFormat);
 	});
 
 	it('should set the direction to forward if the date is in the past', () => {

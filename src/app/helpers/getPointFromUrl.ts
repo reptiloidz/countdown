@@ -1,12 +1,4 @@
-import {
-	addDays,
-	addHours,
-	addMinutes,
-	addMonths,
-	addWeeks,
-	addYears,
-	formatDate,
-} from 'date-fns';
+import { addDays, addHours, addMinutes, addMonths, addWeeks, addYears, format } from 'date-fns';
 import { Point } from '../interfaces';
 import { parseDate } from './parseDate';
 import { Constants } from '../enums';
@@ -43,10 +35,7 @@ export const getPointFromUrl = (data: any): Point | undefined => {
 		return undefined;
 	}
 
-	const fullDate = formatDate(
-		dateParsed,
-		data.date ? Constants.fullDateFormat : Constants.reallyFullDateFormat
-	);
+	const fullDate = format(dateParsed, data.date ? Constants.fullDateFormat : Constants.reallyFullDateFormat);
 
 	return {
 		color: data.color || 'gray',
@@ -54,14 +43,7 @@ export const getPointFromUrl = (data: any): Point | undefined => {
 		description: data.description || null,
 		dates: [
 			{
-				date:
-					fullDate ||
-					formatDate(
-						new Date(),
-						data.date
-							? Constants.fullDateFormat
-							: Constants.reallyFullDateFormat
-					),
+				date: fullDate || format(new Date(), data.date ? Constants.fullDateFormat : Constants.reallyFullDateFormat),
 				reason: 'byHand',
 			},
 		],
