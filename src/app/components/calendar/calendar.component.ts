@@ -486,7 +486,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	getAllowedPoints(item: any) {
-		// TODO: этот метод не используется?
+		// TODO: метод не используется?
 		// Фильтруем доступные события.
 		// Если выводить кнопку попапа, то уже для всех дат с событиями
 		return item.points?.filter((point: Point) => !point.public) || [];
