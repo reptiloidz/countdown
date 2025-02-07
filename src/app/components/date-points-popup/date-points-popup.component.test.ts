@@ -61,9 +61,9 @@ describe('DatePointsPopupComponent', () => {
 		fixture.detectChanges();
 	});
 
-	// afterEach(() => {
-	// 	component.ngOnDestroy();
-	// });
+	afterEach(() => {
+		component.ngOnDestroy();
+	});
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
