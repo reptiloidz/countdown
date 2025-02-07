@@ -3,10 +3,14 @@ import { ProfileComponent } from './profile.component';
 import { AuthService } from '../../../services';
 import { DataService } from '../../../services';
 import { NotifyService } from '../../../services';
-import { ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, of } from 'rxjs';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 import { DatepickerComponent } from 'src/app/components/datepicker/datepicker.component';
 import { Auth, User } from '@angular/fire/auth';
+import { Point } from 'src/app/interfaces';
+import { InputComponent } from 'src/app/components/input/input.component';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 const mockAuth = {
 	currentUser: {
@@ -18,7 +22,7 @@ const mockAuth = {
 	signOut: jest.fn(),
 };
 
-describe.skip('ProfileComponent', () => {
+describe('ProfileComponent', () => {
 	let component: ProfileComponent;
 	let fixture: ComponentFixture<ProfileComponent>;
 	let authServiceMock: any;
@@ -28,7 +32,11 @@ describe.skip('ProfileComponent', () => {
 	beforeEach(async () => {
 		authServiceMock = {
 			updateProfile: jest.fn(),
-			eventBirthDateAdded: jest.fn(),
+			eventBirthDateAdded$: new Subject<void>(),
+			eventEmailUpdated$: new Subject<string>(),
+			eventPasswordUpdated$: new Subject<boolean>(),
+			eventAccountDeleted$: new Subject<void>(),
+			eventVerifyEmailSent$: new Subject<void>(),
 			updateUserBirthDate: jest.fn(),
 			verifyEmail: jest.fn(),
 			updateEmail: jest.fn(),
@@ -39,6 +47,7 @@ describe.skip('ProfileComponent', () => {
 
 		dataServiceMock = {
 			addPoint: jest.fn(),
+			eventAddPoint$: new Subject<Point>(),
 		};
 
 		notifyServiceMock = {
@@ -46,14 +55,16 @@ describe.skip('ProfileComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [ProfileComponent, DatepickerComponent],
+			declarations: [ProfileComponent, DatepickerComponent, InputComponent],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: DataService, useValue: dataServiceMock },
 				{ provide: NotifyService, useValue: notifyServiceMock },
 				{ provide: Auth, useValue: mockAuth },
+				[provideNgxMask()],
 			],
-			imports: [ReactiveFormsModule],
+			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective],
+			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(ProfileComponent);

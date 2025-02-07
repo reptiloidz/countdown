@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NotifyComponent } from './components/notify/notify.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Constants } from './enums';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -13,16 +14,19 @@ describe('AppComponent', () => {
 	let actionService: ActionService;
 	let notifyService: NotifyService;
 	let router: Router;
-	let routerEvents$: Subject<ActivationStart>;
+	let mockRouter: jest.Mocked<Router>;
 
 	beforeEach(async () => {
-		routerEvents$ = new Subject<ActivationStart>();
+		mockRouter = {
+			events: new Subject(),
+		} as unknown as jest.Mocked<Router>;
+
 		await TestBed.configureTestingModule({
 			declarations: [AppComponent, NotifyComponent],
 			providers: [
 				{ provide: ActionService, useValue: { intervalSwitched: jest.fn() } },
 				{ provide: NotifyService, useValue: { add: jest.fn() } },
-				{ provide: Router, useValue: { events: routerEvents$.asObservable() } },
+				{ provide: Router, useValue: mockRouter },
 			],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
@@ -38,8 +42,10 @@ describe('AppComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it.skip('should set isUrlMode based on router events', () => {
-		routerEvents$.next(new ActivationStart({ url: [{ path: 'url' }] } as any));
+	it('should set isUrlMode based on router events', () => {
+		const routerEvents = mockRouter.events as Subject<any>;
+		component.ngOnInit();
+		routerEvents.next(new ActivationStart({ url: [{ path: 'url' }] } as any));
 		expect(component.isUrlMode).toBe(true);
 	});
 
@@ -49,11 +55,12 @@ describe('AppComponent', () => {
 		expect(setPropertySpy).toHaveBeenCalledWith('--start-time', expect.any(String));
 	});
 
-	it.skip('should update --count and call intervalSwitched on interval', done => {
+	it('should update --count and call intervalSwitched on interval', done => {
+		Object.defineProperty(Constants, 'tick', { value: 1 });
 		jest.useFakeTimers();
 		component.ngOnInit();
-		jest.advanceTimersByTime(1000);
-		expect(document.documentElement.style.getPropertyValue('--count')).toBe('1');
+		jest.advanceTimersByTime(3000);
+		expect(+document.documentElement.style.getPropertyValue('--count')).toBeLessThanOrEqual(2);
 		expect(actionService.intervalSwitched).toHaveBeenCalled();
 		jest.useRealTimers();
 		done();

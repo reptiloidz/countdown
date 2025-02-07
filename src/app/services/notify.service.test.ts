@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { NotifyService } from './notify.service';
 import { Notification } from '../interfaces';
-import { Observable } from 'rxjs';
+import { take } from 'rxjs';
 
 describe('NotifyService', () => {
 	let service: NotifyService;
@@ -15,53 +15,59 @@ describe('NotifyService', () => {
 		expect(service).toBeTruthy();
 	});
 
-	describe('confirm', () => {
-		it.skip('should add a confirm notification and return an observable', done => {
-			const notification: Omit<Notification<boolean>, 'date'> = {
-				title: 'Confirm Title',
-				text: 'Confirm Text',
-				confirm: true,
-			};
+	it('should add a notification', () => {
+		const notification: Omit<Notification<boolean>, 'date'> = {
+			title: 'Test',
+			text: 'This is a test notification',
+		};
 
-			const confirmObservable: Observable<boolean> = service.confirm(notification);
+		const date = service.add(notification);
+		expect(service.notifications.length).toBe(1);
+		expect(service.notifications[0].title).toBe('Test');
+	});
 
-			expect(confirmObservable).toBeTruthy();
+	it('should remove a notification on close', () => {
+		const notification: Omit<Notification<boolean>, 'date'> = {
+			title: 'Test',
+			text: 'This is a test notification',
+		};
 
-			confirmObservable.subscribe(result => {
-				expect(result).toBe(true);
+		const date = service.add(notification);
+		service.close(date);
+		expect(service.notifications.length).toBe(0);
+	});
+
+	it('should handle prompt notifications', done => {
+		const notification: Omit<Notification<boolean>, 'date'> = {
+			title: 'Prompt',
+			text: 'Enter value',
+		};
+
+		service
+			.prompt(notification)
+			.pipe(take(1))
+			.subscribe(value => {
+				expect(value).toBe('Test input');
 				done();
 			});
 
-			// Simulate the DOM element for the confirm button
-			const confirmButton = document.createElement('button');
-			confirmButton.classList.add('notify-list__submit');
-			document.documentElement.appendChild(confirmButton);
+		service['_promptSubject']?.next('Test input'); // Симуляция ввода
+	});
 
-			// Simulate the requestAnimationFrame callback
-			requestAnimationFrame(() => {
-				confirmButton.focus();
-				service['_confirmSubject'].next(true);
+	it('should handle confirm notifications', done => {
+		const notification: Omit<Notification<boolean>, 'date'> = {
+			title: 'Confirm',
+			text: 'Are you sure?',
+		};
+
+		service
+			.confirm(notification)
+			.pipe(take(1))
+			.subscribe(value => {
+				expect(value).toBe(true);
+				done();
 			});
-		});
 
-		it('should focus the confirm button', () => {
-			const notification: Omit<Notification<boolean>, 'date'> = {
-				title: 'Confirm Title',
-				text: 'Confirm Text',
-				confirm: true,
-			};
-
-			service.confirm(notification);
-
-			// Simulate the DOM element for the confirm button
-			const confirmButton = document.createElement('button');
-			confirmButton.classList.add('notify-list__submit');
-			document.documentElement.appendChild(confirmButton);
-
-			// Simulate the requestAnimationFrame callback
-			requestAnimationFrame(() => {
-				expect(document.activeElement).toBe(confirmButton);
-			});
-		});
+		service.submit(service.notifications[0].date);
 	});
 });

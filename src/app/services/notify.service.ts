@@ -24,47 +24,35 @@ export class NotifyService {
 	}
 
 	get notificationsOpened(): boolean {
-		return !!document.documentElement.querySelectorAll(
-			'.notify-list__item-wrapper'
-		).length;
+		return !!document.documentElement.querySelectorAll('.notify-list__item-wrapper').length;
 	}
 
 	update(newList: Notification[]) {
 		this._notificationsSubject.next(newList);
 	}
 
-	prompt<T extends boolean>(
-		notification: Omit<Notification<T>, 'date'>
-	): Observable<string> {
+	prompt<T extends boolean>(notification: Omit<Notification<T>, 'date'>): Observable<string> {
 		notification.prompt = true;
 		const newNotificationDate = this.add(notification);
 
 		this._promptSubject = new Subject<string>();
-		this.promptObservable$ = this._promptSubject
-			.asObservable()
-			.pipe(take(1));
+		this.promptObservable$ = this._promptSubject.asObservable().pipe(take(1));
 		requestAnimationFrame(() => {
-			this.promptInput = document.documentElement.querySelector(
-				`#n-${+newNotificationDate} input`
-			) as HTMLInputElement;
+			this.promptInput = document.documentElement.querySelector(`#n-${+newNotificationDate} input`) as HTMLInputElement;
 			this.promptInput.focus();
 		});
 		return this.promptObservable$;
 	}
 
-	confirm<T extends boolean>(
-		notification: Omit<Notification<T>, 'date'>
-	): Observable<boolean> {
+	confirm<T extends boolean>(notification: Omit<Notification<T>, 'date'>): Observable<boolean> {
 		notification.confirm = true;
 		const newNotificationDate = this.add(notification);
 
 		this._confirmSubject = new Subject<boolean>();
-		this.confirmObservable$ = this._confirmSubject
-			.asObservable()
-			.pipe(take(1));
+		this.confirmObservable$ = this._confirmSubject.asObservable().pipe(take(1));
 		requestAnimationFrame(() => {
 			this.confirmButton = document.documentElement.querySelector(
-				`#n-${+newNotificationDate} .notify-list__submit`
+				`#n-${+newNotificationDate} .notify-list__submit`,
 			) as HTMLButtonElement;
 			this.confirmButton.focus();
 		});
@@ -86,22 +74,13 @@ export class NotifyService {
 			type: notification.type,
 		};
 
-		this._notificationsSubject.next([
-			...this.notifications,
-			newNotification,
-		]);
+		this._notificationsSubject.next([...this.notifications, newNotification]);
 
 		const newSubscription =
 			(notification.autoremove || notification.short) &&
-			timer(
-				notification.short ? this._timerShort : this._timer
-			).subscribe({
+			timer(notification.short ? this._timerShort : this._timer).subscribe({
 				next: () => {
-					this.update(
-						this.notifications.filter(
-							(i) => i.date !== newNotification.date
-						)
-					);
+					this.update(this.notifications.filter(i => i.date !== newNotification.date));
 					newSubscription && newSubscription.unsubscribe();
 				},
 			});
@@ -111,36 +90,29 @@ export class NotifyService {
 
 	unsubscribe(date?: Date) {
 		if (date) {
-			this.notifications.some(
-				(item) => item.prompt && date === item.date
-			) && this._promptSubject?.unsubscribe();
-			this.notifications.some(
-				(item) => item.confirm && date === item.date
-			) && this._confirmSubject?.unsubscribe();
+			this.notifications.some(item => item.prompt && date === item.date) && this._promptSubject?.unsubscribe();
+			this.notifications.some(item => item.confirm && date === item.date) && this._confirmSubject?.unsubscribe();
 		} else {
-			this.notifications.some((item) => item.prompt) &&
-				this._promptSubject?.unsubscribe();
-			this.notifications.some((item) => item.confirm) &&
-				this._confirmSubject?.unsubscribe();
+			this.notifications.some(item => item.prompt) && this._promptSubject?.unsubscribe();
+			this.notifications.some(item => item.confirm) && this._confirmSubject?.unsubscribe();
 		}
 		this.promptInput = undefined;
 	}
 
 	close(date: Date) {
-		this.update(this.notifications.filter((i) => i.date !== date));
+		this.update(this.notifications.filter(i => i.date !== date));
 		this.unsubscribe(date);
 	}
 
 	closeModals() {
-		this.update(this.notifications.filter((i) => !i.confirm && !i.prompt));
+		this.update(this.notifications.filter(i => !i.confirm && !i.prompt));
 		this.unsubscribe();
 	}
 
 	submit(date: Date) {
 		if (this.promptInput) {
-			this.promptInput.value &&
-				this._promptSubject.next(this.promptInput.value);
-		} else {
+			this.promptInput.value && this._promptSubject.next(this.promptInput.value);
+		} else if (this._confirmSubject) {
 			this._confirmSubject.next(true);
 		}
 		this.close(date);
