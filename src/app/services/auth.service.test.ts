@@ -123,4 +123,6 @@ describe('AuthService', () => {
 
 		expect(service.verifyEmail).toHaveBeenCalled();
 	});
+
+	// TODO: добавить тестов для покрытия
 });

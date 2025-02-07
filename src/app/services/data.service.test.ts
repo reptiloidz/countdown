@@ -124,4 +124,6 @@ describe('DataService', () => {
 
 		expect(service.editPoint).toHaveBeenCalled();
 	});
+
+	// TODO: добавить тестов для покрытия
 });
