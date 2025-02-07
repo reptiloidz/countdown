@@ -30,7 +30,7 @@ import {
 } from 'rxjs';
 import { Point, Iteration, UserExtraData, SwitcherItem, SelectArray, PointMode, GroupEmoji } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
-import { addMonths, addYears, format, getYear, setYear } from 'date-fns';
+import { addMonths, addYears, format, getYear, intervalToDuration, setYear, subMinutes } from 'date-fns';
 import { getInvertedObject, getPointDate, isDateValid, parseDate, setIterationsMode, sortDates } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
 import { CalendarMode, DifferenceMode, EditPointEvent, PointColorTypes } from 'src/app/types';
@@ -507,9 +507,16 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 			case 'weeks':
 				return Math.round(this.difference / (60 * 24 * 7));
 			case 'months':
-				return Math.round(this.difference / (60 * 24 * 30));
+				const resInterval = intervalToDuration({
+					start: subMinutes(new Date(), this.difference),
+					end: new Date(),
+				});
+				return (resInterval.years ? resInterval.years * 12 : 0) + (resInterval.months || 0);
 			case 'years':
-				return Math.round(this.difference / (60 * 24 * 30 * 12));
+				return intervalToDuration({
+					start: subMinutes(new Date(), this.difference),
+					end: new Date(),
+				}).years;
 			default:
 				return this.difference;
 		}
@@ -629,6 +636,16 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 			default:
 				diffMs = diff * Constants.msInMinute;
 				break;
+		}
+
+		if (targetDate && !isDateValid(targetDate)) {
+			targetDate = this.pointDate;
+			if (diff < 0) {
+				targetDate = setYear(targetDate, 1);
+			} else if (diff > 9999) {
+				targetDate = setYear(targetDate, 9999);
+			}
+			this.dateChanged(targetDate);
 		}
 
 		if (getYear(targetDate) < 1) {
