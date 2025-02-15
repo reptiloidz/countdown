@@ -64,7 +64,7 @@ describe('unauthGuard', () => {
 
 	it('должен вернуть true, если пользователь аутентифицирован', () => {
 		localStorage.setItem('fb-token', 'token');
-		localStorage.setItem('fb-token-exp', 'Tue Feb 11 2025 00:58:19 GMT+0500 (Екатеринбург, стандартное время)');
+		localStorage.setItem('fb-token-exp', 'Tue Feb 11 2125 00:58:19 GMT+0500 (Екатеринбург, стандартное время)');
 		let result: boolean = true;
 		TestBed.runInInjectionContext(() => {
 			result = unauthGuard();
