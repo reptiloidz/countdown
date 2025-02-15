@@ -510,12 +510,14 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 					start: subMinutes(new Date(), this.difference),
 					end: new Date(),
 				});
-				return (resInterval.years ? resInterval.years * 12 : 0) + (resInterval.months || 0);
+				return (resInterval.years ? resInterval.years * 12 : 0) + (resInterval.months || 0) || 0;
 			case 'years':
-				return intervalToDuration({
-					start: subMinutes(new Date(), this.difference),
-					end: new Date(),
-				}).years;
+				return (
+					intervalToDuration({
+						start: subMinutes(new Date(), this.difference),
+						end: new Date(),
+					}).years || 0
+				);
 			default:
 				return this.difference;
 		}
