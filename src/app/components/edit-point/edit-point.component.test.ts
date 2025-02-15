@@ -180,6 +180,30 @@ describe('EditPointComponent', () => {
 		expect(component.form.controls['title'].value).toBe('Updated Title'); // Updated test assertion
 	});
 
+	it('should dateChanged be called when diff too negative', () => {
+		const setDateChangedSpy = jest.spyOn(component, 'dateChanged');
+		component.differenceMode = 'years';
+		component.differenceChanged(-5000);
+
+		expect(setDateChangedSpy).toHaveBeenCalled();
+	});
+
+	it('should dateChanged be called when diff too positive', () => {
+		const setDateChangedSpy = jest.spyOn(component, 'dateChanged');
+		component.differenceMode = 'years';
+		component.differenceChanged(50000);
+
+		expect(setDateChangedSpy).toHaveBeenCalled();
+	});
+
+	it('should not dateChanged be called when diff too positive', () => {
+		const setDateChangedSpy = jest.spyOn(component, 'dateChanged');
+		component.differenceMode = 'years';
+		component.differenceChanged(2000);
+
+		expect(setDateChangedSpy).not.toHaveBeenCalled();
+	});
+
 	afterEach(() => {
 		fixture.destroy();
 	});
