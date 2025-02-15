@@ -120,30 +120,38 @@ describe('EditPointComponent', () => {
 	});
 
 	it('should scroll to iterationsForm element when addIterationHandler is called', () => {
-		component.ngAfterViewInit();
-		component.iterationForm.nativeElement.scrollIntoView = jest.fn();
-		fixture.detectChanges();
+		// fixture.whenStable используется, чтобы component.iterationForm не был undefined
+		// (иначе нужно указывать static: true, что ломает компонент)
+		fixture.whenStable().then(() => {
+			component.ngAfterViewInit();
 
-		const scrollIntoViewSpy = jest.spyOn(component.iterationForm.nativeElement, 'scrollIntoView');
-		component.addIterationHandler();
-		expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth' });
+			component.iterationForm.nativeElement.scrollIntoView = jest.fn();
+
+			const scrollIntoViewSpy = jest.spyOn(component.iterationForm.nativeElement, 'scrollIntoView');
+
+			component.addIterationHandler();
+
+			expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth' });
+		});
 	});
 
 	it('should set isIterationAdded to true when addIterationHandler is called', () => {
-		component.ngAfterViewInit();
-		component.iterationForm.nativeElement.scrollIntoView = jest.fn();
-		fixture.detectChanges();
-		component.addIterationHandler();
-		expect(component.isIterationAdded).toBe(true);
+		fixture.whenStable().then(() => {
+			component.ngAfterViewInit();
+			component.iterationForm.nativeElement.scrollIntoView = jest.fn();
+			component.addIterationHandler();
+			expect(component.isIterationAdded).toBe(true);
+		});
 	});
 
 	it('should call setValues with isReset: true when addIterationHandler is called', () => {
-		component.ngAfterViewInit();
-		component.iterationForm.nativeElement.scrollIntoView = jest.fn();
-		fixture.detectChanges();
-		const setValuesSpy = jest.spyOn(component, 'setValues');
-		component.addIterationHandler();
-		expect(setValuesSpy).toHaveBeenCalledWith({ isReset: true });
+		fixture.whenStable().then(() => {
+			component.ngAfterViewInit();
+			component.iterationForm.nativeElement.scrollIntoView = jest.fn();
+			const setValuesSpy = jest.spyOn(component, 'setValues');
+			component.addIterationHandler();
+			expect(setValuesSpy).toHaveBeenCalledWith({ isReset: true });
+		});
 	});
 
 	it('should initialize form with default values', () => {

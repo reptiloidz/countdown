@@ -60,8 +60,7 @@ enum EditPointSuccessMessage {
 	changeDetection: ChangeDetectionStrategy.Default,
 })
 export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
-	@ViewChild('iterationsList', { static: true }) iterationsList!: ElementRef;
-	@ViewChild('iterationForm', { static: true }) iterationForm!: ElementRef;
+	@ViewChild('iterationForm') iterationForm!: ElementRef;
 	@ViewChild('colorDrop') private colorDrop!: DropComponent;
 	@ViewChild('modesDrop') private modesDrop!: DropComponent;
 	@ViewChild('datePanel') datePanel!: DatePanelComponent;
