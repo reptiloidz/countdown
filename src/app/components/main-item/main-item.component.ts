@@ -10,13 +10,8 @@ import {
 	TemplateRef,
 } from '@angular/core';
 import { Subscription, first } from 'rxjs';
-import { Point, UserExtraData } from 'src/app/interfaces';
-import {
-	ActionService,
-	AuthService,
-	DataService,
-	NotifyService,
-} from 'src/app/services';
+import { Point, PointMode, UserExtraData } from 'src/app/interfaces';
+import { ActionService, AuthService, DataService, NotifyService } from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { getClosestIteration } from 'src/app/helpers';
 import { formatDistanceToNow, intervalToDuration } from 'date-fns';
@@ -28,9 +23,7 @@ import { ru } from 'date-fns/locale';
 })
 export class MainItemComponent implements OnInit, OnDestroy {
 	@ViewChild('pointCheckbox') private pointCheckbox!: CheckboxComponent;
-	@ContentChild('checkboxTemplate') checkboxTemplate:
-		| TemplateRef<unknown>
-		| undefined;
+	@ContentChild('checkboxTemplate') checkboxTemplate: TemplateRef<unknown> | undefined;
 
 	private subscriptions = new Subscription();
 	@Input() point!: Point;
@@ -49,28 +42,29 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	timerMins!: number | string;
 	timerSecs!: number | string;
 
+	_closestIterationDate: Date | undefined;
+	_closestIterationModeSet = false;
+	_closestIterationMode: PointMode | undefined;
+
 	constructor(
 		private data: DataService,
 		private auth: AuthService,
 		private action: ActionService,
-		private notify: NotifyService
+		private notify: NotifyService,
 	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.data.eventStartRemovePoint$.subscribe({
-				next: (id) => {
+				next: id => {
 					if (this.point.id === id) {
 						this.loading = true;
 					}
 				},
-				error: (err) => {
-					console.error(
-						'Ошибка при удалении события:\n',
-						err.message
-					);
+				error: err => {
+					console.error('Ошибка при удалении события:\n', err.message);
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -78,17 +72,15 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.loading = this.data.loading = false;
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
 			this.action.eventPointsCheckedAll$.subscribe({
-				next: (check) => {
-					this.pointCheckbox &&
-						!this.pointCheckbox.isDisabled &&
-						(this.pointCheckbox.isChecked = check);
+				next: check => {
+					this.pointCheckbox && !this.pointCheckbox.isDisabled && (this.pointCheckbox.isChecked = check);
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -96,13 +88,10 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.setTimer();
 				},
-				error: (err) => {
-					console.error(
-						'Ошибка при обновлении таймеров:\n',
-						err.message
-					);
+				error: err => {
+					console.error('Ошибка при обновлении таймеров:\n', err.message);
 				},
-			})
+			}),
 		);
 	}
 
@@ -115,11 +104,16 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	get closestIteration() {
-		return getClosestIteration(this.point).date;
+		!this._closestIterationDate && (this._closestIterationDate = getClosestIteration(this.point).date);
+		return this._closestIterationDate;
 	}
 
 	get closestIterationMode() {
-		return getClosestIteration(this.point).mode;
+		if (!this._closestIterationModeSet) {
+			this._closestIterationMode = getClosestIteration(this.point).mode || undefined;
+			this._closestIterationModeSet = true;
+		}
+		return this._closestIterationMode;
 	}
 
 	get closestIterationRemain() {
@@ -132,8 +126,8 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			(this.isDirectionCorrect
 				? ''
 				: this.point.direction === 'forward'
-				? '. Прямой отсчёт, но событие ещё не наступило'
-				: '. Обратный отсчёт, но событие уже в прошлом')
+					? '. Прямой отсчёт, но событие ещё не наступило'
+					: '. Обратный отсчёт, но событие уже в прошлом')
 		);
 	}
 
@@ -148,22 +142,14 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		const currentDate = new Date();
 
 		return (
-			(this.closestIteration < currentDate &&
-				this.point.direction === 'forward') ||
-			(this.closestIteration > currentDate &&
-				this.point.direction === 'backward')
+			(this.closestIteration < currentDate && this.point.direction === 'forward') ||
+			(this.closestIteration > currentDate && this.point.direction === 'backward')
 		);
 	}
 
 	get directionTitle() {
-		return `${
-			this.point.direction === 'forward'
-				? 'Прямой отсчёт'
-				: 'Обратный отсчёт'
-		}${
-			this.isDirectionCorrect
-				? ''
-				: '. Но есть нюанс. Подробнее в описании'
+		return `${this.point.direction === 'forward' ? 'Прямой отсчёт' : 'Обратный отсчёт'}${
+			this.isDirectionCorrect ? '' : '. Но есть нюанс. Подробнее в описании'
 		}`;
 	}
 
@@ -172,27 +158,17 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	setTimer() {
+		this._closestIterationDate = undefined;
+		this._closestIterationModeSet = false;
 		const currentInterval = this.interval;
 
-		this.timerHours = this.zeroPad(
-			(currentInterval.hours && Math.abs(currentInterval.hours)) || 0
-		);
-		this.timerMins = this.zeroPad(
-			(currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0
-		);
-		this.timerSecs = this.zeroPad(
-			(currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0
-		);
+		this.timerHours = this.zeroPad((currentInterval.hours && Math.abs(currentInterval.hours)) || 0);
+		this.timerMins = this.zeroPad((currentInterval.minutes && Math.abs(currentInterval.minutes)) || 0);
+		this.timerSecs = this.zeroPad((currentInterval.seconds && Math.abs(currentInterval.seconds)) || 0);
 
-		this.timerYears = currentInterval.years
-			? this.zeroPad(Math.abs(currentInterval.years))
-			: undefined;
-		this.timerMonths = currentInterval.months
-			? this.zeroPad(Math.abs(currentInterval.months))
-			: undefined;
-		this.timerDays = currentInterval.days
-			? this.zeroPad(Math.abs(currentInterval.days))
-			: undefined;
+		this.timerYears = currentInterval.years ? this.zeroPad(Math.abs(currentInterval.years)) : undefined;
+		this.timerMonths = currentInterval.months ? this.zeroPad(Math.abs(currentInterval.months)) : undefined;
+		this.timerDays = currentInterval.days ? this.zeroPad(Math.abs(currentInterval.days)) : undefined;
 	}
 
 	delete(id: string | undefined) {
@@ -213,11 +189,8 @@ export class MainItemComponent implements OnInit, OnDestroy {
 					next: (userData: UserExtraData) => {
 						this.point.userInfo = userData;
 					},
-					error: (err) => {
-						console.error(
-							'Ошибка при получении информации о пользователе:\n',
-							err.message
-						);
+					error: err => {
+						console.error('Ошибка при получении информации о пользователе:\n', err.message);
 					},
 					complete: () => {
 						this.authorLoading = false;

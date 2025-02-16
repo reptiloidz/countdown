@@ -53,6 +53,8 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerPercent = 0;
 	pausedTime: Date | undefined;
 
+	_closestIterationDate: Date | undefined;
+
 	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
 
@@ -216,13 +218,21 @@ export class PointComponent implements OnInit, OnDestroy {
 		return format(this.pointDate, Constants.timeFormat);
 	}
 
+	get closestIteration() {
+		!this._closestIterationDate &&
+			this.point &&
+			(this._closestIterationDate = getClosestIteration(this.point, 'isDirectionCorrect').date);
+		return this._closestIterationDate;
+	}
+
 	get isDirectionCorrect() {
 		const currentDate = new Date();
 
 		return (
 			this.point &&
-			((getClosestIteration(this.point).date < currentDate && this.point?.direction === 'forward') ||
-				(getClosestIteration(this.point).date > currentDate && this.point?.direction === 'backward'))
+			this.closestIteration &&
+			((this.closestIteration < currentDate && this.point?.direction === 'forward') ||
+				(this.closestIteration > currentDate && this.point?.direction === 'backward'))
 		);
 	}
 
@@ -253,6 +263,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	setAllTimers(switchCalendarDate = false) {
+		this._closestIterationDate = undefined;
 		if (this.dates?.[this.currentIterationIndex] || this.urlModeValue) {
 			this.pointDate = getPointDate({
 				pointDate: parseDate(this.dates?.[this.currentIterationIndex || 0].date, this.timerMode, this.timerMode),
