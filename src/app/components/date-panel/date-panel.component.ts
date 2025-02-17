@@ -29,6 +29,7 @@ import { formatDate } from 'date-fns';
 import { Constants } from 'src/app/enums';
 import { Subscription, combineLatestWith, distinctUntilChanged, filter, fromEvent, tap, throttle, timer } from 'rxjs';
 import { animate, query, style, transition, trigger } from '@angular/animations';
+import { CdkVirtualScrollable } from '@angular/cdk/scrolling';
 
 @Component({
 	selector: 'app-date-panel',
@@ -83,6 +84,7 @@ import { animate, query, style, transition, trigger } from '@angular/animations'
 })
 export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('iterationsTabs') iterationsTabs!: ElementRef;
+	@ViewChild('virtualScrollViewport') virtualScrollViewport!: CdkVirtualScrollable;
 	@ViewChild('iterationsList') iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 
@@ -345,20 +347,24 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	scrollList(position = 999999) {
-		this.iterationsTabs?.nativeElement.scroll({
+		this.virtualScrollViewport['elementRef']?.nativeElement.scroll({
 			left: position,
 			behavior: 'smooth',
 		});
 	}
 
 	scrollHome() {
-		(this.iterationsTabs?.nativeElement as HTMLElement)?.querySelector('.tabs__item--active input')?.scrollIntoView({
-			block: 'nearest',
-			behavior: 'smooth',
-		});
+		(this.virtualScrollViewport['elementRef']?.nativeElement as HTMLElement)
+			?.querySelector('.tabs__item--active input')
+			?.scrollIntoView({
+				block: 'nearest',
+				behavior: 'smooth',
+			});
 	}
 
 	onIterationsScroll(event: WheelEvent) {
+		return;
+		// TODO: убрать или починить
 		event.preventDefault();
 	}
 

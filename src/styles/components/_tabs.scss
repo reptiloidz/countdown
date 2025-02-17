@@ -6,6 +6,7 @@
 	--tabs-item-pseudo-bg-size: 20px;
 	--tabs-pb: 20px;
 
+	width: 100%;
 	padding: 0 20px;
 	overflow: auto hidden;
 	transition: padding 0.2s 0.1s;
@@ -224,6 +225,19 @@
 		background-color: rgb(var(--c-bg-inverse));
 		color: initial;
 		font-weight: 400;
+	}
+
+	&__virtual-scroll {
+		display: flex;
+		height: 100%;
+
+		.cdk-virtual-scroll-content-wrapper {
+			position: static;
+		}
+
+		&.cdk-virtual-scrollable {
+			contain: content;
+		}
 	}
 
 	&--expanded {
