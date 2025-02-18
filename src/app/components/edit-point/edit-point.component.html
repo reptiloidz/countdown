@@ -39,6 +39,9 @@
 				icon="chevron-left"
 				title="Вернуться к событию"
 				class="form__button-mobile"
+				[ngClass]="{
+					'form__button-mobile--hidden': isCreation
+				}"
 			></a>
 			{{ pageTitle }}
 		</h3>

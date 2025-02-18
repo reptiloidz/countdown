@@ -22,7 +22,10 @@ export class NoPageComponent implements OnInit, OnDestroy {
 				error: () => {
 					this.loading = false;
 				},
-			})
+				complete: () => {
+					this.loading = false;
+				},
+			}),
 		);
 	}
 

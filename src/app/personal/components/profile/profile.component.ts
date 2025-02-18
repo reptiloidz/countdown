@@ -151,6 +151,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this.profileLoading = false;
 						this.emailLoading = false;
 					},
+					complete: () => {
+						this.profileLoading = false;
+						this.emailLoading = false;
+					},
 				}),
 		);
 
@@ -188,6 +192,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				error: () => {
 					this.emailLoading = false;
 				},
+				complete: () => {
+					this.emailLoading = false;
+				},
 			}),
 		);
 
@@ -208,6 +215,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					}
 				},
 				error: () => {
+					this.passwordLoading = false;
+				},
+				complete: () => {
 					this.passwordLoading = false;
 				},
 			}),
@@ -256,6 +266,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this.userpicLoading = false;
 					},
 					error: () => {
+						this.userpicLoading = false;
+					},
+					complete: () => {
 						this.userpicLoading = false;
 					},
 				}),
@@ -448,6 +461,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.auth.removeAccount(this._user, this._birthDatePointId);
 				},
 				error: () => {
+					this.removeLoading = false;
+				},
+				complete: () => {
 					this.removeLoading = false;
 				},
 			});

@@ -100,6 +100,7 @@
 			></a>
 			<div
 				app-tooltip
+				[disabled]="isSm"
 				vertical="top"
 				[text]="point.repeatable ? 'Добавить итерацию с текущим моментом' : 'Поменять время на текущее'"
 			>

@@ -1,4 +1,7 @@
 .notify-list {
+	@include media-breakpoint-down(sm) {
+		justify-content: flex-end;
+	}
 	--notify-list-title-cl: rgb(var(--c-text-primary));
 	--notify-list-bg-cl: rgb(var(--c-bg-neutral));
 	--notify-list-text-bg-cl: rgb(var(--c-bg-inverse));

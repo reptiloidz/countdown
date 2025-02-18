@@ -38,6 +38,10 @@
 		overflow: hidden;
 
 		&--form {
+			@include media-breakpoint-down(md) {
+				display: none;
+			}
+
 			position: relative;
 			top: 0;
 			overflow: hidden;

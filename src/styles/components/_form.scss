@@ -104,6 +104,10 @@
 		@include media-breakpoint-up(lg) {
 			display: none;
 		}
+
+		&--hidden {
+			display: none;
+		}
 	}
 
 	&--single {
