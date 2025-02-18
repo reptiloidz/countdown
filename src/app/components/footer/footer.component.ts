@@ -221,7 +221,11 @@ export class FooterComponent implements OnInit, OnDestroy {
 		if (this.deviceService.isMobile() && !!navigator.canShare) {
 			navigator
 				.share({
-					title: window.location.origin + '/' + link,
+					title: this.point?.title || '',
+					url: window.location.origin + '/' + link,
+				})
+				.then(() => {
+					this.shareLinkLoading = false;
 				})
 				.catch(e => {
 					this.notify.add({
@@ -231,6 +235,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 						view: 'negative',
 					});
 					console.error('Ошибка:' + e);
+					this.shareLinkLoading = false;
 				});
 		} else {
 			navigator.clipboard
