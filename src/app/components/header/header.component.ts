@@ -1,15 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
-import {
-	ActivatedRoute,
-	ActivationStart,
-	Event,
-	Params,
-	Router,
-} from '@angular/router';
+import { ActivatedRoute, ActivationStart, Event, Params, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
+import { SwitcherItem } from 'src/app/interfaces';
 
 @Component({
 	selector: '[app-header]',
@@ -20,7 +15,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private popupService: PopupService
+		private popupService: PopupService,
 	) {}
 
 	private subscriptions = new Subscription();
@@ -31,58 +26,57 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	logoutLoading = false;
 	user: User | undefined;
 	mainLinkParams!: Params;
+	themes: SwitcherItem[] = [
+		{
+			text: 'Светлая тема',
+			value: 'dark',
+			icon: 'moon',
+		},
+		{
+			text: 'По умолчанию',
+			value: 'default',
+			default: true,
+		},
+		{
+			text: 'Тёмная тема',
+			value: 'light',
+			icon: 'sun',
+		},
+	];
+	themeValueDefault = 'default';
 
 	ngOnInit(): void {
+		document.documentElement.setAttribute('data-theme', this.themeValue);
+
 		this.subscriptions.add(
-			this.router.events
-				.pipe(
-					filter((event: Event) => event instanceof ActivationStart)
-				)
-				.subscribe({
-					next: (data: any) => {
-						this.isMain = !data.snapshot.url.length;
-						this.isPrivacy =
-							data.snapshot.url[0]?.path !== 'privacy';
-						this.isProfile =
-							data.snapshot.url[0]?.path !== 'profile';
-					},
-				})
+			this.router.events.pipe(filter((event: Event) => event instanceof ActivationStart)).subscribe({
+				next: (data: any) => {
+					this.isMain = !data.snapshot.url.length;
+					this.isPrivacy = data.snapshot.url[0]?.path !== 'privacy';
+					this.isProfile = data.snapshot.url[0]?.path !== 'profile';
+				},
+			}),
 		);
 
 		this.route.queryParams.subscribe({
 			next: () => {
 				this.mainLinkParams = {
 					search: localStorage.getItem('searchInputValue') || null,
-					sort:
-						localStorage.getItem('sort') === 'titleAsc'
-							? null
-							: localStorage.getItem('sort'),
-					repeat:
-						localStorage.getItem('repeatableValue') === 'all'
-							? null
-							: localStorage.getItem('repeatableValue'),
-					greenwich:
-						localStorage.getItem('greenwichValue') === 'all'
-							? null
-							: localStorage.getItem('greenwichValue'),
-					public:
-						localStorage.getItem('publicValue') === 'all'
-							? null
-							: localStorage.getItem('publicValue'),
-					color:
-						localStorage.getItem('colorValue') === 'all'
-							? null
-							: localStorage.getItem('colorValue'),
+					sort: localStorage.getItem('sort') === 'titleAsc' ? null : localStorage.getItem('sort'),
+					repeat: localStorage.getItem('repeatableValue') === 'all' ? null : localStorage.getItem('repeatableValue'),
+					greenwich: localStorage.getItem('greenwichValue') === 'all' ? null : localStorage.getItem('greenwichValue'),
+					public: localStorage.getItem('publicValue') === 'all' ? null : localStorage.getItem('publicValue'),
+					color: localStorage.getItem('colorValue') === 'all' ? null : localStorage.getItem('colorValue'),
 				};
 			},
 		});
 
 		this.subscriptions.add(
 			this.auth.currentUser.subscribe({
-				next: (data) => {
+				next: data => {
 					this.user = data as User;
 				},
-			})
+			}),
 		);
 	}
 
@@ -98,11 +92,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		return this.router.url === '/auth';
 	}
 
+	get themeValue() {
+		return localStorage.getItem('theme') || this.themeValueDefault;
+	}
+
+	changeTheme(theme: string) {
+		document.documentElement.setAttribute('data-theme', theme);
+		localStorage.setItem('theme', theme);
+	}
+
 	showPrivacy() {
-		this.popupService.show(
-			'Политика в отношении обработки персональных данных',
-			PrivacyComponent
-		);
+		this.popupService.show('Политика в отношении обработки персональных данных', PrivacyComponent);
 	}
 
 	check() {

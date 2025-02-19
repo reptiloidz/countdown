@@ -72,6 +72,11 @@ $colors: (
 			255,
 			255,
 		),
+		board-logo: (
+			220,
+			220,
+			220,
+		),
 		widget: (
 			64,
 			150,
@@ -145,6 +150,153 @@ $colors: (
 			0,
 			0,
 			0,
+		),
+		positive: (
+			129,
+			193,
+			129,
+		),
+		negative: (
+			255,
+			0,
+			0,
+		),
+		weekend: (
+			183,
+			0,
+			0,
+		),
+		link: (
+			64,
+			150,
+			200,
+		),
+	),
+	shadow: (
+		primary: (
+			0,
+			0,
+			0,
+		),
+		inverse: (
+			255,
+			255,
+			255,
+		),
+		negative: (
+			255,
+			0,
+			0,
+		),
+	),
+);
+
+$colors-dark: (
+	point: map-get($colors, point),
+	bg: (
+		body: (
+			30,
+			30,
+			30,
+		),
+		primary: (
+			255,
+			255,
+			255,
+		),
+		userpic: (
+			204,
+			204,
+			204,
+		),
+		panel: (
+			30,
+			30,
+			30,
+		),
+		board: (
+			0,
+			0,
+			0,
+		),
+		board-logo: (
+			45,
+			45,
+			45,
+		),
+		widget: (
+			64,
+			150,
+			200,
+		),
+		inverse: (
+			0,
+			0,
+			0,
+		),
+		positive: (
+			77,
+			133,
+			77,
+		),
+		negative: (
+			135,
+			30,
+			30,
+		),
+		neutral: (
+			147,
+			127,
+			7,
+		),
+		icon: (
+			255,
+			255,
+			255,
+		),
+	),
+	border: (
+		primary: (
+			255,
+			255,
+			255,
+		),
+		inverse: (
+			35,
+			35,
+			35,
+		),
+		positive: (
+			129,
+			193,
+			129,
+		),
+		negative: (
+			255,
+			0,
+			0,
+		),
+	),
+	text: (
+		primary: (
+			221,
+			221,
+			221,
+		),
+		inverse: (
+			0,
+			0,
+			0,
+		),
+		button: (
+			0,
+			0,
+			0,
+		),
+		button-inverse: (
+			255,
+			255,
+			255,
 		),
 		positive: (
 			129,

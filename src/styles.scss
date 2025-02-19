@@ -8,20 +8,18 @@
 	@include get-colors;
 
 	--ff-slab: 'Roboto Slab', sans-serif;
-}
 
-.subtitle {
-	margin: 10px 0 20px;
-}
+	@media (prefers-color-scheme: dark) {
+		@include get-colors($colors-dark);
+	}
 
-.description {
-	margin: 12px 0;
-}
+	&[data-theme='dark'] {
+		@include get-colors($colors-dark);
+	}
 
-.empty {
-	font-family: var(--ff-slab);
-}
-
-.ov-hidden {
-	overflow: hidden;
+	&[data-theme='light'] {
+		@media (prefers-color-scheme: dark) {
+			@include get-colors;
+		}
+	}
 }

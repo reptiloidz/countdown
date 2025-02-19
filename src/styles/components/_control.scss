@@ -43,6 +43,8 @@
 		border: 0;
 		border-radius: inherit;
 		outline: 0;
+		background-color: rgba(var(--c-bg-inverse), 1);
+		color: rgba(var(--c-text-primary), 1);
 		font-weight: 300;
 
 		&::placeholder {

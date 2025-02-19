@@ -248,7 +248,7 @@
 		--board-hinge-shadow-w-2: 4px;
 		--board-hinge-before-shadow-x: 0;
 		--board-hinge-after-shadow-x: 0;
-		--board-bg-cl: 220, 220, 220;
+		--board-bg-cl: var(--c-bg-board-logo);
 		--board-half-shadow: inset 0 1px 0 0 rgba(var(--c-bg-inverse), 0.5);
 
 		&::before,

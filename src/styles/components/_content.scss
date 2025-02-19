@@ -62,6 +62,10 @@
 		}
 	}
 
+	&__empty {
+		font-family: var(--ff-slab);
+	}
+
 	&--main {
 		@include media-breakpoint-down(lg) {
 			--content-py: 40px;

@@ -1,13 +1,17 @@
 .logo {
+	@include media-breakpoint-down(xs) {
+		--logo-gap: 5px;
+	}
 	--logo-h: 60px;
 	--logo-pb: 2px;
+	--logo-gap: 10px;
 
 	display: flex;
-	gap: 10px;
+	gap: var(--logo-gap);
 	align-items: center;
 	justify-content: center;
 	height: var(--logo-h);
-	padding: 0 10px var(--logo-pb);
+	padding: 0 var(--logo-gap) var(--logo-pb);
 	border-radius: 8px;
 	background-color: rgba(var(--c-bg-primary), 0.2);
 	color: rgb(var(--c-text-primary));

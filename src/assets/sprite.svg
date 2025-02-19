@@ -123,6 +123,9 @@
         <svg id="minus" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12h-5m-3 0H4"/>
         </svg>
+        <svg id="moon" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12c0-4.889-4-8.869-9-9 5.683 5.758-.048 15.618-8 14 1.66 2.432 4.771 4 8 4 2.884 0 5.375-1.279 7-3.284"/>
+        </svg>
         <svg id="pause" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 16v2m0-12v6M9 6v12"/>
         </svg>
@@ -173,6 +176,9 @@
         </svg>
         <svg id="stopwatch" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 3h4m-2 6v4l2 2m-2 6a8 8 0 1 0-5.292-2"/>
+        </svg>
+        <svg id="sun" fill="none" viewBox="0 0 24 24">
+            <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12h2m0 7 2-2m5 2v2m5-4 2 2M5 5l2 2m12 5h2m-4-5 2-2m-7-2v2m3 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
         </svg>
         <svg id="trash" fill="none" viewBox="0 0 24 24">
             <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 10v6m4-6v6M4 6h16m-5 0V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v1m9 0v8m0 4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-5m0-4V6"/>

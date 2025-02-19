@@ -77,6 +77,13 @@
 	</div>
 </h1>
 
+<app-switcher
+	size="sm"
+	[items]="themes"
+	[value]="themeValue"
+	(valueSwitched)="changeTheme($event)"
+></app-switcher>
+
 <div
 	*ngIf="!isMain"
 	class="nav__aside nav__aside--home"

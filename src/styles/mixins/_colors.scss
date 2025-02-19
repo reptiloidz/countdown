@@ -1,4 +1,4 @@
-@mixin get-colors() {
+@mixin get-colors($colors: $colors) {
 	@each $type, $list in $colors {
 		@each $name, $val in $list {
 			#{'--c-' + $type + '-' + $name}: $val;

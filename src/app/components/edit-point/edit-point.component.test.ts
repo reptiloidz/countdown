@@ -196,7 +196,7 @@ describe('EditPointComponent', () => {
 		expect(setDateChangedSpy).toHaveBeenCalled();
 	});
 
-	it('should not dateChanged be called when diff too positive', () => {
+	it('should not dateChanged be called when diff is ok', () => {
 		const setDateChangedSpy = jest.spyOn(component, 'dateChanged');
 		component.differenceMode = 'years';
 		component.differenceChanged(2000);
