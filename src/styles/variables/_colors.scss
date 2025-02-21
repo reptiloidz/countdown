@@ -195,9 +195,9 @@ $colors-dark: (
 	point: map-get($colors, point),
 	bg: (
 		body: (
-			30,
-			30,
-			30,
+			50,
+			50,
+			50,
 		),
 		primary: (
 			255,
@@ -210,14 +210,14 @@ $colors-dark: (
 			204,
 		),
 		panel: (
-			30,
-			30,
-			30,
+			50,
+			50,
+			50,
 		),
 		board: (
-			0,
-			0,
-			0,
+			30,
+			30,
+			30,
 		),
 		board-logo: (
 			45,
@@ -230,9 +230,9 @@ $colors-dark: (
 			200,
 		),
 		inverse: (
-			0,
-			0,
-			0,
+			50,
+			50,
+			50,
 		),
 		positive: (
 			77,
@@ -262,9 +262,9 @@ $colors-dark: (
 			255,
 		),
 		inverse: (
-			35,
-			35,
-			35,
+			51,
+			51,
+			51,
 		),
 		positive: (
 			129,

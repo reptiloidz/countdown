@@ -52,17 +52,14 @@ export class SvgComponent implements OnInit {
 
 		if (!svgElement) return;
 
-		const childElements: Element[] = Object.values(svgElement.children);
+		Object.values(svgElement.children)
+			.filter(element => element?.tagName?.toLowerCase() !== 'title')
+			.forEach(element => element?.remove());
 
-		this.useElement?.remove?.();
-		this.useElement = null;
-
-		childElements.filter(element => element?.tagName?.toLowerCase() !== 'title').forEach(element => element?.remove());
-
-		this.useElement = this.renderer.createElement('use');
-		this.renderer.setAttribute(this.useElement, 'xlink:href', `assets/sprite.svg#${this.name}`);
-		if (this.useElement) {
-			svgElement.append(this.useElement);
+		if (this.name) {
+			this.useElement = this.renderer.createElement('use', 'svg');
+			this.renderer.setAttribute(this.useElement, 'href', `assets/sprite.svg#${this.name}`);
+			this.renderer.appendChild(this.elementRef.nativeElement, this.useElement);
 		}
 	}
 }

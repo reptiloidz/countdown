@@ -1,16 +1,14 @@
 module.exports = {
 	plugins: [
 		{
-			name: "preset-default",
+			name: 'preset-default',
 			params: {
 				overrides: {
-					removeUnknownsAndDefaults: false,
-					cleanupIds: false,
+					removeUnknownsAndDefaults: true,
 					removeXMLProcInst: true,
-					sortAttrs: true
+					sortAttrs: true,
 				},
 			},
 		},
-		'removeXMLNS'
 	],
 };

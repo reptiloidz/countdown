@@ -37,7 +37,7 @@ describe('SvgComponent', () => {
 
 		const useElement = elementRef.nativeElement.querySelector('use');
 		expect(useElement).toBeTruthy();
-		useElement && expect(useElement.getAttribute('xlink:href')).toBe('assets/sprite.svg#test-icon');
+		useElement && expect(useElement.getAttribute('href')).toBe('assets/sprite.svg#test-icon');
 	});
 
 	it('should set the title when provided', () => {
