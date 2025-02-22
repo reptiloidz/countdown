@@ -96,8 +96,9 @@
 			rgba(var(--c-bg-primary), 0.05) 100%
 		);
 		color: rgb(var(--c-text-primary));
-		font-family: monospace;
+		font-family: 'Nimbus Mono', monospace;
 		font-size: var(--board-fz);
+		font-weight: 700;
 		transition: transform 1s;
 		transform-origin: bottom;
 		animation-duration: 200ms;
