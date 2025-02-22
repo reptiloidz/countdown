@@ -20,6 +20,10 @@
 		fill: currentColor;
 	}
 
+	use {
+		stroke-width: var(--icon-stroke-w);
+	}
+
 	&--positive {
 		[stroke] {
 			stroke: rgb(var(--c-text-positive));

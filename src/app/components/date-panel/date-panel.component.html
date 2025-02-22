@@ -74,9 +74,12 @@
 			</label>
 		</ng-template>
 		<ng-template #extraTemplate>
-			<div
+			<cdk-virtual-scroll-viewport
 				@extraPanel
-				class="panel__tabs"
+				class="panel__tabs tabs__virtual-scroll"
+				#virtualScrollViewport
+				itemSize="150"
+				orientation="horizontal"
 			>
 				<div
 					*ngIf="iterationsListScrollable"
@@ -111,67 +114,60 @@
 						'tabs--edit': isEditing
 					}"
 				>
-					<cdk-virtual-scroll-viewport
-						#virtualScrollViewport
-						itemSize="150"
-						orientation="horizontal"
-						class="tabs__virtual-scroll"
+					<ul
+						#iterationsList
+						class="tabs__inner"
+						(wheel)="onIterationsScroll($event)"
 					>
-						<ul
-							#iterationsList
-							class="tabs__inner"
-							(wheel)="onIterationsScroll($event)"
-						>
 
-							<ng-container *cdkVirtualFor="let date of datesBefore; let i = index">
-								<ng-container
-									[ngTemplateOutlet]="iteration"
-									[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past', icon: date.mode?.icon }"
-								></ng-container>
-							</ng-container>
+						<ng-container *cdkVirtualFor="let date of datesBefore; let i = index">
+							<ng-container
+								[ngTemplateOutlet]="iteration"
+								[ngTemplateOutletContext]="{ $implicit: date, index: i, time: 'past', icon: date.mode?.icon }"
+							></ng-container>
+						</ng-container>
 
-							<li class="tabs__item tabs__item--home">
-								<svg
-									app-svg
-									name="home-2"
-								></svg>
-								<div
-									*ngIf="showIterationsInfo"
-									@iterationsInfo
-									class="tabs__label-wrapper"
-								>
-									<div class="tabs__label tabs__label--now">
-										<p class="tabs__date">{{ currentTime }}</p>
-									</div>
-								</div>
-							</li>
-							<ng-container *ngFor="let date of datesAfter; let i = index">
-								<ng-container
-									[ngTemplateOutlet]="iteration"
-									[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future', icon: date.mode?.icon  }"
-								></ng-container>
-							</ng-container>
-							<li
-								*ngIf="isEditing"
-								class="tabs__item tabs__item--add"
-								[ngClass]="{
-									'tabs__item--active': isIterationAdded
-								}"
+						<li class="tabs__item tabs__item--home">
+							<svg
+								app-svg
+								name="home-2"
+							></svg>
+							<div
+								*ngIf="showIterationsInfo"
+								@iterationsInfo
+								class="tabs__label-wrapper"
 							>
-								<button
-									app-button
-									class="button"
-									mode="ghost"
-									icon="plus"
-									title="Добавить итерацию"
-									class="tabs__btn"
-									(click)="addIterationClick()"
-								></button>
-							</li>
-						</ul>
-					</cdk-virtual-scroll-viewport>
+								<div class="tabs__label tabs__label--now">
+									<p class="tabs__date">{{ currentTime }}</p>
+								</div>
+							</div>
+						</li>
+						<ng-container *ngFor="let date of datesAfter; let i = index">
+							<ng-container
+								[ngTemplateOutlet]="iteration"
+								[ngTemplateOutletContext]="{ $implicit: date, index: i + (datesBefore?.length || 0), time: 'future', icon: date.mode?.icon  }"
+							></ng-container>
+						</ng-container>
+						<li
+							*ngIf="isEditing"
+							class="tabs__item tabs__item--add"
+							[ngClass]="{
+								'tabs__item--active': isIterationAdded
+							}"
+						>
+							<button
+								app-button
+								class="button"
+								mode="ghost"
+								icon="plus"
+								title="Добавить итерацию"
+								class="tabs__btn"
+								(click)="addIterationClick()"
+							></button>
+						</li>
+					</ul>
 				</div>
-			</div>
+			</cdk-virtual-scroll-viewport>
 			<div>
 				<div class="tabs__nav">
 					<button

@@ -35,6 +35,8 @@
 		position: absolute;
 		z-index: 1;
 		display: none;
+		justify-content: flex-end;
+		width: max-content;
 		border-radius: 4px;
 		color: rgba(var(--c-text-primary), 1);
 		font-size: 16px;
@@ -49,7 +51,6 @@
 
 		position: relative;
 		z-index: 1;
-		width: max-content;
 		max-width: 200px;
 		padding: 10px;
 		border: 1px solid rgba(var(--c-border-primary), 0.2);

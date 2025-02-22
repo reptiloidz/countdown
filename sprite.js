@@ -25,7 +25,7 @@ const spriter = new SVGSpriter({
 							name: 'removeAttrs',
 							active: true,
 							params: {
-								attrs: 'stroke',
+								attrs: '(stroke|stroke-width)',
 							},
 						},
 					],
