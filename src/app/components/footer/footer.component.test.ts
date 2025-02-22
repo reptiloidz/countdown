@@ -345,5 +345,28 @@ describe('FooterComponent', () => {
 				greenwich: false,
 			});
 		});
+
+		it('should navigate to create and update point-timer', async () => {
+			component.point = mockPoint;
+			component.point.dates = [{ date: '15.01.2025 12:25:00', reason: 'byHand' }];
+			component.isTimer = true;
+			component.isUrl = true;
+
+			// Мокаем зависимости
+			jest.spyOn(router, 'navigate').mockResolvedValue(true);
+			jest.spyOn(actionServiceMock, 'pointUpdated').mockImplementation();
+
+			// Вызываем метод
+			await component.copyPoint();
+			// Проверяем вызовы
+			expect(router.navigate).toHaveBeenCalledWith(['/create-url/']);
+			expect(actionServiceMock.pointUpdated).toHaveBeenCalledWith({
+				...mockPoint,
+				dates: mockPoint.dates,
+				repeatable: false,
+				public: false,
+				greenwich: false,
+			});
+		});
 	});
 });

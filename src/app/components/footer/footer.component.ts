@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Event, ActivationStart, ActivatedRoute } from '@angular/router';
-import { formatISO } from 'date-fns';
+import { format, formatISO } from 'date-fns';
 import { filter, Subscription, mergeMap, combineLatestWith, of } from 'rxjs';
 import { getPointFromUrl, parseDate } from 'src/app/helpers';
 import { Point } from 'src/app/interfaces';
 import { AuthService, DataService, ActionService, NotifyService, HttpService } from 'src/app/services';
 import { HttpParams } from '@angular/common/http';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { Constants } from 'src/app/enums';
 
 @Component({
 	selector: '[app-footer]',
@@ -260,6 +261,9 @@ export class FooterComponent implements OnInit, OnDestroy {
 		const point = this.point;
 		if (point) {
 			point.dates = point?.dates.slice(-1);
+			if (this.isTimer) {
+				point.dates[0].date = format(parseDate(point.dates[0].date, true, true), Constants.fullDateFormat);
+			}
 			point.repeatable = false;
 			point.public = false;
 			point.greenwich = false;

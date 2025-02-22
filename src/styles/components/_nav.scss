@@ -80,6 +80,12 @@
 		grid-area: left;
 		margin-right: auto;
 		margin-left: 20px;
+		text-decoration: none;
+		cursor: revert;
+
+		&[href] {
+			cursor: pointer;
+		}
 	}
 
 	&--header {

@@ -50,9 +50,12 @@
 		>Проверка</button> -->
 </div>
 
-<h1
+<a
 	class="nav__logo logo"
 	aria-label="Дней без происшествий: 0"
+	[routerLink]="!isMain ? '/' : null"
+	[queryParams]="!isMain ? mainLinkParams : null"
+	[attr.title]="!isMain ? 'Домой' : null"
 >
 	<div
 		aria-hidden="true"
@@ -75,7 +78,7 @@
 		></app-board>
 		<div class="logo__letters">ль</div>
 	</div>
-</h1>
+</a>
 
 <app-switcher
 	size="sm"
@@ -83,19 +86,3 @@
 	[value]="themeValue"
 	(valueSwitched)="changeTheme($event)"
 ></app-switcher>
-
-<div
-	*ngIf="!isMain"
-	class="nav__aside nav__aside--home"
->
-	<a
-		app-button
-		view="link"
-		icon="home"
-		size="xl"
-		mode="primary"
-		routerLink="/"
-		[queryParams]="mainLinkParams"
-		title="Домой"
-	></a>
-</div>
