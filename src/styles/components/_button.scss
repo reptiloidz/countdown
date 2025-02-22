@@ -39,6 +39,8 @@
 
 	&:disabled,
 	&--disabled {
+		--button-cl: rgba(var(--c-text-negative-icon-disabled), 1);
+
 		filter: grayscale(1);
 		pointer-events: none;
 
