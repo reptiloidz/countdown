@@ -9,24 +9,26 @@ export const getPointFromUrl = (data: any): Point | undefined => {
 	if (data.date) {
 		dateParsed = parseDate(data.date, true);
 	} else {
+		console.log(111);
+
 		switch (true) {
 			case !!data.years:
-				dateParsed = addYears(new Date(), data.years);
+				dateParsed = addYears(new Date(), data.years * 1);
 				break;
 			case !!data.months:
-				dateParsed = addMonths(new Date(), data.months);
+				dateParsed = addMonths(new Date(), data.months * 1);
 				break;
 			case !!data.weeks:
-				dateParsed = addWeeks(new Date(), data.weeks);
+				dateParsed = addWeeks(new Date(), data.weeks * 1);
 				break;
 			case !!data.days:
-				dateParsed = addDays(new Date(), data.days);
+				dateParsed = addDays(new Date(), data.days * 1);
 				break;
 			case !!data.hours:
-				dateParsed = addHours(new Date(), data.hours);
+				dateParsed = addHours(new Date(), data.hours * 1);
 				break;
 			case !!data.minutes:
-				dateParsed = addMinutes(new Date(), data.minutes);
+				dateParsed = addMinutes(new Date(), data.minutes * 1);
 				break;
 		}
 	}
