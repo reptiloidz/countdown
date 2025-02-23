@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPointComponent } from './edit-point.component';
 import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, of, Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
 import { DropComponent } from '../drop/drop.component';
 import { DatePanelComponent } from '../date-panel/date-panel.component';
@@ -56,12 +56,19 @@ describe('EditPointComponent', () => {
 		} as unknown as jest.Mocked<DataService>;
 
 		authServiceMock = {
-			getUserData: jest.fn(),
-			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
+			getUserData: jest.fn(() => of({ birthDate: '25.12.1991 00:00' })), // Мок метода getUserData
+			uid: '123',
+			eventEditAccessCheck$: jest.fn(() =>
+				of({
+					access: true,
+				}),
+			),
 		} as unknown as jest.Mocked<AuthService>;
 
 		actionServiceMock = {
 			pointUpdated: jest.fn(),
+			eventUpdatedPoint$: new Subject(),
+			eventIntervalSwitched$: new Subject(),
 		} as unknown as jest.Mocked<ActionService>;
 
 		notifyServiceMock = {
@@ -79,18 +86,10 @@ describe('EditPointComponent', () => {
 				},
 				{
 					provide: AuthService,
-					useValue: {
-						getUserData: jest.fn(() => of({ birthDate: '25.12.1991 00:00' })), // Мок метода getUserData
-						uid: '123',
-						eventEditAccessCheck$: jest.fn(() =>
-							of({
-								access: true,
-							}),
-						),
-					},
+					useValue: authServiceMock,
 				},
-				{ provide: ActionService, useValue: { pointUpdated: jest.fn(), eventUpdatedPoint$: new Subject() } },
-				{ provide: NotifyService, useValue: { add: jest.fn(), close: jest.fn() } },
+				{ provide: ActionService, useValue: actionServiceMock },
+				{ provide: NotifyService, useValue: notifyServiceMock },
 				{ provide: Router, useValue: { navigate: jest.fn() } },
 				{
 					provide: ActivatedRoute,

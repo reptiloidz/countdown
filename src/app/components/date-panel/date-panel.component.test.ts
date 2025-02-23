@@ -83,6 +83,7 @@ describe('DatePanelComponent', () => {
 			eventPointsChecked$: new Subject(),
 			eventHasEditablePoints$: new Subject(),
 			eventUpdatedPoint$: new BehaviorSubject(mockPoint),
+			eventIntervalSwitched$: new Subject(),
 			hasEditablePoints: jest.fn(),
 			checkAllPoints: jest.fn(),
 			uncheckAllPoints: jest.fn(),
@@ -201,18 +202,14 @@ describe('DatePanelComponent', () => {
 		expect(component.iterationsListScrollable).toBe(true);
 	});
 
-	it.skip('should scroll iterations list to home', () => {
-		// TODO: чинить тест после фикса скролла
-		const mockTabs = {
-			nativeElement: {
-				querySelector: jest.fn().mockReturnValue({
-					scrollIntoView: jest.fn(),
-				}),
-			},
+	it('should scroll iterations list to home', () => {
+		component.currentIterationIndex = 100;
+		const mockViewport = {
+			scrollToIndex: jest.fn(),
 		} as any;
-		component.iterationsTabs = mockTabs;
+		component.virtualScrollViewport = mockViewport;
 
-		component.scrollHome();
-		expect(mockTabs.nativeElement.querySelector).toHaveBeenCalledWith('.tabs__item--active input');
+		component.scrollList('home');
+		expect(mockViewport.scrollToIndex).toHaveBeenCalledWith(100, 'smooth');
 	});
 });

@@ -27,9 +27,9 @@ import { CalendarMode } from 'src/app/types';
 import { PanelComponent } from '../panel/panel.component';
 import { formatDate } from 'date-fns';
 import { Constants } from 'src/app/enums';
-import { Subscription, combineLatestWith, distinctUntilChanged, filter, fromEvent, tap, throttle, timer } from 'rxjs';
+import { Subscription, combineLatestWith, distinctUntilChanged, filter, tap } from 'rxjs';
 import { animate, query, style, transition, trigger } from '@angular/animations';
-import { CdkVirtualScrollable } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
 	selector: 'app-date-panel',
@@ -84,7 +84,7 @@ import { CdkVirtualScrollable } from '@angular/cdk/scrolling';
 })
 export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('iterationsTabs') iterationsTabs!: ElementRef;
-	@ViewChild('virtualScrollViewport') virtualScrollViewport!: CdkVirtualScrollable;
+	@ViewChild('virtualScrollViewport') virtualScrollViewport!: CdkVirtualScrollViewport;
 	@ViewChild('iterationsList') iterationsList!: ElementRef;
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 
@@ -124,6 +124,9 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	removedIterationIndex = 0;
 	resizeObserver: ResizeObserver | null = null;
 	iterationsListScrollable = false;
+	daysBeforeLength = 0;
+	daysAfterLength = 0;
+	combinedDates: { type: string; data?: Point | Iteration; time?: string }[] = [];
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -163,8 +166,8 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						}
 
 						setTimeout(() => {
-							this.scrollHome();
-						}, 500);
+							this.scrollList('home');
+						}, 1000);
 
 						if (this.urlMode) {
 							this.currentIterationIndex = 0;
@@ -175,27 +178,6 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 					},
 					error: err => {
 						console.error('Ошибка при обновлении таймеров:\n', err.message);
-					},
-				}),
-		);
-
-		this.subscriptions.add(
-			fromEvent(document, 'wheel')
-				.pipe(
-					filter(event => {
-						const eWheel = event as WheelEvent;
-						return this.iterationsTabs?.nativeElement.contains(eWheel.target as HTMLElement);
-					}),
-					throttle(() => timer(100)),
-				)
-				.subscribe({
-					next: event => {
-						const eWheel = event as WheelEvent;
-						if (eWheel.deltaY !== 0) {
-							if (this.iterationsTabs.nativeElement) {
-								this.iterationsTabs.nativeElement.scrollLeft += eWheel.deltaY;
-							}
-						}
 					},
 				}),
 		);
@@ -220,6 +202,22 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 				},
 				error: err => {
 					console.error('Ошибка при обновлении параметров итерации:\n', err.message);
+				},
+			}),
+		);
+
+		this.subscriptions.add(
+			this.action.eventIntervalSwitched$.subscribe({
+				next: () => {
+					if (this.daysBeforeLength !== this.datesBefore?.length || this.daysAfterLength !== this.datesAfter?.length) {
+						this.daysBeforeLength = this.datesBefore?.length || 0;
+						this.daysAfterLength = this.datesAfter?.length || 0;
+						this.combinedDates = [
+							...(this.datesBefore?.map(item => ({ type: 'date', data: item, time: 'past' })) || []),
+							{ type: 'home' },
+							...(this.datesAfter?.map(item => ({ type: 'date', data: item, time: 'future' })) || []),
+						];
+					}
 				},
 			}),
 		);
@@ -346,26 +344,20 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		localStorage.setItem('showIterationsInfo', this.showIterationsInfo ? 'true' : '');
 	}
 
-	scrollList(position = 999999) {
-		this.virtualScrollViewport['elementRef']?.nativeElement.scroll({
-			left: position,
-			behavior: 'smooth',
-		});
-	}
-
-	scrollHome() {
-		(this.virtualScrollViewport['elementRef']?.nativeElement as HTMLElement)
-			?.querySelector('.tabs__item--active input')
-			?.scrollIntoView({
-				block: 'nearest',
-				behavior: 'smooth',
-			});
-	}
-
-	onIterationsScroll(event: WheelEvent) {
-		return;
-		// TODO: убрать или починить
-		event.preventDefault();
+	scrollList(position: 'start' | 'end' | 'home') {
+		let index = 0;
+		switch (position) {
+			case 'start':
+				index = 0;
+				break;
+			case 'end':
+				index = (this.dates && this.dates?.length - 1) || 0;
+				break;
+			case 'home':
+				index = this.currentIterationIndex;
+				break;
+		}
+		this.virtualScrollViewport.scrollToIndex(index, 'smooth');
 	}
 
 	dateChecked({ data, check }: { data: Point[] | Iteration[]; check: boolean }) {

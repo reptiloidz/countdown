@@ -7,7 +7,6 @@
 	--tabs-pb: 20px;
 
 	width: 100%;
-	padding: 0 20px;
 	overflow: auto hidden;
 	transition: padding 0.2s 0.1s;
 	scroll-behavior: smooth;
@@ -18,7 +17,7 @@
 		gap: var(--tabs-gap);
 		width: fit-content;
 		margin: 0;
-		padding: 4px var(--tabs-gap) var(--tabs-pb) var(--tabs-gap);
+		padding: 4px 0 var(--tabs-pb) 0;
 		list-style-type: none;
 		transition: padding 0.2s 0.1s;
 	}
@@ -228,14 +227,17 @@
 	}
 
 	&__virtual-scroll {
-		display: flex;
 		height: 100%;
 
 		.cdk-virtual-scroll-content-wrapper {
 			position: static;
+			width: fit-content;
+			margin: auto;
+			padding: 0 20px;
 		}
 
 		&.cdk-virtual-scrollable {
+			overflow: auto hidden;
 			contain: content;
 		}
 	}
@@ -247,7 +249,11 @@
 	}
 
 	&--scrollable {
-		padding-left: 0;
+		.tabs__virtual-scroll {
+			.cdk-virtual-scroll-content-wrapper {
+				padding: 0 var(--tabs-gap);
+			}
+		}
 	}
 
 	&--edit {
