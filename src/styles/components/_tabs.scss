@@ -251,6 +251,7 @@
 	&--scrollable {
 		.tabs__virtual-scroll {
 			.cdk-virtual-scroll-content-wrapper {
+				margin: 0;
 				padding: 0 var(--tabs-gap);
 			}
 		}

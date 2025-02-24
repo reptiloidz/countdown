@@ -22,7 +22,11 @@
 	<svg
 		app-svg
 		[name]="icon"
-		[ngClass]="view === 'button' ? 'button__icon' : 'link__icon'"
+		[ngClass]="{
+			'button__icon': view === 'button',
+			'link__icon': view === 'link',
+			'icon--fill': fillModeIcon,
+		}"
 		[title]="iconTitle || undefined"
 		[attr.aria-label]="iconTitle"
 		[ariaHidden]="iconAriaHidden"

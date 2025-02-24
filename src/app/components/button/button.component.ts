@@ -13,15 +13,10 @@ export class ButtonComponent {
 	@Input() type!: string;
 	@Input() loading = false;
 	@Input() view: 'button' | 'link' = 'button';
-	@Input() mode!:
-		| 'primary'
-		| 'secondary'
-		| 'negative'
-		| 'positive'
-		| 'ghost'
-		| 'ghost-positive';
+	@Input() mode!: 'primary' | 'secondary' | 'negative' | 'positive' | 'ghost' | 'ghost-positive';
 	@Input() size!: ButtonSize;
 	@Input() disabled = false;
+	@Input() fillModeIcon = false;
 	@Input() textClass: string[] = [];
 
 	@HostBinding('attr.type') get typeAttr(): string | null {
@@ -31,11 +26,8 @@ export class ButtonComponent {
 		const baseClass = this.view === 'button' ? 'button' : 'link';
 		const modeClass = this.mode && `${baseClass}--${this.mode}`;
 		const sizeClass = this.size && `${baseClass}--${this.size}`;
-		const disabledClass =
-			this.disabled && this.tag === 'a' && `${baseClass}--disabled`;
-		return [baseClass, modeClass, sizeClass, disabledClass]
-			.filter((_) => _)
-			.join(' ');
+		const disabledClass = this.disabled && this.tag === 'a' && `${baseClass}--disabled`;
+		return [baseClass, modeClass, sizeClass, disabledClass].filter(_ => _).join(' ');
 	}
 
 	get tag(): string {
@@ -43,10 +35,7 @@ export class ButtonComponent {
 	}
 
 	get textClasses() {
-		return [
-			this.view === 'button' ? 'button__text' : 'link__text',
-			...this.textClass,
-		];
+		return [this.view === 'button' ? 'button__text' : 'link__text', ...this.textClass];
 	}
 
 	constructor(public elementRef: ElementRef) {}

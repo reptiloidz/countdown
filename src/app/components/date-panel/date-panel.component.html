@@ -114,8 +114,9 @@
 					<cdk-virtual-scroll-viewport
 						class="tabs__virtual-scroll"
 						#virtualScrollViewport
-						itemSize="150"
+						[itemSize]="hasAccess ? 150 : 120"
 						orientation="horizontal"
+						(scrolledIndexChange)="updateIterationCheckboxes()"
 					>
 						<ul
 							#iterationsList
@@ -173,7 +174,7 @@
 						size="sm"
 						mode="negative"
 						icon="cross"
-						[attr.disabled]="iterationsChecked.length ? null : true"
+						[attr.disabled]="iterationsCheckedForRemove.length ? null : true"
 						title="Удалить выбранные итерации"
 						(click)="removeCheckedIterations()"
 					></button>
@@ -194,7 +195,7 @@
 						app-button
 						size="sm"
 						mode="secondary"
-						[attr.disabled]="iterationsChecked.length ? null : true"
+						[attr.disabled]="iterationsCheckedForRemove.length ? null : true"
 						icon="document-cross"
 						title="Снять выбор со всех итераций"
 						(click)="checkAllIterations(false)"
@@ -230,7 +231,7 @@
 				*ngIf="hasAccess"
 				[name]="i.toString()"
 				iconSize="sm"
-				(change)="checkIteration()"
+				(change)="checkIteration($event, i)"
 				class="tabs__check"
 			></label>
 			<button

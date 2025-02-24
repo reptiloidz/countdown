@@ -19,8 +19,23 @@ const spriter = new SVGSpriter({
 			{
 				svgo: {
 					plugins: [
-						{ name: 'removeUnknownsAndDefaults', active: true },
-						{ name: 'sortAttrs', active: true },
+						{
+							name: 'addVectorEffectToElements',
+							type: 'visitor',
+							fn: () => {
+								return {
+									element: {
+										enter: node => {
+											const targetElements = ['path', 'line', 'rect', 'circle', 'ellipse', 'polygon', 'polyline'];
+											if (targetElements.includes(node.name)) {
+												node.attributes = node.attributes || {};
+												node.attributes['vector-effect'] = 'non-scaling-stroke';
+											}
+										},
+									},
+								};
+							},
+						},
 						{
 							name: 'removeAttrs',
 							active: true,
@@ -28,6 +43,8 @@ const spriter = new SVGSpriter({
 								attrs: '(stroke|stroke-width)',
 							},
 						},
+						{ name: 'removeUnknownsAndDefaults', active: true },
+						{ name: 'sortAttrs', active: true },
 					],
 				},
 			},
@@ -58,15 +75,6 @@ const spriter = new SVGSpriter({
 					}
 					[stroke^="#"] {
 						stroke-width:var(--icon-stroke-w, 1px);
-					}
-					[stroke-opacity],
-					[stroke-width],
-					[stroke-linecap],
-					[stroke-linejoin],
-					[stroke-dasharray],
-					[stroke-miterlimit],
-					[stroke-dashoffset] {
-						vector-effect: non-scaling-stroke;
 					}</style>`;
 				return spriteContent
 					.replace(/(<defs)/, styleTag + '$1')

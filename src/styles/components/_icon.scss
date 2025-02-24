@@ -35,4 +35,10 @@
 			stroke: rgb(var(--c-text-negative));
 		}
 	}
+
+	&--fill {
+		use {
+			stroke-width: 0;
+		}
+	}
 }
