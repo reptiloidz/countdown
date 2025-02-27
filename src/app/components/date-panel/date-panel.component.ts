@@ -27,7 +27,7 @@ import { CalendarMode } from 'src/app/types';
 import { PanelComponent } from '../panel/panel.component';
 import { formatDate } from 'date-fns';
 import { Constants } from 'src/app/enums';
-import { Subscription, combineLatestWith, distinctUntilChanged, filter, tap } from 'rxjs';
+import { Subscription, combineLatestWith, debounceTime, distinctUntilChanged, filter, fromEvent, tap } from 'rxjs';
 import { animate, query, style, transition, trigger } from '@angular/animations';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
@@ -169,6 +169,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						}
 
 						setTimeout(() => {
+							this.getIterationsListScrollable();
 							this.scrollList('home');
 						}, 1000);
 
@@ -230,6 +231,16 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 				},
 			}),
 		);
+
+		fromEvent(window, 'resize')
+			.pipe(debounceTime(200))
+			.subscribe({
+				next: () => {
+					setTimeout(() => {
+						this.getIterationsListScrollable();
+					}, 100);
+				},
+			});
 
 		this.switchCalendarPanel();
 
