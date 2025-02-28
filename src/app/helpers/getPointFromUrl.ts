@@ -9,8 +9,6 @@ export const getPointFromUrl = (data: any): Point | undefined => {
 	if (data.date) {
 		dateParsed = parseDate(data.date, true);
 	} else {
-		console.log(111);
-
 		switch (true) {
 			case !!data.years:
 				dateParsed = addYears(new Date(), data.years * 1);

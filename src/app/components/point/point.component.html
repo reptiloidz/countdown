@@ -6,6 +6,12 @@
 	[urlMode]="urlModeValue"
 	(iterationSwitched)="iterationSwitchHandler($event)"
 ></app-date-panel>
+<audio
+	controls
+	#audioFinish
+	src="assets/audio/double.mp3"
+	style="display: none;"
+></audio>
 <div
 	style="--timer-percent: {{ timerPercent }}"
 	class="content color"
@@ -178,7 +184,7 @@
 
 		<button
 			app-button
-			*ngIf="timerMode"
+			*ngIf="timerMode && hasTimerLine"
 			mode="secondary"
 			size="lg"
 			class="point-page__pause-btn"

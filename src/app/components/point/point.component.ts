@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, HostBinding, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	OnDestroy,
+	HostBinding,
+	ChangeDetectionStrategy,
+	HostListener,
+	ViewChild,
+	ElementRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
@@ -24,6 +33,8 @@ import { Title } from '@angular/platform-browser';
 export class PointComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
 	@HostListener('window:beforeunload', ['$event'])
+	@ViewChild('audioFinish')
+	audioFinish!: ElementRef<HTMLAudioElement>;
 	handleBeforeUnload(event: Event) {
 		if (this.timerMode) {
 			event.preventDefault();
@@ -52,11 +63,13 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerSecs!: number | string;
 	timerPercent = 0;
 	pausedTime: Date | undefined;
+	sound = false;
 
 	_closestIterationDate: Date | undefined;
 
 	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
+	private moveTimelineSubscription = new Subscription();
 
 	constructor(
 		private data: DataService,
@@ -86,10 +99,19 @@ export class PointComponent implements OnInit, OnDestroy {
 
 							if (!data.date) {
 								this.timerMode = true;
-								this.notify.add({
-									title: 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии',
-									autoremove: true,
-								});
+								this.notify
+									.confirm({
+										title: `
+										Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии.
+										Воспроизвести звуковой сигнал в конце?
+									`,
+										button: 'Да',
+									})
+									.subscribe({
+										next: () => {
+											this.sound = true;
+										},
+									});
 							}
 						}
 					}),
@@ -143,16 +165,6 @@ export class PointComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
-			interval(10)
-				.pipe(filter(() => !this.pausedTime))
-				.subscribe({
-					next: () => {
-						this.moveTimeline();
-					},
-				}),
-		);
-
-		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
 				next: ([point]) => {
 					this.loading = this.data.loading = false;
@@ -164,6 +176,16 @@ export class PointComponent implements OnInit, OnDestroy {
 					console.error('Ошибка при обновлении события после сброса таймера:\n', err.message);
 				},
 			}),
+		);
+
+		this.moveTimelineSubscription.add(
+			interval(10)
+				.pipe(filter(() => !this.pausedTime))
+				.subscribe({
+					next: () => {
+						this.moveTimeline();
+					},
+				}),
 		);
 	}
 
@@ -314,6 +336,10 @@ export class PointComponent implements OnInit, OnDestroy {
 				default:
 					this.timerPercent = newTimerPercent;
 					break;
+			}
+			if (this.timerPercent === 100) {
+				this.moveTimelineSubscription.unsubscribe();
+				this.sound && this.audioFinish.nativeElement.play();
 			}
 		}
 	}
