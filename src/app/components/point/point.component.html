@@ -184,10 +184,13 @@
 
 		<button
 			app-button
-			*ngIf="timerMode && hasTimerLine"
+			*ngIf="timerMode"
 			mode="secondary"
 			size="lg"
 			class="point-page__pause-btn"
+			[ngClass]="{
+				'point-page__pause-btn--hidden': !hasTimerLine
+			}"
 			(click)="pause()"
 			[icon]="pausedTime ? 'play' : 'pause'"
 		></button>

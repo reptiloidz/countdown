@@ -206,5 +206,10 @@
 
 	&__pause-btn {
 		margin: auto auto 0;
+
+		&--hidden {
+			visibility: hidden;
+			pointer-events: none;
+		}
 	}
 }
