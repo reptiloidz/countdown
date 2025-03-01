@@ -1,7 +1,4 @@
 .logo {
-	@include media-breakpoint-down(xs) {
-		--logo-gap: 5px;
-	}
 	--logo-h: 60px;
 	--logo-pb: 2px;
 	--logo-gap: 10px;

@@ -4,7 +4,7 @@ import { ActivatedRoute, ActivationStart, Event, Params, Router } from '@angular
 import { filter, Subscription } from 'rxjs';
 import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
-import { SwitcherItem } from 'src/app/interfaces';
+import { SettingsComponent } from '../settings/settings.component';
 
 @Component({
 	selector: '[app-header]',
@@ -26,28 +26,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	logoutLoading = false;
 	user: User | undefined;
 	mainLinkParams!: Params;
-	themes: SwitcherItem[] = [
-		{
-			text: 'Светлая тема',
-			value: 'dark',
-			icon: 'moon',
-		},
-		{
-			text: 'По умолчанию',
-			value: 'default',
-			default: true,
-		},
-		{
-			text: 'Тёмная тема',
-			value: 'light',
-			icon: 'sun',
-		},
-	];
-	themeValueDefault = 'default';
 
 	ngOnInit(): void {
-		document.documentElement.setAttribute('data-theme', this.themeValue);
-
 		this.subscriptions.add(
 			this.router.events.pipe(filter((event: Event) => event instanceof ActivationStart)).subscribe({
 				next: (data: any) => {
@@ -92,21 +72,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		return this.router.url === '/auth';
 	}
 
-	get themeValue() {
-		return localStorage.getItem('theme') || this.themeValueDefault;
-	}
-
-	changeTheme(theme: string) {
-		document.documentElement.setAttribute('data-theme', theme);
-		localStorage.setItem('theme', theme);
-	}
-
 	showPrivacy() {
 		this.popupService.show('Политика в отношении обработки персональных данных', PrivacyComponent);
 	}
 
 	check() {
 		this.auth.checkIsAuth();
+	}
+
+	showSettings() {
+		this.popupService.show('Настройки', SettingsComponent, {
+			isPopup: true,
+		});
 	}
 
 	logout() {

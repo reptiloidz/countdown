@@ -43,7 +43,7 @@
 	}
 
 	&__status {
-		@include media-breakpoint-down(xs) {
+		@include media-breakpoint-down(sm) {
 			margin-left: 0;
 			font-size: 12px;
 		}
@@ -68,6 +68,11 @@
 	}
 
 	&__table {
+		@include media-breakpoint-down(md) {
+			--calendar-button-p: 16px 4px;
+			--calendar-min-w: 0;
+		}
+
 		min-width: 100%;
 
 		&--year,
@@ -78,11 +83,6 @@
 		}
 
 		&--month {
-			@include media-breakpoint-down(md) {
-				--calendar-button-p: 16px 4px;
-				--calendar-min-w: 0;
-			}
-
 			.calendar__row {
 				--calendar-row-cols: 7;
 			}

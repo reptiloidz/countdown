@@ -64,6 +64,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerPercent = 0;
 	pausedTime: Date | undefined;
 	sound = false;
+	timerNotifyText = 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии';
 
 	_closestIterationDate: Date | undefined;
 
@@ -99,19 +100,25 @@ export class PointComponent implements OnInit, OnDestroy {
 
 							if (!data.date) {
 								this.timerMode = true;
-								this.notify
-									.confirm({
-										title: `
-										Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии.
-										Воспроизвести звуковой сигнал в конце?
-									`,
-										button: 'Да',
-									})
-									.subscribe({
-										next: () => {
-											this.sound = true;
-										},
+								if (this.localStorageSound === 'disabled') {
+									this.notify.add({
+										title: this.timerNotifyText,
 									});
+								} else {
+									this.notify
+										.confirm({
+											title: `
+												${this.timerNotifyText}.
+												Воспроизвести звуковой сигнал в конце?
+											`,
+											button: 'Да',
+										})
+										.subscribe({
+											next: () => {
+												this.sound = true;
+											},
+										});
+								}
 							}
 						}
 					}),
@@ -280,6 +287,19 @@ export class PointComponent implements OnInit, OnDestroy {
 		return this.timerMode && this.pointDate > new Date();
 	}
 
+	get localStorageSound() {
+		return localStorage.getItem('sound');
+	}
+
+	get soundIcon() {
+		return !this.sound ? 'speaker-disabled' : `speaker-${this.localStorageSound}`;
+	}
+
+	changeSound() {
+		this.sound && this.audioFinish.nativeElement.pause();
+		this.sound = !this.sound;
+	}
+
 	zeroPad(num?: number) {
 		return String(num).padStart(2, '0');
 	}
@@ -339,7 +359,10 @@ export class PointComponent implements OnInit, OnDestroy {
 			}
 			if (this.timerPercent === 100) {
 				this.moveTimelineSubscription.unsubscribe();
-				this.sound && this.audioFinish.nativeElement.play();
+				if (this.localStorageSound !== 'disabled' && this.sound) {
+					this.localStorageSound === 'long' && this.audioFinish.nativeElement.setAttribute('loop', 'true');
+					this.audioFinish.nativeElement.play();
+				}
 			}
 		}
 	}

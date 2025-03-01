@@ -79,10 +79,14 @@
 		<div class="logo__letters">ль</div>
 	</div>
 </a>
+<app-settings class="nav__settings"></app-settings>
 
-<app-switcher
-	size="sm"
-	[items]="themes"
-	[value]="themeValue"
-	(valueSwitched)="changeTheme($event)"
-></app-switcher>
+<button
+	app-button
+	icon="settings"
+	mode="secondary"
+	size="md"
+	(click)="showSettings()"
+	title="Настройки"
+	class="nav__settings nav__settings--mobile"
+></button>

@@ -171,11 +171,23 @@
         <svg xmlns="http://www.w3.org/2000/svg" id="search" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="m20 20-4.197-4.197S14 18 10.5 18a7.5 7.5 0 1 1 7.35-6" vector-effect="non-scaling-stroke"/>
         </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="settings" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" d="M14 4v.569c0 .428.287.8.682.963.396.164.856.102 1.158-.2l.403-.403a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1 0 1.414l-.402.403c-.303.302-.365.762-.201 1.158.164.395.535.682.963.682H20a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-.569c-.428 0-.8.287-.963.682-.164.396-.102.856.2 1.158l.403.403M4.929 17.657a1 1 0 0 1 0-1.414l.402-.403c.303-.302.365-.762.201-1.158-.164-.395-.535-.682-.963-.682H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h.569c.428 0 .8-.287.963-.682.164-.396.102-.856-.2-1.158l-.403-.403a1 1 0 0 1 0-1.414L6.343 4.93a1 1 0 0 1 1.414 0l.403.402c.302.303.762.365 1.158.201.395-.164.682-.535.682-.963V4a1 1 0 0 1 1-1M8.16 18.669c.302-.303.762-.365 1.158-.201.395.164.682.535.682.963V20a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-.569c0-.428.287-.8.682-.963.395-.164.856-.102 1.158.2l.403.403a1 1 0 0 0 1.414 0M14 12a2 2 0 1 1-2-2" vector-effect="non-scaling-stroke"/>
+        </svg>
         <svg xmlns="http://www.w3.org/2000/svg" id="share" fill="none" viewBox="0 0 24 24">
             <path d="M8.684 10.658 13 8.5m2.316 8.158L11 14.5M21 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM9 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm12 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" vector-effect="non-scaling-stroke"/>
         </svg>
         <svg xmlns="http://www.w3.org/2000/svg" id="shield" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.5 9.5 11 14l-1.5-1.5M12 3l8 4c0 5.193-2.784 12.51-8 14-5.216-1.49-8-8.807-8-14l4-2" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="speaker-disabled" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.6 5 13 3v5M3 3l18 18M7 16H5a2 2 0 0 1-2-2v-4c0-.364.097-.706.268-1M13 18v3l-3-2.5" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="speaker-long" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h2l6-5v18l-3-2.5M16 9c.5.5 1 1.5 1 3s-.5 2.5-1 3m3-9c1.5 1.5 2 4 2 6m-.384 3c-.308 1.132-.822 2.206-1.616 3" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="speaker-short" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 9c.5.5 1 1.5 1 3s-.5 2.5-1 3m-9 1H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h2l6-5v18l-3-2.5" vector-effect="non-scaling-stroke"/>
         </svg>
         <svg xmlns="http://www.w3.org/2000/svg" id="stopwatch" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10 3h4m-2 6v4l2 2m-2 6a8 8 0 1 0-5.292-2" vector-effect="non-scaling-stroke"/>

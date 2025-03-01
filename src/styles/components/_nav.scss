@@ -88,6 +88,23 @@
 		}
 	}
 
+	&__settings {
+		@include media-breakpoint-down(md) {
+			display: none;
+		}
+
+		display: flex;
+		gap: 15px;
+
+		&--mobile {
+			@include media-breakpoint-down(md) {
+				display: flex;
+			}
+
+			display: none;
+		}
+	}
+
 	&--header {
 		@include media-breakpoint-down(md) {
 			padding-top: 10px;

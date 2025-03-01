@@ -204,12 +204,11 @@
 		margin-left: 12px;
 	}
 
-	&__pause-btn {
+	&__timer-nav {
+		display: flex;
+		gap: 10px;
+		align-items: center;
 		margin: auto auto 0;
-
-		&--hidden {
-			visibility: hidden;
-			pointer-events: none;
-		}
+		padding: 20px 0;
 	}
 }

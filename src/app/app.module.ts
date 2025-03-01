@@ -1,9 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-	BrowserAnimationsModule,
-	provideAnimations,
-} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,6 +36,7 @@ import { NoPageComponent } from './components/no-page/no-page.component';
 import { PointModesComponent } from './components/point-modes/point-modes.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { DatePointsPopupComponent } from './components/date-points-popup/date-points-popup.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
 	declarations: [
@@ -68,6 +66,7 @@ import { DatePointsPopupComponent } from './components/date-points-popup/date-po
 		NoPageComponent,
 		PointModesComponent,
 		DatePointsPopupComponent,
+		SettingsComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -82,14 +81,13 @@ import { DatePointsPopupComponent } from './components/date-points-popup/date-po
 			initializeApp({
 				projectId: 'countdown-2971d',
 				appId: '1:711051586210:web:f9be0c6579bbb2608d85fb',
-				databaseURL:
-					'https://countdown-2971d-default-rtdb.firebaseio.com',
+				databaseURL: 'https://countdown-2971d-default-rtdb.firebaseio.com',
 				storageBucket: 'countdown-2971d.appspot.com',
 				apiKey: 'AIzaSyAqSOHSqWdyzx2GKWK33AqIIRgimEjVFak',
 				authDomain: 'countdown-2971d.firebaseapp.com',
 				messagingSenderId: '711051586210',
 				measurementId: 'G-XRDWYMHR2Y',
-			})
+			}),
 		),
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),

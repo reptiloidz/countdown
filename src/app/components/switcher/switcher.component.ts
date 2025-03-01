@@ -1,16 +1,5 @@
-import {
-	Component,
-	EventEmitter,
-	HostBinding,
-	Input,
-	Output,
-	forwardRef,
-} from '@angular/core';
-import {
-	ControlValueAccessor,
-	FormControl,
-	NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { Component, EventEmitter, HostBinding, Input, Output, forwardRef } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SwitcherItem } from 'src/app/interfaces';
 
 @Component({
@@ -28,7 +17,7 @@ export class SwitcherComponent implements ControlValueAccessor {
 	@Input() items: SwitcherItem[] = [];
 	@Input() value!: string;
 	@Input() mode: 'ghost' = 'ghost';
-	@Input() size!: 'sm';
+	@Input() size: 'sm' | undefined;
 	@Input() showTitle = false;
 	@Input() switcherListClass = '';
 	@Input() formControlName!: string;
@@ -38,7 +27,7 @@ export class SwitcherComponent implements ControlValueAccessor {
 		const baseClass = 'switcher';
 		const modeClass = this.mode && `${baseClass}--${this.mode}`;
 		const sizeClass = this.size && `${baseClass}--${this.size}`;
-		return [baseClass, modeClass, sizeClass].filter((_) => _).join(' ');
+		return [baseClass, modeClass, sizeClass].filter(_ => _).join(' ');
 	}
 
 	private _name: string | null = null;
@@ -50,7 +39,7 @@ export class SwitcherComponent implements ControlValueAccessor {
 	}
 
 	get valueName() {
-		return this.items.find((item) => item.value === this.value)?.text;
+		return this.items.find(item => item.value === this.value)?.text;
 	}
 
 	onChange: (value: any) => void = () => {};

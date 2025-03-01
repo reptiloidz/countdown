@@ -182,14 +182,25 @@
 			<div class="root__loading-marker"></div>
 		</ng-template>
 
-		<button
-			app-button
+		<div
 			*ngIf="timerMode"
-			mode="secondary"
-			size="lg"
-			class="point-page__pause-btn"
-			(click)="pause()"
-			[icon]="pausedTime ? 'play' : 'pause'"
-		></button>
+			class="point-page__timer-nav"
+		>
+			<button
+				app-button
+				mode="secondary"
+				size="lg"
+				(click)="pause()"
+				[icon]="pausedTime ? 'play' : 'pause'"
+			></button>
+			<label
+				app-checkbox
+				mode="custom"
+				(change)="changeSound()"
+				[isChecked]="sound"
+				[icon]="soundIcon"
+				title="Звук таймера"
+			></label>
+		</div>
 	</div>
 </div>

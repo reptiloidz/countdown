@@ -1,0 +1,14 @@
+<app-switcher
+	[size]="!isPopup ? 'sm' : undefined"
+	[items]="sounds"
+	[value]="soundValue"
+	[showTitle]="isPopup"
+	(valueSwitched)="changeSound($event)"
+></app-switcher>
+<app-switcher
+	[size]="!isPopup ? 'sm' : undefined"
+	[items]="themes"
+	[value]="themeValue"
+	[showTitle]="isPopup"
+	(valueSwitched)="changeTheme($event)"
+></app-switcher>
