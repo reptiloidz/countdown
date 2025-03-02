@@ -6,12 +6,19 @@
 	[urlMode]="urlModeValue"
 	(iterationSwitched)="iterationSwitchHandler($event)"
 ></app-date-panel>
+
 <audio
 	controls
 	#audioFinish
 	src="assets/audio/double.mp3"
 	style="display: none;"
 ></audio>
+<div
+	*ngIf="inverted"
+	class="root__invert-marker"
+></div>
+<div class="root__invert-possible"></div>
+
 <div
 	style="--timer-percent: {{ timerPercent }}"
 	class="content color"

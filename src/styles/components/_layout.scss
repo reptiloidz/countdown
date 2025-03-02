@@ -52,6 +52,32 @@ body {
 		}
 	}
 
+	&:has(.root__invert-possible) {
+		&::after {
+			content: '';
+		}
+	}
+
+	&:has(.root__invert-marker) {
+		&::after {
+			filter: invert(1);
+		}
+	}
+
+	&::after {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 5;
+		display: block;
+		filter: invert(0);
+		pointer-events: none;
+		transition: filter 0.5s;
+		backdrop-filter: blur(0.01px);
+	}
+
 	@media (max-width: 1024px) {
 		height: auto;
 	}
@@ -77,6 +103,10 @@ body {
 	}
 
 	&__loading-marker {
+		display: none;
+	}
+
+	&__invert-marker {
 		display: none;
 	}
 }

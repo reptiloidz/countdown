@@ -31,9 +31,13 @@ export class NotifyService {
 		this._notificationsSubject.next(newList);
 	}
 
-	prompt<T extends boolean>(notification: Omit<Notification<T>, 'date'>): Observable<string> {
+	prompt<T extends boolean>(notification: Omit<Notification<T>, 'date'>, date?: Date): Observable<string> {
 		notification.prompt = true;
-		const newNotificationDate = this.add(notification);
+		const newNotification: Notification = {
+			...notification,
+			date: date || new Date(),
+		};
+		const newNotificationDate = this.add(newNotification);
 
 		this._promptSubject = new Subject<string>();
 		this.promptObservable$ = this._promptSubject.asObservable().pipe(take(1));
@@ -44,9 +48,13 @@ export class NotifyService {
 		return this.promptObservable$;
 	}
 
-	confirm<T extends boolean>(notification: Omit<Notification<T>, 'date'>): Observable<boolean> {
+	confirm<T extends boolean>(notification: Omit<Notification<T>, 'date'>, date?: Date): Observable<boolean> {
 		notification.confirm = true;
-		const newNotificationDate = this.add(notification);
+		const newNotification: Notification = {
+			...notification,
+			date: date || new Date(),
+		};
+		const newNotificationDate = this.add(newNotification);
 
 		this._confirmSubject = new Subject<boolean>();
 		this.confirmObservable$ = this._confirmSubject.asObservable().pipe(take(1));
@@ -100,7 +108,7 @@ export class NotifyService {
 	}
 
 	close(date: Date) {
-		this.update(this.notifications.filter(i => i.date !== date));
+		this.update(this.notifications.filter(i => +i.date !== +date));
 		this.unsubscribe(date);
 	}
 

@@ -9,10 +9,10 @@ import {
 	ElementRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval } from 'rxjs';
+import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval, take } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
-import { format, formatDate, formatDistanceToNow, intervalToDuration } from 'date-fns';
+import { format, formatDate, formatDistance, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText, PointColors } from 'src/app/enums';
 import {
@@ -68,6 +68,9 @@ export class PointComponent implements OnInit, OnDestroy {
 	pausedTime: Date | undefined;
 	sound = false;
 	timerNotifyText = 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии';
+	soundNotify: Date | undefined;
+	inverted = false;
+	finalTitleCount = 0;
 
 	_closestIterationDate: Date | undefined;
 
@@ -109,14 +112,18 @@ export class PointComponent implements OnInit, OnDestroy {
 										autoremove: true,
 									});
 								} else {
+									this.soundNotify = new Date();
 									this.notify
-										.confirm({
-											title: `
+										.confirm(
+											{
+												title: `
 												${this.timerNotifyText}.
 												Воспроизвести звуковой сигнал в конце?
 											`,
-											button: 'Да',
-										})
+												button: 'Да',
+											},
+											this.soundNotify,
+										)
 										.subscribe({
 											next: () => {
 												this.sound = true;
@@ -202,6 +209,7 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+		this.moveTimelineSubscription.unsubscribe();
 		this.title.setTitle('Countdown');
 	}
 
@@ -213,7 +221,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	get remainText() {
-		const isPast = this.pointDate < new Date();
+		const isPast = this.pointDate < (this.pausedTime || new Date());
 		const isForward = this.point?.direction === 'forward';
 
 		return isPast
@@ -226,9 +234,13 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	get remainValue() {
-		return formatDistanceToNow(this.pointDate, {
-			locale: ru,
-		});
+		return this.pausedTime
+			? formatDistance(this.pointDate, this.pausedTime, {
+					locale: ru,
+				})
+			: formatDistanceToNow(this.pointDate, {
+					locale: ru,
+				});
 	}
 
 	get dates() {
@@ -288,7 +300,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	get hasTimerLine() {
-		return this.timerMode && this.pointDate > new Date();
+		return this.timerMode && this.pointDate > (this.pausedTime || new Date());
 	}
 
 	get localStorageSound() {
@@ -339,7 +351,8 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.timerMonths = currentInterval.months ? this.zeroPad(Math.abs(currentInterval.months)) : undefined;
 		this.timerDays = currentInterval.days ? this.zeroPad(Math.abs(currentInterval.days)) : undefined;
 
-		this.title.setTitle(`
+		!(this.finalTitleCount % 2) &&
+			this.title.setTitle(`
 			${currentInterval.years ? Math.abs(currentInterval.years) + 'г. ' : ''}${
 				currentInterval.months ? Math.abs(currentInterval.months) + 'м. ' : ''
 			}${currentInterval.days ? Math.abs(currentInterval.days) + 'д. ' : ''}
@@ -366,6 +379,12 @@ export class PointComponent implements OnInit, OnDestroy {
 			}
 			if (this.timerPercent === 100) {
 				this.moveTimelineSubscription.unsubscribe();
+
+				if (this.soundNotify) {
+					this.notify.close(this.soundNotify);
+					this.soundNotify = undefined;
+				}
+
 				if (this.sound) {
 					this.localStorageSound === 'long' && this.audioFinish.nativeElement.setAttribute('loop', 'true');
 					this.audioFinish.nativeElement.play();
@@ -375,6 +394,18 @@ export class PointComponent implements OnInit, OnDestroy {
 						this.sound = false;
 					}
 				}
+
+				this.subscriptions.add(
+					interval(500)
+						.pipe(take(6))
+						.subscribe({
+							next: () => {
+								this.inverted = !this.inverted;
+								this.title.setTitle('⏰⏰⏰');
+								this.finalTitleCount++;
+							},
+						}),
+				);
 			}
 		}
 	}
