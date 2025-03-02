@@ -24,6 +24,7 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Title } from '@angular/platform-browser';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 
 @Component({
 	selector: 'app-point',
@@ -35,6 +36,8 @@ export class PointComponent implements OnInit, OnDestroy {
 	@HostListener('window:beforeunload', ['$event'])
 	@ViewChild('audioFinish')
 	audioFinish!: ElementRef<HTMLAudioElement>;
+	@ViewChild('soundCheckbox')
+	soundCheckbox!: CheckboxComponent;
 	handleBeforeUnload(event: Event) {
 		if (this.timerMode) {
 			event.preventDefault();
@@ -103,6 +106,7 @@ export class PointComponent implements OnInit, OnDestroy {
 								if (this.localStorageSound === 'disabled') {
 									this.notify.add({
 										title: this.timerNotifyText,
+										autoremove: true,
 									});
 								} else {
 									this.notify
@@ -292,11 +296,14 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	get soundIcon() {
-		return !this.sound ? 'speaker-disabled' : `speaker-${this.localStorageSound}`;
+		return !this.sound ? 'speaker-disabled' : this.localStorageSound === 'long' ? 'speaker-long' : 'speaker-short';
 	}
 
 	changeSound() {
-		this.sound && this.audioFinish.nativeElement.pause();
+		if (this.sound && this.timerPercent === 100) {
+			this.audioFinish.nativeElement.pause();
+			this.soundCheckbox.isDisabled = true;
+		}
 		this.sound = !this.sound;
 	}
 
@@ -359,9 +366,14 @@ export class PointComponent implements OnInit, OnDestroy {
 			}
 			if (this.timerPercent === 100) {
 				this.moveTimelineSubscription.unsubscribe();
-				if (this.localStorageSound !== 'disabled' && this.sound) {
+				if (this.sound) {
 					this.localStorageSound === 'long' && this.audioFinish.nativeElement.setAttribute('loop', 'true');
 					this.audioFinish.nativeElement.play();
+
+					if (this.localStorageSound === 'short') {
+						this.soundCheckbox.isDisabled = true;
+						this.sound = false;
+					}
 				}
 			}
 		}

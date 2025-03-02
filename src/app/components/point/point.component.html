@@ -194,6 +194,7 @@
 				[icon]="pausedTime ? 'play' : 'pause'"
 			></button>
 			<label
+				#soundCheckbox
 				app-checkbox
 				mode="custom"
 				(change)="changeSound()"
