@@ -8,6 +8,7 @@ import {
 	ViewChild,
 	ContentChild,
 	TemplateRef,
+	ElementRef,
 } from '@angular/core';
 import { Subscription, first } from 'rxjs';
 import { Point, PointMode, UserExtraData } from 'src/app/interfaces';
@@ -43,6 +44,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	timerSecs!: number | string;
 
 	_closestIterationDate: Date | undefined;
+	_futureIterationDate: Date | undefined;
 	_closestIterationModeSet = false;
 	_closestIterationMode: PointMode | undefined;
 
@@ -51,6 +53,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private action: ActionService,
 		private notify: NotifyService,
+		private el: ElementRef,
 	) {}
 
 	ngOnInit(): void {
@@ -86,7 +89,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.action.eventIntervalSwitched$.subscribe({
 				next: () => {
-					this.setTimer();
+					this.el.nativeElement.querySelector('.board--visible') && this.setTimer();
 				},
 				error: err => {
 					console.error('Ошибка при обновлении таймеров:\n', err.message);
