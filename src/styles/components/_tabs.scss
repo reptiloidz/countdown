@@ -233,7 +233,7 @@
 			position: static;
 			width: fit-content;
 			margin: auto;
-			padding: 0 20px;
+			padding: 0 var(--tabs-gap);
 		}
 
 		&.cdk-virtual-scrollable {
@@ -252,7 +252,6 @@
 		.tabs__virtual-scroll {
 			.cdk-virtual-scroll-content-wrapper {
 				margin: 0;
-				padding: 0 var(--tabs-gap);
 			}
 		}
 	}

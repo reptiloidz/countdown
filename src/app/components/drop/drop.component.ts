@@ -18,6 +18,7 @@ import {
 	EventEmitter,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { NotifyService } from 'src/app/services';
@@ -84,7 +85,10 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	private bottomSpace = 0;
 	private topSpace = 0;
 	private rightSpace = 0;
+	private lastTopState = false;
 	private documentClickListener: (() => void) | null = null;
+	private subscriptions = new Subscription();
+	private triggerElement!: HTMLElement;
 
 	constructor(
 		private elementRef: ElementRef,
@@ -95,34 +99,50 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
 	ngOnInit(): void {
 		this.open && this.addDocumentClickListener();
+		this.subscriptions.add(
+			fromEvent(window, 'resize')
+				.pipe(debounceTime(200))
+				.subscribe({
+					next: () => {
+						if (this.open) {
+							this.setHeightParams();
+							this.setDropMaxH(this.lastTopState);
+						}
+					},
+				}),
+		);
 	}
 
 	ngOnDestroy(): void {
 		this.removeDocumentClickListener();
+		this.subscriptions.unsubscribe();
 	}
 
 	get keyOfValue() {
 		return getKeyByValue(this.dropList, this.value);
 	}
 
+	setHeightParams() {
+		this.bottomSpace = window.innerHeight - this.triggerOffsetTop - this.footerHeight;
+		this.topSpace = this.triggerOffsetTop;
+		this.triggerHeight = parseInt(getComputedStyle(this.triggerElement).height);
+	}
+
 	openHandler() {
 		this.open = true;
 		this.addDocumentClickListener();
 
-		const triggerElement = this.triggerTemplate
+		this.triggerElement = this.triggerTemplate
 			? this.triggerTemplateRef?.element.nativeElement.querySelector('button, input')
 			: this.defaultTriggerButton.nativeElement;
-		this.triggerOffsetTop = triggerElement.getBoundingClientRect().top;
-		this.triggerOffsetLeft = triggerElement.getBoundingClientRect().left;
+		this.triggerOffsetTop = this.triggerElement.getBoundingClientRect().top;
+		this.triggerOffsetLeft = this.triggerElement.getBoundingClientRect().left;
 
 		this.footerHeight = parseInt(getComputedStyle(document.querySelector('footer') as HTMLElement).height) || 0;
 
-		this.bottomSpace = window.innerHeight - this.triggerOffsetTop - this.footerHeight;
-		this.topSpace = this.triggerOffsetTop;
 		this.rightSpace = window.innerWidth - this.triggerOffsetLeft;
-
-		this.triggerHeight = parseInt(getComputedStyle(triggerElement).height);
-		this.triggerWidth = parseInt(getComputedStyle(triggerElement).width);
+		this.setHeightParams();
+		this.triggerWidth = parseInt(getComputedStyle(this.triggerElement).width);
 
 		requestAnimationFrame(() => {
 			this.dropHeight = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().height;
@@ -181,6 +201,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	setDropMaxH(isTop = false) {
+		this.lastTopState = isTop;
 		this.renderer.setStyle(
 			this.elementRef.nativeElement,
 			'--drop-max-h',

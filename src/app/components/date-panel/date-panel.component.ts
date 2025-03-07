@@ -232,15 +232,17 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			}),
 		);
 
-		fromEvent(window, 'resize')
-			.pipe(debounceTime(200))
-			.subscribe({
-				next: () => {
-					setTimeout(() => {
-						this.getIterationsListScrollable();
-					}, 100);
-				},
-			});
+		this.subscriptions.add(
+			fromEvent(window, 'resize')
+				.pipe(debounceTime(200))
+				.subscribe({
+					next: () => {
+						setTimeout(() => {
+							this.getIterationsListScrollable();
+						}, 100);
+					},
+				}),
+		);
 
 		this.switchCalendarPanel();
 
