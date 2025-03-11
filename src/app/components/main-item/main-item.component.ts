@@ -14,8 +14,8 @@ import { Subscription, first } from 'rxjs';
 import { Point, PointMode, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService, NotifyService } from 'src/app/services';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { getClosestIteration } from 'src/app/helpers';
-import { formatDistanceToNow, intervalToDuration } from 'date-fns';
+import { getClosestIteration, parseDate } from 'src/app/helpers';
+import { compareAsc, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
 @Component({
@@ -36,6 +36,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	loading = false;
 	authorLoading = false;
+	remainCalculated = false;
 	timerYears: number | string | undefined;
 	timerMonths: number | string | undefined;
 	timerDays: number | string | undefined;
@@ -43,7 +44,12 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	timerMins!: number | string;
 	timerSecs!: number | string;
 
-	_closestIterationDate: Date | undefined;
+	_closestIteration!: {
+		date: Date;
+		index: number;
+		mode: PointMode | undefined;
+	};
+	_closestIterationDate = new Date();
 	_futureIterationDate: Date | undefined;
 	_closestIterationModeSet = false;
 	_closestIterationMode: PointMode | undefined;
@@ -107,8 +113,33 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	get closestIteration() {
-		!this._closestIterationDate && (this._closestIterationDate = getClosestIteration(this.point).date);
-		return this._closestIterationDate;
+		if (!this._futureIterationDate) {
+			const datesSorted = this.point.dates.sort((a, b) => compareAsc(parseDate(a.date), parseDate(b.date)));
+			for (const item of datesSorted) {
+				const parsedDate = parseDate(item.date);
+				if (parsedDate > new Date()) {
+					this._futureIterationDate = parsedDate;
+					break;
+				}
+			}
+		}
+
+		if (this._futureIterationDate) {
+			const toFuture = +this._futureIterationDate - +new Date();
+
+			if (toFuture < 0 && toFuture > -1000 && this.point.repeatable) {
+				this._closestIterationDate = getClosestIteration(this.point).date || new Date();
+				this._closestIteration = getClosestIteration(this.point);
+				this._futureIterationDate = undefined;
+			}
+		}
+
+		if (!this._closestIteration) {
+			this._closestIterationDate = getClosestIteration(this.point).date || new Date();
+			this._closestIteration = getClosestIteration(this.point);
+			this.remainCalculated = true;
+		}
+		return this._closestIteration;
 	}
 
 	get closestIterationMode() {
@@ -121,9 +152,9 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get closestIterationRemain() {
 		return (
-			(this.closestIteration < new Date() ? 'Прошло:' : 'Осталось:') +
+			(this._closestIterationDate < new Date() ? 'Прошло:' : 'Осталось:') +
 			' ' +
-			formatDistanceToNow(this.closestIteration, {
+			formatDistanceToNow(this._closestIterationDate, {
 				locale: ru,
 			}) +
 			(this.isDirectionCorrect
@@ -136,7 +167,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get interval() {
 		return intervalToDuration({
-			start: this.closestIteration,
+			start: this.closestIteration.date,
 			end: new Date(),
 		});
 	}
@@ -145,8 +176,8 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		const currentDate = new Date();
 
 		return (
-			(this.closestIteration < currentDate && this.point.direction === 'forward') ||
-			(this.closestIteration > currentDate && this.point.direction === 'backward')
+			(this._closestIterationDate < currentDate && this.point.direction === 'forward') ||
+			(this._closestIterationDate > currentDate && this.point.direction === 'backward')
 		);
 	}
 
@@ -161,8 +192,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	setTimer() {
-		this._closestIterationDate = undefined;
-		this._closestIterationModeSet = false;
 		const currentInterval = this.interval;
 
 		this.timerHours = this.zeroPad((currentInterval.hours && Math.abs(currentInterval.hours)) || 0);

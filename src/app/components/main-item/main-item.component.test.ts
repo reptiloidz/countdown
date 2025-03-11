@@ -132,7 +132,7 @@ describe('MainItemComponent', () => {
 	});
 
 	it('should correctly calculate isDirectionCorrect', () => {
-		jest.spyOn(component, 'closestIteration', 'get').mockReturnValue(new Date(Date.now() + 1000));
+		component._closestIterationDate = new Date(Date.now() + 1000);
 		expect(component.isDirectionCorrect).toBe(false);
 	});
 

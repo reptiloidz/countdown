@@ -25,7 +25,7 @@
 			class="point__description"
 			[title]="point.description"
 		>{{ point.description }}</p>
-		<p class="point__description">{{ closestIterationRemain }}</p>
+		<p class="point__description">{{ remainCalculated ? closestIterationRemain : 'Расчёт оставшегося времени' }}</p>
 		<p
 			*ngIf="closestIterationMode"
 			class="point__description"
