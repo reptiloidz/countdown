@@ -63,6 +63,7 @@
 	&__inner {
 		display: flex;
 		flex-direction: column;
+		min-height: 100px;
 		max-height: calc(var(--drop-max-h) * 1px - var(--drop-max-h-gap));
 		overflow-x: hidden;
 		overflow-y: auto;
@@ -211,7 +212,9 @@
 		> .drop__body {
 			&,
 			> .drop__inner {
-				overflow: visible;
+				@media (min-height: 701px) {
+					overflow: visible;
+				}
 			}
 		}
 	}

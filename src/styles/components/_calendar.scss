@@ -30,6 +30,12 @@
 			@include media-breakpoint-down(md) {
 				--drop-d: none;
 			}
+
+			@include media-breakpoint-up(lg) {
+				@media (max-height: 700px) {
+					--drop-d: none;
+				}
+			}
 		}
 	}
 
@@ -197,6 +203,10 @@
 		&--popup {
 			@include media-breakpoint-up(lg) {
 				display: none;
+
+				@media (max-height: 700px) {
+					display: block;
+				}
 			}
 		}
 	}

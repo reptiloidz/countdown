@@ -18,7 +18,7 @@ import {
 	EventEmitter,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { debounceTime, fromEvent, Subscription } from 'rxjs';
+import { debounceTime, fromEvent, merge, Subscription } from 'rxjs';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { NotifyService } from 'src/app/services';
@@ -100,7 +100,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	ngOnInit(): void {
 		this.open && this.addDocumentClickListener();
 		this.subscriptions.add(
-			fromEvent(window, 'resize')
+			merge(fromEvent(window, 'resize'), fromEvent(window, 'scroll'))
 				.pipe(debounceTime(200))
 				.subscribe({
 					next: () => {
@@ -123,6 +123,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	setHeightParams() {
+		this.triggerOffsetTop = this.triggerElement.getBoundingClientRect().top;
 		this.bottomSpace = window.innerHeight - this.triggerOffsetTop - this.footerHeight;
 		this.topSpace = this.triggerOffsetTop;
 		this.triggerHeight = parseInt(getComputedStyle(this.triggerElement).height);
@@ -135,7 +136,6 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.triggerElement = this.triggerTemplate
 			? this.triggerTemplateRef?.element.nativeElement.querySelector('button, input')
 			: this.defaultTriggerButton.nativeElement;
-		this.triggerOffsetTop = this.triggerElement.getBoundingClientRect().top;
 		this.triggerOffsetLeft = this.triggerElement.getBoundingClientRect().left;
 
 		this.footerHeight = parseInt(getComputedStyle(document.querySelector('footer') as HTMLElement).height) || 0;
