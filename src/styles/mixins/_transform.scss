@@ -1,0 +1,33 @@
+// ===============================================
+// TRANSFORM
+// ===============================================
+
+@use 'sass:meta';
+@use '@sass-fairy/string';
+@use '@sass-fairy/list';
+
+/*
+	Параметры (transform-свойства через запятую) распарсятся и сохранятся в отдельные переменные,
+	которые будут использованы в итоговом значении свойства transform. Свойство всегда будет содержать
+	все переменные из списка $transform-props-list. Неуказанные переменные будут использовать фолбэк (пустое значение).
+	Таким образом, старые значения transform не будут перезаписаны.
+	Основная суть в реализации индивидуальных свойств трансформации, пока они не имеют достаточную поддержку:
+	https://web.dev/css-individual-transform-properties/
+	https://caniuse.com/mdn-css_properties_translate
+*/
+
+@mixin transform($transform...) {
+	transform: list.map($transform-props-list, meta.get-function('_wrap-transform-in-var'), $separator: space);
+
+	@each $transform-item in $transform {
+		/* stylelint-disable-next-line prettier/prettier */
+		$transform-name: list.slice(string.split(to-lower-case(string.trim(#{$transform-item})), '('), $start-at: 1, $end-at: 1);
+		--transform-#{$transform-name}: #{$transform-item};
+	}
+}
+
+@function _wrap-transform-in-var($item, $index, $list) {
+	// Не ошибка, дефолтное значение должно быть просто пустым
+	/* stylelint-disable-next-line prettier/prettier */
+	@return var(--transform-#{$item},);
+}

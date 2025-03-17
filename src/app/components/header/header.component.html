@@ -52,6 +52,7 @@
 
 <a
 	class="nav__logo logo"
+	[ngClass]="isMain ? '' : 'state'"
 	aria-label="Дней без происшествий: 0"
 	[routerLink]="!isMain ? '/' : null"
 	[queryParams]="!isMain ? mainLinkParams : null"

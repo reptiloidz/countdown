@@ -27,7 +27,7 @@ export class ButtonComponent {
 		const modeClass = this.mode && `${baseClass}--${this.mode}`;
 		const sizeClass = this.size && `${baseClass}--${this.size}`;
 		const disabledClass = this.disabled && this.tag === 'a' && `${baseClass}--disabled`;
-		return [baseClass, modeClass, sizeClass, disabledClass].filter(_ => _).join(' ');
+		return ['state', baseClass, modeClass, sizeClass, disabledClass].filter(_ => _).join(' ');
 	}
 
 	get tag(): string {

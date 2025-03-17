@@ -54,7 +54,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() horizontal: DropHorizontal = 'right';
 	@Input() icon: string = 'chevron-down';
 	@Input() buttonSize!: ButtonSize;
-	@Input() buttonClass = '';
+	@Input() buttonClass: NgClassType = '';
 	@Input() buttonTitle: string | null = null;
 	@Input() buttonLabel: string | null = null;
 	@Input() dropBodyClass: string | string[] = '';
@@ -65,7 +65,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@Input() value: string | number = '';
 	@Input() focusoutClose = false;
 	@Input() showFooter = true;
-	@Input() navClass: NgClassType = 'drop__nav';
+	@Input() navClass: NgClassType = 'drop__nav state';
 	@Input() innerClass: NgClassType = '';
 	@Input() listButtonTextClass = '';
 	@Input() buttonTextClass: string[] = [];

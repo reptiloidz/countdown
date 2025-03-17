@@ -1,5 +1,6 @@
 .point {
 	@include glass(3);
+	@include transition(box-shadow 0.2s);
 	--point-markers-bg-size: 20px;
 	--point-title-opacity: 0.3;
 	--point-description-opacity: 0.3;
@@ -15,7 +16,6 @@
 	border: 1px solid rgba(var(--point-color), 1);
 	border-radius: 10px;
 	background-color: rgba(var(--point-color), 0.05);
-	transition: box-shadow 0.2s;
 
 	&:has(:checked) {
 		box-shadow: inset 0 0 0 3px rgba(var(--point-color), 1);
@@ -29,6 +29,7 @@
 		}
 
 		@include text-truncate(3);
+		@include transition(opacity 0.4s);
 
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
 		font-weight: 500;
@@ -49,6 +50,7 @@
 
 	&__description {
 		@include text-truncate(3);
+		@include transition(opacity 0.4s);
 
 		margin-top: 10px;
 		color: rgba(var(--c-text-primary), var(--point-title-opacity));
@@ -71,7 +73,26 @@
 		flex-direction: column;
 		grid-area: main;
 		padding: 16px 20px;
+		outline: 0;
 		text-decoration: none;
+
+		&.state {
+			&,
+			&:focus,
+			&:hover,
+			&:active {
+				background-image: none;
+				box-shadow: none;
+			}
+
+			&:focus,
+			&:hover {
+				.point__title,
+				.point__description {
+					opacity: 0.5;
+				}
+			}
+		}
 	}
 
 	&__markers {
@@ -133,6 +154,7 @@
 	&__author-button {
 		justify-content: center;
 		min-width: 28px;
+		border-radius: 0;
 		font-size: 12px;
 		text-decoration: none;
 

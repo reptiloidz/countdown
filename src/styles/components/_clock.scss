@@ -16,6 +16,7 @@
 	aspect-ratio: 1/1;
 
 	&__arrow {
+		@include transition(transform 0.4s cubic-bezier(0.1, 0.79, 0.24, 0.95));
 		--clock-current: calc(var(--clock-current-second, 0) * 6);
 		--clock-arrow-count: calc((var(--count)) * 6);
 
@@ -25,13 +26,8 @@
 		height: calc(var(--clock-arrow-h) * 1%);
 		border-radius: calc(25% * var(--clock-arrow-h)) / calc(25% * var(--clock-arrow-w));
 		background-color: var(--clock-cl);
-		transition: transform 0.4s cubic-bezier(0.1, 0.79, 0.24, 0.95);
 		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * -1deg));
 		transform-origin: bottom;
-
-		@media (prefers-reduced-motion: reduce) {
-			transition: none;
-		}
 
 		&--minute {
 			--clock-current: calc(var(--clock-current-minute, 0) * 6);

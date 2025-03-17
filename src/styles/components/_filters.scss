@@ -5,8 +5,9 @@
 	}
 
 	@include media-breakpoint-down(sm) {
+		@include transition(grid-template-rows 0.4s linear);
+
 		grid-template-rows: 1fr auto;
-		transition: grid-template-rows 0.4s linear;
 	}
 
 	--filters-mt: 16px;
@@ -22,10 +23,11 @@
 
 	&__switchers {
 		@include media-breakpoint-down(sm) {
+			@include transition(transform 0.2s 0.4s linear);
+
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 			overflow: hidden;
-			transition: transform 0.2s 0.4s linear;
 		}
 
 		display: flex;
@@ -34,8 +36,9 @@
 
 		&--hidden {
 			@include media-breakpoint-down(sm) {
+				@include transition(transform 0.2s linear);
+
 				pointer-events: none;
-				transition: transform 0.2s linear;
 				transform: scaleY(0);
 			}
 		}

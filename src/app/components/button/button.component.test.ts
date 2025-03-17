@@ -37,12 +37,12 @@ describe('ButtonComponent', () => {
 		component.mode = 'primary';
 		component.size = 'lg';
 		component.disabled = true;
-		expect(component.componentClass).toBe('button button--primary button--lg');
+		expect(component.componentClass).toBe('state button button--primary button--lg');
 
 		component.view = 'link';
 		component.mode = 'ghost';
 		component.size = 'sm';
-		expect(component.componentClass).toBe('link link--ghost link--sm');
+		expect(component.componentClass).toBe('state link link--ghost link--sm');
 	});
 
 	it('should compute correct textClasses', () => {

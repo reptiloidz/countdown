@@ -32,6 +32,8 @@
 	}
 
 	&::before {
+		@include transition(opacity 0.4s);
+
 		content: '';
 		position: absolute;
 		top: 0;
@@ -40,7 +42,6 @@
 		left: 0;
 		background-color: rgba(var(--c-bg-primary), 0.2);
 		opacity: 0;
-		transition: opacity 0.4s;
 		backdrop-filter: blur(6px);
 	}
 

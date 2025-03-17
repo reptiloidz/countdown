@@ -1,0 +1,92 @@
+// stylelint-disable @stylistic/indentation, @stylistic/block-closing-brace-empty-line-before
+:root {
+	--state-main-normal-bg-img: transparent;
+	--state-main-hover-bg-img: rgba(var(--c-bg-primary), 0.25);
+
+	--state-shadow-w: 1px;
+	--state-shadow-pos: inset 0 0 0;
+
+	--state-main-normal-shadow-cl: transparent;
+	--state-main-focus-shadow-cl: rgb(var(--c-border-primary));
+	--state-error-hover-bg-img: rgba(var(--c-bg-negative), 0.25);
+	--state-positive-hover-bg-img: rgba(var(--c-bg-positive), 0.25);
+}
+// stylelint-enable @stylistic/indentation, @stylistic/block-closing-brace-empty-line-before
+
+.state {
+	@include transition(true, transform 0.4s, box-shadow 0.4s, --state-bg-img 0.4s);
+	@include transform(translateZ(0));
+
+	--state-shadow-cl: var(--state-main-normal-shadow-cl);
+	--state-bg-img: var(--state-main-normal-bg-img);
+
+	background-image: linear-gradient(0deg, var(--state-bg-img), var(--state-bg-img));
+	box-shadow: var(--state-shadow-pos) var(--state-shadow-w) var(--state-shadow-cl);
+
+	&:hover {
+		@media (hover: hover) {
+			--state-bg-img: var(--state-main-hover-bg-img);
+
+			cursor: pointer;
+		}
+	}
+
+	&:focus-visible {
+		--state-shadow-cl: var(--state-main-focus-shadow-cl);
+
+		outline: none;
+	}
+
+	&:active {
+		@include transform(scale(0.95));
+		--state-main-focus-shadow-cl: transparent;
+
+		&:has(.state:active) {
+			@include transform(scale(1));
+		}
+
+		/*
+			TODO: Переписать все --transform-переменные на @property
+			по аналогии со --state-bg-img, когда будет нормальная поддержка,
+			чтобы запретить наследование переменных (приводит к багам)
+			https://caniuse.com/mdn-css_at-rules_property
+		*/
+		.state {
+			&:not(:active) {
+				--transform-scale: '';
+			}
+		}
+	}
+
+	&[class*='--error'],
+	&[class*='--negative'] {
+		&:hover {
+			--state-bg-img: var(--state-error-hover-bg-img);
+		}
+	}
+
+	&[class*='--positive'] {
+		&:hover {
+			--state-bg-img: var(--state-positive-hover-bg-img);
+		}
+	}
+
+	&--inherit {
+		[class*='--error'] &,
+		[class*='--negative'] & {
+			&:hover {
+				--state-bg-img: var(--state-error-hover-bg-img);
+			}
+		}
+	}
+}
+
+/*
+	Задаёт тип для css-переменной, чтобы работал transition
+*/
+
+@property --state-bg-img {
+	syntax: '<color>';
+	inherits: true;
+	initial-value: transparent;
+}

@@ -82,6 +82,8 @@
 	}
 
 	&__half {
+		@include transition(transform 1s);
+
 		position: relative;
 		display: flex;
 		grid-area: 1/1/1/1;
@@ -99,7 +101,6 @@
 		font-family: 'Nimbus Mono', monospace;
 		font-size: var(--board-fz);
 		font-weight: 700;
-		transition: transform 1s;
 		transform-origin: bottom;
 		animation-duration: 200ms;
 		animation-timing-function: cubic-bezier(0.36, 0.25, 0.76, 0.52);

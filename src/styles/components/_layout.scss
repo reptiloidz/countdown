@@ -65,6 +65,8 @@ body {
 	}
 
 	&::after {
+		@include transition(filter 0.5s);
+
 		position: fixed;
 		top: 0;
 		right: 0;
@@ -74,7 +76,6 @@ body {
 		display: block;
 		filter: invert(0);
 		pointer-events: none;
-		transition: filter 0.5s;
 		backdrop-filter: blur(0.01px);
 	}
 
@@ -83,6 +84,8 @@ body {
 	}
 
 	&__loader {
+		@include transition(opacity 1s, backdrop-filter 1s);
+
 		position: fixed;
 		top: 0;
 		right: 0;
@@ -91,15 +94,13 @@ body {
 		z-index: 3;
 		opacity: 0;
 		pointer-events: none;
-		transition:
-			opacity 1s,
-			backdrop-filter 1s;
 	}
 
 	&__loader-icon {
+		@include transition(display 0.8s allow-discrete);
+
 		display: none;
 		height: 100%;
-		transition: display 0.8s allow-discrete;
 	}
 
 	&__loading-marker {

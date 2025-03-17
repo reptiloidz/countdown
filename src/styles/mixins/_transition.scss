@@ -1,0 +1,75 @@
+// ===============================================
+// TRANSITIONS
+// ===============================================
+
+@use 'sass:meta';
+@use '@sass-fairy/string';
+@use '@sass-fairy/list';
+
+/*
+	Используется в 4 вариантах:
+	1) Без параметров — будет использовано стандартное значение из переменой $transition-base;
+	2) С обычным значением свойства transition в качестве параметра — свойство добавится, как обычно;
+	3) С указанием true перед значением — оно будет распарсено и сохранено в отдельные переменные,
+	которые будут использованы в итоговом значении свойства transition. Свойство всегда будет содержать
+	все переменные из списка $transition-props-list. Неуказанные переменные будут использовать фолбэк "0s".
+	Таким образом, старые значения transition не будут перезаписаны;
+	4) Указано только true — аналогично варианту 3, но с использованием значения из переменной $transition-base.
+	В любом случае добавляется "prefers-reduced-motion: reduce" с отключением transition,
+	если пользователь отключил анимации в браузере
+*/
+
+@mixin transition($transition...) {
+	// Если параметры указаны
+	@if (length($transition) != 0) {
+		// Первым параметром указано true — генерируем переменные, transition не перезапишет старые значения
+		@if (type-of(nth($transition, 1)) == bool) {
+			$transition-values: ();
+
+			transition: list.map($transition-props-list, meta.get-function('_wrap-transition-in-var'), $separator: comma);
+
+			@if length($transition) == 1 {
+				// Остальные параметры не были переданы, используем дефолтное значение таким же образом
+				$transition-values: list.prepend($transition-values, $transition-base);
+			} @else {
+				$transition-args: list.slice($transition, $start-at: 2);
+				/* stylelint-disable-next-line prettier/prettier */
+				$transition-values: string.split(str-slice(string.replace(list.to-string($transition-args), '), (', '/'), 2, -2), '/');
+			}
+
+			@each $transition-item in $transition-values {
+				$transition-list: string.split(#{string.trim(#{$transition-item})}, ' ');
+				$transition-name: #{list.slice($transition-list, $start-at: 1, $end-at: 1)};
+				$transition-value: #{list.slice($transition-list, $start-at: 2)};
+				--transition-#{$transition-name}: #{$transition-value};
+			}
+		} @else {
+			// Просто записываем параметры в свойство transition
+			@if length($transition) > 1 {
+				@each $value in $transition {
+					@if $value == null or $value == none {
+						@warn "The keyword 'none' or 'null' must be used as a single argument.";
+					}
+				}
+			}
+
+			@if nth($transition, 1) != null {
+				transition: $transition;
+			}
+		}
+	} @else {
+		// Просто выводим дефолтное значение
+		transition: $transition-base;
+	}
+
+	// https://ru.hexlet.io/blog/posts/novye-mediazaprosy-kotorye-izmenyat-vashi-predstavleniya-o-vozmozhnostyah-css
+
+	// stylelint-disable-next-line scss/media-feature-value-dollar-variable
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+}
+
+@function _wrap-transition-in-var($item, $index, $list) {
+	@return #{$item} var(--transition-#{$item}, 0s);
+}

@@ -1,9 +1,5 @@
 import { Component, HostBinding, Input, forwardRef } from '@angular/core';
-import {
-	ControlValueAccessor,
-	FormControl,
-	NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
 	selector: '[app-checkbox]',
@@ -18,9 +14,7 @@ import {
 })
 export class CheckboxComponent implements ControlValueAccessor {
 	@HostBinding('class') get controlClass() {
-		return ['checkbox', this.mode !== 'text' && 'checkbox--' + this.mode]
-			.filter((_) => _)
-			.join(' ');
+		return ['checkbox state', this.mode !== 'text' && 'checkbox--' + this.mode].filter(_ => _).join(' ');
 	}
 	@HostBinding('attr.for') get for() {
 		return this.name || null;

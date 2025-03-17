@@ -2995,6 +2995,42 @@
     "@resvg/resvg-js-win32-ia32-msvc" "2.6.2"
     "@resvg/resvg-js-win32-x64-msvc" "2.6.2"
 
+"@sass-fairy/exception@^1.0.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/exception/-/exception-1.1.1.tgz#41454a4dbdd40a90e491a1f9cee788e7bc06a29d"
+  integrity sha512-DP3dwerkS/gE79CaCzaE46zkTSWxmUc8Q/8Io6FC9qYRaNJ5aR8l1IvRbEe6ZnsnVE1+Ow1XOzC9uL2eeh62Hg==
+
+"@sass-fairy/list@1.2.4", "@sass-fairy/list@^1.0.0":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/list/-/list-1.2.4.tgz#72f380f3f06b25e55bb6195e13d8b7e230038e60"
+  integrity sha512-gs+96qO1kqPbnDU0tqG9/V77ceUXtA8grYQ554jIEQKYerFRs8usUs7KUu7JZJfkmEDpyoDbvNm18vr1WVgz6w==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+    "@sass-fairy/math" "^1.0.0"
+    "@sass-fairy/meta" "^1.0.0"
+
+"@sass-fairy/math@^1.0.0":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/math/-/math-1.0.3.tgz#2f3bb635e6f00983d109ad1f7f22380f144b3e69"
+  integrity sha512-Lg/0vwx9Y7BSl/hTy3zO13bObx3dz8wkV/G6suX8B2j3IloXMGZmvdlmGwH+8J4e9/nUA/Yv3N9B6+W/IdLHmw==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+
+"@sass-fairy/meta@^1.0.0":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/meta/-/meta-1.0.2.tgz#16d4a8b8859a07bd87b8866d4fbe10258121da98"
+  integrity sha512-LLQnuY5kLdsGjGM+r94y3xew1wi7iok4Ciw43fYC9fCtyvwbeohMA0OK4vjl2iP9RaGIMEWfpjX7WZ0gSc5sSQ==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+
+"@sass-fairy/string@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/string/-/string-1.3.0.tgz#020927d48f274f881357284ba9dff033474f2269"
+  integrity sha512-YWYv6ynNzeIUQhDHbVpEhRhj3K+SBzE/d3uhkl4/VFitDRZ7PHLooKdQqdYoDsg0ncRIuiYE0csE6HO+JBT+Eg==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+    "@sass-fairy/list" "^1.0.0"
+
 "@schematics/angular@16.2.16", "@schematics/angular@^16.0.0":
   version "16.2.16"
   resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-16.2.16.tgz#3f077f398fc7ff88654fd477790af8270585c3af"

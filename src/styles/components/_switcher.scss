@@ -9,6 +9,8 @@
 	--switcher-border-cl: transparent;
 	--switcher-border-item-cl: transparent;
 	--switcher-border-item-active-cl: transparent;
+	--switcher-focus-checked-shadow-cl: transparent;
+	--state-shadow-pos: 0 0 0;
 
 	display: flex;
 	flex-direction: column;
@@ -27,9 +29,29 @@
 		border: 1px solid var(--switcher-border-item-cl);
 		border-radius: 8px;
 		background-color: var(--switcher-item-bg-cl);
+		box-shadow: var(--state-shadow-pos) var(--state-shadow-w) var(--switcher-focus-checked-shadow-cl);
 		color: var(--switcher-item-cl);
 		cursor: pointer;
 		user-select: none;
+
+		&.state {
+			&:hover {
+				--checkbox-box-bg-cl: var(--state-bg-img);
+			}
+
+			&:focus-within {
+				--state-shadow-cl: var(--state-main-focus-shadow-cl);
+				--checkbox-box-border-cl: var(--state-shadow-cl);
+
+				&:has(.checkbox__input:checked) {
+					--switcher-focus-checked-shadow-cl: var(--state-shadow-cl);
+				}
+
+				&:has(.checkbox__input:disabled) {
+					--switcher-focus-checked-shadow-cl: transparent;
+				}
+			}
+		}
 
 		&--active {
 			--switcher-item-bg-cl: var(--switcher-item-active-bg-cl);
@@ -48,7 +70,6 @@
 	&__input {
 		width: 0;
 		height: 0;
-		visibility: hidden;
 	}
 
 	&__icon {

@@ -84,9 +84,22 @@
 		border-left-color: rgba(var(--c-border-primary), 0.4);
 		background-color: rgb(var(--c-bg-inverse));
 
+		&:has(> .state) {
+			background-image: linear-gradient(0deg, var(--state-bg-img), var(--state-bg-img));
+		}
+
+		> .state {
+			background-image: none;
+			box-shadow: none;
+		}
+
 		&--sm {
 			--drop-brs: 4px;
 		}
+	}
+
+	&__link {
+		padding: 0 4px;
 	}
 
 	&__item {

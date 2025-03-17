@@ -1,4 +1,5 @@
 .tabs {
+	@include transition(padding 0.2s 0.1s);
 	--tabs-gap: 50px;
 	--tabs-item-pseudo-opacity: 0.1;
 	--tabs-date-cl: rgba(var(--c-text-primary), 0.4);
@@ -8,18 +9,18 @@
 
 	width: 100%;
 	overflow: auto hidden;
-	transition: padding 0.2s 0.1s;
 	scroll-behavior: smooth;
 	scroll-padding: 50%;
 
 	&__inner {
+		@include transition(padding 0.2s 0.1s);
+
 		display: flex;
 		gap: var(--tabs-gap);
 		width: fit-content;
 		margin: 0;
 		padding: 4px 0 var(--tabs-pb) 0;
 		list-style-type: none;
-		transition: padding 0.2s 0.1s;
 	}
 
 	&__item {
