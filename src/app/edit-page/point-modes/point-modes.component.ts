@@ -13,8 +13,8 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { GroupEmoji, LocalEmoji, Point, PointMode } from 'src/app/interfaces';
-import { DropComponent } from '../drop/drop.component';
-import { InputComponent } from '../input/input.component';
+import { DropComponent } from '../../components/drop/drop.component';
+import { InputComponent } from '../../components/input/input.component';
 import { debounceTime, interval, Subject, Subscription } from 'rxjs';
 
 @Component({

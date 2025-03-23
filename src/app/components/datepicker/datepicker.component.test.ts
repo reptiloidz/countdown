@@ -3,7 +3,7 @@ import { DatepickerComponent } from './datepicker.component';
 import { FormsModule } from '@angular/forms';
 import { DropComponent } from '../drop/drop.component';
 import { ButtonComponent } from '../button/button.component';
-import { SvgComponent } from '../svg/svg.component';
+import { SvgComponent } from '../../svg/svg.component';
 
 describe('DatepickerComponent', () => {
 	let component: DatepickerComponent;

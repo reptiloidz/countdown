@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainItemComponent } from './main-item.component';
 import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 import { of, Subject } from 'rxjs';
 import { CheckAccessEditPipe } from 'src/app/pipes/check-access-edit.pipe';
 import { LetDirective } from 'src/app/directives/let.directive';

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, Event, ActivationStart, ActivatedRoute } from '@angular/router';
+import { Router, Event, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { format, formatISO } from 'date-fns';
-import { filter, Subscription, mergeMap, combineLatestWith, of } from 'rxjs';
+import { filter, Subscription, mergeMap, combineLatestWith, of, distinctUntilChanged } from 'rxjs';
 import { getPointFromUrl, parseDate } from 'src/app/helpers';
 import { Point } from 'src/app/interfaces';
 import { AuthService, DataService, ActionService, NotifyService, HttpService } from 'src/app/services';
@@ -14,8 +14,8 @@ import { Constants } from 'src/app/enums';
 	templateUrl: './footer.component.html',
 })
 export class FooterComponent implements OnInit, OnDestroy {
-	pointId!: string;
-	point!: Point | undefined;
+	pointId: string | undefined;
+	point: Point | undefined;
 	isEdit = false;
 	isCreate = false;
 	isCreateUrl = false;
@@ -57,24 +57,27 @@ export class FooterComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.router.events
 				.pipe(
-					filter((event: Event) => event instanceof ActivationStart),
+					filter((event: Event) => event instanceof NavigationEnd),
 					combineLatestWith(this.route.queryParams),
+					distinctUntilChanged(),
 					mergeMap(([event, queryParams]: [any, any]) => {
+						const finalPath =
+							this.router.lastSuccessfulNavigation?.finalUrl?.root.children['primary']?.segments[0].path;
 						this.iteration = queryParams.iteration;
-						this.pointId = event.snapshot.params['id'];
-						this.isEdit = event.snapshot.url[0]?.path === 'edit';
-						this.isCreate = event.snapshot.url[0]?.path === 'create';
-						this.isCreateUrl = event.snapshot.url[0]?.path === 'create-url';
-						this.isUrl = event.snapshot.url[0]?.path === 'url';
-						this.isMain = !event.snapshot.url.length;
-						this.isTimer = this.isUrl && !event.snapshot.queryParams.date;
+						this.pointId =
+							this.router.lastSuccessfulNavigation?.finalUrl?.root.children['primary']?.segments &&
+							this.router.lastSuccessfulNavigation?.finalUrl?.root.children['primary']?.segments.length > 1
+								? this.router.lastSuccessfulNavigation?.finalUrl?.root.children['primary']?.segments[1].path
+								: undefined;
+						this.isEdit = finalPath === 'edit';
+						this.isCreate = finalPath === 'create';
+						this.isCreateUrl = finalPath === 'create-url';
+						this.isUrl = finalPath === 'url';
+						this.isMain = !finalPath;
+						this.isTimer = this.isUrl && !queryParams.date;
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
-							: of(
-									Object.keys(event.snapshot.queryParams).length !== 0
-										? getPointFromUrl(event.snapshot.queryParams)
-										: undefined,
-								);
+							: of(Object.keys(queryParams).length !== 0 ? getPointFromUrl(queryParams) : undefined);
 					}),
 				)
 				.subscribe({

@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ActionService, NotifyService } from './services';
-import { ActivationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NotifyComponent } from './components/notify/notify.component';
@@ -40,13 +40,6 @@ describe('AppComponent', () => {
 
 	it('should create the app', () => {
 		expect(component).toBeTruthy();
-	});
-
-	it('should set isUrlMode based on router events', () => {
-		const routerEvents = mockRouter.events as Subject<any>;
-		component.ngOnInit();
-		routerEvents.next(new ActivationStart({ url: [{ path: 'url' }] } as any));
-		expect(component.isUrlMode).toBe(true);
 	});
 
 	it('should set --start-time on document element style on init', () => {

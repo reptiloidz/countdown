@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PointModesComponent } from './point-modes.component';
 import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ElementRef, NO_ERRORS_SCHEMA, Renderer2 } from '@angular/core';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DropComponent } from '../drop/drop.component';
-import { InputComponent } from '../input/input.component';
+import { DropComponent } from '../../components/drop/drop.component';
+import { InputComponent } from '../../components/input/input.component';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { NotifyService } from 'src/app/services';
 

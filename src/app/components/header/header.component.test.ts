@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
-import { Router, ActivatedRoute, ActivationStart, Event } from '@angular/router';
+import { Router, ActivatedRoute, Event, NavigationEnd } from '@angular/router';
 import { AuthService, PopupService } from 'src/app/services';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { PrivacyComponent } from '../privacy/privacy.component';
-import { BoardComponent } from '../board/board.component';
+import { BoardComponent } from '../../board/board.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('HeaderComponent', () => {
@@ -64,17 +64,15 @@ describe('HeaderComponent', () => {
 			component.ngOnInit();
 
 			expect(component.isMain).toBeFalsy();
-			expect(component.isPrivacy).toBeFalsy();
 			expect(component.isProfile).toBeFalsy();
 			expect(component.logoutLoading).toBeFalsy();
 		});
 
-		it('should update isMain, isPrivacy, and isProfile based on router events', () => {
-			const event = new ActivationStart({ url: [] } as any);
+		it('should update isMain and isProfile based on router events', () => {
+			const event = new NavigationEnd(0, '', '');
 			(router.events as Subject<Event>).next(event);
 
 			expect(component.isMain).toBeTruthy();
-			expect(component.isPrivacy).toBeTruthy();
 			expect(component.isProfile).toBeTruthy();
 		});
 

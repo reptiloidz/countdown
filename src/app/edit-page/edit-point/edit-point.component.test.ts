@@ -4,8 +4,8 @@ import { DataService, AuthService, ActionService, NotifyService } from 'src/app/
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
-import { DropComponent } from '../drop/drop.component';
-import { DatePanelComponent } from '../date-panel/date-panel.component';
+import { DropComponent } from '../../components/drop/drop.component';
+import { DatePanelComponent } from '../../point-page/date-panel/date-panel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Point } from 'src/app/interfaces';

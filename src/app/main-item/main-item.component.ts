@@ -13,7 +13,7 @@ import {
 import { Subscription, first } from 'rxjs';
 import { Point, PointMode, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService, NotifyService } from 'src/app/services';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { CheckboxComponent } from '../components/checkbox/checkbox.component';
 import { getClosestIteration, parseDate } from 'src/app/helpers';
 import { compareAsc, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';

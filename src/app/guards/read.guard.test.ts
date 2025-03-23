@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, of, Subject, Subscription, throwError } from 'rxjs';
 import { AuthService, DataService } from '../services';
 import { readGuard } from './read.guard';
@@ -45,11 +45,18 @@ describe('readGuard', () => {
 			navigate: jest.fn(),
 		};
 
+		const activatedRouteMock = {
+			snapshot: {
+				queryParams: {},
+			},
+		};
+
 		TestBed.configureTestingModule({
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: DataService, useValue: dataServiceMock },
 				{ provide: Router, useValue: routerMock },
+				{ provide: ActivatedRoute, useValue: activatedRouteMock },
 			],
 		});
 

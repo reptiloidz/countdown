@@ -4,7 +4,7 @@ import { NotifyService } from 'src/app/services';
 import { Renderer2, ChangeDetectorRef, ElementRef, Component, ViewChild, TemplateRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ButtonComponent } from '../button/button.component';
-import { SvgComponent } from '../svg/svg.component';
+import { SvgComponent } from '../../svg/svg.component';
 
 @Component({
 	selector: 'mock-custom-template',

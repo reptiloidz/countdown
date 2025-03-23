@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainListComponent } from './components/main-list/main-list.component';
-import { PointComponent } from './components/point/point.component';
-import { EditPointComponent } from './components/edit-point/edit-point.component';
 import { AuthComponent } from './personal/components/auth/auth.component';
-import { readGuard, editGuard, authGuard } from './guards';
-import { NoPageComponent } from './components/no-page/no-page.component';
-import { shortGuard } from './guards/short.guard';
+import { authGuard } from './guards';
 import { noPointGuard } from './guards/noPoint.guard';
 
 const routes: Routes = [
@@ -22,12 +18,11 @@ const routes: Routes = [
 	},
 	{
 		path: 'point/:id',
-		component: PointComponent,
-		canActivate: [readGuard],
+		loadChildren: () => import('./point-page/point-page.module').then(m => m.PointPageModule),
 	},
 	{
 		path: 'url',
-		component: PointComponent,
+		loadChildren: () => import('./point-page/point-page.module').then(m => m.PointPageModule),
 	},
 	{
 		path: 'auth',
@@ -36,27 +31,23 @@ const routes: Routes = [
 	},
 	{
 		path: 'edit/:id',
-		component: EditPointComponent,
-		canActivate: [editGuard],
+		loadChildren: () => import('./edit-page/edit-page.module').then(m => m.EditPageModule),
 	},
 	{
 		path: 'create',
-		component: EditPointComponent,
-		canActivate: [editGuard],
+		loadChildren: () => import('./edit-page/edit-page.module').then(m => m.EditPageModule),
 	},
 	{
 		path: 'create-url',
-		component: EditPointComponent,
+		loadChildren: () => import('./edit-page/edit-page.module').then(m => m.EditPageModule),
 	},
 	{
 		path: '',
-		loadChildren: () =>
-			import('./personal/personal.module').then((m) => m.PersonalModule),
+		loadChildren: () => import('./personal/personal.module').then(m => m.PersonalModule),
 	},
 	{
 		path: '**',
-		component: NoPageComponent,
-		canActivate: [noPointGuard, shortGuard],
+		loadChildren: () => import('./no-page/no-page.module').then(m => m.NoPageModule),
 	},
 ];
 

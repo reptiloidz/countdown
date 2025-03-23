@@ -1,11 +1,4 @@
-import {
-	AUTO_STYLE,
-	animate,
-	state,
-	style,
-	transition,
-	trigger,
-} from '@angular/animations';
+import { AUTO_STYLE, animate, state, style, transition, trigger } from '@angular/animations';
 import {
 	Component,
 	ContentChild,
@@ -30,19 +23,16 @@ import { ButtonSize } from 'src/app/types';
 				style({
 					height: AUTO_STYLE,
 					visibility: AUTO_STYLE,
-				})
+				}),
 			),
 			state(
 				'closed',
 				style({
 					height: '0',
 					visibility: 'hidden',
-				})
+				}),
 			),
-			transition(
-				'open <=> closed',
-				animate('.6s cubic-bezier(.1, .79, .24, .95)')
-			),
+			transition('open <=> closed', animate('.6s cubic-bezier(.1, .79, .24, .95)')),
 		]),
 	],
 })
@@ -54,15 +44,9 @@ export class PanelComponent {
 		return this.open;
 	}
 
-	@ContentChild('buttonTemplate') buttonTemplate:
-		| TemplateRef<unknown>
-		| undefined;
-	@ContentChild('bodyTemplate') bodyTemplate:
-		| TemplateRef<unknown>
-		| undefined;
-	@ContentChild('extraTemplate') extraTemplate:
-		| TemplateRef<unknown>
-		| undefined;
+	@ContentChild('buttonTemplate') buttonTemplate: TemplateRef<unknown> | undefined;
+	@ContentChild('bodyTemplate') bodyTemplate: TemplateRef<unknown> | undefined;
+	@ContentChild('extraTemplate') extraTemplate: TemplateRef<unknown> | undefined;
 	@ContentChild('extraButton') extraButton: TemplateRef<unknown> | undefined;
 	@ViewChild('panelContentRef') private panelContentRef!: ElementRef;
 

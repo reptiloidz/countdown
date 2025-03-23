@@ -1,14 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import {
-	Subscription,
-	distinctUntilChanged,
-	filter,
-	first,
-	interval,
-	switchMap,
-} from 'rxjs';
+import { Subscription, filter, first, interval, switchMap } from 'rxjs';
 import { ActionService, NotifyService } from './services';
-import { ActivationStart, Event, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Constants } from './enums';
 
@@ -19,12 +12,11 @@ import { Constants } from './enums';
 export class AppComponent implements OnInit, OnDestroy {
 	count = 0;
 	startTime = new Date();
-	isUrlMode = false;
 
 	constructor(
 		private notify: NotifyService,
 		private action: ActionService,
-		private router: Router
+		private router: Router,
 	) {}
 
 	private subscriptions = new Subscription();
@@ -35,36 +27,17 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.subscriptions.add(
-			this.router.events
-				.pipe(
-					filter((event: Event) => event instanceof ActivationStart),
-					distinctUntilChanged()
-				)
-				.subscribe({
-					next: (data: any) => {
-						this.isUrlMode = data.snapshot.url[0]?.path === 'url';
-					},
-				})
-		);
-
-		document.documentElement.style.setProperty(
-			'--start-time',
-			(+new Date()).toString()
-		);
+		document.documentElement.style.setProperty('--start-time', (+new Date()).toString());
 
 		interval(this.isProd ? 1 : Constants.tick)
 			.pipe(
 				filter(() => +new Date() % 1000 < 100),
 				first(),
-				switchMap(() => interval(1000))
+				switchMap(() => interval(1000)),
 			)
 			.subscribe({
 				next: () => {
-					document.documentElement.style.setProperty(
-						'--count',
-						(++this.count).toString()
-					);
+					document.documentElement.style.setProperty('--count', (++this.count).toString());
 
 					this.action.intervalSwitched();
 				},

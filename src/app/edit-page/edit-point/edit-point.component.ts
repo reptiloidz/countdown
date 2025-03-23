@@ -34,9 +34,9 @@ import { addMonths, addYears, format, getYear, intervalToDuration, setYear, subM
 import { getInvertedObject, getPointDate, isDateValid, parseDate, setIterationsMode, sortDates } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
 import { CalendarMode, DifferenceMode, EditPointEvent, PointColorTypes } from 'src/app/types';
-import { DropComponent } from '../drop/drop.component';
+import { DropComponent } from '../../components/drop/drop.component';
 import { fetchEmojis, fetchMessages } from 'emojibase';
-import { DatePanelComponent } from '../date-panel/date-panel.component';
+import { DatePanelComponent } from '../../point-page/date-panel/date-panel.component';
 
 enum EditPointType {
 	Create = 'create',
@@ -221,7 +221,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 
 		this.subscriptions.add(
-			this.route.url.subscribe({
+			this.route.pathFromRoot?.[1].url.subscribe({
 				next: (data: any) => {
 					this.type =
 						data[0].path === 'create'

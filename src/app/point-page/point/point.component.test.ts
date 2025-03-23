@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { DatePanelComponent } from '../date-panel/date-panel.component';
 import { PanelComponent } from '../panel/panel.component';
-import { TimersComponent } from '../timers/timers.component';
+import { TimersComponent } from '../../timers/timers.component';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Point } from 'src/app/interfaces';

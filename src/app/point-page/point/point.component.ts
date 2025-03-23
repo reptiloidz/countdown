@@ -24,7 +24,7 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Title } from '@angular/platform-browser';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { CheckboxComponent } from '../../components/checkbox/checkbox.component';
 
 @Component({
 	selector: 'app-point',
@@ -89,9 +89,9 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.route.url.subscribe({
+			this.route.pathFromRoot?.[1].url.subscribe({
 				next: (data: any) => {
-					this.urlMode.next(data[0].path === 'url');
+					this.urlMode.next(data[0]?.path === 'url');
 				},
 			}),
 		);

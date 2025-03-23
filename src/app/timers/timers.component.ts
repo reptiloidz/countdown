@@ -1,10 +1,4 @@
-import {
-	AUTO_STYLE,
-	animate,
-	style,
-	transition,
-	trigger,
-} from '@angular/animations';
+import { AUTO_STYLE, animate, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -28,14 +22,14 @@ import { Component, Input } from '@angular/core';
 							opacity: AUTO_STYLE,
 							width: AUTO_STYLE,
 							marginLeft: 'var(--timers-gap)',
-						})
+						}),
 					),
 				],
 				{
 					params: {
 						delay: 0,
 					},
-				}
+				},
 			),
 			transition(':leave', [
 				animate(
@@ -45,7 +39,7 @@ import { Component, Input } from '@angular/core';
 						opacity: 0,
 						width: 0,
 						marginLeft: 0,
-					})
+					}),
 				),
 			]),
 		]),

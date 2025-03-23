@@ -38,7 +38,7 @@
 	}
 
 	&:active {
-		@include transform(scale(0.95));
+		@include transform(scale(0.98));
 		--state-main-focus-shadow-cl: transparent;
 
 		&:has(.state:active) {
