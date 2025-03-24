@@ -100,7 +100,7 @@
 					>
 						<ng-template #bodyTemplate>
 							<button
-								*ngFor="let pointColorsItem of pointColors"
+								*ngFor="let pointColorsItem of pointColors; trackBy: trackBy"
 								app-button
 								class="drop__item"
 								[ngClass]="{

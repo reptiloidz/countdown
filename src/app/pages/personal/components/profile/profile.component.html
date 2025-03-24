@@ -59,7 +59,7 @@
 					class="info info--error"
 				>
 					<li
-						*ngFor="let errMessage of nameErrorMessages"
+						*ngFor="let errMessage of nameErrorMessages; trackBy: trackBy"
 						class="info__item"
 					>{{ errMessage }}</li>
 				</ul>
@@ -95,7 +95,7 @@
 					class="info info--error"
 				>
 					<li
-						*ngFor="let errMessage of emailErrorMessages"
+						*ngFor="let errMessage of emailErrorMessages; trackBy: trackBy"
 						class="info__item"
 					>{{ errMessage }}</li>
 				</ul>
@@ -141,7 +141,7 @@
 					class="info info--error"
 				>
 					<li
-						*ngFor="let errMessage of passwordErrorMessages"
+						*ngFor="let errMessage of passwordErrorMessages; trackBy: trackBy"
 						class="info__item"
 					>{{ errMessage }}</li>
 				</ul>
