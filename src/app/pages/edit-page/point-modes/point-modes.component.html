@@ -134,7 +134,7 @@
 		<h4 class="emoji-list__title">{{ group.title }}</h4>
 		<ul class="emoji-list__group">
 			<li
-				*ngFor="let emoji of group.list"
+				*ngFor="let emoji of group.list; trackBy: trackByEmoji"
 				class="emoji-list__emoji"
 			>
 				<button

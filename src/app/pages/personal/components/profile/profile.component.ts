@@ -499,4 +499,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				},
 			});
 	}
+
+	trackBy(index: number, item: string): string {
+		return item;
+	}
 }

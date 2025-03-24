@@ -546,6 +546,10 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 		return this.point?.repeatable;
 	}
 
+	trackBy(index: number, item: PointColorTypes): string {
+		return item;
+	}
+
 	closeNotify(name: string) {
 		this.notifies[name].date && this.notify.close(this.notifies[name].date as Date);
 		this.notifies[name].date = undefined;

@@ -60,18 +60,18 @@
 					[ngClass]="{
 						'calendar__head--weekend': weekendDays.includes(i)
 					}"
-					*ngFor="let day of weekDaysArray; index as i"
+					*ngFor="let day of weekDaysArray; index as i; trackBy: trackBy"
 				>{{ day }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr
-				*ngFor="let period of calendarArray"
+				*ngFor="let period of calendarArray; trackBy: trackBy"
 				class="calendar__row"
 			>
 				<td
 					class="calendar__cell"
-					*ngFor="let item of period"
+					*ngFor="let item of period; trackBy: trackBy"
 				>
 					<button
 						class="calendar__button state"

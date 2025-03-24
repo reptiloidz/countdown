@@ -200,6 +200,10 @@ export class NotifyComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	trackBy(index: number, item: Notification): Date {
+		return item.date;
+	}
+
 	closeNotify(date: Date) {
 		this.notify.close(date);
 	}

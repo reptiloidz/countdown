@@ -1,7 +1,7 @@
 <ul class="notify-list">
 	<li
 		@notify
-		*ngFor="let notify of notifyList"
+		*ngFor="let notify of notifyList; trackBy: trackBy"
 		class="notify-list__item-wrapper"
 		[attr.id]="'n-' + +notify.date"
 	>

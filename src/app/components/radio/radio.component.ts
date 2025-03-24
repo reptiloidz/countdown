@@ -53,4 +53,8 @@ export class RadioComponent implements ControlValueAccessor {
 		this.onTouched();
 		this.valueSwitched.emit(this.value);
 	}
+
+	trackBy(index: number, item: RadioItem) {
+		return item.value;
+	}
 }

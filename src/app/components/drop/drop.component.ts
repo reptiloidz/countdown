@@ -122,6 +122,10 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		return getKeyByValue(this.dropList, this.value);
 	}
 
+	trackBy(index: number, item: SelectArray): string | number {
+		return item.value;
+	}
+
 	setHeightParams() {
 		this.triggerOffsetTop = this.triggerElement.getBoundingClientRect().top;
 		this.bottomSpace = window.innerHeight - this.triggerOffsetTop - this.footerHeight;

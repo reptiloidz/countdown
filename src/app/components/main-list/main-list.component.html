@@ -141,7 +141,7 @@
 						<ng-template #bodyTemplate>
 							<div #colorList>
 								<label
-									*ngFor="let pointColorsItem of pointColors"
+									*ngFor="let pointColorsItem of pointColors; trackBy: trackByColors"
 									app-checkbox
 									iconSize="sm"
 									[attr.data-color]="pointColorsItem"
@@ -218,7 +218,7 @@
 					</ng-template>
 					<ng-template #bodyTemplate>
 						<button
-							*ngFor="let sortTypeItem of sortTypeKeysArray"
+							*ngFor="let sortTypeItem of sortTypeKeysArray; trackBy: trackByNames"
 							app-button
 							class="drop__item"
 							[ngClass]="{
@@ -265,7 +265,7 @@
 					[isLine]="modesValue === 'list'"
 					[attr.data-id]="point.id"
 					class="points-list__item"
-					*ngFor="let point of filteredPoints | sortPoints : sortType; let i = index"
+					*ngFor="let point of filteredPoints | sortPoints : sortType; let i = index; trackBy: trackByFilteredPoints"
 					[point]="point"
 					(pointCheck)="checkPoint()"
 				></li>
@@ -302,7 +302,7 @@
 			app-main-item
 			[isSm]="isSm"
 			[attr.data-id]="point.id"
-			*ngFor="let point of pointsList | sortPoints : sortType; let i = index"
+			*ngFor="let point of pointsList | sortPoints : sortType; let i = index; trackBy: trackByFilteredPoints"
 			[point]="point"
 		>
 			<ng-template

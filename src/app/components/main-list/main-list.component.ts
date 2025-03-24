@@ -285,6 +285,18 @@ export class MainListComponent implements OnInit, OnDestroy {
 		return this.auth.isAuthenticated;
 	}
 
+	trackByColors(index: number, item: PointColorTypes): string {
+		return item;
+	}
+
+	trackByNames(index: number, item: SortTypes): string {
+		return item;
+	}
+
+	trackByFilteredPoints(index: number, item: Point): string {
+		return item.id || index.toString();
+	}
+
 	getAvailablePointsVisibility() {
 		requestAnimationFrame(() => {
 			this.action.hasEditablePoints(

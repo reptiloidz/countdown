@@ -3,7 +3,7 @@
 	[ngClass]="switcherListClass"
 >
 	<label
-		*ngFor="let item of items"
+		*ngFor="let item of items; trackBy: trackBy"
 		class="switcher__item state"
 		[ngClass]="{
 			'switcher__item--active' : item?.value === value

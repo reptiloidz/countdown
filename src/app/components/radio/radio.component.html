@@ -1,5 +1,5 @@
 <label
-	*ngFor="let item of items"
+	*ngFor="let item of items; trackBy: trackBy"
 	class="radio"
 	[ngClass]="radioClass"
 	[attr.title]="item?.text || null"

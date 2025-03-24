@@ -169,6 +169,10 @@ export class RegComponent implements OnInit, OnDestroy {
 		this.popupService.show('Политика в отношении обработки персональных данных', PrivacyComponent);
 	}
 
+	trackBy(index: number, item: string): string {
+		return item;
+	}
+
 	submit() {
 		if (this.form.valid) {
 			this.isLoading = true;

@@ -71,4 +71,8 @@ export class SwitcherComponent implements ControlValueAccessor {
 		this.onTouched = fn;
 	}
 	setDisabledState?(isDisabled: boolean): void {}
+
+	trackBy(index: number, item: SwitcherItem) {
+		return item.value;
+	}
 }

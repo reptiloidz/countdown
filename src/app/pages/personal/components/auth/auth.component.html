@@ -24,7 +24,7 @@
 			class="info info--error"
 		>
 			<li
-				*ngFor="let errMessage of errorMessages"
+				*ngFor="let errMessage of errorMessages; trackBy: trackBy"
 				class="info__item"
 			>{{ errMessage }}</li>
 		</ul>

@@ -117,6 +117,10 @@ export class AuthComponent implements OnInit, OnDestroy {
 		return hasFieldErrors(this.controlsValidated['password'] as ValidationObjectField);
 	}
 
+	trackBy(index: number, item: string): string {
+		return item;
+	}
+
 	resetPassword() {
 		this.notify
 			.prompt({

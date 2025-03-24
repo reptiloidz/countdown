@@ -223,6 +223,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		return result;
 	}
 
+	trackBy(index: number): number {
+		return index;
+	}
+
 	getItemDate(date: Date) {
 		let result = '';
 		switch (this.activeMode) {
