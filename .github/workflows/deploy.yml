@@ -29,6 +29,7 @@ jobs:
     - name: Сжатие файлов Gzip
       run: |
         find dist/cd -type f \( -name "*.js" -o -name "*.css" -o -name "*.html" -o -name "*.svg" \) -exec gzip -9 -k {} \;
+        ls dist/cd/**/*.gz
 
     - name: Deploy to external server via SFTP
       env:
