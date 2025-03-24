@@ -28,7 +28,7 @@ jobs:
     - run: npm test
     - name: Сжатие файлов Gzip
       run: |
-        find ${{ vars.DEPLOY_PATH }} -type f -exec gzip -9 -k {} \;
+        find dist/cd -type f -exec gzip -9 -k {} \;
 
     - name: Deploy to external server via SFTP
       env:
