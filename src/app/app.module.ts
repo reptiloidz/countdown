@@ -12,7 +12,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from './shared.module';
 import { SortPointsPipe } from './pipes/sort-points.pipe';
 import { CheckEditablePointsPipe } from './pipes/check-editable-points.pipe';
 import { ColorsCheckPipe } from './pipes/colors-check.pipe';
@@ -21,12 +21,12 @@ import { FontProvider } from './providers/font.provider';
 import { FilterPipe } from './pipes/filter.pipe';
 import { DatePointsPopupComponent } from './components/date-points-popup/date-points-popup.component';
 import { SettingsComponent } from './components/settings/settings.component';
-import { ClockModule } from './clock/clock.module';
-import { BoardModule } from './board/board.module';
+import { ClockModule } from './components/clock/clock.module';
+import { BoardModule } from './components/board/board.module';
 import { TimersModule } from './timers/timers.module';
-import { MainItemModule } from './main-item/main-item.module';
+import { MainItemModule } from './components/main-item/main-item.module';
 import { CommonModule } from '@angular/common';
-import { SvgModule } from './svg/svg.module';
+import { SvgModule } from './components/svg/svg.module';
 
 @NgModule({
 	declarations: [

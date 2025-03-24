@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimersComponent } from './timers.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { BoardComponent } from '../board/board.component';
+import { BoardComponent } from '../components/board/board.component';
 
 describe('TimersComponent', () => {
 	let component: TimersComponent;

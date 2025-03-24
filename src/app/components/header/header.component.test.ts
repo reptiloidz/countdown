@@ -5,7 +5,7 @@ import { AuthService, PopupService } from 'src/app/services';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { PrivacyComponent } from '../privacy/privacy.component';
-import { BoardComponent } from '../../board/board.component';
+import { BoardComponent } from '../board/board.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('HeaderComponent', () => {

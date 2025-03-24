@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimersComponent } from './timers.component';
-import { BoardModule } from '../board/board.module';
+import { BoardModule } from '../components/board/board.module';
 
 @NgModule({
 	imports: [CommonModule, BoardModule],

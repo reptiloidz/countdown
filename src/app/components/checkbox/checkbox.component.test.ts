@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CheckboxComponent } from './checkbox.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { SvgComponent } from '../../svg/svg.component';
+import { SvgComponent } from '../svg/svg.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CheckboxComponent', () => {
