@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	EventEmitter,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+	ViewChild,
+} from '@angular/core';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { DropComponent } from '../drop/drop.component';
@@ -10,6 +19,7 @@ import { IConfig } from 'ngx-mask';
 @Component({
 	selector: 'app-autocomplete',
 	templateUrl: './autocomplete.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() value: string | number = '';

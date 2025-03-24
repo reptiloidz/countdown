@@ -10,7 +10,7 @@
 	gap: var(--button-gap);
 	align-items: center;
 	justify-content: center;
-	width: fit-content;
+	width: var(--button-w, fit-content);
 	padding: 6px;
 	border: 1px solid var(--button-border-cl);
 	border-radius: var(--button-brs);

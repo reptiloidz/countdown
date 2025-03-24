@@ -1,9 +1,10 @@
-import { Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
 import { ButtonSize } from 'src/app/types';
 
 @Component({
 	selector: '[app-button]',
 	templateUrl: './button.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
 	@Input() icon!: string;

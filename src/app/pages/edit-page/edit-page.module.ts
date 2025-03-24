@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClockModule } from '../../components/clock/clock.module';
 import { MainItemModule } from '../../components/main-item/main-item.module';
 import { PointModule } from '../point-page/point.module';
+import { SvgModule } from 'src/app/components/svg/svg.module';
 
 const routes: Routes = [
 	{
@@ -26,6 +27,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [
 		CommonModule,
+		SvgModule,
 		SharedModule,
 		ScrollingModule,
 		BoardModule,

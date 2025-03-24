@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ButtonComponent } from './button.component';
-import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { LoaderComponent } from '../loader/loader.component';
 import { SvgComponent } from '../svg/svg.component';
 
@@ -97,6 +97,8 @@ describe('ButtonComponent', () => {
 		expect(iconElement.classList.contains('button__icon')).toBe(true);
 
 		component.view = 'link';
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		cdr.detectChanges();
 		fixture.detectChanges();
 		expect(iconElement.classList.contains('link__icon')).toBe(true);
 	});

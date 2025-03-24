@@ -85,7 +85,15 @@
 		background-color: rgb(var(--c-bg-inverse));
 
 		&:has(> .state) {
+			--button-w: 100%;
+
 			background-image: linear-gradient(0deg, var(--state-bg-img), var(--state-bg-img));
+			box-shadow: var(--state-shadow-pos) var(--state-shadow-w) var(--state-shadow-cl);
+		}
+
+		&:has(> .state:focus) {
+			--button-w: 100%;
+			--state-shadow-cl: var(--state-main-focus-shadow-cl);
 		}
 
 		> .state {

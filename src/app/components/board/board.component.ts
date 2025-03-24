@@ -1,4 +1,15 @@
-import { Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	ElementRef,
+	HostBinding,
+	Input,
+	OnChanges,
+	OnDestroy,
+	OnInit,
+	SimpleChanges,
+} from '@angular/core';
 import { filter, timer } from 'rxjs';
 
 const ANIMATION_SPEED = 200;
@@ -6,6 +17,7 @@ const ANIMATION_SPEED = 200;
 @Component({
 	selector: 'app-board',
 	templateUrl: './board.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 	@HostBinding('class') get componentClass() {
@@ -31,7 +43,10 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 	intersectionCallback!: IntersectionObserverCallback;
 	intersectionObserver!: IntersectionObserver;
 
-	constructor(private el: ElementRef) {}
+	constructor(
+		private el: ElementRef,
+		private cdr: ChangeDetectorRef,
+	) {}
 
 	ngOnInit(): void {
 		this.intersectionCallback = (entries: IntersectionObserverEntry[]) => {
@@ -94,6 +109,7 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 				this.bottomStaticValue = this.value;
 				this.switchBottom = false;
 			});
+			this.cdr.detectChanges();
 		});
 	}
 }

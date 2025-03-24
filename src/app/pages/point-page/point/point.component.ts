@@ -34,11 +34,9 @@ import { CheckboxComponent } from '../../../components/checkbox/checkbox.compone
 export class PointComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
 	@HostListener('window:beforeunload', ['$event'])
-	@ViewChild('audioFinish')
-	audioFinish!: ElementRef<HTMLAudioElement>;
-	@ViewChild('soundCheckbox')
-	soundCheckbox!: CheckboxComponent;
 	handleBeforeUnload(event: Event) {
+		console.log('this.timerMode', this.timerMode);
+
 		if (this.timerMode) {
 			event.preventDefault();
 			// @ts-ignore
@@ -46,6 +44,10 @@ export class PointComponent implements OnInit, OnDestroy {
 		}
 		return '';
 	}
+	@ViewChild('audioFinish')
+	audioFinish!: ElementRef<HTMLAudioElement>;
+	@ViewChild('soundCheckbox')
+	soundCheckbox!: CheckboxComponent;
 
 	point!: Point | undefined;
 	pointDate = new Date();
