@@ -1,4 +1,5 @@
 import {
+	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
 	HostBinding,
@@ -18,6 +19,7 @@ import { SortTypes } from 'src/app/types';
 @Component({
 	selector: 'app-date-points-popup',
 	templateUrl: './date-points-popup.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatePointsPopupComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'date-points-popup';
@@ -35,38 +37,30 @@ export class DatePointsPopupComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private popupService: PopupService,
 		private cdr: ChangeDetectorRef,
-		private router: Router
+		private router: Router,
 	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
-			this.data.eventRemovePoint$
-				.pipe(switchMap(() => this.data.eventFetchAllPoints$))
-				.subscribe({
-					next: (points: Point[]) => {
-						this.pointsList = this.pointsList.filter((point) =>
-							points.some((item) => item.id === point.id)
-						);
+			this.data.eventRemovePoint$.pipe(switchMap(() => this.data.eventFetchAllPoints$)).subscribe({
+				next: (points: Point[]) => {
+					this.pointsList = this.pointsList.filter(point => points.some(item => item.id === point.id));
 
-						this.cdr.detectChanges();
+					this.cdr.detectChanges();
 
-						if (!this.pointsList.length) {
-							this.popupService.close();
-						}
-					},
-				})
+					if (!this.pointsList.length) {
+						this.popupService.close();
+					}
+				},
+			}),
 		);
 
 		this.subscriptions.add(
-			this.router.events
-				.pipe(
-					filter((event: Event) => event instanceof ActivationStart)
-				)
-				.subscribe({
-					next: () => {
-						this.popupService.close();
-					},
-				})
+			this.router.events.pipe(filter((event: Event) => event instanceof ActivationStart)).subscribe({
+				next: () => {
+					this.popupService.close();
+				},
+			}),
 		);
 	}
 

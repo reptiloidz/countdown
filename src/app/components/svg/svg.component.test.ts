@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SvgComponent } from './svg.component';
-import { Renderer2, ElementRef } from '@angular/core';
+import { Renderer2, ElementRef, ChangeDetectorRef } from '@angular/core';
 
 describe('SvgComponent', () => {
 	let component: SvgComponent;
@@ -42,6 +42,8 @@ describe('SvgComponent', () => {
 
 	it('should set the title when provided', () => {
 		component.title = 'Test Title';
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		cdr.detectChanges();
 		fixture.detectChanges();
 
 		const titleElement = elementRef.nativeElement.querySelector('title');

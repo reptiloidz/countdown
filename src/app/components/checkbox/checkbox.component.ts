@@ -1,9 +1,21 @@
-import { Component, HostBinding, Input, forwardRef } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	HostBinding,
+	Input,
+	OnDestroy,
+	OnInit,
+	forwardRef,
+} from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { ActionService } from 'src/app/services';
 
 @Component({
 	selector: '[app-checkbox]',
 	templateUrl: './checkbox.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
@@ -12,7 +24,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
 		},
 	],
 })
-export class CheckboxComponent implements ControlValueAccessor {
+export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestroy {
 	@HostBinding('class') get controlClass() {
 		return ['checkbox state', this.mode !== 'text' && 'checkbox--' + this.mode].filter(_ => _).join(' ');
 	}
@@ -33,6 +45,27 @@ export class CheckboxComponent implements ControlValueAccessor {
 	}
 	set name(value: string | null) {
 		this._name = value || this.formControlName;
+	}
+
+	private subscriptions = new Subscription();
+
+	constructor(
+		private cdr: ChangeDetectorRef,
+		private action: ActionService,
+	) {}
+
+	ngOnInit(): void {
+		this.subscriptions.add(
+			this.action.eventPointsCheckedAll$.subscribe({
+				next: () => {
+					this.cdr.detectChanges();
+				},
+			}),
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	onChange: (value: boolean) => void = () => {};

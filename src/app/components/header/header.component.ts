@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { SettingsComponent } from '../settings/settings.component';
 @Component({
 	selector: '[app-header]',
 	templateUrl: './header.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 	constructor(
@@ -16,6 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private popupService: PopupService,
+		private cdr: ChangeDetectorRef,
 	) {}
 
 	private subscriptions = new Subscription();
@@ -36,6 +38,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					this.isMain = !finalPath;
 					this.isPrivacy = finalPath !== 'privacy';
 					this.isProfile = finalPath !== 'profile';
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -51,6 +54,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 						public: localStorage.getItem('publicValue') === 'all' ? null : localStorage.getItem('publicValue'),
 						color: localStorage.getItem('colorValue') === 'all' ? null : localStorage.getItem('colorValue'),
 					};
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -59,6 +63,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			this.auth.currentUser.subscribe({
 				next: data => {
 					this.user = data as User;
+					this.cdr.detectChanges();
 				},
 			}),
 		);

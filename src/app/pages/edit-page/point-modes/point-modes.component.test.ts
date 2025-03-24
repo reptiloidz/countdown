@@ -85,7 +85,7 @@ describe('PointModesComponent', () => {
 
 	it('should apply filter', () => {
 		jest.useFakeTimers();
-		component.filterRef = new InputComponent();
+		component.filterRef = new InputComponent(TestBed.inject(ChangeDetectorRef));
 		component.filterRef.value = 'label1';
 		component.emojis = [
 			{

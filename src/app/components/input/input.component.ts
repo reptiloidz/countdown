@@ -1,4 +1,6 @@
 import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -15,6 +17,7 @@ import { ValidationObjectFieldValue } from 'src/app/interfaces';
 @Component({
 	selector: 'app-input',
 	templateUrl: './input.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
@@ -59,6 +62,8 @@ export class InputComponent implements ControlValueAccessor {
 
 	@ViewChild('inputRef') inputRef!: ElementRef;
 
+	constructor(private cdr: ChangeDetectorRef) {}
+
 	isDisabled: boolean = false;
 
 	get showPasswordTitle(): string {
@@ -76,6 +81,7 @@ export class InputComponent implements ControlValueAccessor {
 		if (typeof value === 'string' || typeof value === 'number') {
 			this.value = value.toString();
 		}
+		this.cdr.detectChanges();
 	}
 	registerOnChange(fn: (value: string | number) => void): void {
 		this.onChange = fn;
@@ -91,6 +97,7 @@ export class InputComponent implements ControlValueAccessor {
 		this.value = (event.target as HTMLInputElement).value || '';
 		this.onChange(this.value);
 		this.onTouched();
+		this.cdr.detectChanges();
 	}
 
 	resetValue() {

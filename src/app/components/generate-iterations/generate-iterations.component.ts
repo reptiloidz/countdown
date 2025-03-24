@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	EventEmitter,
+	Input,
+	OnInit,
+	Output,
+	ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
 	Day,
@@ -35,6 +44,7 @@ import { DatepickerComponent } from '../datepicker/datepicker.component';
 @Component({
 	selector: 'app-generate-iterations',
 	templateUrl: './generate-iterations.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GenerateIterationsComponent implements OnInit {
 	@Input() form!: FormGroup;
@@ -87,6 +97,8 @@ export class GenerateIterationsComponent implements OnInit {
 			icon: 'calendar-clock',
 		},
 	];
+
+	constructor(private cdr: ChangeDetectorRef) {}
 
 	ngOnInit(): void {
 		this.getStartDayParam();
@@ -295,6 +307,7 @@ export class GenerateIterationsComponent implements OnInit {
 		this.repeatsAreGenerated.emit(this.repeats);
 
 		this.repeats = [];
+		this.cdr.detectChanges();
 	}
 
 	getDateTime(k: number) {
@@ -371,10 +384,12 @@ export class GenerateIterationsComponent implements OnInit {
 	rangeStartDatePicked(date: Date) {
 		this.rangeStartDate = date;
 		this.getStartDayParam();
+		this.cdr.detectChanges();
 	}
 
 	rangeEndDatePicked(date: Date) {
 		this.rangeEndDate = date;
+		this.cdr.detectChanges();
 	}
 
 	addIterationRecursively(k: number) {
@@ -393,11 +408,13 @@ export class GenerateIterationsComponent implements OnInit {
 			});
 			this.addIterationRecursively(k + 1);
 		}
+		this.cdr.detectChanges();
 	}
 
 	repeatsModeSwitcher() {
 		requestAnimationFrame(() => {
 			this.rangeEndRef?.fixDisabledDate();
+			this.cdr.detectChanges();
 		});
 	}
 }

@@ -1,20 +1,11 @@
-import {
-	Component,
-	EventEmitter,
-	Input,
-	Output,
-	forwardRef,
-} from '@angular/core';
-import {
-	ControlValueAccessor,
-	FormControl,
-	NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { RadioItem } from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-radio',
 	templateUrl: './radio.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

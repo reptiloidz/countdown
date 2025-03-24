@@ -1,9 +1,10 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit } from '@angular/core';
 import { SwitcherItem } from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-settings',
 	templateUrl: './settings.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
 	themes: SwitcherItem[] = [

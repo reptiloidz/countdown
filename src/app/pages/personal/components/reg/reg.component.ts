@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
@@ -11,6 +11,7 @@ import { passwordRepeat } from 'src/app/validators';
 @Component({
 	selector: 'app-reg',
 	templateUrl: './reg.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegComponent implements OnInit, OnDestroy {
 	@ViewChild('passwordControl') private passwordControl!: InputComponent;

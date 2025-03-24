@@ -3,7 +3,7 @@ import { CheckboxComponent } from './checkbox.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { SvgComponent } from '../svg/svg.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CheckboxComponent', () => {
 	let component: CheckboxComponent;
@@ -46,6 +46,8 @@ describe('CheckboxComponent', () => {
 
 	it('should disable the checkbox when isDisabled is true', () => {
 		component.isDisabled = true;
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		cdr.detectChanges();
 		fixture.detectChanges();
 
 		const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
@@ -70,6 +72,8 @@ describe('CheckboxComponent', () => {
 
 	it('should bind the name attribute to the input element', () => {
 		component.name = 'test-checkbox';
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		cdr.detectChanges();
 		fixture.detectChanges();
 
 		const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
@@ -105,6 +109,8 @@ describe('CheckboxComponent', () => {
 
 	it('should apply the correct size class to the checkbox box', () => {
 		component.iconSize = 'sm';
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		cdr.detectChanges();
 		fixture.detectChanges();
 
 		const checkboxBox = fixture.debugElement.query(By.css('.checkbox__box')).nativeElement;

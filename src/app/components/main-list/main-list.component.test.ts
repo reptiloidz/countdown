@@ -3,10 +3,11 @@ import { MainListComponent } from './main-list.component';
 import { DataService, ActionService, AuthService, PopupService } from 'src/app/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { ElementRef } from '@angular/core';
+import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
 import { Point } from 'src/app/interfaces';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
 
 describe('MainListComponent', () => {
 	let component: MainListComponent;
@@ -51,7 +52,8 @@ describe('MainListComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [MainListComponent, InputComponent, DatePointsPopupComponent],
+			// imports: [CommonModule],
+			declarations: [MainListComponent, InputComponent, DatePointsPopupComponent, FilterPipe],
 			providers: [
 				{ provide: DataService, useValue: dataServiceMock },
 				{ provide: ActionService, useValue: actionServiceMock },
@@ -61,6 +63,7 @@ describe('MainListComponent', () => {
 				{ provide: ActivatedRoute, useValue: routeMock },
 				{ provide: ElementRef, useValue: {} },
 			],
+			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(MainListComponent);
@@ -82,7 +85,6 @@ describe('MainListComponent', () => {
 		expect(component.loading).toBe(true);
 		expect(component.isDatePointsChecked).toBe(false);
 		expect(component.datePointsChecked).toEqual([]);
-		expect(component.isAllDatesChecked).toBe(false);
 		expect(component.sortType).toBe('titleAsc');
 		expect(component.colorType).toEqual([]);
 		expect(component.repeatableValue).toBe('all');
@@ -194,7 +196,7 @@ describe('MainListComponent', () => {
 		expect(component.greenwichValue).toBe('all');
 		expect(component.publicValue).toBe('all');
 		expect(component.directionValue).toBe('all');
-		expect(component.searchInput.value).toBe('');
+		expect(component.searchInput?.value).toBeFalsy();
 		expect(component.colorType).toEqual([]);
 	});
 

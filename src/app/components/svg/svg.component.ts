@@ -1,8 +1,9 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
 
 @Component({
 	selector: '[app-svg]',
 	templateUrl: './svg.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SvgComponent implements OnInit {
 	private _name: string | null = null;

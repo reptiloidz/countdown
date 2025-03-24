@@ -1,4 +1,12 @@
-import { Component, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	HostBinding,
+	OnDestroy,
+	OnInit,
+	ViewChild,
+} from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format, parse, subYears } from 'date-fns';
@@ -12,6 +20,7 @@ import { AuthService, DataService, NotifyService } from 'src/app/services';
 @Component({
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent implements OnInit, OnDestroy {
 	@ViewChild('passwordControl') private passwordControl!: InputComponent;
@@ -22,6 +31,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		private auth: AuthService,
 		private data: DataService,
 		private notify: NotifyService,
+		private cdr: ChangeDetectorRef,
 	) {}
 
 	birthDateEventName = 'Я родился';
@@ -146,14 +156,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						if (user?.birthDate) {
 							this.birthDatePickerValue = parse('00:00', Constants.timeFormat, parseDate(user.birthDate));
 						}
+						this.cdr.detectChanges();
 					},
 					error: () => {
 						this.profileLoading = false;
 						this.emailLoading = false;
+						this.cdr.detectChanges();
 					},
 					complete: () => {
 						this.profileLoading = false;
 						this.emailLoading = false;
+						this.cdr.detectChanges();
 					},
 				}),
 		);
@@ -179,6 +192,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 								short: true,
 								view: 'positive',
 							});
+						this.cdr.detectChanges();
 					},
 				}),
 		);
@@ -188,12 +202,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.emailLoading = false;
 					this.auth.verifyEmail(this._user);
+					this.cdr.detectChanges();
 				},
 				error: () => {
 					this.emailLoading = false;
+					this.cdr.detectChanges();
 				},
 				complete: () => {
 					this.emailLoading = false;
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -213,12 +230,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this.formPassword.controls['new-password'].setValue(null);
 						this.passwordErrorMessages = [];
 					}
+					this.cdr.detectChanges();
 				},
 				error: () => {
 					this.passwordLoading = false;
+					this.cdr.detectChanges();
 				},
 				complete: () => {
 					this.passwordLoading = false;
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -234,6 +254,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						short: true,
 						view: 'positive',
 					});
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -264,12 +285,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							this.nameErrorMessages = getErrorMessages(this.nameValidated);
 						}
 						this.userpicLoading = false;
+						this.cdr.detectChanges();
 					},
 					error: () => {
 						this.userpicLoading = false;
+						this.cdr.detectChanges();
 					},
 					complete: () => {
 						this.userpicLoading = false;
+						this.cdr.detectChanges();
 					},
 				}),
 		);
@@ -289,6 +313,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						},
 					}) as ValidationObject;
 					this.emailErrorMessages = getErrorMessages(this.emailValidated);
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -332,6 +357,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.passwordErrorMessages = getErrorMessages(this.passwordValidated);
 					this.oldPasswordErrorMessages = getErrorMessages(oldPasswordValidated);
 					this.newPasswordErrorMessages = getErrorMessages(newPasswordValidated);
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -352,6 +378,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 								view: 'positive',
 							});
 						});
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -360,6 +387,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.auth.eventVerifyEmailSent$.subscribe({
 				next: () => {
 					this.verifyButtonDisabled = false;
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -459,12 +487,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.removeLoading = true;
 					this.auth.removeAccount(this._user, this._birthDatePointId);
+					this.cdr.detectChanges();
 				},
 				error: () => {
 					this.removeLoading = false;
+					this.cdr.detectChanges();
 				},
 				complete: () => {
 					this.removeLoading = false;
+					this.cdr.detectChanges();
 				},
 			});
 	}

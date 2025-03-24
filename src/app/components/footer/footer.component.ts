@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, Event, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { format, formatISO } from 'date-fns';
 import { filter, Subscription, mergeMap, combineLatestWith, of, distinctUntilChanged } from 'rxjs';
@@ -12,6 +12,7 @@ import { Constants } from 'src/app/enums';
 @Component({
 	selector: '[app-footer]',
 	templateUrl: './footer.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent implements OnInit, OnDestroy {
 	pointId: string | undefined;
@@ -39,6 +40,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 		private notify: NotifyService,
 		private http: HttpService,
 		private deviceService: DeviceDetectorService,
+		private cdr: ChangeDetectorRef,
 	) {}
 
 	get isAuthenticated() {
@@ -105,6 +107,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 								}).toString();
 							this.hasAccess = point && this.auth.checkAccessEdit(point);
 						}
+						this.cdr.detectChanges();
 					},
 					error: err => {
 						console.error('Ошибка в футере при получении события:\n', err.message);
@@ -116,6 +119,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$.subscribe({
 				next: ([point]) => {
 					this.point = point;
+					this.cdr.detectChanges();
 				},
 				error: err => {
 					console.error('Ошибка при обновлении итераций события:\n', err.message);
@@ -132,6 +136,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 						view: 'positive',
 						short: true,
 					});
+					this.cdr.detectChanges();
 				},
 				error: err => {
 					console.error('Ошибка при удалении события:\n', err.message);
@@ -143,13 +148,17 @@ export class FooterComponent implements OnInit, OnDestroy {
 			this.action.eventPointsChecked$.subscribe({
 				next: check => {
 					this.pointsChecked = check;
+					this.cdr.detectChanges();
 				},
 			}),
 		);
 
 		this.subscriptions.add(
 			this.action.eventHasEditablePoints$.subscribe({
-				next: data => (this.hasEditablePoints = data),
+				next: data => {
+					this.hasEditablePoints = data;
+					this.cdr.detectChanges();
+				},
 			}),
 		);
 
@@ -157,6 +166,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 			this.action.eventUpdatedPoint$.subscribe({
 				next: point => {
 					this.point = point;
+					this.cdr.detectChanges();
 				},
 			}),
 		);

@@ -1,10 +1,19 @@
-import { Component, EventEmitter, HostBinding, Input, Output, forwardRef } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	EventEmitter,
+	HostBinding,
+	Input,
+	Output,
+	forwardRef,
+} from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SwitcherItem } from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-switcher',
 	templateUrl: './switcher.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

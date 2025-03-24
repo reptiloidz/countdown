@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoaderComponent } from './loader.component';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 describe('LoaderComponent', () => {
@@ -29,6 +29,8 @@ describe('LoaderComponent', () => {
 	it('should pass the iconClass input to the svg element', () => {
 		const testClass = { 'custom-class': true };
 		component.iconClass = testClass;
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		cdr.detectChanges();
 		fixture.detectChanges();
 
 		const svgElement = fixture.debugElement.query(By.css('svg'));

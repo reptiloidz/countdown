@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RadioComponent } from './radio.component';
 import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { ChangeDetectorRef } from '@angular/core';
 
 describe('RadioComponent', () => {
 	let component: RadioComponent;
@@ -51,6 +52,8 @@ describe('RadioComponent', () => {
 
 	it('should respect disabled state', () => {
 		component.items[1].disabled = true;
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		cdr.detectChanges();
 		fixture.detectChanges();
 		const radioInputs = fixture.debugElement.queryAll(By.css('input[type=radio]'));
 		expect(radioInputs[1].nativeElement.disabled).toBeTruthy();

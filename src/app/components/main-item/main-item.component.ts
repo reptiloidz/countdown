@@ -9,6 +9,8 @@ import {
 	ContentChild,
 	TemplateRef,
 	ElementRef,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 } from '@angular/core';
 import { Subscription, first } from 'rxjs';
 import { Point, PointMode, UserExtraData } from 'src/app/interfaces';
@@ -21,6 +23,7 @@ import { ru } from 'date-fns/locale';
 @Component({
 	selector: '[app-main-item]',
 	templateUrl: './main-item.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainItemComponent implements OnInit, OnDestroy {
 	@ViewChild('pointCheckbox') private pointCheckbox!: CheckboxComponent;
@@ -60,6 +63,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		private action: ActionService,
 		private notify: NotifyService,
 		private el: ElementRef,
+		private cdr: ChangeDetectorRef,
 	) {}
 
 	ngOnInit(): void {
@@ -69,6 +73,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 					if (this.point.id === id) {
 						this.loading = true;
 					}
+					this.cdr.detectChanges();
 				},
 				error: err => {
 					console.error('Ошибка при удалении события:\n', err.message);
@@ -80,6 +85,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			this.data.eventRemovePoint$.subscribe({
 				next: () => {
 					this.loading = this.data.loading = false;
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -88,6 +94,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			this.action.eventPointsCheckedAll$.subscribe({
 				next: check => {
 					this.pointCheckbox && !this.pointCheckbox.isDisabled && (this.pointCheckbox.isChecked = check);
+					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -96,6 +103,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			this.action.eventIntervalSwitched$.subscribe({
 				next: () => {
 					this.el.nativeElement.querySelector('.board--visible') && this.setTimer();
+					this.cdr.detectChanges();
 				},
 				error: err => {
 					console.error('Ошибка при обновлении таймеров:\n', err.message);
@@ -201,6 +209,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.timerYears = currentInterval.years ? this.zeroPad(Math.abs(currentInterval.years)) : undefined;
 		this.timerMonths = currentInterval.months ? this.zeroPad(Math.abs(currentInterval.months)) : undefined;
 		this.timerDays = currentInterval.days ? this.zeroPad(Math.abs(currentInterval.days)) : undefined;
+		this.cdr.detectChanges();
 	}
 
 	delete(id: string | undefined) {
@@ -209,6 +218,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	checkPoint() {
 		this.pointCheck.emit();
+		this.cdr.detectChanges();
 	}
 
 	loadUserInfo(id?: string) {

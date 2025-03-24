@@ -1,4 +1,14 @@
-import { ElementRef, ViewChild, Component, OnDestroy, OnInit, HostBinding, TemplateRef } from '@angular/core';
+import {
+	ElementRef,
+	ViewChild,
+	Component,
+	OnDestroy,
+	OnInit,
+	HostBinding,
+	TemplateRef,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { PointColors, SortTypeNames } from 'src/app/enums';
@@ -14,6 +24,7 @@ import { ru } from 'date-fns/locale';
 @Component({
 	selector: 'app-main-list',
 	templateUrl: './main-list.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainListComponent implements OnInit, OnDestroy {
 	@ViewChild('pointsList') private pointsList!: ElementRef;
@@ -33,7 +44,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 	loading = true;
 	isDatePointsChecked = false;
 	datePointsChecked: string[] = [];
-	isAllDatesChecked = false;
 	sortType: SortTypes = 'titleAsc';
 	colorType: PointColorTypes[] = [];
 	repeatableValue: FilterSelected = 'all';
@@ -140,6 +150,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		private sort: SortService,
 		public elementRef: ElementRef,
 		private popupService: PopupService,
+		private cdr: ChangeDetectorRef,
 	) {}
 
 	ngOnInit(): void {
@@ -160,6 +171,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 						});
 						this.action.pointsFetched();
 						this.getAvailablePointsVisibility();
+						this.cdr.detectChanges();
 					},
 					error(err) {
 						console.error('Ошибка при загрузке списка:', err.message);
@@ -219,6 +231,8 @@ export class MainListComponent implements OnInit, OnDestroy {
 					localStorage.setItem('publicValue', this.publicValue);
 					localStorage.setItem('directionValue', this.directionValue);
 					localStorage.setItem('colorValue', this.colorType.join('+') || 'all');
+
+					this.cdr.detectChanges();
 				},
 				error: err => {
 					console.error('Ошибка при получении параметров:\n', err.message);
@@ -343,6 +357,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	checkPoint() {
 		this.action.getCheckedPoints(this.pointsList?.nativeElement || this.elementRef?.nativeElement);
+		this.cdr.detectChanges();
 	}
 
 	getCheckedDatePoints() {
@@ -351,6 +366,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			.map((item: any) => item.getAttribute('data-id'));
 
 		this.isDatePointsChecked = !!this.datePointsChecked.length;
+		this.cdr.detectChanges();
 	}
 
 	checkDatePoints(check?: boolean) {
