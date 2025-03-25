@@ -120,7 +120,7 @@
 		"
 	>
 		<button
-			*ngIf="(isUrl || pointId) && !isCreateUrl || isCreate"
+			*ngIf="((isUrl || pointId) && !isCreateUrl) || isCreate"
 			app-button
 			#tooltipTrigger
 			size="lg"

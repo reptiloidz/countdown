@@ -13,14 +13,16 @@ export const editGuard = () => {
 		.pipe(filter((event: Event) => event instanceof ActivationEnd))
 		.pipe(
 			switchMap((data: any) => {
+				hasAccess =
+					data.snapshot.parent?.url?.[0]?.path === 'create-url' || data.snapshot.routeConfig?.path === 'create-url';
 				return dataService.fetchPoint(data.snapshot.params.id);
-			})
+			}),
 		)
 		.subscribe({
-			next: (point) => {
-				hasAccess =
-					!!(point && auth.checkAccessEdit(point)) ||
-					!!(point && !point.id && auth.checkEmailVerified);
+			next: point => {
+				if (!hasAccess) {
+					hasAccess = !!(point && auth.checkAccessEdit(point)) || !!(point && !point.id && auth.checkEmailVerified);
+				}
 				if (!hasAccess) {
 					router.navigate(point?.id ? ['/point/', point.id] : ['/']);
 				}
@@ -28,11 +30,8 @@ export const editGuard = () => {
 				guardSubscribe.unsubscribe();
 				return hasAccess;
 			},
-			error: (err) => {
-				console.error(
-					'Ошибка при проверке доступа к редактированию события:\n',
-					err.message
-				);
+			error: err => {
+				console.error('Ошибка при проверке доступа к редактированию события:\n', err.message);
 			},
 		});
 
