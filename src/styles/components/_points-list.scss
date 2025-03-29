@@ -25,6 +25,10 @@
 		display: flex;
 	}
 
+	&__more {
+		width: 100%;
+	}
+
 	&--lines {
 		@include media-breakpoint-down(md) {
 			--points-list-lines-min-w: 100%;

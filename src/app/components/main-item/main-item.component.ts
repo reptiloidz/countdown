@@ -46,6 +46,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	timerHours!: number | string;
 	timerMins!: number | string;
 	timerSecs!: number | string;
+	isBoardVisible = false;
 
 	_closestIteration!: {
 		date: Date;
@@ -102,7 +103,8 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.action.eventIntervalSwitched$.subscribe({
 				next: () => {
-					this.el.nativeElement.querySelector('.board--visible') && this.setTimer();
+					this.isBoardVisible = this.el.nativeElement.querySelector('.board--visible') ? true : false;
+					this.isBoardVisible && this.setTimer();
 					this.cdr.detectChanges();
 				},
 				error: err => {

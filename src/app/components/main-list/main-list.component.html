@@ -265,10 +265,23 @@
 					[isLine]="modesValue === 'list'"
 					[attr.data-id]="point.id"
 					class="points-list__item"
-					*ngFor="let point of filteredPoints | sortPoints : sortType; let i = index; trackBy: trackByFilteredPoints"
+					*ngFor="let point of (filteredPoints | sortPoints : sortType) | slice:0:(showMore ? -1 : 5); let i = index; trackBy: trackByFilteredPoints"
 					[point]="point"
 					(pointCheck)="checkPoint()"
 				></li>
+				<li
+					class="points-list__item"
+					*ngIf="!showMore"
+				>
+					<button
+						app-button
+						class="points-list__more"
+						size="lg"
+						mode="secondary"
+						icon="dots"
+						(click)="onShowMore()"
+					></button>
+				</li>
 			</ul>
 		</div>
 	</ng-container>

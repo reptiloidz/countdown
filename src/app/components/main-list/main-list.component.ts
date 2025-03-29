@@ -48,11 +48,12 @@ export class MainListComponent implements OnInit, OnDestroy {
 	colorType: PointColorTypes[] = [];
 	repeatableValue: FilterSelected = 'all';
 	greenwichValue: FilterSelected = 'all';
-	publicValue: FilterSelected = 'all';
+	publicValue: FilterSelected = 'false';
 	directionValue: Direction | 'all' = 'all';
 	modesValue: 'list' | 'grid' = 'grid';
 	searchInputValue = '';
 	isFiltersVisible = false;
+	showMore = !!sessionStorage.getItem('showMore');
 
 	repeatList: SwitcherItem[] = [
 		{
@@ -92,17 +93,17 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	publicList: SwitcherItem[] = [
 		{
-			text: 'Приватные',
+			text: 'Мои',
 			value: 'false',
-			icon: 'lock',
+			icon: 'user',
 		},
 		{
-			text: 'Приватные/публичные',
+			text: 'Доступные',
 			value: 'all',
 			default: true,
 		},
 		{
-			text: 'Публичные',
+			text: 'Чужие',
 			value: 'true',
 			icon: 'users',
 		},
@@ -209,7 +210,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 					if (data.public) {
 						this.publicValue = data.public;
 					} else {
-						this.publicValue = 'all';
+						this.publicValue = 'false';
 					}
 
 					if (data.direction) {
@@ -270,7 +271,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		return (
 			this.repeatableValue !== 'all' ||
 			this.greenwichValue !== 'all' ||
-			this.publicValue !== 'all' ||
+			this.publicValue !== 'false' ||
 			this.directionValue !== 'all' ||
 			this.searchInputValue !== '' ||
 			this.colorType.length
@@ -341,7 +342,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			queryParams: {
 				repeat: this.repeatableValue === 'all' ? null : this.repeatableValue,
 				greenwich: this.greenwichValue === 'all' ? null : this.greenwichValue,
-				public: this.publicValue === 'all' ? null : this.publicValue,
+				public: this.publicValue === 'false' ? null : this.publicValue,
 				direction: this.directionValue === 'all' ? null : this.directionValue,
 				search: this.searchInputValue || null,
 				color: this.colorType.join('+') || null,
@@ -355,7 +356,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	clearFilters() {
 		this.repeatableValue = 'all';
 		this.greenwichValue = 'all';
-		this.publicValue = 'all';
+		this.publicValue = 'false';
 		this.directionValue = 'all';
 		this.searchInput.value = '';
 		this.resetColors();
@@ -471,5 +472,11 @@ export class MainListComponent implements OnInit, OnDestroy {
 				footerRef: this.footerRef,
 			},
 		);
+	}
+
+	onShowMore() {
+		sessionStorage.setItem('showMore', 'true');
+		this.showMore = true;
+		this.cdr.detectChanges();
 	}
 }

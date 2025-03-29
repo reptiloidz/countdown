@@ -89,7 +89,7 @@ describe('MainListComponent', () => {
 		expect(component.colorType).toEqual([]);
 		expect(component.repeatableValue).toBe('all');
 		expect(component.greenwichValue).toBe('all');
-		expect(component.publicValue).toBe('all');
+		expect(component.publicValue).toBe('false');
 		expect(component.directionValue).toBe('all');
 		expect(component.modesValue).toBe('grid');
 		expect(component.searchInputValue).toBe('');
@@ -194,7 +194,7 @@ describe('MainListComponent', () => {
 		component.clearFilters();
 		expect(component.repeatableValue).toBe('all');
 		expect(component.greenwichValue).toBe('all');
-		expect(component.publicValue).toBe('all');
+		expect(component.publicValue).toBe('false');
 		expect(component.directionValue).toBe('all');
 		expect(component.searchInput?.value).toBeFalsy();
 		expect(component.colorType).toEqual([]);

@@ -66,6 +66,9 @@
         <svg xmlns="http://www.w3.org/2000/svg" id="document-cross" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M14.5 11.5 12 14m0 0-2.5 2.5M12 14l-2.5-2.5M12 14l2.5 2.5M13 3H5v2m8-2h1l5 5v1m-6-6v4c0 1 1 2 2 2h4m0 0v3M5 10v11h14v-5" vector-effect="non-scaling-stroke"/>
         </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="dots" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM5 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" vector-effect="non-scaling-stroke"/>
+        </svg>
         <svg xmlns="http://www.w3.org/2000/svg" id="emote-normal" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 12a9 9 0 1 0 2.292-6M8 15h8m-1-6h.01M9 9h.01" vector-effect="non-scaling-stroke"/>
         </svg>

@@ -1,11 +1,17 @@
 import { FilterPipe } from './filter.pipe';
 import { Point } from '../interfaces';
+import { AuthService } from '../services';
 
 describe('FilterPipe', () => {
 	let pipe: FilterPipe;
+	let authService: AuthService;
 
 	beforeEach(() => {
-		pipe = new FilterPipe();
+		authService = {
+			checkAccessEdit: jest.fn(),
+		} as unknown as AuthService;
+		pipe = new FilterPipe(authService);
+		(authService.checkAccessEdit as jest.Mock).mockReturnValue(true);
 	});
 
 	it('should create an instance', () => {
@@ -81,7 +87,7 @@ describe('FilterPipe', () => {
 			isRepeatable: 'all',
 			isGreenwich: 'all',
 			direction: 'all',
-			isPublic: 'all',
+			isPublic: 'false',
 			color: '',
 		});
 
@@ -115,7 +121,7 @@ describe('FilterPipe', () => {
 			isRepeatable: 'true',
 			isGreenwich: 'all',
 			direction: 'all',
-			isPublic: 'all',
+			isPublic: 'false',
 			color: '',
 		});
 
@@ -149,7 +155,7 @@ describe('FilterPipe', () => {
 			isGreenwich: 'true',
 			isRepeatable: 'all',
 			direction: 'all',
-			isPublic: 'all',
+			isPublic: 'false',
 			color: '',
 		});
 
@@ -187,7 +193,7 @@ describe('FilterPipe', () => {
 			color: '',
 		});
 
-		expect(result).toEqual([points[0]]);
+		expect(result.length).toEqual(0);
 	});
 
 	it('should filter points by direction', () => {
@@ -217,7 +223,7 @@ describe('FilterPipe', () => {
 			direction: 'backward',
 			isRepeatable: 'all',
 			isGreenwich: 'all',
-			isPublic: 'all',
+			isPublic: 'false',
 			color: '',
 		});
 
@@ -250,7 +256,7 @@ describe('FilterPipe', () => {
 			search: '',
 			isRepeatable: 'all',
 			isGreenwich: 'all',
-			isPublic: 'all',
+			isPublic: 'false',
 			direction: 'all',
 			color: 'red',
 		});
@@ -282,7 +288,7 @@ describe('FilterPipe', () => {
 			search: 'Point',
 			isRepeatable: 'true',
 			isGreenwich: 'true',
-			isPublic: 'true',
+			isPublic: 'false',
 			direction: 'backward',
 			color: 'red',
 		});
