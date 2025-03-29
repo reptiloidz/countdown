@@ -42,7 +42,9 @@ export class FilterPipe implements PipeTransform {
 					point.title.toLowerCase().includes(search.toLowerCase().trim()) &&
 					(point.repeatable.toString() === isRepeatable || isRepeatable === 'all') &&
 					(point.greenwich.toString() === isGreenwich || isGreenwich === 'all') &&
-					(this.auth.checkAccessEdit(point).toString() !== isPublic || isPublic === 'all') &&
+					(this.auth.checkAccessEdit(point).toString() !== isPublic ||
+						isPublic === 'all' ||
+						!this.auth.isAuthenticated) &&
 					(point.direction === direction || direction === 'all') &&
 					(color?.split('+').includes(point.color || 'gray') || color === '')
 				);

@@ -193,7 +193,7 @@ describe('FilterPipe', () => {
 			color: '',
 		});
 
-		expect(result.length).toEqual(0);
+		expect(result.length).toEqual(2);
 	});
 
 	it('should filter points by direction', () => {
