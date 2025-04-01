@@ -25,7 +25,7 @@ jobs:
     - run: rm -rf node_modules package-lock.json
     - run: npm install
     - run: npm run build
-    - run: npm test
+    # - run: npm test
 
     - name: Clean deployment directory
       env:

@@ -105,8 +105,10 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				.subscribe({
 					next: () => {
 						if (this.open) {
-							this.setHeightParams();
-							this.setDropMaxH(this.lastTopState);
+							requestAnimationFrame(() => {
+								this.setHeightParams();
+								this.setDropMaxH(this.lastTopState);
+							});
 						}
 					},
 				}),

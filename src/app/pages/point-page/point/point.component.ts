@@ -73,8 +73,9 @@ export class PointComponent implements OnInit, OnDestroy {
 	soundNotify: Date | undefined;
 	inverted = false;
 	finalTitleCount = 0;
+	isDirectionCorrect = false; 
 
-	_closestIterationDate: Date | undefined;
+	private _closestIterationDate: Date | undefined;
 
 	urlMode = new BehaviorSubject<boolean>(false);
 	private subscriptions = new Subscription();
@@ -265,22 +266,21 @@ export class PointComponent implements OnInit, OnDestroy {
 		return format(this.pointDate, Constants.timeFormat);
 	}
 
-	get closestIteration() {
+	getClosestIteration() {
 		!this._closestIterationDate &&
 			this.point &&
-			(this._closestIterationDate = getClosestIteration(this.point, 'isDirectionCorrect').date);
-		return this._closestIterationDate;
+			getClosestIteration(this.point).then(data => {
+				this._closestIterationDate = data.date;
+			});
 	}
 
-	get isDirectionCorrect() {
+	checkIsDirectionCorrect() {
 		const currentDate = new Date();
-
-		return (
-			this.point &&
-			this.closestIteration &&
-			((this.closestIteration < currentDate && this.point?.direction === 'forward') ||
-				(this.closestIteration > currentDate && this.point?.direction === 'backward'))
-		);
+		this.isDirectionCorrect =
+			!!(this.point &&
+			this._closestIterationDate &&
+			((this._closestIterationDate < currentDate && this.point?.direction === 'forward') ||
+				(this._closestIterationDate > currentDate && this.point?.direction === 'backward')));
 	}
 
 	get directionTitle() {
@@ -333,6 +333,9 @@ export class PointComponent implements OnInit, OnDestroy {
 				isGreenwich: this.point?.greenwich,
 			});
 		}
+
+		this.getClosestIteration();
+		this.checkIsDirectionCorrect();
 
 		if (switchCalendarDate) {
 			this.selectedIterationDate = this.pointDate;

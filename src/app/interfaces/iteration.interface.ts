@@ -1,4 +1,4 @@
-import { IterationReasons } from '../types';
+import { IterationReasons } from '../types/iterationReasons.type';
 import { PointMode } from './pointMode.interface';
 
 export interface Iteration {

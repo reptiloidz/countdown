@@ -162,7 +162,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 								isNaN(this.currentIterationIndex) ||
 								this.currentIterationIndex < 0
 							) {
-								this.point && !this.isIterationAdded && this.switchIteration(getClosestIteration(this.point).index);
+								this.point && !this.isIterationAdded && getClosestIteration(this.point).then(({index}) => this.switchIteration(index));
 							}
 						} else {
 							this.switchIteration();
@@ -188,7 +188,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 		this.subscriptions.add(
 			this.data.eventEditPoint$.subscribe({
-				next: ([point, editPointEvent, newIteration]) => {
+				next: async ([point, editPointEvent, newIteration]) => {
 					const newIterationIndex = newIteration && getFirstIteration([newIteration], point);
 
 					if (
@@ -197,7 +197,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 					) {
 						this.currentIterationIndex = newIterationIndex;
 					} else if (this.currentIterationIndex >= this.removedIterationIndex && this.point) {
-						this.currentIterationIndex = getClosestIteration(point).index;
+						this.currentIterationIndex = (await getClosestIteration(point)).index;
 					}
 					this.switchIteration(this.currentIterationIndex);
 					this.setIterationsParam();

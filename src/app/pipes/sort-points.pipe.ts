@@ -9,7 +9,7 @@ import { SortTypes } from '../types';
 export class SortPointsPipe implements PipeTransform {
 	constructor(private sort: SortService) {}
 
-	transform(points: Point[], sortType: SortTypes): Point[] {
+	transform(points: Point[], sortType: SortTypes): Promise<Point[]> {
 		return this.sort.sort(points, sortType);
 	}
 }

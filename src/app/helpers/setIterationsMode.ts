@@ -1,4 +1,4 @@
-import { Point } from '../interfaces';
+import { Point } from '../interfaces/point.interface';
 
 export const setIterationsMode = (point: Point) => {
 	let isOdd = true;

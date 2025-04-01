@@ -51,12 +51,12 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	_closestIteration!: {
 		date: Date;
 		index: number;
-		mode: PointMode | undefined;
+		mode?: PointMode | undefined;
 	};
 	_closestIterationDate = new Date();
 	_futureIterationDate: Date | undefined;
 	_closestIterationModeSet = false;
-	_closestIterationMode: PointMode | undefined;
+	closestIterationMode: PointMode | undefined;
 
 	constructor(
 		private data: DataService,
@@ -122,44 +122,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		return this.auth.isAuthenticated;
 	}
 
-	get closestIteration() {
-		if (!this._futureIterationDate) {
-			const datesSorted = this.point.dates.sort((a, b) => compareAsc(parseDate(a.date), parseDate(b.date)));
-			for (const item of datesSorted) {
-				const parsedDate = parseDate(item.date);
-				if (parsedDate > new Date()) {
-					this._futureIterationDate = parsedDate;
-					break;
-				}
-			}
-		}
-
-		if (this._futureIterationDate) {
-			const toFuture = +this._futureIterationDate - +new Date();
-
-			if (toFuture < 0 && toFuture > -1000 && this.point.repeatable) {
-				this._closestIterationDate = getClosestIteration(this.point).date || new Date();
-				this._closestIteration = getClosestIteration(this.point);
-				this._futureIterationDate = undefined;
-			}
-		}
-
-		if (!this._closestIteration) {
-			this._closestIterationDate = getClosestIteration(this.point).date || new Date();
-			this._closestIteration = getClosestIteration(this.point);
-			this.remainCalculated = true;
-		}
-		return this._closestIteration;
-	}
-
-	get closestIterationMode() {
-		if (!this._closestIterationModeSet) {
-			this._closestIterationMode = getClosestIteration(this.point).mode || undefined;
-			this._closestIterationModeSet = true;
-		}
-		return this._closestIterationMode;
-	}
-
 	get closestIterationRemain() {
 		return (
 			(this._closestIterationDate < new Date() ? 'Прошло:' : 'Осталось:') +
@@ -176,8 +138,9 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	get interval() {
+		this.getClosestIteration();
 		return intervalToDuration({
-			start: this.closestIteration.date,
+			start: this._closestIteration?.date,
 			end: new Date(),
 		});
 	}
@@ -195,6 +158,42 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		return `${this.point.direction === 'forward' ? 'Прямой отсчёт' : 'Обратный отсчёт'}${
 			this.isDirectionCorrect ? '' : '. Но есть нюанс. Подробнее в описании'
 		}`;
+	}
+
+	getClosestIteration() {
+		if (!this._futureIterationDate) {
+			const datesSorted = this.point.dates.sort((a, b) => compareAsc(parseDate(a.date), parseDate(b.date)));
+			for (const item of datesSorted) {
+				const parsedDate = parseDate(item.date);
+				if (parsedDate > new Date()) {
+					this._futureIterationDate = parsedDate;
+					break;
+				}
+			}
+		}
+
+		getClosestIteration(this.point).then(res => {
+			if (this._futureIterationDate) {
+				const toFuture = +this._futureIterationDate - +new Date();
+
+				if (toFuture < 0 && toFuture > -1000 && this.point.repeatable) {
+					this._closestIterationDate = res.date || new Date();
+					this._closestIteration = res;
+					this._futureIterationDate = undefined;
+				}
+			}
+
+			if (!this._closestIteration) {
+				this._closestIterationDate = res.date || new Date();
+				this._closestIteration = res;
+				this.remainCalculated = true;
+			}
+
+			if (!this._closestIterationModeSet) {
+				this.closestIterationMode = res.mode || undefined;
+				this._closestIterationModeSet = true;
+			}
+		});
 	}
 
 	zeroPad(num?: number) {

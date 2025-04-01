@@ -265,7 +265,7 @@
 					[isLine]="modesValue === 'list'"
 					[attr.data-id]="point.id"
 					class="points-list__item"
-					*ngFor="let point of (filteredPoints | sortPoints : sortType) | slice:0:(showMore ? -1 : 5); let i = index; trackBy: trackByFilteredPoints"
+					*ngFor="let point of (filteredPoints | sortPoints : sortType) | async | slice:0:(showMore ? -1 : 5); let i = index; trackBy: trackByFilteredPoints"
 					[point]="point"
 					(pointCheck)="checkPoint()"
 				></li>
@@ -315,7 +315,7 @@
 			app-main-item
 			[isSm]="isSm"
 			[attr.data-id]="point.id"
-			*ngFor="let point of pointsList | sortPoints : sortType; let i = index; trackBy: trackByFilteredPoints"
+			*ngFor="let point of pointsList | sortPoints : sortType | async; let i = index; trackBy: trackByFilteredPoints"
 			[point]="point"
 		>
 			<ng-template

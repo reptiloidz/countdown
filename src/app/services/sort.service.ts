@@ -7,41 +7,45 @@ import { getClosestIteration } from '../helpers';
 	providedIn: 'root',
 })
 export class SortService {
-	sort(points: Point[], sortType: SortTypes) {
-		return points.sort((a, b) => {
-			switch (sortType) {
-				case 'titleAsc':
-					return this.compareTitle(a, b);
-				case 'titleDesc':
-					return this.compareTitle(b, a);
-				// case SortTypeNames.userAsc:
-				// 	return this.compareUser(a, b);
-				// case SortTypeNames.userDesc:
-				// 	return this.compareUser(b, a);
-				case 'repeatableAsc':
-					return this.compareRepeatable(b, a);
-				case 'repeatableDesc':
-					return this.compareRepeatable(a, b);
-				case 'greenwichAsc':
-					return this.compareGreenwich(b, a);
-				case 'greenwichDesc':
-					return this.compareGreenwich(a, b);
-				case 'publicAsc':
-					return this.comparePublic(b, a);
-				case 'publicDesc':
-					return this.comparePublic(a, b);
-				case 'closestAsc':
-					return this.compareClosest(b, a);
-				case 'closestDesc':
-					return this.compareClosest(a, b);
-				case 'directionAsc':
-					return this.compareDirection(b, a);
-				case 'directionDesc':
-					return this.compareDirection(a, b);
-				default:
-					return 0;
-			}
-		});
+	sort(points: Point[], sortType: SortTypes): Promise<Point[]> {
+		return new Promise(resolve =>
+			this.getPointsUpdated(points).then(points => {
+				resolve(points.sort((a, b) => {
+					switch (sortType) {
+						case 'titleAsc':
+							return this.compareTitle(a, b);
+						case 'titleDesc':
+							return this.compareTitle(b, a);
+						// case SortTypeNames.userAsc:
+						// 	return this.compareUser(a, b);
+						// case SortTypeNames.userDesc:
+						// 	return this.compareUser(b, a);
+						case 'repeatableAsc':
+							return this.compareRepeatable(b, a);
+						case 'repeatableDesc':
+							return this.compareRepeatable(a, b);
+						case 'greenwichAsc':
+							return this.compareGreenwich(b, a);
+						case 'greenwichDesc':
+							return this.compareGreenwich(a, b);
+						case 'publicAsc':
+							return this.comparePublic(b, a);
+						case 'publicDesc':
+							return this.comparePublic(a, b);
+						case 'closestAsc':
+							return this.compareClosest(b, a);
+						case 'closestDesc':
+							return this.compareClosest(a, b);
+						case 'directionAsc':
+							return this.compareDirection(b, a);
+						case 'directionDesc':
+							return this.compareDirection(a, b);
+						default:
+							return 0;
+					}
+				}));
+			}),
+		);
 	}
 
 	compareTitle(a: Point, b: Point) {
@@ -96,9 +100,9 @@ export class SortService {
 	}
 
 	compareDirection(a: Point, b: Point) {
-		if (getClosestIteration(a).date < getClosestIteration(b).date) {
+		if (a.closestIteration && b.closestIteration && (a.closestIteration.date < b.closestIteration.date)) {
 			return 1;
-		} else if (getClosestIteration(a).date > getClosestIteration(b).date) {
+		} else if (a.closestIteration && b.closestIteration && (a.closestIteration.date > b.closestIteration.date)) {
 			return -1;
 		} else {
 			return this.compareTitle(a, b);
@@ -109,13 +113,15 @@ export class SortService {
 		const currentDate = new Date();
 
 		if (
-			this.getDateAbs(getClosestIteration(a).date, currentDate) <
-			this.getDateAbs(getClosestIteration(b).date, currentDate)
+			a.closestIteration &&
+			b.closestIteration &&
+			(this.getDateAbs(a.closestIteration.date, currentDate) < this.getDateAbs(b.closestIteration.date, currentDate))
 		) {
 			return 1;
 		} else if (
-			this.getDateAbs(getClosestIteration(a).date, currentDate) >
-			this.getDateAbs(getClosestIteration(b).date, currentDate)
+			a.closestIteration &&
+			b.closestIteration &&
+			(this.getDateAbs(a.closestIteration.date, currentDate) > this.getDateAbs(b.closestIteration.date, currentDate))
 		) {
 			return -1;
 		} else {
@@ -125,5 +131,18 @@ export class SortService {
 
 	getDateAbs(date: Date, currentDate: Date) {
 		return Math.abs(+date - +currentDate);
+	}
+
+	getPointsUpdated(points: Point[]): Promise<Point[]> {
+		const updatedPoints: Point[] = [];
+		return new Promise(resolve => {
+			Promise.all(
+				points.map((point, index) => {
+					getClosestIteration(point).then(data => (updatedPoints[index] = { ...point, closestIteration: data }));
+				}),
+			).then(() => {
+				resolve(points);
+			});
+		});
 	}
 }

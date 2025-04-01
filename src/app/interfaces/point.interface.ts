@@ -1,5 +1,8 @@
-import { Iteration, PointMode, UserExtraData } from '.';
-import { Direction, PointColorTypes } from '../types';
+import { UserExtraData } from './userExtraData.interface';
+import { PointMode } from './pointMode.interface';
+import { Iteration } from './iteration.interface';
+import { Direction } from '../types/direction.type';
+import { PointColorTypes } from '../types/pointColorTypes.type';
 
 export interface Point {
 	title: string;
@@ -15,4 +18,9 @@ export interface Point {
 	public?: boolean;
 	color: PointColorTypes;
 	modes?: PointMode[];
+	closestIteration?: {
+		date: Date;
+		index: number;
+		mode?: PointMode;
+	};
 }

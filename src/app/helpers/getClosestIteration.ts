@@ -1,56 +1,12 @@
-import { Iteration, Point } from '../interfaces';
-import { getPointDate } from './getPointDate';
-import { parseDate } from './parseDate';
-import { setIterationsMode } from './setIterationsMode';
-import { sortDates } from './sortDates';
+import { Point, PointMode } from '../interfaces';
 
-export const getClosestIteration = (point: Point, source?: string) => {
-	point = setIterationsMode(sortDates(point));
-
-	const now = new Date();
-	let closestFuture!: Iteration;
-	let closestPast!: Iteration;
-
-	point.dates.forEach(iteration => {
-		const iterationDate = getPointDate({
-			pointDate: parseDate(iteration.date),
-			isGreenwich: point.greenwich,
-		});
-
-		if (iterationDate > now) {
-			if (
-				!closestFuture ||
-				iterationDate <
-					getPointDate({
-						pointDate: parseDate(closestFuture.date),
-						isGreenwich: point.greenwich,
-					})
-			) {
-				closestFuture = iteration;
-			}
-		} else {
-			if (
-				!closestPast ||
-				iterationDate >
-					getPointDate({
-						pointDate: parseDate(closestPast.date),
-						isGreenwich: point.greenwich,
-					})
-			) {
-				closestPast = iteration;
-			}
-		}
+export const getClosestIteration = (point: Point): Promise<{ date: Date; index: number; mode: PointMode }> => {
+	const worker = new Worker(new URL('./../workers/getClosestIteration.worker.ts', import.meta.url), { type: 'module' });
+	return new Promise(resolve => {
+		worker.postMessage(point);
+		worker.onmessage = ({ data }) => {
+			worker.terminate();
+			return resolve(data);
+		};
 	});
-
-	const resultIteration: Iteration =
-		point.direction === 'backward' ? closestFuture || closestPast : closestPast || closestFuture;
-
-	return {
-		date: getPointDate({
-			pointDate: parseDate(resultIteration.date),
-			isGreenwich: point.greenwich,
-		}),
-		index: point.dates.findIndex(item => item.date === resultIteration.date),
-		mode: resultIteration.mode,
-	};
 };

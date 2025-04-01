@@ -1,5 +1,5 @@
 import { compareAsc } from 'date-fns';
-import { Point } from '../interfaces';
+import { Point } from '../interfaces/point.interface';
 import { parseDate } from './parseDate';
 
 export const sortDates = (point: Point) => {
