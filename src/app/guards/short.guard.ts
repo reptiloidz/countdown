@@ -8,33 +8,32 @@ export const shortGuard = () => {
 	const action = inject(ActionService);
 	const notify = inject(NotifyService);
 
-	const guardSubscribe = http
-		.getFullLink(window.location.pathname.slice(1))
-		.subscribe({
-			next: (link) => {
-				const queryParams: { [key: string]: string } = {};
-				new URLSearchParams(link).forEach((value, key) => {
-					queryParams[key] = value;
-				});
+	const guardSubscribe = http.getFullLink(window.location.pathname.slice(1)).subscribe({
+		next: link => {
+			const queryParams: { [key: string]: string } = {};
+			new URLSearchParams(link).forEach((value, key) => {
+				queryParams[key] = value;
+			});
 
-				if (link) {
-					router.navigate(['/url/'], {
-						queryParams,
-					});
-					return false;
-				} else {
-					return true;
-				}
-			},
-			error: () => {
-				notify.add({
-					view: 'negative',
-					short: true,
-					title: 'Нет такой ссылки, даже короткой.',
+			if (link) {
+				router.navigate(['/url/'], {
+					queryParams,
+					replaceUrl: true,
 				});
-				action.shortLinkChecked();
-			},
-		});
+				return false;
+			} else {
+				return true;
+			}
+		},
+		error: () => {
+			notify.add({
+				view: 'negative',
+				short: true,
+				title: 'Нет такой ссылки, даже короткой.',
+			});
+			action.shortLinkChecked();
+		},
+	});
 
 	return guardSubscribe;
 };

@@ -162,7 +162,9 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 								isNaN(this.currentIterationIndex) ||
 								this.currentIterationIndex < 0
 							) {
-								this.point && !this.isIterationAdded && getClosestIteration(this.point).then(({index}) => this.switchIteration(index));
+								this.point &&
+									!this.isIterationAdded &&
+									getClosestIteration(this.point).then(({ index }) => this.switchIteration(index));
 							}
 						} else {
 							this.switchIteration();
@@ -440,6 +442,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 				iteration: isNaN(i) ? null : i + 1,
 			},
 			queryParamsHandling: 'merge',
+			replaceUrl: true,
 		});
 
 		this.isIterationAdded = false;

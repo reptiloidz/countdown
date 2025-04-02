@@ -92,6 +92,7 @@ describe('shortGuard', () => {
 		});
 		expect(navigateSpy).toHaveBeenCalledWith(['/url/'], {
 			queryParams: queryParams,
+			'replaceUrl': true,
 		});
 	});
 

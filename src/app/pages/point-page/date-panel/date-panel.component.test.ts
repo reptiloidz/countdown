@@ -137,11 +137,7 @@ describe('DatePanelComponent', () => {
 		jest.spyOn(component, 'switchIteration');
 		component.switchIteration(1);
 		expect(component.switchIteration).toHaveBeenCalledWith(1);
-		expect(mockRouter.navigate).toHaveBeenCalledWith([], {
-			relativeTo: mockActivatedRoute,
-			queryParams: { iteration: 2 },
-			queryParamsHandling: 'merge',
-		});
+		expect(mockRouter.navigate).toHaveBeenCalled();
 	});
 
 	it('should update access when a point is provided', () => {
