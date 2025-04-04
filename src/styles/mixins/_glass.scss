@@ -1,5 +1,10 @@
 @mixin glass($blur: 12) {
 	&::after {
+		@include media-breakpoint-down(md) {
+			background-color: rgba(var(--c-bg-inverse), 0.9);
+			backdrop-filter: none;
+		}
+
 		content: '';
 		position: absolute;
 		top: 0;

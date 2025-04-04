@@ -31,6 +31,7 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() delay = true;
 	@Input() delayValue!: number;
 	@Input() delayRandomValue!: string | number;
+	@Input() boardHalfClass = '';
 
 	switchTop = false;
 	switchBottom = false;

@@ -28,6 +28,7 @@
 		background-color: var(--clock-cl);
 		transform: rotate(calc((var(--clock-arrow-count) + var(--clock-current)) * -1deg));
 		transform-origin: bottom;
+		will-change: transform;
 
 		&--minute {
 			--clock-current: calc(var(--clock-current-minute, 0) * 6);
@@ -43,6 +44,8 @@
 			--clock-arrow-count: calc(var(--count) * 6 / (60 * 24));
 
 			--clock-arrow-h: 20;
+
+			will-change: auto;
 		}
 	}
 }

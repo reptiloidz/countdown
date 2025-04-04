@@ -188,6 +188,10 @@
 				animation-name: halfBottom;
 			}
 		}
+
+		&--second {
+			will-change: transform;
+		}
 	}
 
 	&__text-wrapper {

@@ -73,7 +73,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	soundNotify: Date | undefined;
 	inverted = false;
 	finalTitleCount = 0;
-	isDirectionCorrect = false; 
+	isDirectionCorrect = false;
 
 	private _closestIterationDate: Date | undefined;
 
@@ -214,6 +214,7 @@ export class PointComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 		this.moveTimelineSubscription.unsubscribe();
 		this.title.setTitle('Countdown');
+		window.removeEventListener('beforeunload', this.handleBeforeUnload);
 	}
 
 	get interval() {
@@ -276,11 +277,12 @@ export class PointComponent implements OnInit, OnDestroy {
 
 	checkIsDirectionCorrect() {
 		const currentDate = new Date();
-		this.isDirectionCorrect =
-			!!(this.point &&
+		this.isDirectionCorrect = !!(
+			this.point &&
 			this._closestIterationDate &&
 			((this._closestIterationDate < currentDate && this.point?.direction === 'forward') ||
-				(this._closestIterationDate > currentDate && this.point?.direction === 'backward')));
+				(this._closestIterationDate > currentDate && this.point?.direction === 'backward'))
+		);
 	}
 
 	get directionTitle() {

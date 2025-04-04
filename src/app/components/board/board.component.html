@@ -20,6 +20,7 @@
 	<div
 		*ngIf="switchBottom"
 		class="board__half board__half--animate board__half--bottom"
+		[ngClass]="boardHalfClass"
 	>
 		<div class="board__text-wrapper">
 			<div class="board__text">{{ bottomAnimatedValue }}</div>
