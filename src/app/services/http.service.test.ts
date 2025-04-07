@@ -22,12 +22,13 @@ describe('HttpService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [
-				HttpClientTestingModule,
+			imports: [HttpClientTestingModule],
+			providers: [
+				HttpService,
+				{ provide: Auth, useValue: mockAuth },
 				provideFirebaseApp(() => initializeApp()),
 				provideDatabase(() => getDatabase()),
 			],
-			providers: [HttpService, { provide: Auth, useValue: mockAuth }],
 		});
 
 		service = TestBed.inject(HttpService);

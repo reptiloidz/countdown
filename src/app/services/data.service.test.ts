@@ -47,8 +47,15 @@ describe('DataService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientTestingModule, provideFirebaseApp(() => initializeApp())],
-			providers: [DataService, HttpService, NotifyService, ActionService, { provide: Auth, useValue: mockAuth }],
+			imports: [HttpClientTestingModule],
+			providers: [
+				DataService,
+				HttpService,
+				NotifyService,
+				ActionService,
+				{ provide: Auth, useValue: mockAuth },
+				provideFirebaseApp(() => initializeApp()),
+			],
 		});
 
 		service = TestBed.inject(DataService);

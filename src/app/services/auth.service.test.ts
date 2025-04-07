@@ -87,13 +87,14 @@ describe('AuthService', () => {
 		} as unknown as jest.Mocked<NotifyService>;
 
 		TestBed.configureTestingModule({
-			imports: [HttpClientModule, provideFirebaseApp(() => initializeApp())],
+			imports: [HttpClientModule],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: HttpService, useValue: httpServiceMock },
 				{ provide: ActionService, useValue: actionServiceMock },
 				{ provide: NotifyService, useValue: notifyServiceMock },
 				{ provide: Router, useValue: routerMock },
+				provideFirebaseApp(() => initializeApp()),
 			],
 		});
 		service = TestBed.inject(AuthService);
