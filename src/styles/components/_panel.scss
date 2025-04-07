@@ -16,6 +16,7 @@
 		padding: 10px var(--panel-px);
 		border-bottom: 1px solid rgba(var(--c-border-primary), 0.2);
 		background-color: rgb(var(--c-bg-panel));
+		content-visibility: auto;
 	}
 
 	&__content {
