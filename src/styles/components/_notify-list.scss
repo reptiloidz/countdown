@@ -34,6 +34,10 @@
 	&::before {
 		@include transition(opacity 0.4s);
 
+		@include media-breakpoint-up(lg) {
+			backdrop-filter: blur(6px);
+		}
+
 		content: '';
 		position: absolute;
 		top: 0;
@@ -42,7 +46,6 @@
 		left: 0;
 		background-color: rgba(var(--c-bg-primary), 0.2);
 		opacity: 0;
-		backdrop-filter: blur(6px);
 	}
 
 	&__item-wrapper {

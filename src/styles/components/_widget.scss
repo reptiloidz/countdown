@@ -32,9 +32,12 @@
 
 	&__nav,
 	&__body {
+		@include media-breakpoint-up(lg) {
+			backdrop-filter: blur(12px);
+		}
+
 		border-radius: var(--widget-brs);
 		background-color: transparent;
-		backdrop-filter: blur(12px);
 	}
 
 	&--drop {

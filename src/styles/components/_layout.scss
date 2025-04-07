@@ -42,9 +42,12 @@ body {
 
 	&:has(.root__loading-marker) {
 		.root__loader {
+			@include media-breakpoint-up(lg) {
+				backdrop-filter: blur(4px);
+			}
+
 			opacity: 1;
 			pointer-events: all;
-			backdrop-filter: blur(4px);
 		}
 
 		.root__loader-icon {
@@ -61,6 +64,7 @@ body {
 	&:has(.root__invert-marker) {
 		&::after {
 			filter: invert(1);
+			backdrop-filter: blur(0.01px);
 		}
 	}
 
@@ -74,9 +78,8 @@ body {
 		left: 0;
 		z-index: 5;
 		display: block;
-		filter: invert(0);
+		filter: none;
 		pointer-events: none;
-		backdrop-filter: blur(0.01px);
 	}
 
 	@media (max-width: 1024px) {
