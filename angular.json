@@ -25,8 +25,8 @@
 						"inlineStyleLanguage": "scss",
 						"assets": ["src/favicon.ico", "src/assets", "src/404.html"],
 						"styles": ["src/styles.scss"],
-            "scripts": [],
-            "webWorkerTsConfig": "tsconfig.worker.json"
+						"scripts": [],
+						"webWorkerTsConfig": "tsconfig.worker.json"
 					},
 					"configurations": {
 						"production": {
@@ -83,13 +83,13 @@
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
 						"production": {
-							"browserTarget": "cd:build:production"
+							"buildTarget": "cd:build:production"
 						},
 						"development": {
-							"browserTarget": "cd:build:development"
+							"buildTarget": "cd:build:development"
 						},
 						"mock": {
-							"browserTarget": "cd:build:mock"
+							"buildTarget": "cd:build:mock"
 						}
 					},
 					"defaultConfiguration": "development"
@@ -97,7 +97,7 @@
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "cd:build"
+						"buildTarget": "cd:build"
 					}
 				},
 				"deploy": {
