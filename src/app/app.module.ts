@@ -56,6 +56,14 @@ import { SvgModule } from './components/svg/svg.module';
 		SvgModule,
 		ClockModule,
 		MainItemModule,
+	],
+	providers: [
+		provideAnimations(),
+		{
+			provide: APP_INITIALIZER,
+			useFactory: FontProvider,
+			multi: true,
+		},
 		provideFirebaseApp(() =>
 			initializeApp({
 				projectId: 'countdown-2971d',
@@ -70,14 +78,6 @@ import { SvgModule } from './components/svg/svg.module';
 		),
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),
-	],
-	providers: [
-		provideAnimations(),
-		{
-			provide: APP_INITIALIZER,
-			useFactory: FontProvider,
-			multi: true,
-		},
 	],
 	bootstrap: [AppComponent],
 })

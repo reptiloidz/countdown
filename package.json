@@ -18,7 +18,7 @@
 	},
 	"lint-staged": {
 		"*.{js,ts,json}": "npx prettier --write --use-tabs --single-quote",
-		"*.{ts}": "jest --bail --findRelatedTests",
+		"*.{ts}": "jest --bail --findRelatedTests --passWithNoTests",
 		"*.html": "eslint --fix",
 		"*.scss": "stylelint --fix --customSyntax postcss-scss"
 	},
