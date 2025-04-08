@@ -12,7 +12,7 @@
 			<div class="notify-list__header">
 				<h4
 					class="notify-list__title"
-					[innerHTML]="notify.title"
+					[innerHTML]="notify.title | safeHtml"
 				></h4>
 				<button
 					*ngIf="!notify.short"
@@ -52,7 +52,7 @@
 			<p
 				*ngIf="notify.text"
 				class="notify-list__text"
-				[innerHTML]="notify.text"
+				[innerHTML]="notify.text | safeHtml"
 			></p>
 		</div>
 	</li>

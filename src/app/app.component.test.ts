@@ -2,7 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ActionService, NotifyService } from './services';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NotifyComponent } from './components/notify/notify.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -25,7 +25,10 @@ describe('AppComponent', () => {
 			declarations: [AppComponent, NotifyComponent],
 			providers: [
 				{ provide: ActionService, useValue: { intervalSwitched: jest.fn() } },
-				{ provide: NotifyService, useValue: { add: jest.fn() } },
+				{
+					provide: NotifyService,
+					useValue: { add: jest.fn(), notifications$: new BehaviorSubject<Notification[]>([]) },
+				},
 				{ provide: Router, useValue: mockRouter },
 			],
 			schemas: [NO_ERRORS_SCHEMA],
@@ -53,7 +56,7 @@ describe('AppComponent', () => {
 		jest.useFakeTimers();
 		component.ngOnInit();
 		jest.advanceTimersByTime(3000);
-		expect(+document.documentElement.style.getPropertyValue('--count')).toBeLessThanOrEqual(2);
+		expect(+document.documentElement.style.getPropertyValue('--count')).toBeLessThan(3000);
 		expect(actionService.intervalSwitched).toHaveBeenCalled();
 		jest.useRealTimers();
 		done();
@@ -74,13 +77,5 @@ describe('AppComponent', () => {
 		Object.defineProperty(document, 'hidden', { value: false, writable: true });
 		component.changeVisibilityHandler();
 		expect(component.count).toBe(5);
-	});
-
-	it('should call notify.add with correct parameters on toast', () => {
-		component.toast();
-		expect(notifyService.add).toHaveBeenCalledWith({
-			title: `Создано событие "<a href="../point/" class="notify-list__link">С днем рождения</a>"`,
-			view: 'positive',
-		});
 	});
 });

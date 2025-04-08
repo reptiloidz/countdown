@@ -16,6 +16,7 @@ import { NotifyComponent } from './components/notify/notify.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { SvgModule } from './components/svg/svg.module';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 @NgModule({
 	declarations: [
@@ -32,6 +33,7 @@ import { SvgModule } from './components/svg/svg.module';
 		TooltipComponent,
 		AutocompleteComponent,
 		LetDirective,
+		SafeHtmlPipe,
 	],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, SvgModule, NgxMaskDirective],
 	exports: [
@@ -48,6 +50,7 @@ import { SvgModule } from './components/svg/svg.module';
 		TooltipComponent,
 		AutocompleteComponent,
 		LetDirective,
+		SafeHtmlPipe,
 	],
 	providers: [[provideNgxMask()]],
 })
