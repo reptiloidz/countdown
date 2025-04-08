@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, filter, first, interval, switchMap } from 'rxjs';
 import { ActionService, NotifyService } from './services';
 import { environment } from 'src/environments/environment';
 import { Constants } from './enums';
@@ -29,21 +29,19 @@ export class AppComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		document.documentElement.style.setProperty('--start-time', (+new Date()).toString());
 
-		setTimeout(
-			() => {
-				this.subscriptions.add(
-					interval(this.isProd ? 1000 : Constants.tick).subscribe({
-						next: () => {
-							document.documentElement.style.setProperty('--count', (++this.count).toString());
+		interval(this.isProd ? 1 : Constants.tick)
+			.pipe(
+				filter(() => +new Date() % 1000 < 100),
+				first(),
+				switchMap(() => interval(1000)),
+			)
+			.subscribe({
+				next: () => {
+					document.documentElement.style.setProperty('--count', (++this.count).toString());
 
-							this.action.intervalSwitched();
-							this.cdr.detectChanges();
-						},
-					}),
-				);
-			},
-			1000 - (Date.now() % 1000),
-		);
+					this.action.intervalSwitched();
+				},
+			});
 	}
 
 	ngOnDestroy(): void {
