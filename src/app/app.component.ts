@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, filter, first, interval, switchMap } from 'rxjs';
-import { ActionService, NotifyService } from './services';
+import { ActionService } from './services';
 import { environment } from 'src/environments/environment';
 import { Constants } from './enums';
 
@@ -14,7 +14,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	startTime = new Date();
 
 	constructor(
-		private notify: NotifyService,
 		private action: ActionService,
 		private cdr: ChangeDetectorRef,
 	) {}
@@ -40,6 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
 					document.documentElement.style.setProperty('--count', (++this.count).toString());
 
 					this.action.intervalSwitched();
+					this.cdr.detectChanges();
 				},
 			});
 	}
