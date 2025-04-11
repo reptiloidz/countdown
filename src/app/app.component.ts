@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, filter, first, interval, switchMap } from 'rxjs';
 import { ActionService } from './services';
 import { environment } from 'src/environments/environment';
@@ -7,7 +7,7 @@ import { Constants } from './enums';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
 	count = 0;
