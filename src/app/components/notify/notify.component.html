@@ -54,6 +54,12 @@
 				class="notify-list__text"
 				[innerHTML]="notify.text | safeHtml"
 			></p>
+			<div
+				*ngIf="notify.component"
+				class="notify-list__text"
+			>
+				<ng-template #notifyContent></ng-template>
+			</div>
 		</div>
 	</li>
 </ul>

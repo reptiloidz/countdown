@@ -75,6 +75,8 @@ export class NotifyService {
 			view: notification.view || 'neutral',
 			autoremove: notification.autoremove,
 			short: notification.short,
+			component: notification.component,
+			inputs: notification.inputs,
 			prompt: notification.prompt,
 			confirm: notification.confirm,
 			button: notification.button,

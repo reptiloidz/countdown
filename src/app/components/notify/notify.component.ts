@@ -7,6 +7,7 @@ import {
 	OnDestroy,
 	OnInit,
 	ViewChild,
+	ViewContainerRef,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -89,6 +90,10 @@ export class NotifyComponent implements OnInit, OnDestroy {
 		private cdr: ChangeDetectorRef,
 	) {}
 	@ViewChild('control') private control!: InputComponent;
+	@ViewChild('notifyContent', {
+		read: ViewContainerRef,
+	})
+	notifyContent!: ViewContainerRef;
 
 	public notifyList: Notification[] = [];
 	private subscriptions = new Subscription();
@@ -173,6 +178,19 @@ export class NotifyComponent implements OnInit, OnDestroy {
 
 							this.isControlEmpty = !this.form.controls['email'].value && !this.form.controls['password'].value;
 						},
+					});
+
+					this.notifyList.forEach(item => {
+						if (item.component) {
+							this.cdr.detectChanges();
+							const componentRef = this.notifyContent.createComponent(item.component);
+
+							if (item.inputs) {
+								for (const [key, value] of Object.entries(item.inputs)) {
+									(componentRef.instance as any)[key] = value;
+								}
+							}
+						}
 					});
 					this.cdr.detectChanges();
 				},

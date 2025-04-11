@@ -27,6 +27,7 @@ import { TimersModule } from './timers/timers.module';
 import { MainItemModule } from './components/main-item/main-item.module';
 import { CommonModule } from '@angular/common';
 import { SvgModule } from './components/svg/svg.module';
+import { LinkPointComponent } from './components/link-point/link-point.component';
 
 @NgModule({
 	declarations: [
@@ -42,6 +43,7 @@ import { SvgModule } from './components/svg/svg.module';
 		PrivacyComponent,
 		DatePointsPopupComponent,
 		SettingsComponent,
+		LinkPointComponent,
 	],
 	imports: [
 		CommonModule,

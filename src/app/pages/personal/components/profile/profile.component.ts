@@ -12,6 +12,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format, parse, subYears } from 'date-fns';
 import { debounce, distinctUntilChanged, Subscription, concatMap, switchMap, tap, timer, skipWhile } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
+import { LinkPointComponent } from 'src/app/components/link-point/link-point.component';
 import { Constants } from 'src/app/enums';
 import { generateUserpicName, getErrorMessages, mergeDeep, parseDate, randomHEXColor } from 'src/app/helpers';
 import { ValidationObject } from 'src/app/interfaces';
@@ -373,7 +374,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						})
 						.then(() => {
 							this.notify.add({
-								title: `Создано событие "<a href="../point/${point.id}" class="notify-list__link">${this.birthDateEventName}</a>"`,
+								title: 'Создано событие',
+								component: LinkPointComponent,
+								inputs: {
+									pointId: point.id,
+									pointName: this.birthDateEventName,
+								},
 								autoremove: true,
 								view: 'positive',
 							});

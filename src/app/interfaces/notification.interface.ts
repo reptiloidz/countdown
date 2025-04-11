@@ -5,6 +5,8 @@ export interface Notification<T extends boolean = true> {
 	title: string;
 	text?: string;
 	short?: boolean;
+	component?: any;
+	inputs?: Record<string, any>;
 	view?: 'positive' | 'neutral' | 'negative';
 	autoremove?: boolean;
 	prompt?: boolean;

@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, filter, first, interval, switchMap } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, interval } from 'rxjs';
 import { ActionService } from './services';
 import { environment } from 'src/environments/environment';
 import { Constants } from './enums';
@@ -7,7 +7,7 @@ import { Constants } from './enums';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	// changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
 	count = 0;
@@ -28,20 +28,21 @@ export class AppComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		document.documentElement.style.setProperty('--start-time', (+new Date()).toString());
 
-		interval(this.isProd ? 1 : Constants.tick)
-			.pipe(
-				filter(() => +new Date() % 1000 < 100),
-				first(),
-				switchMap(() => interval(1000)),
-			)
-			.subscribe({
-				next: () => {
-					document.documentElement.style.setProperty('--count', (++this.count).toString());
+		setTimeout(
+			() => {
+				this.subscriptions.add(
+					interval(this.isProd ? 1000 : Constants.tick).subscribe({
+						next: () => {
+							document.documentElement.style.setProperty('--count', (++this.count).toString());
 
-					this.action.intervalSwitched();
-					this.cdr.detectChanges();
-				},
-			});
+							this.action.intervalSwitched();
+							this.cdr.detectChanges();
+						},
+					}),
+				);
+			},
+			1000 - (Date.now() % 1000),
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -61,8 +62,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	// toast() {
 	// 	this.notify.add({
-	// 		title: `Создано событие "<a [routerLink]="'/profile'" class="notify-list__link">С днем рождения</a>"`,
-	// 		text: `Создано событие "<a href="../point/" class="notify-list__link">С днем рождения</a>"`,
+	// 		title: "Создано событие",
+	// 		component: BirthdayPointComponent,
+	// 		inputs: {
+	// 			pointId: '111',
+	// 			pointName: 'С днем рождения',
+	// 		},
 	// 		view: 'positive',
 	// 	});
 
