@@ -100,7 +100,7 @@ describe('HeaderComponent', () => {
 			const user: User = { uid: '123', email: 'test@example.com' } as User;
 			(authService.currentUser as Subject<User>).next(user);
 
-			expect(component.user).toEqual(user);
+			expect((component.user$ as BehaviorSubject<User>).getValue()).toEqual(user);
 		});
 	});
 
@@ -114,7 +114,7 @@ describe('HeaderComponent', () => {
 
 	describe('isAuthenticated', () => {
 		it('should return auth.isAuthenticated', () => {
-			expect(component.isAuthenticated).toBe(authService.isAuthenticated);
+			expect((component.isAuthenticated$ as BehaviorSubject<boolean>).getValue()).toBe(!!authService.isAuthenticated);
 		});
 	});
 

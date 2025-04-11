@@ -1,3 +1,20 @@
+/**
+ * The root component of the application.
+ *
+ * This component is responsible for managing the application's main logic,
+ * including handling visibility changes, managing intervals, and updating
+ * the DOM with runtime properties.
+ *
+ * @remarks
+ * - Utilizes Angular's OnPush change detection strategy for performance optimization.
+ * - Subscribes to an interval observable to update the `--count` CSS variable.
+ * - Handles visibility changes to adjust the count based on elapsed time.
+ *
+ * @example
+ * ```html
+ * <app-root></app-root>
+ * ```
+ */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
 import { ActionService } from './services';

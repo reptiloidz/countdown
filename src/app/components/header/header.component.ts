@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, Subscription } from 'rxjs';
 import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
 import { SettingsComponent } from '../settings/settings.component';
@@ -26,8 +26,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	isPrivacy = false;
 	isProfile = false;
 	logoutLoading = false;
-	user: User | undefined;
 	mainLinkParams!: Params;
+	user$ = new BehaviorSubject<User | undefined>(undefined);
+	isAuthenticated$ = new BehaviorSubject<boolean>(false);
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -54,7 +55,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 						public: localStorage.getItem('publicValue') === 'all' ? null : localStorage.getItem('publicValue'),
 						color: localStorage.getItem('colorValue') === 'all' ? null : localStorage.getItem('colorValue'),
 					};
-					this.cdr.detectChanges();
 				},
 			}),
 		);
@@ -62,8 +62,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.auth.currentUser.subscribe({
 				next: data => {
-					this.user = data as User;
-					this.cdr.detectChanges();
+					this.user$.next(data as User);
+					this.cdr.markForCheck();
+					requestAnimationFrame(() => {
+						this.isAuthenticated$.next(this.auth.isAuthenticated);
+					});
 				},
 			}),
 		);
@@ -71,10 +74,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
-	}
-
-	get isAuthenticated() {
-		return this.auth.isAuthenticated;
 	}
 
 	get isAuthorization() {
@@ -97,13 +96,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	logout() {
 		this.logoutLoading = true;
-		this.auth
-			.logout()
-			.then(() => {
-				this.logoutLoading = false;
-			})
-			.catch(() => {
-				this.logoutLoading = false;
-			});
+		this.auth.logout().finally(() => {
+			this.logoutLoading = false;
+		});
 	}
 }

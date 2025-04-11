@@ -1,3 +1,47 @@
+/**
+ * NotifyComponent is responsible for displaying notifications and handling user interactions
+ * with them. It includes animations for showing and hiding notifications, form validation
+ * for user inputs, and dynamic component creation for custom notification content.
+ *
+ * @remarks
+ * This component uses Angular animations for smooth transitions and ChangeDetectionStrategy.OnPush
+ * for performance optimization. It also listens for escape key presses to close modals.
+ *
+ * @example
+ * <app-notify></app-notify>
+ *
+ * @animations
+ * - `notify`: Handles the enter and leave animations for notifications.
+ *
+ * @hostListeners
+ * - `document:keydown.escape`: Closes all modals when the escape key is pressed.
+ *
+ * @dependencies
+ * - NotifyService: Provides notification data and methods for managing notifications.
+ * - ChangeDetectorRef: Used to manually trigger change detection.
+ *
+ * @childComponents
+ * - InputComponent: Used for user input fields within the notification form.
+ *
+ * @properties
+ * - `notifyList` (Notification[]): List of notifications to display.
+ * - `form` (FormGroup): Reactive form for user input validation.
+ * - `errorMessages` (string[]): List of error messages for form validation.
+ * - `promptType` (NotificationType): Type of prompt to display (e.g., email, password).
+ * - `isControlEmpty` (boolean): Indicates if the input controls are empty.
+ * - `controlsValidated` (ValidationObject): Tracks validation states for form controls.
+ *
+ * @methods
+ * - `onEscapeKeydown()`: Closes all modals when the escape key is pressed.
+ * - `ngOnInit()`: Initializes the component, subscribes to notification updates, and sets up form validation.
+ * - `ngOnDestroy()`: Cleans up subscriptions when the component is destroyed.
+ * - `hasEmailErrors`: Checks if there are validation errors for the email field.
+ * - `hasPasswordErrors`: Checks if there are validation errors for the password field.
+ * - `isInvalid`: Determines if the form is invalid based on the current prompt type.
+ * - `trackBy(index: number, item: Notification)`: Tracks notification items by their date.
+ * - `closeNotify(date: Date)`: Closes a specific notification.
+ * - `submitNotify(date: Date)`: Submits a specific notification.
+ */
 import { animate, AUTO_STYLE, group, query, style, transition, trigger } from '@angular/animations';
 import {
 	ChangeDetectionStrategy,

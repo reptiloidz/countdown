@@ -1,5 +1,8 @@
-<div class="nav__aside nav__aside--links">
-	<ng-container *ngIf="isAuthenticated; else unAuth">
+<div
+	class="nav__aside nav__aside--links"
+	*appLet="user$ | async as user"
+>
+	<ng-container *ngIf="isAuthenticated$ | async; else unAuth">
 		<a
 			app-button
 			view="link"
