@@ -226,7 +226,7 @@ export class NotifyComponent implements OnInit, OnDestroy {
 
 					this.notifyList.forEach(item => {
 						if (item.component) {
-							this.cdr.detectChanges();
+							this.cdr.markForCheck();
 							const componentRef = this.notifyContent.createComponent(item.component);
 
 							if (item.inputs) {
@@ -236,7 +236,7 @@ export class NotifyComponent implements OnInit, OnDestroy {
 							}
 						}
 					});
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);

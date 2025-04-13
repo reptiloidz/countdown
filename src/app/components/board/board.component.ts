@@ -110,7 +110,7 @@ export class BoardComponent implements OnInit, OnChanges, OnDestroy {
 				this.bottomStaticValue = this.value;
 				this.switchBottom = false;
 			});
-			this.cdr.detectChanges();
+			this.cdr.markForCheck();
 		});
 	}
 }

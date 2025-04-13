@@ -171,7 +171,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 					if (index === this.emojisCurrent.length) {
 						emojisInterval.unsubscribe();
 					}
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			});
 		});

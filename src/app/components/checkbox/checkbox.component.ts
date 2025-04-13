@@ -58,7 +58,7 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 		this.subscriptions.add(
 			this.action.eventPointsCheckedAll$.subscribe({
 				next: () => {
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);

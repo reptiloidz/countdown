@@ -15,7 +15,7 @@ const dropMock = new DropComponent(
 		createElement: jest.fn(),
 		setStyle: jest.fn(),
 	} as unknown as Renderer2,
-	{ detectChanges: jest.fn() } as unknown as ChangeDetectorRef,
+	{ detectChanges: jest.fn(), markForCheck: jest.fn() } as unknown as ChangeDetectorRef,
 	new NotifyService(),
 );
 

@@ -134,7 +134,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						this.generateCalendar({
 							force: prevDateString !== nowDateString,
 						});
-						this.cdr.detectChanges();
+						this.cdr.markForCheck();
 					},
 				}),
 		);
@@ -143,7 +143,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			this.data.eventEditPoint$
 				.pipe(
 					tap(() => {
-						this.cdr.detectChanges();
+						this.cdr.markForCheck();
 					}),
 				)
 				.subscribe(),
@@ -540,6 +540,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		this.generateCalendar({
 			date: result[this.activeMode][forward ? 'forward' : 'backward'],
 		});
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 }

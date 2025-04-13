@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
 							document.documentElement.style.setProperty('--count', (++this.count).toString());
 
 							this.action.intervalSwitched();
-							this.cdr.detectChanges();
+							this.cdr.markForCheck();
 						},
 					}),
 				);

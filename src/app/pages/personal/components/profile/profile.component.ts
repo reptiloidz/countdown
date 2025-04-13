@@ -157,7 +157,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						if (user?.birthDate) {
 							this.birthDatePickerValue = parse('00:00', Constants.timeFormat, parseDate(user.birthDate));
 						}
-						this.cdr.detectChanges();
+						this.cdr.markForCheck();
 					},
 					error: () => {
 						this.profileLoading = false;
@@ -193,7 +193,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 								short: true,
 								view: 'positive',
 							});
-						this.cdr.detectChanges();
+						this.cdr.markForCheck();
 					},
 				}),
 		);
@@ -255,7 +255,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						short: true,
 						view: 'positive',
 					});
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);
@@ -314,7 +314,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						},
 					}) as ValidationObject;
 					this.emailErrorMessages = getErrorMessages(this.emailValidated);
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);
@@ -358,7 +358,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.passwordErrorMessages = getErrorMessages(this.passwordValidated);
 					this.oldPasswordErrorMessages = getErrorMessages(oldPasswordValidated);
 					this.newPasswordErrorMessages = getErrorMessages(newPasswordValidated);
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);
@@ -384,7 +384,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 								view: 'positive',
 							});
 						});
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);
@@ -393,7 +393,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.auth.eventVerifyEmailSent$.subscribe({
 				next: () => {
 					this.verifyButtonDisabled = false;
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);

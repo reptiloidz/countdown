@@ -307,7 +307,7 @@ export class GenerateIterationsComponent implements OnInit {
 		this.repeatsAreGenerated.emit(this.repeats);
 
 		this.repeats = [];
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	getDateTime(k: number) {
@@ -384,12 +384,12 @@ export class GenerateIterationsComponent implements OnInit {
 	rangeStartDatePicked(date: Date) {
 		this.rangeStartDate = date;
 		this.getStartDayParam();
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	rangeEndDatePicked(date: Date) {
 		this.rangeEndDate = date;
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	addIterationRecursively(k: number) {
@@ -408,7 +408,7 @@ export class GenerateIterationsComponent implements OnInit {
 			});
 			this.addIterationRecursively(k + 1);
 		}
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	repeatsModeSwitcher() {

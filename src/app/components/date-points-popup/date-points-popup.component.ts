@@ -46,7 +46,7 @@ export class DatePointsPopupComponent implements OnInit, OnDestroy {
 				next: (points: Point[]) => {
 					this.pointsList = this.pointsList.filter(point => points.some(item => item.id === point.id));
 
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 
 					if (!this.pointsList.length) {
 						this.popupService.close();

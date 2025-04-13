@@ -81,7 +81,7 @@ export class InputComponent implements ControlValueAccessor {
 		if (typeof value === 'string' || typeof value === 'number') {
 			this.value = value.toString();
 		}
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 	registerOnChange(fn: (value: string | number) => void): void {
 		this.onChange = fn;
@@ -97,7 +97,7 @@ export class InputComponent implements ControlValueAccessor {
 		this.value = (event.target as HTMLInputElement).value || '';
 		this.onChange(this.value);
 		this.onTouched();
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	resetValue() {

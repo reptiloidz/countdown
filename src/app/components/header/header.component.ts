@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					this.isMain = !finalPath;
 					this.isPrivacy = finalPath !== 'privacy';
 					this.isProfile = finalPath !== 'profile';
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);

@@ -367,7 +367,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 							}
 						}
 
-						this.cdr.detectChanges();
+						this.cdr.markForCheck();
 					},
 					error: err => {
 						console.error('Ошибка при изменении в поле формы:\n', err.message);
@@ -403,7 +403,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 					this.sortDates();
 					this.action.pointUpdated(this.point);
 					this.success(point, editPointEvent);
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);

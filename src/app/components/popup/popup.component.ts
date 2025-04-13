@@ -27,16 +27,16 @@ export class PopupComponent implements OnInit {
 
 	constructor(
 		private cdr: ChangeDetectorRef,
-		private popupService: PopupService
+		private popupService: PopupService,
 	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.popupService.eventPopupOpen$.subscribe({
-				next: (data) => {
+				next: data => {
 					this.show(data.title, data.component, data.inputs);
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
@@ -44,7 +44,7 @@ export class PopupComponent implements OnInit {
 				next: () => {
 					this.close();
 				},
-			})
+			}),
 		);
 	}
 
@@ -61,7 +61,7 @@ export class PopupComponent implements OnInit {
 			}
 		}
 
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	close() {

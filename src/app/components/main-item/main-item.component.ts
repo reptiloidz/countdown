@@ -95,7 +95,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			this.action.eventPointsCheckedAll$.subscribe({
 				next: check => {
 					this.pointCheckbox && !this.pointCheckbox.isDisabled && (this.pointCheckbox.isChecked = check);
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 			}),
 		);
@@ -105,7 +105,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.isBoardVisible = this.el.nativeElement.querySelector('.board--visible') ? true : false;
 					this.isBoardVisible && this.setTimer();
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 				error: err => {
 					console.error('Ошибка при обновлении таймеров:\n', err.message);
@@ -210,7 +210,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.timerYears = currentInterval.years ? this.zeroPad(Math.abs(currentInterval.years)) : undefined;
 		this.timerMonths = currentInterval.months ? this.zeroPad(Math.abs(currentInterval.months)) : undefined;
 		this.timerDays = currentInterval.days ? this.zeroPad(Math.abs(currentInterval.days)) : undefined;
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	delete(id: string | undefined) {
@@ -219,7 +219,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	checkPoint() {
 		this.pointCheck.emit();
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	loadUserInfo(id?: string) {

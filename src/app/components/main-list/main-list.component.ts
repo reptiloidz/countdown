@@ -172,7 +172,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 						});
 						this.action.pointsFetched();
 						this.getAvailablePointsVisibility();
-						this.cdr.detectChanges();
+						this.cdr.markForCheck();
 					},
 					error(err) {
 						console.error('Ошибка при загрузке списка:', err.message);
@@ -233,7 +233,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 					localStorage.setItem('directionValue', this.directionValue);
 					localStorage.setItem('colorValue', this.colorType.join('+') || 'all');
 
-					this.cdr.detectChanges();
+					this.cdr.markForCheck();
 				},
 				error: err => {
 					console.error('Ошибка при получении параметров:\n', err.message);
@@ -370,7 +370,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	checkPoint() {
 		this.action.getCheckedPoints(this.pointsList?.nativeElement || this.elementRef?.nativeElement);
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	getCheckedDatePoints() {
@@ -477,6 +477,6 @@ export class MainListComponent implements OnInit, OnDestroy {
 	onShowMore() {
 		sessionStorage.setItem('showMore', 'true');
 		this.showMore = true;
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 }

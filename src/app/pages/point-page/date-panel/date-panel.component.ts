@@ -432,7 +432,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	calendarCreated() {
 		this.isCalendarCreated = true;
-		this.cdr.detectChanges();
+		this.cdr.markForCheck();
 	}
 
 	switchIteration(i: number = this.currentIterationIndex) {
