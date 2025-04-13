@@ -1,8 +1,5 @@
-<div
-	class="nav__aside nav__aside--links"
-	*appLet="user$ | async as user"
->
-	<ng-container *ngIf="isAuthenticated$ | async; else unAuth">
+<div class="nav__aside nav__aside--links">
+	<ng-container *ngIf="isAuthenticated(); else unAuth">
 		<a
 			app-button
 			view="link"
@@ -10,16 +7,16 @@
 			class="nav__profile-link"
 			[textClass]="['nav__profile-wrapper']"
 			[routerLink]="'/profile'"
-			[title]="user?.email"
+			[title]="user()?.email"
 		>
 			<span class="nav__profile-inner">
 				<img
-					*ngIf="user?.photoURL"
+					*ngIf="user()?.photoURL"
 					class="userpic userpic--sm"
-					[src]="user?.photoURL"
-					[alt]="user?.displayName"
+					[src]="user()?.photoURL"
+					[alt]="user()?.displayName"
 					aria-hidden="true"
-				><span class="nav__profile-text">{{ user?.displayName }}</span>
+				><span class="nav__profile-text">{{ user()?.displayName }}</span>
 			</span>
 		</a>
 		<button

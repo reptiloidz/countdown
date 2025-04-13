@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { BehaviorSubject, filter, Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
 import { SettingsComponent } from '../settings/settings.component';
@@ -27,8 +27,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	isProfile = false;
 	logoutLoading = false;
 	mainLinkParams!: Params;
-	user$ = new BehaviorSubject<User | undefined>(undefined);
-	isAuthenticated$ = new BehaviorSubject<boolean>(false);
+	user = signal<User | undefined>(undefined);
+	isAuthenticated = signal(false);
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -62,11 +62,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.auth.currentUser.subscribe({
 				next: data => {
-					this.user$.next(data as User);
-					this.cdr.markForCheck();
-					requestAnimationFrame(() => {
-						this.isAuthenticated$.next(this.auth.isAuthenticated);
-					});
+					this.user.set(data as User);
+					this.isAuthenticated.set(this.auth.isAuthenticated);
 				},
 			}),
 		);
