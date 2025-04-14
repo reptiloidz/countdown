@@ -222,5 +222,15 @@
         <svg xmlns="http://www.w3.org/2000/svg" id="warning" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.99V19m0-14v11" vector-effect="non-scaling-stroke"/>
         </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="zero" fill="none" viewBox="0 0 24 24">
+            <g clip-path="url(#aaclip0_429_11154)">
+                <path stroke-linejoin="round" d="M12 20a5 5 0 0 0 5-5V9A5 5 0 0 0 7 9v6a5 5 0 0 0 5 5Z" vector-effect="non-scaling-stroke"/>
+            </g>
+            <defs>
+                <clipPath id="aaclip0_429_11154">
+                    <path fill="#fff" d="M0 0h24v24H0z" vector-effect="non-scaling-stroke"/>
+                </clipPath>
+            </defs>
+        </svg>
     </defs>
 </svg>

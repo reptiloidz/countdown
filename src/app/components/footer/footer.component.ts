@@ -242,13 +242,10 @@ export class FooterComponent implements OnInit, OnDestroy {
 					this.shareLinkLoading = false;
 				})
 				.catch(e => {
-					this.notify.add({
-						title: 'Ошибка при шэринге ссылки',
-						text: e,
-						short: true,
-						view: 'negative',
-					});
 					console.error('Ошибка:' + e);
+					this.shareLinkLoading = false;
+				})
+				.finally(() => {
 					this.shareLinkLoading = false;
 				});
 		} else {
