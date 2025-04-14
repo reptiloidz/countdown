@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
 import { User } from '@angular/fire/auth';
-import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { NavigationEnd, Params, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
@@ -15,7 +15,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	constructor(
 		private auth: AuthService,
 		private router: Router,
-		private route: ActivatedRoute,
 		private popupService: PopupService,
 		private cdr: ChangeDetectorRef,
 	) {}
@@ -39,22 +38,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					this.isMain = !finalPath;
 					this.isPrivacy = finalPath !== 'privacy';
 					this.isProfile = finalPath !== 'profile';
-					this.cdr.markForCheck();
-				},
-			}),
-		);
-
-		this.subscriptions.add(
-			this.route.queryParams.subscribe({
-				next: () => {
 					this.mainLinkParams = {
 						search: localStorage.getItem('searchInputValue') || null,
 						sort: localStorage.getItem('sort') === 'titleAsc' ? null : localStorage.getItem('sort'),
 						repeat: localStorage.getItem('repeatableValue') === 'all' ? null : localStorage.getItem('repeatableValue'),
 						greenwich: localStorage.getItem('greenwichValue') === 'all' ? null : localStorage.getItem('greenwichValue'),
-						public: localStorage.getItem('publicValue') === 'all' ? null : localStorage.getItem('publicValue'),
+						public: localStorage.getItem('publicValue') === 'false' ? null : localStorage.getItem('publicValue'),
 						color: localStorage.getItem('colorValue') === 'all' ? null : localStorage.getItem('colorValue'),
 					};
+					this.cdr.markForCheck();
 				},
 			}),
 		);

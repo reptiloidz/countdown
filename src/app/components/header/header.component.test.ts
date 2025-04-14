@@ -86,12 +86,14 @@ describe('HeaderComponent', () => {
 
 			component.ngOnInit();
 
+			(router.events as Subject<Event>).next(new NavigationEnd(1, '/', '/'));
+
 			expect(component.mainLinkParams).toEqual({
 				search: 'test',
 				sort: null,
 				repeat: null,
 				greenwich: null,
-				public: null,
+				public: 'all',
 				color: null,
 			});
 		});
