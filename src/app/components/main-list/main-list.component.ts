@@ -335,7 +335,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			? Array.from(this.colorList.nativeElement.children)
 					.filter((item: any) => item?.querySelector('input')?.checked)
 					.map((item: any) => item.getAttribute('data-color'))
-			: [];
+			: this.colorType;
 
 		this.router.navigate([], {
 			relativeTo: this.route,

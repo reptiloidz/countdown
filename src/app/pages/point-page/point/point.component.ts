@@ -272,6 +272,7 @@ export class PointComponent implements OnInit, OnDestroy {
 			this.point &&
 			getClosestIteration(this.point).then(data => {
 				this._closestIterationDate = data.date;
+				this.checkIsDirectionCorrect();
 			});
 	}
 
@@ -337,7 +338,6 @@ export class PointComponent implements OnInit, OnDestroy {
 		}
 
 		this.getClosestIteration();
-		this.checkIsDirectionCorrect();
 
 		if (switchCalendarDate) {
 			this.selectedIterationDate = this.pointDate;
