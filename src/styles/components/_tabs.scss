@@ -229,6 +229,28 @@
 
 	&__virtual-scroll {
 		height: 100%;
+		scrollbar-color: black transparent;
+		scrollbar-width: thin;
+
+		&::-webkit-scrollbar-button {
+			display: none;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			border-width: 0;
+			border-style: solid;
+			border-color: blue;
+			border-radius: 4px;
+			background-color: red;
+		}
+
+		&::-webkit-scrollbar,
+		&::-webkit-scrollbar-track {
+			width: 4px;
+			height: 4px;
+			margin: 4px;
+			background-color: green;
+		}
 
 		.cdk-virtual-scroll-content-wrapper {
 			position: static;
