@@ -386,7 +386,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 				index = 0;
 				break;
 			case 'end':
-				index = (this.dates && this.dates?.length - 1) || 0;
+				index = (this.dates && this.dates?.length + 1000) || 0;
 				break;
 			case 'home':
 				index = this.currentIterationIndex;

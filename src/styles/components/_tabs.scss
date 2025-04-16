@@ -229,35 +229,6 @@
 
 	&__virtual-scroll {
 		height: 100%;
-		-webkit-overflow-scrolling: touch;
-		scrollbar-color: black transparent;
-		scrollbar-width: thin;
-
-		&::-webkit-scrollbar-button {
-			display: none;
-		}
-
-		&::-webkit-scrollbar-thumb {
-			border-width: 0;
-			border-style: solid;
-			border-color: blue;
-			border-radius: 4px;
-			background-color: red;
-		}
-
-		::-webkit-scrollbar {
-			width: 8px;
-			height: 4px;
-			-webkit-appearance: none;
-		}
-
-		&::-webkit-scrollbar,
-		&::-webkit-scrollbar-track {
-			width: 4px;
-			height: 4px;
-			margin: 4px;
-			background-color: green;
-		}
 
 		.cdk-virtual-scroll-content-wrapper {
 			position: static;
