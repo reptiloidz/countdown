@@ -229,6 +229,7 @@
 
 	&__virtual-scroll {
 		height: 100%;
+		-webkit-overflow-scrolling: touch;
 		scrollbar-color: black transparent;
 		scrollbar-width: thin;
 
@@ -242,6 +243,12 @@
 			border-color: blue;
 			border-radius: 4px;
 			background-color: red;
+		}
+
+		::-webkit-scrollbar {
+			width: 8px;
+			height: 4px;
+			-webkit-appearance: none;
 		}
 
 		&::-webkit-scrollbar,
