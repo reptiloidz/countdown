@@ -278,9 +278,8 @@
 						class="points-list__more"
 						size="lg"
 						mode="secondary"
-						icon="dots"
 						(click)="onShowMore()"
-					></button>
+					>+{{ filteredPoints.length - 5 }}</button>
 				</li>
 			</ul>
 		</div>
@@ -289,7 +288,9 @@
 
 <ng-template #empty>
 	<h2 class="content__empty">
-		Нет событий для отображения
+		Нет событий {{":("}}
+		<br>
+		Попробуйте изменить фильтры или создать новое.
 	</h2>
 </ng-template>
 
