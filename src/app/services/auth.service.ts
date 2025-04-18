@@ -32,14 +32,7 @@ import {
 	EmailAuthCredential,
 	sendPasswordResetEmail,
 } from '@angular/fire/auth';
-import {
-	goOnline,
-	objectVal,
-	query,
-	ref,
-	set,
-	update,
-} from '@angular/fire/database';
+import { goOnline, objectVal, query, ref, set, update } from '@angular/fire/database';
 import { NotifyService, HttpService } from '.';
 import { generateUserpicName, randomHEXColor } from '../helpers';
 
@@ -52,7 +45,7 @@ export class AuthService implements OnDestroy {
 		private http: HttpService,
 		private router: Router,
 		private authFB: Auth,
-		private notify: NotifyService
+		private notify: NotifyService,
 	) {
 		this.subscriptions.add(
 			authState(this.authFB).subscribe({
@@ -67,18 +60,18 @@ export class AuthService implements OnDestroy {
 						this.setToken();
 					}
 				},
-			})
+			}),
 		);
 
 		this.subscriptions.add(
 			this.eventLogin$
 				.pipe(
-					concatMap((id) => {
+					concatMap(id => {
 						return this.getUserData(id).pipe(take(1));
-					})
+					}),
 				)
 				.subscribe({
-					next: (data) => {
+					next: data => {
 						if (!data) {
 							this._user?.uid &&
 								this.updateUserBirthDate(this._user.uid, {
@@ -93,7 +86,7 @@ export class AuthService implements OnDestroy {
 								});
 						}
 					},
-				})
+				}),
 		);
 	}
 
@@ -150,9 +143,7 @@ export class AuthService implements OnDestroy {
 
 	get token(): string | null {
 		if (localStorage.getItem('fb-token')) {
-			const expDate = new Date(
-				localStorage.getItem('fb-token-exp') ?? ''
-			);
+			const expDate = new Date(localStorage.getItem('fb-token-exp') ?? '');
 			if (expDate > new Date()) {
 				return localStorage.getItem('fb-token');
 			} else {
@@ -177,13 +168,9 @@ export class AuthService implements OnDestroy {
 	}
 
 	async login(user: UserPoint): Promise<any> {
-		const value: any = await signInWithEmailAndPassword(
-			getAuth(),
-			user.email,
-			user.password
-		);
+		const value: any = await signInWithEmailAndPassword(getAuth(), user.email, user.password);
 
-		return await new Promise((resolve) => {
+		return await new Promise(resolve => {
 			const displayName = user.email.split('@')[0];
 			console.log('UserCredentialImpl', value);
 
@@ -198,7 +185,7 @@ export class AuthService implements OnDestroy {
 				this.updateProfile(this._user, {
 					displayName,
 					photoURL: `https://ui-avatars.com/api/?name=${generateUserpicName(
-						displayName
+						displayName,
 					)}&background=${randomHEXColor()}`,
 				});
 			resolve(value);
@@ -224,11 +211,11 @@ export class AuthService implements OnDestroy {
 
 	register(user: UserPoint): Observable<any> {
 		return this.httpClient.post(
-			`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.apiKey}`,
+			`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebase?.apiKey}`,
 			{
 				...user,
 				returnSecureToken: true,
-			}
+			},
 		);
 	}
 
@@ -262,7 +249,7 @@ export class AuthService implements OnDestroy {
 				new Date().getTime() +
 					// response.expiresIn * Constants.msInSecond
 					// Вместо дефолтного expiresIn используем кастомный период (неделю)
-					7 * 24 * 60 * Constants.msInMinute
+					7 * 24 * 60 * Constants.msInMinute,
 			);
 
 			localStorage.setItem('fb-token', token);
@@ -296,7 +283,7 @@ export class AuthService implements OnDestroy {
 					.then(() => {
 						this._eventEmailUpdatedSubject.next(data);
 					})
-					.catch((err) => {
+					.catch(err => {
 						if (err.code === 'auth/requires-recent-login') {
 							this.updateEmail(user, data, true);
 						} else {
@@ -307,7 +294,7 @@ export class AuthService implements OnDestroy {
 						}
 					});
 			})
-			.catch((err) => {
+			.catch(err => {
 				this.wrongPasswordError(err);
 			});
 	}
@@ -327,7 +314,7 @@ export class AuthService implements OnDestroy {
 						});
 					});
 			})
-			.catch((err) => {
+			.catch(err => {
 				this.wrongPasswordError(err);
 			});
 	}
@@ -344,7 +331,7 @@ export class AuthService implements OnDestroy {
 									.then(() => {
 										this._eventAccountDeletedSubject.next();
 									})
-									.catch((err) => {
+									.catch(err => {
 										console.error(err);
 										this.notify.add({
 											title: 'Ошибка при удалении учётной записи',
@@ -352,7 +339,7 @@ export class AuthService implements OnDestroy {
 										});
 									});
 							})
-							.catch((err) => {
+							.catch(err => {
 								console.error(err);
 								this.notify.add({
 									title: 'Ошибка при удалении события',
@@ -360,7 +347,7 @@ export class AuthService implements OnDestroy {
 								});
 							});
 					})
-					.catch((err) => {
+					.catch(err => {
 						console.error(err);
 						this.notify.add({
 							title: 'Ошибка при удалении события',
@@ -368,7 +355,7 @@ export class AuthService implements OnDestroy {
 						});
 					});
 			})
-			.catch((err) => {
+			.catch(err => {
 				this.wrongPasswordError(err);
 			});
 	}
@@ -409,16 +396,13 @@ export class AuthService implements OnDestroy {
 		return objectVal<any>(query(ref(this.http.db, `users/${id}`)));
 	}
 
-	async updateUserBirthDate(
-		id: string,
-		param: UserExtraData | null
-	): Promise<void> {
+	async updateUserBirthDate(id: string, param: UserExtraData | null): Promise<void> {
 		await set(ref(this.http.db, `users/${id}`), {
 			birthDate: param?.birthDate || null,
 			birthDatePointId: param?.birthDatePointId || null,
 			auth: param?.auth || null,
 		} as UserExtraData);
-		return await new Promise((resolve) => {
+		return await new Promise(resolve => {
 			param && this.eventBirthDateAdded();
 			resolve();
 		});
@@ -426,7 +410,7 @@ export class AuthService implements OnDestroy {
 
 	async reAuth(reAuthRequired = false, password?: string) {
 		if (!reAuthRequired) {
-			return new Promise((resolve) => {
+			return new Promise(resolve => {
 				resolve(null);
 			});
 		} else {
@@ -439,8 +423,8 @@ export class AuthService implements OnDestroy {
 							title: 'Введите пароль',
 							button: 'Подтвердить пароль',
 							type: 'password',
-						})
-					)
+						}),
+					),
 				);
 			}
 		}
@@ -452,20 +436,13 @@ export class AuthService implements OnDestroy {
 		// https://stackoverflow.com/questions/37811684/how-to-create-credential-object-needed-by-firebase-web-user-reauthenticatewith
 		if (this.authFB.currentUser) {
 			credential =
-				this.authFB.currentUser.email &&
-				EmailAuthProvider.credential(
-					this.authFB.currentUser.email,
-					password
-				);
+				this.authFB.currentUser.email && EmailAuthProvider.credential(this.authFB.currentUser.email, password);
 
 			return credential
-				? reauthenticateWithCredential(
-						this.authFB.currentUser,
-						credential
-				  )
-				: new Promise((resolve) => {
+				? reauthenticateWithCredential(this.authFB.currentUser, credential)
+				: new Promise(resolve => {
 						resolve(null);
-				  });
+					});
 		}
 	}
 }

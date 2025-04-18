@@ -24,6 +24,26 @@ jobs:
     - run: npm cache clean --force
     - run: rm -rf node_modules package-lock.json
     - run: npm install
+    - name: Create environment.prod.ts
+      run: |
+        echo "import { Environment } from '../app/interfaces';
+
+        export const environment: Environment = {
+          production: true,
+          mock: false,
+          providers: [],
+          firebase: {
+            apiKey: '${{ secrets.NG_APP_FIREBASE_API_KEY }}',
+            authDomain: '${{ secrets.NG_APP_FIREBASE_AUTH_DOMAIN }}',
+            databaseURL: '${{ secrets.NG_APP_FIREBASE_DB_URL }}',
+            projectId: '${{ secrets.NG_APP_FIREBASE_PROJECT_ID }}',
+            storageBucket: '${{ secrets.NG_APP_FIREBASE_STORAGE_BUCKET }}',
+            messagingSenderId: '${{ secrets.NG_APP_FIREBASE_MESSAGING_SENDER_ID }}',
+            appId: '${{ secrets.NG_APP_FIREBASE_APP_ID }}',
+            measurementId: '${{ secrets.NG_APP_FIREBASE_MEASUREMENT_ID }}',
+          },
+        };
+        " > src/environments/environment.prod.ts
     - run: npm run build
     - run: npm test
 

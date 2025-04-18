@@ -8,7 +8,7 @@ import { MainListComponent } from './components/main-list/main-list.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { FirebaseOptions, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { PrivacyComponent } from './components/privacy/privacy.component';
@@ -28,6 +28,7 @@ import { MainItemModule } from './components/main-item/main-item.module';
 import { CommonModule } from '@angular/common';
 import { SvgModule } from './components/svg/svg.module';
 import { LinkPointComponent } from './components/link-point/link-point.component';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
 	declarations: [
@@ -66,18 +67,7 @@ import { LinkPointComponent } from './components/link-point/link-point.component
 			useFactory: FontProvider,
 			multi: true,
 		},
-		provideFirebaseApp(() =>
-			initializeApp({
-				projectId: 'countdown-2971d',
-				appId: '1:711051586210:web:f9be0c6579bbb2608d85fb',
-				databaseURL: 'https://countdown-2971d-default-rtdb.firebaseio.com',
-				storageBucket: 'countdown-2971d.appspot.com',
-				apiKey: 'AIzaSyAqSOHSqWdyzx2GKWK33AqIIRgimEjVFak',
-				authDomain: 'countdown-2971d.firebaseapp.com',
-				messagingSenderId: '711051586210',
-				measurementId: 'G-XRDWYMHR2Y',
-			}),
-		),
+		provideFirebaseApp(() => initializeApp(environment.firebase as FirebaseOptions)),
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),
 	],
