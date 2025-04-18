@@ -14,7 +14,7 @@ import { DropComponent } from '../drop/drop.component';
 import { InputComponent } from '../input/input.component';
 import { ActionService } from 'src/app/services';
 import { filter, Subscription } from 'rxjs';
-import { IConfig } from 'ngx-mask';
+import { NgxMaskConfig } from 'ngx-mask';
 
 @Component({
 	selector: 'app-autocomplete',
@@ -28,7 +28,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() inputmode: string | null = null;
 	@Input() autocompleteList!: SelectArray[];
 	@Input() mask: string | null = null;
-	@Input() patterns!: IConfig['patterns'];
+	@Input() patterns!: NgxMaskConfig['patterns'];
 	@Input() suffix: string = '';
 	@Input() prefix: string = '';
 	@Input() filterFn = (item: SelectArray, filterValue: string) =>

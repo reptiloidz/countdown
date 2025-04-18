@@ -1,11 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	EventEmitter,
-	Input,
-	OnInit,
-	Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
 	addMinutes,
 	format,
@@ -23,7 +16,7 @@ import {
 	subMinutes,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { IConfig } from 'ngx-mask';
+import { NgxMaskConfig } from 'ngx-mask';
 import { Constants } from 'src/app/enums';
 import { isDateValid, parseDate } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
@@ -48,7 +41,7 @@ export class DatepickerComponent implements OnInit {
 	@Output() datePicked = new EventEmitter<Date>();
 
 	currentYear = getYear(new Date());
-	monthPatterns: IConfig['patterns'] = {
+	monthPatterns: NgxMaskConfig['patterns'] = {
 		A: {
 			pattern: new RegExp('[а-яА-Я0-9]'),
 		},
@@ -64,12 +57,7 @@ export class DatepickerComponent implements OnInit {
 
 	get dateFormatted() {
 		return this.date && isDateValid(this.date)
-			? format(
-					this.date,
-					this.dateOnly
-						? Constants.shortDateFormat
-						: Constants.fullDateFormat
-			  )
+			? format(this.date, this.dateOnly ? Constants.shortDateFormat : Constants.fullDateFormat)
 			: 'Выберите дату';
 	}
 
@@ -78,11 +66,7 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	set dateYear(value: string) {
-		this.visibleDate = parse(
-			value + '.' + (this.dateMonthNumber + 1) + '.' + '1',
-			'y.M.d',
-			this.defaultDate
-		);
+		this.visibleDate = parse(value + '.' + (this.dateMonthNumber + 1) + '.' + '1', 'y.M.d', this.defaultDate);
 	}
 
 	get dateMonth() {
@@ -94,11 +78,7 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	set dateMonth(value: string) {
-		this.visibleDate = parse(
-			this.dateYear + '.' + (+value + 1) + '.' + '1',
-			'y.M.d',
-			this.defaultDate
-		);
+		this.visibleDate = parse(this.dateYear + '.' + (+value + 1) + '.' + '1', 'y.M.d', this.defaultDate);
 	}
 
 	get dateDay() {
@@ -110,11 +90,7 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	set dateHour(value: string) {
-		this.date = parse(
-			value + ':' + this.dateMinute,
-			'H:m',
-			this.defaultDate
-		);
+		this.date = parse(value + ':' + this.dateMinute, 'H:m', this.defaultDate);
 		this.datePicked.emit(this.date);
 	}
 
@@ -130,57 +106,46 @@ export class DatepickerComponent implements OnInit {
 	get yearsArray(): SelectArray[] {
 		return this.createArray({
 			length: 200,
-			getKey: (index) => this.currentYear - 100 + index,
-			isDisabled: (index) =>
-				this.isYearDisabled(this.currentYear - 100 + index),
+			getKey: index => this.currentYear - 100 + index,
+			isDisabled: index => this.isYearDisabled(this.currentYear - 100 + index),
 		});
 	}
 
 	get monthsArray(): SelectArray[] {
 		return this.createArray({
 			length: 12,
-			getValue: (index) => index,
-			getKey: (index) => this.getMonthName(index).toString(),
-			isDisabled: (index) => this.isMonthDisabled(index),
+			getValue: index => index,
+			getKey: index => this.getMonthName(index).toString(),
+			isDisabled: index => this.isMonthDisabled(index),
 		});
 	}
 
 	get hoursArray(): SelectArray[] {
 		return this.createArray({
 			length: 24,
-			getKey: (index) => index,
-			isDisabled: (index) => this.isHourDisabled(index),
+			getKey: index => index,
+			isDisabled: index => this.isHourDisabled(index),
 		});
 	}
 
 	get minutesArray(): SelectArray[] {
 		return this.createArray({
 			length: 60,
-			getKey: (index) => index,
-			isDisabled: (index) => this.isMinuteDisabled(index),
+			getKey: index => index,
+			isDisabled: index => this.isMinuteDisabled(index),
 		});
 	}
 
 	get isDateDisabledBefore(): boolean {
 		const thisDate = this.date || new Date();
 
-		return (
-			(thisDate &&
-				this.disabledBefore &&
-				isBefore(thisDate, this.disabledBefore)) ||
-			false
-		);
+		return (thisDate && this.disabledBefore && isBefore(thisDate, this.disabledBefore)) || false;
 	}
 
 	get isDateDisabledAfter(): boolean {
 		const thisDate = this.date || new Date();
 
-		return (
-			(thisDate &&
-				this.disabledAfter &&
-				isAfter(thisDate, this.disabledAfter)) ||
-			false
-		);
+		return (thisDate && this.disabledAfter && isAfter(thisDate, this.disabledAfter)) || false;
 	}
 
 	/**
@@ -190,11 +155,9 @@ export class DatepickerComponent implements OnInit {
 	get fixedDate(): Date {
 		let fixedDateValue = this.date || new Date();
 		if (this.isDateDisabledBefore && this.disabledBefore) {
-			fixedDateValue =
-				this.disabledBefore && addMinutes(this.disabledBefore, 1);
+			fixedDateValue = this.disabledBefore && addMinutes(this.disabledBefore, 1);
 		} else if (this.isDateDisabledAfter && this.disabledAfter) {
-			fixedDateValue =
-				this.disabledAfter && subMinutes(this.disabledAfter, 1);
+			fixedDateValue = this.disabledAfter && subMinutes(this.disabledAfter, 1);
 		}
 		return fixedDateValue;
 	}
@@ -208,10 +171,8 @@ export class DatepickerComponent implements OnInit {
 		if (!this.date) {
 			return false;
 		} else {
-			const isDisabledBefore =
-				this.disabledBefore && index < getYear(this.disabledBefore);
-			const isDisabledAfter =
-				this.disabledAfter && index > getYear(this.disabledAfter);
+			const isDisabledBefore = this.disabledBefore && index < getYear(this.disabledBefore);
+			const isDisabledAfter = this.disabledAfter && index > getYear(this.disabledAfter);
 			return isDisabledBefore || isDisabledAfter || false;
 		}
 	}
@@ -221,13 +182,9 @@ export class DatepickerComponent implements OnInit {
 			return false;
 		} else {
 			const isDisabledBefore =
-				this.disabledBefore &&
-				isSameYear(this.dateYear, this.disabledBefore) &&
-				index < getMonth(this.disabledBefore);
+				this.disabledBefore && isSameYear(this.dateYear, this.disabledBefore) && index < getMonth(this.disabledBefore);
 			const isDisabledAfter =
-				this.disabledAfter &&
-				isSameYear(this.dateYear, this.disabledAfter) &&
-				index > getMonth(this.disabledAfter);
+				this.disabledAfter && isSameYear(this.dateYear, this.disabledAfter) && index > getMonth(this.disabledAfter);
 			return isDisabledBefore || isDisabledAfter || false;
 		}
 	}
@@ -237,13 +194,9 @@ export class DatepickerComponent implements OnInit {
 			return false;
 		} else {
 			const isDisabledBefore =
-				this.disabledBefore &&
-				isSameDay(this.date, this.disabledBefore) &&
-				index < getHours(this.disabledBefore);
+				this.disabledBefore && isSameDay(this.date, this.disabledBefore) && index < getHours(this.disabledBefore);
 			const isDisabledAfter =
-				this.disabledAfter &&
-				isSameDay(this.date, this.disabledAfter) &&
-				index > getHours(this.disabledAfter);
+				this.disabledAfter && isSameDay(this.date, this.disabledAfter) && index > getHours(this.disabledAfter);
 			return isDisabledBefore || isDisabledAfter || false;
 		}
 	}
@@ -253,13 +206,9 @@ export class DatepickerComponent implements OnInit {
 			return false;
 		} else {
 			const isDisabledBefore =
-				this.disabledBefore &&
-				isSameHour(this.date, this.disabledBefore) &&
-				index <= getMinutes(this.disabledBefore);
+				this.disabledBefore && isSameHour(this.date, this.disabledBefore) && index <= getMinutes(this.disabledBefore);
 			const isDisabledAfter =
-				this.disabledAfter &&
-				isSameHour(this.date, this.disabledAfter) &&
-				index >= getMinutes(this.disabledAfter);
+				this.disabledAfter && isSameHour(this.date, this.disabledAfter) && index >= getMinutes(this.disabledAfter);
 			return isDisabledBefore || isDisabledAfter || false;
 		}
 	}
@@ -289,9 +238,7 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	yearSwitched(value: string | number) {
-		this.visibleDate = parseDate(
-			`01.${+this.dateMonthNumber + 1}.${value} 00:00`
-		);
+		this.visibleDate = parseDate(`01.${+this.dateMonthNumber + 1}.${value} 00:00`);
 	}
 
 	monthSwitched(value: string | number) {
@@ -299,28 +246,18 @@ export class DatepickerComponent implements OnInit {
 	}
 
 	hourSwitched(value: string | number) {
-		this.date = parseDate(
-			`${this.dateDay}.${+this.dateMonthNumber + 1}.${
-				this.dateYear
-			} ${value}:${this.dateMinute}`
-		);
+		this.date = parseDate(`${this.dateDay}.${+this.dateMonthNumber + 1}.${this.dateYear} ${value}:${this.dateMinute}`);
 
 		this.fixDisabledDate();
 	}
 
 	minuteSwitched(value: string | number) {
-		this.date = parseDate(
-			`${this.dateDay}.${+this.dateMonthNumber + 1}.${this.dateYear} ${
-				this.dateHour
-			}:${value}`
-		);
+		this.date = parseDate(`${this.dateDay}.${+this.dateMonthNumber + 1}.${this.dateYear} ${this.dateHour}:${value}`);
 		this.datePicked.emit(this.date);
 	}
 
 	dateSelected({ date }: { date: Date }) {
-		this.date = this.dateOnly
-			? parse('0:0', 'H:m', date)
-			: parse(this.dateHour + ':' + this.dateMinute, 'H:m', date);
+		this.date = this.dateOnly ? parse('0:0', 'H:m', date) : parse(this.dateHour + ':' + this.dateMinute, 'H:m', date);
 		this.visibleDate = this.date;
 
 		this.fixDisabledDate();
@@ -334,8 +271,7 @@ export class DatepickerComponent implements OnInit {
 	filterMonth(item: SelectArray, filterValue: string) {
 		return (
 			(item.key.toString().includes(filterValue) && !item.disabled) ||
-			((+item.value + 1).toString().includes(filterValue) &&
-				!item.disabled)
+			((+item.value + 1).toString().includes(filterValue) && !item.disabled)
 		);
 	}
 }

@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { MainListComponent } from './components/main-list/main-list.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FirebaseOptions, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
@@ -46,6 +46,7 @@ import { environment } from 'src/environments/environment';
 		SettingsComponent,
 		LinkPointComponent,
 	],
+	bootstrap: [AppComponent],
 	imports: [
 		CommonModule,
 		BoardModule,
@@ -54,7 +55,6 @@ import { environment } from 'src/environments/environment';
 		BrowserAnimationsModule,
 		AppRoutingModule,
 		FormsModule,
-		HttpClientModule,
 		SharedModule,
 		SvgModule,
 		ClockModule,
@@ -70,7 +70,7 @@ import { environment } from 'src/environments/environment';
 		provideFirebaseApp(() => initializeApp(environment.firebase as FirebaseOptions)),
 		provideAuth(() => getAuth()),
 		provideDatabase(() => getDatabase()),
+		provideHttpClient(withInterceptorsFromDi()),
 	],
-	bootstrap: [AppComponent],
 })
 export class AppModule {}
