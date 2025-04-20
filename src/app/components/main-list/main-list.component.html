@@ -306,6 +306,7 @@
 	let-pointsList="pointsList"
 	let-sortType="sortType"
 	let-isSm="isSm"
+	let-isPopup="isPopup"
 	let-ulClass="ulClass"
 >
 	<ul
@@ -315,6 +316,7 @@
 		<li
 			app-main-item
 			[isSm]="isSm"
+			[isPopup]="isPopup"
 			[attr.data-id]="point.id"
 			*ngFor="let point of pointsList | sortPoints : sortType | async; let i = index; trackBy: trackByFilteredPoints"
 			[point]="point"

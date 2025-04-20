@@ -33,6 +33,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@Input() point!: Point;
 	@Input() isLine = false;
 	@Input() isSm = false;
+	@Input() isPopup = false;
 	@Input() showSec = true;
 	@Input() isEdit = false;
 	@Output() pointCheck = new EventEmitter();

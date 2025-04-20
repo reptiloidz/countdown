@@ -7,6 +7,7 @@
 		point.color ? 'color--' + point.color : '',
 		isLine ? 'point--line color--horizontal' : '',
 		isSm ? 'point--sm' : '',
+		isPopup ? 'point--popup' : '',
 	]"
 >
 	<a
@@ -34,7 +35,7 @@
 
 	<div class="point__timers-wrapper">
 		<app-timers
-			*ngIf="!isSm"
+			*ngIf="!isSm && !isPopup"
 			class="point__timers timers timers--sm timers--left"
 			size="sm"
 			[years]="timerYears"
@@ -53,7 +54,7 @@
 			delayRandomValue="3000"
 		></app-timers>
 		<ng-container
-			*ngIf="!isSm"
+			*ngIf="!isSm && !isPopup"
 			[ngTemplateOutlet]="rotating"
 		></ng-container>
 	</div>
@@ -113,6 +114,10 @@
 				></button>
 			</div>
 		</div>
+		<ng-container
+			*ngIf="isPopup"
+			[ngTemplateOutlet]="rotating"
+		></ng-container>
 	</div>
 
 	<div
@@ -208,7 +213,7 @@
 			ariaHidden="false"
 			[ngClass]="[
 						isDirectionCorrect ? 'direction-icon--correct' : '',
-						point.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward'
+						point.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward',
 					]"
 		></svg>
 	</ng-template>
