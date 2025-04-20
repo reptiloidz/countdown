@@ -60,7 +60,7 @@
 
 	&__item {
 		z-index: 1;
-		box-shadow: 0 0 1px var(--timers-item-shadow-spread) rgb(var(--c-bg-primary), 0.5);
+		box-shadow: 0 0 1px var(--timers-item-shadow-spread) rgb(var(--c-shadow-primary), 0.5);
 	}
 
 	&__item-wrapper {
@@ -141,10 +141,15 @@
 	}
 
 	&--sm {
+		@include media-breakpoint-down(sm) {
+			min-height: 80px;
+		}
 		--timers-item-shadow-spread: 0;
 
+		display: flex;
+		align-items: flex-end;
 		width: auto;
-		min-height: 0;
+		min-height: 30px;
 		margin: 0;
 		container: unset;
 

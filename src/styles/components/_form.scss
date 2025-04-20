@@ -25,10 +25,15 @@
 		&--settings {
 			@include media-breakpoint-down(sm) {
 				display: grid;
+				grid-template-areas: 'direction colors' 'modes checks';
 				grid-template-columns: auto auto;
 			}
 
 			align-items: flex-start;
+		}
+
+		&--settings-link {
+			grid-template-areas: 'colors checks';
 		}
 	}
 
@@ -47,6 +52,7 @@
 
 	&__checks {
 		display: flex;
+		grid-area: checks;
 		gap: 6px;
 	}
 
@@ -56,8 +62,17 @@
 			margin-left: auto;
 		}
 
+		grid-area: colors;
 		margin-right: auto;
 		margin-bottom: auto;
+	}
+
+	&__modes {
+		grid-area: modes;
+	}
+
+	&__direction {
+		grid-area: direction;
 	}
 
 	&__section {

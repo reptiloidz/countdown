@@ -1,4 +1,8 @@
 .form-drop {
+	@include media-breakpoint-down(sm) {
+		flex-direction: column;
+	}
+
 	display: flex;
 	gap: 18px;
 	min-height: 120px;
@@ -12,10 +16,13 @@
 	}
 
 	&__col {
+		@include media-breakpoint-up(md) {
+			min-height: 274px;
+		}
+
 		display: flex;
 		flex-direction: column;
 		width: 190px;
-		min-height: 274px;
 
 		&:first-child {
 			border-right: 1px solid rgb(var(--c-border-inverse));
@@ -47,6 +54,10 @@
 	}
 
 	&__submit {
+		@include media-breakpoint-down(sm) {
+			margin-top: 20px;
+		}
+
 		margin-top: auto;
 		margin-left: auto;
 	}

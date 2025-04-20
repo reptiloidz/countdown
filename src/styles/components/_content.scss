@@ -121,6 +121,10 @@
 			position: fixed;
 			bottom: 95px;
 			z-index: 2;
+
+			@media (max-height: 700px) {
+				bottom: 75px;
+			}
 		}
 	}
 

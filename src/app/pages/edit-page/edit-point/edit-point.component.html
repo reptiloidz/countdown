@@ -82,13 +82,19 @@
 					></app-input>
 				</div>
 
-				<div class="form__row form__row--settings">
+				<div
+					class="form__row form__row--settings"
+					[ngClass]="{
+						'form__row--settings-link': isCreationUrl
+					}"
+				>
 					<app-switcher
 						*ngIf="!isCreationUrl"
 						[items]="directionList"
 						[value]="this.point?.direction || 'forward'"
 						formControlName="direction"
 						[showTitle]="true"
+						class="form__direction"
 					></app-switcher>
 					<app-drop
 						#colorDrop
@@ -125,7 +131,7 @@
 					<app-drop
 						#modesDrop
 						*ngIf="!isCreation && repeatableValue"
-						class="drop--modes"
+						class="drop--modes form__modes"
 						(dropOpened)="pointModesOpened()"
 						(dropClosed)="pointModesClosed()"
 					>
@@ -163,39 +169,38 @@
 						</ng-template>
 					</app-drop>
 
-					<div
-						*ngIf="!isCreationUrl"
-						class="form__checks"
-					>
-						<label
-							app-checkbox
-							mode="custom"
-							icon="globe"
-							formControlName="greenwich"
-							[title]="greenwichValue ? 'Глобальное время' : 'Местное время'"
-						></label>
-						<label
-							app-checkbox
-							mode="custom"
-							icon="users"
-							formControlName="public"
-							[title]="publicValue ? 'Публичное событие' : 'Приватное событие'"
-						></label>
-						<label
-							app-checkbox
-							mode="custom"
-							icon="refresh"
-							formControlName="repeatable"
-							[title]="repeatableValue ? 'Многократное событие' : 'Однократное событие'"
-						></label>
+					<div class="form__checks">
+						<ng-container *ngIf="!isCreationUrl">
+							<label
+								app-checkbox
+								mode="custom"
+								icon="globe"
+								formControlName="greenwich"
+								[title]="greenwichValue ? 'Глобальное время' : 'Местное время'"
+							></label>
+							<label
+								app-checkbox
+								mode="custom"
+								icon="users"
+								formControlName="public"
+								[title]="publicValue ? 'Публичное событие' : 'Приватное событие'"
+							></label>
+							<label
+								app-checkbox
+								mode="custom"
+								icon="refresh"
+								formControlName="repeatable"
+								[title]="repeatableValue ? 'Многократное событие' : 'Однократное событие'"
+							></label>
+						</ng-container>
+						<app-switcher
+							*ngIf="isCreationUrl"
+							[items]="dateModeList"
+							[value]="dateUrlMode"
+							[showTitle]="true"
+							(valueSwitched)="switchDateUrlMode($event)"
+						></app-switcher>
 					</div>
-					<app-switcher
-						*ngIf="isCreationUrl"
-						[items]="dateModeList"
-						[value]="dateUrlMode"
-						[showTitle]="true"
-						(valueSwitched)="switchDateUrlMode($event)"
-					></app-switcher>
 				</div>
 				<div class="form__row">
 					<button
