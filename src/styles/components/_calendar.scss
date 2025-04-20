@@ -223,7 +223,7 @@
 	&__drop-body {
 		@include media-breakpoint-down(md) {
 			/* stylelint-disable-next-line unit-no-unknown */
-			width: 100cqw;
+			width: calc(100 * var(--unit-qw));
 		}
 		--drop-max-h-gap: 50px;
 	}

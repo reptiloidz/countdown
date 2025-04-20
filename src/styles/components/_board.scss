@@ -105,6 +105,7 @@
 		animation-duration: 200ms;
 		animation-timing-function: cubic-bezier(0.36, 0.25, 0.76, 0.52);
 		animation-fill-mode: forwards;
+		transform-style: preserve-3d;
 
 		&::before,
 		&::after {
@@ -144,7 +145,7 @@
 				rgba(var(--c-bg-primary), 0.02) 100%
 			);
 			box-shadow: none;
-			transform: none;
+			transform: perspective(800px);
 			transform-origin: top;
 
 			&::before {
@@ -220,7 +221,7 @@
 		color: rgba(var(--c-text-primary), 0.4);
 		font-size: clamp(7px, var(--board-label-fz), 20px);
 		text-align: center;
-		transform: translateZ(0);
+		transform: perspective(800px) translateZ(0);
 	}
 
 	&--sm {
@@ -275,25 +276,25 @@
 @keyframes halfTop {
 	0% {
 		box-shadow: none;
-		transform: rotateX(0);
+		transform: perspective(800px) rotateX(-360deg);
 	}
 
 	100% {
 		box-shadow:
 			var(--board-half-shadow),
 			0 calc(var(--board-h) / -4) 20px 0 rgba(var(--c-bg-primary), 0.1);
-		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, 0.75, 0, 0.001, 1, 1, 0.1, 0.1, 0.1, 0.1, 0, 1);
+		transform: perspective(800px) rotateX(-450deg);
 	}
 }
 
 @keyframes halfBottom {
 	0% {
 		box-shadow: 0 calc(var(--board-h) / 4) 20px 1px rgba(var(--c-shadow-primary), 0.4);
-		transform: rotateX(90deg) matrix3d(1, 0, 0, 0, 0, 0.75, 0, -0.001, 1, 1, 0.1, 0.1, 0.1, 0.1, 0, 1);
+		transform: perspective(800px) rotateX(90deg);
 	}
 
 	100% {
 		box-shadow: none;
-		transform: rotateX(0);
+		transform: perspective(800px) rotateX(0);
 	}
 }

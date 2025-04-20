@@ -10,7 +10,7 @@
 	li {
 		counter-increment: item;
 		margin: 10px 0;
-		list-style-position: inside;
+		list-style-type: none;
 
 		h2 {
 			@include media-breakpoint-down(sm) {
@@ -46,7 +46,7 @@
 		li {
 			font-size: inherit;
 
-			&::marker {
+			&::before {
 				content: counters(item, '.') '. ';
 			}
 		}
@@ -57,6 +57,7 @@
 			list-style-position: outside;
 			list-style-type: square;
 
+			&::before,
 			&::marker {
 				content: unset;
 			}

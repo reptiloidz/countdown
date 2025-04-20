@@ -10,4 +10,20 @@
 	}
 
 	--cont-px: 40px;
+
+	/* если браузер понимает cqw/cqh — записываем их в переменные */
+	@supports (width: 1cqw) {
+		--unit-qw: 1cqw;
+		--unit-qh: 1cqh;
+		--unit-timer-qh: 1cqh;
+		--unit-timer-qw: 1cqw;
+	}
+
+	/* иначе — используем другие ед. изм. */
+	@supports not (width: 1cqw) {
+		--unit-qw: 1vw;
+		--unit-qh: 1vh;
+		--unit-timer-qh: 0.1rem;
+		--unit-timer-qw: 0.75rem;
+	}
 }
