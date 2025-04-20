@@ -2,7 +2,7 @@
 	--point-color: var(--c-point-gray);
 
 	@each $name, $val in map-get($colors, point) {
-		&--#{$name} {
+		&--#{'' + $name} {
 			--point-color: var(--c-point-#{$name});
 		}
 	}

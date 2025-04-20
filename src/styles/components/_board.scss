@@ -174,10 +174,6 @@
 				animation-name: none;
 			}
 
-			&::after {
-				content: none;
-			}
-
 			@media (prefers-reduced-motion: reduce) {
 				&,
 				&.board__half--bottom {
