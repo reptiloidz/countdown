@@ -29,7 +29,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@ViewChild('pointCheckbox') private pointCheckbox!: CheckboxComponent;
 	@ContentChild('checkboxTemplate') checkboxTemplate: TemplateRef<unknown> | undefined;
 
-	private subscriptions = new Subscription();
+	private readonly subscriptions = new Subscription();
 	@Input() point!: Point;
 	@Input() isLine = false;
 	@Input() isSm = false;
@@ -104,7 +104,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.action.eventIntervalSwitched$.subscribe({
 				next: () => {
-					this.isBoardVisible = this.el.nativeElement.querySelector('.board--visible') ? true : false;
+					this.isBoardVisible = !!this.el.nativeElement.querySelector('.board--visible');
 					this.isBoardVisible && this.setTimer();
 					this.cdr.markForCheck();
 				},
