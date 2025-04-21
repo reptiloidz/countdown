@@ -87,6 +87,17 @@ describe('FooterComponent', () => {
 					useValue: {
 						navigate: jest.fn(),
 						events: new Subject(),
+						lastSuccessfulNavigation: {
+							finalUrl: {
+								root: {
+									children: {
+										primary: {
+											segments: [{ path: 'edit' }, { path: '1' }],
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 				{
@@ -152,7 +163,7 @@ describe('FooterComponent', () => {
 			expect(component.shareLinkLoading).toBeFalsy();
 		});
 
-		it.skip('should fetch point and set properties', () => {
+		it('should fetch point and set properties', () => {
 			dataServiceMock.fetchPoint = jest.fn().mockReturnValue(of(mockPoint));
 			jest.spyOn(dataServiceMock, 'fetchPoint');
 			const event = new NavigationEnd(1, '/point/0/', '/point/1/');

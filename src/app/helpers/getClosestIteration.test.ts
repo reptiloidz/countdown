@@ -1,24 +1,28 @@
 import { getClosestIteration } from '../helpers/getClosestIteration';
 import { Point, PointMode } from '../interfaces';
 
-jest.mock('../workers/getClosestIteration.worker.ts', () => {
-	return class {
-		onmessage: ((event: { data: { date: Date; index: number; mode: string } }) => void) | null = null;
-		postMessage = jest.fn(() => {
-			setTimeout(() => {
-				if (this.onmessage) {
-					this.onmessage({
-						data: { date: new Date('2025-01-01T12:00:00Z'), index: 42, mode: 'AUTO' },
+jest.mock('../workers/getClosestIteration.util', () => ({
+	getClosestIterationWorker: () => {
+		return {
+			postMessage: jest.fn(function () {
+				setTimeout(() => {
+					this.onmessage?.({
+						data: {
+							date: new Date('2025-01-01T12:00:00Z'),
+							index: 42,
+							mode: { name: 'fff' } as PointMode,
+						},
 					});
-				}
-			}, 10);
-		});
-		terminate = jest.fn();
-	};
-});
+				}, 10);
+			}),
+			onmessage: null,
+			terminate: jest.fn(),
+		};
+	},
+}));
 
 describe('getClosestIteration', () => {
-	it.skip('should return the closest iteration data from the worker', async () => {
+	it('should return the closest iteration data from the worker', async () => {
 		const point = {
 			id: '1',
 			title: 'Test point 1',
@@ -33,7 +37,7 @@ describe('getClosestIteration', () => {
 		expect(result).toEqual({
 			date: new Date('2025-01-01T12:00:00Z'),
 			index: 42,
-			mode: {name: 'fff'} as PointMode,
+			mode: { name: 'fff' } as PointMode,
 		});
 	});
 });

@@ -77,6 +77,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 						this.isUrl = finalPath === 'url';
 						this.isMain = !finalPath;
 						this.isTimer = this.isUrl && !queryParams.date;
+						console.log(111, this.pointId);
+
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
 							: of(Object.keys(queryParams).length !== 0 ? getPointFromUrl(queryParams) : undefined);
