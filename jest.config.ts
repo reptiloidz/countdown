@@ -29,6 +29,7 @@ const config: Config = {
 		'src/app/{components,personal/components}/**/*.{ts,html}',
 		'src/app/{services,directives,guards,helpers,pipes,validators,providers}/**/*.ts',
 		'!**/index.ts',
+		'!**/*.module.ts',
 		'!**/*.mock.service.ts',
 	],
 

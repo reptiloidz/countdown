@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { DataService } from './data.service';
 import { ActionService, HttpService, NotifyService } from '.';
 import { Point } from '../interfaces';
@@ -47,7 +47,6 @@ describe('DataService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientTestingModule],
 			providers: [
 				DataService,
 				HttpService,
@@ -55,6 +54,7 @@ describe('DataService', () => {
 				ActionService,
 				{ provide: Auth, useValue: mockAuth },
 				provideFirebaseApp(() => initializeApp()),
+				provideHttpClientTesting(),
 			],
 		});
 
