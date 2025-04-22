@@ -743,7 +743,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		} else {
 			this.notifies['timer'].date = this.notify.add({
-				title: 'При выборе режима "таймер" отсчёт всегда будет от значения, указанного в ссылке',
+				title: 'При выборе режима &laquo;таймер&raquo; отсчёт всегда будет от&nbsp;значения, указанного в&nbsp;ссылке',
 				text: 'После обновления страницы отсчёт начнётся заново',
 			}) as Date;
 		}

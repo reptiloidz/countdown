@@ -17,7 +17,7 @@ describe('SortTrendingPipe', () => {
 		const result = pipe.transform(sortType);
 		expect(result).toEqual({
 			icon: 'arrow-small-up',
-			title: 'По возрастанию',
+			title: 'По&nbsp;возрастанию',
 		});
 	});
 
@@ -26,7 +26,7 @@ describe('SortTrendingPipe', () => {
 		const result = pipe.transform(sortType);
 		expect(result).toEqual({
 			icon: 'arrow-small-down',
-			title: 'По убыванию',
+			title: 'По&nbsp;убыванию',
 		});
 	});
 
@@ -35,7 +35,7 @@ describe('SortTrendingPipe', () => {
 		const result = pipe.transform(sortType);
 		expect(result).toEqual({
 			icon: 'arrow-small-up',
-			title: 'По возрастанию',
+			title: 'По&nbsp;возрастанию',
 		});
 	});
 
@@ -44,7 +44,7 @@ describe('SortTrendingPipe', () => {
 		const result = pipe.transform(sortType);
 		expect(result).toEqual({
 			icon: 'arrow-small-down',
-			title: 'По убыванию',
+			title: 'По&nbsp;убыванию',
 		});
 	});
 });

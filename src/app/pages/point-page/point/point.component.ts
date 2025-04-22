@@ -69,7 +69,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerPercent = 0;
 	pausedTime: Date | undefined;
 	sound = false;
-	timerNotifyText = 'Событие в режиме "таймера" начнёт отсчёт заново при повторном открытии';
+	timerNotifyText = 'Событие в&nbsp;режиме &laquo;таймера&raquo; начнёт отсчёт заново при повторном открытии';
 	soundNotify: Date | undefined;
 	inverted = false;
 	finalTitleCount = 0;
@@ -121,7 +121,7 @@ export class PointComponent implements OnInit, OnDestroy {
 											{
 												title: `
 												${this.timerNotifyText}.
-												Воспроизвести звуковой сигнал в конце?
+												Воспроизвести звуковой сигнал в&nbsp;конце?
 											`,
 												button: 'Да',
 											},

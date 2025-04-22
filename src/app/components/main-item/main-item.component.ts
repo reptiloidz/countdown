@@ -157,7 +157,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	get directionTitle() {
 		return `${this.point.direction === 'forward' ? 'Прямой отсчёт' : 'Обратный отсчёт'}${
-			this.isDirectionCorrect ? '' : '. Но есть нюанс. Подробнее в описании'
+			this.isDirectionCorrect ? '' : '. Но&nbsp;есть нюанс. Подробнее в&nbsp;описании'
 		}`;
 	}
 

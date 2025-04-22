@@ -136,7 +136,7 @@ describe('HeaderComponent', () => {
 		it('should call popupService.show with correct arguments', () => {
 			component.showPrivacy();
 			expect(popupService.show).toHaveBeenCalledWith(
-				'Политика в отношении обработки персональных данных',
+				'Политика в&nbsp;отношении обработки персональных данных',
 				PrivacyComponent,
 			);
 		});

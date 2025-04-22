@@ -45,7 +45,7 @@
 						size="sm"
 						icon="document-cross"
 						class="calendar__btn-nav"
-						title="Снять отметки со всех итераций даты"
+						title="Снять отметки со&nbsp;всех итераций даты"
 						(click)="dateChecked({
 							check: false,
 							data: date.iterations
@@ -62,7 +62,7 @@
 				app-checkbox
 				iconSize="sm"
 				mode="icon"
-				title="Отображение информации об итерациях"
+				title="Отображение информации об&nbsp;итерациях"
 				[isChecked]="showIterationsInfo"
 				(change)="iterationsInfoSwitch($event)"
 			>
@@ -88,7 +88,7 @@
 							mode="ghost"
 							icon="chevron-left"
 							(click)="scrollList('start')"
-							title="Перейти к началу списка итераций"
+							title="Перейти к&nbsp;началу списка итераций"
 						></button>
 					</div>
 					<div class="tabs__nav">
@@ -98,7 +98,7 @@
 							mode="ghost"
 							icon="clock"
 							(click)="scrollList('home')"
-							title="Перейти к выбранной итерации"
+							title="Перейти к&nbsp;выбранной итерации"
 						></button>
 					</div>
 				</div>
@@ -165,7 +165,7 @@
 						*ngIf="iterationsListScrollable"
 						icon="chevron-right"
 						(click)="scrollList('end')"
-						title="Перейти к концу списка итераций"
+						title="Перейти к&nbsp;концу списка итераций"
 					></button>
 					<button
 						*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
@@ -197,7 +197,7 @@
 						mode="secondary"
 						[attr.disabled]="iterationsCheckedForRemove.length ? null : true"
 						icon="document-cross"
-						title="Снять выбор со всех итераций"
+						title="Снять выбор со&nbsp;всех итераций"
 						(click)="checkAllIterations(false)"
 					></button>
 				</div>

@@ -229,7 +229,7 @@ export class GenerateIterationsComponent implements OnInit {
 
 		this.thirdFromTheEndDayMonth &&
 			startDayParams.push({
-				text: '3-й с конца день месяца',
+				text: '3-й с&nbsp;конца день месяца',
 				value: 'thirdFromTheEndDayMonth',
 				checked: !dayNumberSelected,
 			}) &&

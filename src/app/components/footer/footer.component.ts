@@ -77,7 +77,6 @@ export class FooterComponent implements OnInit, OnDestroy {
 						this.isUrl = finalPath === 'url';
 						this.isMain = !finalPath;
 						this.isTimer = this.isUrl && !queryParams.date;
-						console.log(111, this.pointId);
 
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
@@ -255,7 +254,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 				.writeText(window.location.origin + '/' + link)
 				.then(() => {
 					this.notify.add({
-						title: 'URL события успешно скопирован в буфер обмена',
+						title: 'URL события успешно скопирован в&nbsp;буфер обмена',
 						text: window.location.origin + '/' + link,
 						short: true,
 						view: 'positive',

@@ -14,7 +14,7 @@
 				size="lg"
 				mode="secondary"
 				icon="document-cross"
-				title="Снять отметки со всех событий"
+				title="Снять отметки со&nbsp;всех событий"
 				(click)="uncheckAllPoints()"
 			></button>
 			<button
@@ -56,7 +56,7 @@
 		vertical="top"
 		onboarding="now"
 		[onboardingBefore]="!isVerified ? 'confirm' : null"
-		[text]="point?.repeatable ? 'Добавить итерацию с текущим моментом' : 'Поменять время на текущее'"
+		[text]="point?.repeatable ? 'Добавить итерацию с&nbsp;текущим моментом' : 'Поменять время на&nbsp;текущее'"
 	>
 		<button
 			app-button
@@ -78,7 +78,7 @@
 			pointId && hasAccess && !isEdit ? 'now' :
 			'createlink'
 		"
-		[text]="isUrl ? 'Создать и копировать короткую ссылку' : 'Копировать ссылку'"
+		[text]="isUrl ? 'Создать и&nbsp;копировать короткую ссылку' : 'Копировать ссылку'"
 	>
 		<button
 			app-button
@@ -99,7 +99,7 @@
 		size="lg"
 		[href]="exportGoogleLink"
 		target="_blank"
-		title="Экспорт в Google Calendar"
+		title="Экспорт в&nbsp;Google Calendar"
 		[fillModeIcon]="true"
 	></a>
 	<div
@@ -116,7 +116,7 @@
 			: null
 		"
 		text="
-			Создать событие-ссылку. Не требует регистрации, дает доступ по ссылке (можно создать короткую).
+			Создать событие-ссылку. Не&nbsp;требует регистрации, дает доступ по&nbsp;ссылке (можно создать короткую).
 		"
 	>
 		<button
@@ -157,7 +157,7 @@
 			[attr.disabled]="!isVerified || null"
 			mode="positive"
 			(click)="copyPoint(true)"
-			title="Сохранить в свои события"
+			title="Сохранить в&nbsp;свои события"
 		></button>
 		<a
 			*ngIf="isAuthenticated && !isCreate && !isCreateUrl && !isUrl"
@@ -176,15 +176,15 @@
 					routerLink="/profile"
 					class="link--inline"
 				>Подтвердите почту</a>,
-				чтобы иметь доступ к созданию и
-				редактированию</ng-container>
+				чтобы иметь доступ к&nbsp;созданию
+				и&nbsp;редактированию</ng-container>
 			<ng-container *ngIf="!isAuthenticated">
 				<a
 					routerLink="/reg"
 					class="link--inline"
 				>Зарегистрируйтесь</a>,
-				чтобы иметь доступ к созданию и
-				редактированию</ng-container>
+				чтобы иметь доступ к&nbsp;созданию
+				и&nbsp;редактированию</ng-container>
 		</ng-template>
 	</div>
 </div>

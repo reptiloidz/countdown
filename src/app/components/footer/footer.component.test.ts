@@ -324,7 +324,7 @@ describe('FooterComponent', () => {
 				await component.copyLink(mockPoint.id);
 				expect(writeTextMock).toHaveBeenCalledWith(window.location.origin + '/point/' + mockPoint.id);
 				expect(notifyServiceMock.add).toHaveBeenCalledWith({
-					title: 'URL события успешно скопирован в буфер обмена',
+					title: 'URL события успешно скопирован в&nbsp;буфер обмена',
 					text: window.location.origin + '/point/' + mockPoint.id,
 					short: true,
 					view: 'positive',
