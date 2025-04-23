@@ -79,7 +79,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 	isCalendarCreated = false;
 	isCalendarPanelOpen = false;
 	iterationControls = {};
-	iterationsChecked: Number[] = [];
+	iterationsChecked: number[] = [];
 	selectedIterationDate = new Date();
 	selectedIterationsNumber = 0;
 	calendarMode!: CalendarMode;
@@ -268,6 +268,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 							this.point && this.action.pointUpdated(this.point);
 							this.sortDates();
 						}
+						this.cdr.markForCheck();
 					},
 					error: err => {
 						console.error('Ошибка при создании/редактировании:\n', err.message);
@@ -324,12 +325,10 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 							if (!!this.greenwichValue === !!this.point?.greenwich || !this.hasManyIterations) {
 								this.notifies['greenwich'].remove();
 							}
-						} else {
-							if (!!this.greenwichValue !== !!this.point?.greenwich && this.hasManyIterations) {
-								this.notifies['greenwich'].date = this.notify.add({
-									title: 'Сохраните событие для корректного редактирования итераций',
-								}) as Date;
-							}
+						} else if (!!this.greenwichValue !== !!this.point?.greenwich && this.hasManyIterations) {
+							this.notifies['greenwich'].date = this.notify.add({
+								title: 'Сохраните событие для корректного редактирования итераций',
+							});
 						}
 
 						/**
@@ -341,12 +340,10 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 							if (!this.repeatableValue) {
 								this.notifies['repeatable'].remove();
 							}
-						} else {
-							if (this.repeatableValue && !this.repeatableValueSaved) {
-								this.notifies['repeatable'].date = this.notify.add({
-									title: 'Изменение итераций будет доступно после сохранения события',
-								}) as Date;
-							}
+						} else if (this.repeatableValue && !this.repeatableValueSaved) {
+							this.notifies['repeatable'].date = this.notify.add({
+								title: 'Изменение итераций будет доступно после сохранения события',
+							});
 						}
 
 						/**
@@ -358,13 +355,11 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 							if (this.repeatableValue) {
 								this.notifies['repeatableOff'].remove();
 							}
-						} else {
-							if (!this.isCreation && !this.repeatableValue && this.hasManyIterations) {
-								this.notifies['repeatableOff'].date = this.notify.add({
-									title: 'Отключены повторы события',
-									text: 'Все итерации кроме последней будут удалены',
-								}) as Date;
-							}
+						} else if (!this.isCreation && !this.repeatableValue && this.hasManyIterations) {
+							this.notifies['repeatableOff'].date = this.notify.add({
+								title: 'Отключены повторы события',
+								text: 'Все итерации кроме последней будут удалены',
+							});
 						}
 
 						this.cdr.markForCheck();
@@ -510,13 +505,13 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 					start: subMinutes(new Date(), this.difference),
 					end: new Date(),
 				});
-				return (resInterval.years ? resInterval.years * 12 : 0) + (resInterval.months || 0) || 0;
+				return (resInterval.years ? resInterval.years * 12 : 0) + (resInterval.months ?? 0) || 0;
 			case 'years':
 				return (
 					intervalToDuration({
 						start: subMinutes(new Date(), this.difference),
 						end: new Date(),
-					}).years || 0
+					}).years ?? 0
 				);
 			default:
 				return this.difference;
@@ -551,8 +546,11 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	closeNotify(name: string) {
-		this.notifies[name].date && this.notify.close(this.notifies[name].date as Date);
-		this.notifies[name].date = undefined;
+		const date = this.notifies[name].date;
+		if (date !== undefined) {
+			this.notify.close(date);
+			this.notifies[name].date = undefined;
+		}
 	}
 
 	sortDates() {
@@ -580,11 +578,11 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				{
 					title: this.point?.title,
 					description: this.point?.description,
-					direction: this.point?.direction || 'backward',
+					direction: this.point?.direction ?? 'backward',
 					greenwich: this.point?.greenwich || false,
 					repeatable: this.point?.repeatable || this.isIterationAdded || false,
 					public: this.point?.public || false,
-					color: this.point?.color || 'gray',
+					color: this.point?.color ?? 'gray',
 				},
 				{
 					emitEvent: false,
@@ -745,7 +743,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.notifies['timer'].date = this.notify.add({
 				title: 'При выборе режима &laquo;таймер&raquo; отсчёт всегда будет от&nbsp;значения, указанного в&nbsp;ссылке',
 				text: 'После обновления страницы отсчёт начнётся заново',
-			}) as Date;
+			});
 		}
 	}
 
@@ -828,7 +826,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 			if (!this.repeatableValue || this.isCreation) {
 				newDatesArray = [lastDate];
 			} else if (this.isIterationAdded) {
-				saveIteration && newDatesArray?.push(lastDate);
+				newDatesArray?.push(lastDate);
 				editPointEvent = 'iterationAdded';
 			} else if (newDatesArray) {
 				newDatesArray[this.currentIterationIndex] = lastDate;
@@ -839,31 +837,31 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 
 		let result = {
-			dates: newDatesArray as Iteration[],
+			dates: newDatesArray,
 		} as Point;
 
 		if (!saveIteration && !repeats.length) {
 			result = Object.assign(result, {
 				title: this.form.controls['title'].value,
-				description: this.form.controls['description'].value || null,
+				description: this.form.controls['description'].value ?? null,
 				direction: this.form.controls['direction'].value,
 				greenwich: this.greenwichValue,
 				repeatable: this.repeatableValue,
 				public: this.publicValue,
-				user: this.auth.uid || '',
-				color: this.form.controls['color'].value || 'gray',
+				user: this.auth.uid ?? '',
+				color: this.form.controls['color'].value ?? 'gray',
 				modes: this.pointModes.length && this.repeatableValue ? this.pointModes : null,
 			});
 		} else {
 			result = Object.assign(result, {
 				title: this.point?.title,
-				description: this.point?.description || '',
+				description: this.point?.description ?? '',
 				direction: this.point?.direction,
 				greenwich: this.point?.greenwich,
 				repeatable: this.point?.repeatable,
 				public: this.point?.public,
 				user: this.point?.user,
-				color: this.point?.color || 'gray',
+				color: this.point?.color ?? 'gray',
 				modes: this.point?.modes?.length && this.point?.repeatable ? this.point.modes : null,
 			});
 			this.isIterationSwitched = true;

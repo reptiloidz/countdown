@@ -139,7 +139,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 					}),
 					tap(([point]) => {
 						this.point = point && setIterationsMode(sortDates(point));
-						this.datesLength = this.point?.dates.length || 0;
+						this.datesLength = this.point?.dates.length ?? 0;
 						!this.urlMode && this.setIterationsParam();
 						!this.iterationsChecked.length && this.updateIterationsCheckedList();
 					}),
@@ -208,6 +208,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						this.datesLength = point.dates.length;
 					}
 					this.getIterationsListScrollable();
+					this.getCombineDates();
 				},
 				error: err => {
 					console.error('Ошибка при обновлении параметров итерации:\n', err.message);
@@ -222,13 +223,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						this.datesBeforeLength !== this.datesBefore?.length ||
 						this.datesAfterLength !== this.datesAfter?.length
 					) {
-						this.datesBeforeLength = this.datesBefore?.length || 0;
-						this.datesAfterLength = this.datesAfter?.length || 0;
-						this.combinedDates = [
-							...(this.datesBefore?.map(item => ({ type: 'date', data: item, time: 'past' })) || []),
-							{ type: 'home' },
-							...(this.datesAfter?.map(item => ({ type: 'date', data: item, time: 'future' })) || []),
-						];
+						this.getCombineDates();
 					}
 				},
 			}),
@@ -308,6 +303,16 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		return this.iterationsChecked.filter(item => item);
 	}
 
+	getCombineDates() {
+		this.datesBeforeLength = this.datesBefore?.length ?? 0;
+		this.datesAfterLength = this.datesAfter?.length ?? 0;
+		this.combinedDates = [
+			...(this.datesBefore?.map(item => ({ type: 'date', data: item, time: 'past' })) || []),
+			{ type: 'home' },
+			...(this.datesAfter?.map(item => ({ type: 'date', data: item, time: 'future' })) || []),
+		];
+	}
+
 	updateIterationsCheckedList(checked = false) {
 		this.iterationsChecked = [];
 		this.point?.dates.forEach((item, i) => {
@@ -370,7 +375,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.isCalendarPanelOpen = value;
 			localStorage.setItem('isCalendarPanelOpen', value.toString());
 		} else {
-			this.isCalendarPanelOpen = localStorage.getItem('isCalendarPanelOpen') === 'true' ? true : false;
+			this.isCalendarPanelOpen = localStorage.getItem('isCalendarPanelOpen') === 'true';
 		}
 	}
 
@@ -383,7 +388,6 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		let index = 0;
 		switch (position) {
 			case 'start':
-				index = 0;
 				break;
 			case 'end':
 				index = (this.dates && this.dates?.length + 1000) || 0;
@@ -396,11 +400,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	dateChecked({ data, check }: { data: Point[] | Iteration[]; check: boolean }) {
-		if (check) {
-			this.checkAllIterations(true, data as Iteration[]);
-		} else {
-			this.checkAllIterations(false, data as Iteration[]);
-		}
+		this.checkAllIterations(check, data as Iteration[]);
 	}
 
 	checkIteration(event: Event, i: number) {
@@ -411,7 +411,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		Array.from(this.iterationsList.nativeElement.children).forEach(item => {
 			const checkbox = (item as HTMLElement).querySelector('input');
 			if (checkbox !== null) {
-				const checkboxName = parseFloat(checkbox.getAttribute('name') || '0');
+				const checkboxName = parseFloat(checkbox.getAttribute('name') ?? '0');
 				checkbox && (checkbox.checked = this.iterationsChecked[checkboxName]);
 			}
 		});

@@ -21,6 +21,7 @@ const mockAnimations = () => {
 // Mock services
 const mockDataService = {
 	eventStartRemovePoint$: new Subject(),
+	eventEditPoint$: new Subject(),
 	eventRemovePoint$: new Subject(),
 	removePoints: jest.fn(),
 	setDateNow: jest.fn(),

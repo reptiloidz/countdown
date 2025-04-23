@@ -172,7 +172,7 @@ export class AuthService implements OnDestroy {
 
 		return await new Promise(resolve => {
 			const displayName = user.email.split('@')[0];
-			console.log('UserCredentialImpl', value);
+			// console.log('UserCredentialImpl', value);
 
 			this._user = value.user;
 			this._eventLoginSubject.next(this._user?.uid || '');
@@ -398,8 +398,8 @@ export class AuthService implements OnDestroy {
 
 	async updateUserBirthDate(id: string, param: UserExtraData | null): Promise<void> {
 		await set(ref(this.http.db, `users/${id}`), {
-			birthDate: param?.birthDate || null,
-			birthDatePointId: param?.birthDatePointId || null,
+			birthDate: param?.birthDate ?? null,
+			birthDatePointId: param?.birthDatePointId ?? null,
 			auth: param?.auth || null,
 		} as UserExtraData);
 		return await new Promise(resolve => {
@@ -410,23 +410,19 @@ export class AuthService implements OnDestroy {
 
 	async reAuth(reAuthRequired = false, password?: string) {
 		if (!reAuthRequired) {
-			return new Promise(resolve => {
-				resolve(null);
-			});
+			return Promise.resolve(null);
+		} else if (password) {
+			return this.reAuthWithCred(password);
 		} else {
-			if (password) {
-				return this.reAuthWithCred(password);
-			} else {
-				return this.reAuthWithCred(
-					await firstValueFrom(
-						this.notify.prompt({
-							title: 'Введите пароль',
-							button: 'Подтвердить пароль',
-							type: 'password',
-						}),
-					),
-				);
-			}
+			return this.reAuthWithCred(
+				await firstValueFrom(
+					this.notify.prompt({
+						title: 'Введите пароль',
+						button: 'Подтвердить пароль',
+						type: 'password',
+					}),
+				),
+			);
 		}
 	}
 
@@ -438,11 +434,7 @@ export class AuthService implements OnDestroy {
 			credential =
 				this.authFB.currentUser.email && EmailAuthProvider.credential(this.authFB.currentUser.email, password);
 
-			return credential
-				? reauthenticateWithCredential(this.authFB.currentUser, credential)
-				: new Promise(resolve => {
-						resolve(null);
-					});
+			return credential ? reauthenticateWithCredential(this.authFB.currentUser, credential) : Promise.resolve(null);
 		}
 	}
 }

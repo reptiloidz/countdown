@@ -55,7 +55,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			this.auth.currentUser.subscribe({
 				next: data => {
 					this.user.set(data as User);
-					this.isAuthenticated.set(this.auth.isAuthenticated);
+					this.isAuthenticated.set(!!data);
 				},
 			}),
 		);

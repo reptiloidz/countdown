@@ -48,6 +48,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	timerMins!: number | string;
 	timerSecs!: number | string;
 	isBoardVisible = false;
+	isPointEdited = false;
 
 	_closestIteration!: {
 		date: Date;
@@ -88,6 +89,17 @@ export class MainItemComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.loading = this.data.loading = false;
 					this.cdr.detectChanges();
+				},
+			}),
+		);
+
+		this.subscriptions.add(
+			this.data.eventEditPoint$.subscribe({
+				next: () => {
+					this._futureIterationDate = undefined;
+					this.isPointEdited = true;
+					this.getClosestIteration();
+					this.cdr.markForCheck();
 				},
 			}),
 		);
@@ -177,23 +189,24 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			if (this._futureIterationDate) {
 				const toFuture = +this._futureIterationDate - +new Date();
 
-				if (toFuture < 0 && toFuture > -1000 && this.point.repeatable) {
+				if (this.isPointEdited || (toFuture < 0 && toFuture > -1000 && this.point.repeatable)) {
 					this._closestIterationDate = res.date || new Date();
 					this._closestIteration = res;
 					this._futureIterationDate = undefined;
 				}
 			}
 
-			if (!this._closestIteration) {
+			if (this.isPointEdited || !this._closestIteration) {
 				this._closestIterationDate = res.date || new Date();
 				this._closestIteration = res;
 				this.remainCalculated = true;
 			}
 
-			if (!this._closestIterationModeSet) {
+			if (this.isPointEdited || !this._closestIterationModeSet) {
 				this.closestIterationMode = res.mode || undefined;
 				this._closestIterationModeSet = true;
 			}
+			this.isPointEdited = false;
 		});
 	}
 

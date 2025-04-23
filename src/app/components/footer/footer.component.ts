@@ -96,8 +96,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 								}) + (point?.greenwich ? 'Z' : '');
 
 							const googleLinkParams = {
-								text: point?.title || '',
-								details: point?.description || '',
+								text: point?.title ?? '',
+								details: point?.description ?? '',
 								dates: googleLinkDate ? googleLinkDate + '/' + googleLinkDate : '',
 							};
 
@@ -236,18 +236,15 @@ export class FooterComponent implements OnInit, OnDestroy {
 		if (this.deviceService.isMobile() && !!navigator.canShare) {
 			navigator
 				.share({
-					title: this.point?.title || '',
+					title: this.point?.title ?? '',
 					url: window.location.origin + '/' + link,
-				})
-				.then(() => {
-					this.shareLinkLoading = false;
 				})
 				.catch(e => {
 					console.error('Ошибка:' + e);
-					this.shareLinkLoading = false;
 				})
 				.finally(() => {
 					this.shareLinkLoading = false;
+					this.cdr.markForCheck();
 				});
 		} else {
 			navigator.clipboard
@@ -259,11 +256,13 @@ export class FooterComponent implements OnInit, OnDestroy {
 						short: true,
 						view: 'positive',
 					});
-					this.shareLinkLoading = false;
 				})
 				.catch(() => {
 					console.error('Надо вернуть фокус в браузер для копирования ссылки');
+				})
+				.finally(() => {
 					this.shareLinkLoading = false;
+					this.cdr.markForCheck();
 				});
 		}
 	}
