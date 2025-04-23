@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	showPrivacy() {
-		this.popupService.show('Политика в&nbsp;отношении обработки персональных данных', PrivacyComponent);
+		this.popupService.show('Политика в отношении обработки персональных данных', PrivacyComponent);
 	}
 
 	check() {
