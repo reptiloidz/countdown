@@ -7,6 +7,7 @@ import {
 	HostListener,
 	ViewChild,
 	ElementRef,
+	signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval, take } from 'rxjs';
@@ -66,7 +67,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	timerHours!: number | string;
 	timerMins!: number | string;
 	timerSecs!: number | string;
-	timerPercent = 0;
+	timerPercent = signal(0);
 	pausedTime: Date | undefined;
 	sound = false;
 	timerNotifyText = 'Событие в&nbsp;режиме &laquo;таймера&raquo; начнёт отсчёт заново при повторном открытии';
@@ -317,7 +318,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	changeSound() {
-		if (this.sound && this.timerPercent === 100) {
+		if (this.sound && this.timerPercent() === 100) {
 			this.audioFinish.nativeElement.pause();
 			this.soundCheckbox.isDisabled = true;
 		}
@@ -368,23 +369,23 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	moveTimeline() {
-		if (this.timerMode && this.timerPercent <= 100 && this.timerPercent >= 0) {
+		if (this.timerMode && this.timerPercent() <= 100 && this.timerPercent() >= 0) {
 			const newTimerPercent = +(
 				100 /
 				((+this.pointDate - +this.initialDate) / (+new Date() - +this.initialDate))
 			).toFixed(3);
 			switch (true) {
 				case newTimerPercent >= 100:
-					this.timerPercent = 100;
+					this.timerPercent.set(100);
 					break;
 				case newTimerPercent <= 0:
-					this.timerPercent = 0;
+					this.timerPercent.set(0);
 					break;
 				default:
-					this.timerPercent = newTimerPercent;
+					this.timerPercent.set(newTimerPercent);
 					break;
 			}
-			if (this.timerPercent === 100) {
+			if (this.timerPercent() === 100) {
 				this.moveTimelineSubscription.unsubscribe();
 
 				if (this.soundNotify) {

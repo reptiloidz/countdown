@@ -20,7 +20,7 @@
 <div class="root__invert-possible"></div>
 
 <div
-	style="--timer-percent: {{ timerPercent }}"
+	style="--timer-percent: {{ timerPercent() }}"
 	class="content color"
 	[ngClass]="[
 		point?.color ? 'color--' + point?.color : '',
