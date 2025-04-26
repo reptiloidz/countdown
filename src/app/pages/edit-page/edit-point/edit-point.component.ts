@@ -313,7 +313,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				)
 				.subscribe({
 					next: ([curr, prev]) => {
-						if (prev.difference !== curr.difference || prev.direction !== curr.direction) {
+						if (+prev.difference !== +curr.difference || prev.direction !== curr.direction) {
 							this.differenceChanged();
 						}
 
