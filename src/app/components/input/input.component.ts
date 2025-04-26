@@ -1,4 +1,5 @@
 import {
+	AfterViewInit,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
@@ -11,6 +12,7 @@ import {
 	forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxMaskConfig } from 'ngx-mask';
 import { ValidationObjectFieldValue } from 'src/app/interfaces';
 
@@ -26,7 +28,7 @@ import { ValidationObjectFieldValue } from 'src/app/interfaces';
 		},
 	],
 })
-export class InputComponent implements ControlValueAccessor {
+export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	@HostBinding('class') get controlClass() {
 		return ['control', this.invalid ? 'control--error' : null].join(' ');
 	}
@@ -39,6 +41,7 @@ export class InputComponent implements ControlValueAccessor {
 	@Input() inputmode: string | null = null;
 	@Input() icon!: string;
 	@Input() textarea = false;
+	@Input() autofocus = false;
 	@Input() mask: string | null = null;
 	@Input() patterns!: NgxMaskConfig['patterns'];
 	@Input() suffix: string = '';
@@ -62,7 +65,10 @@ export class InputComponent implements ControlValueAccessor {
 
 	@ViewChild('inputRef') inputRef!: ElementRef;
 
-	constructor(private cdr: ChangeDetectorRef) {}
+	constructor(
+		private cdr: ChangeDetectorRef,
+		private deviceService: DeviceDetectorService,
+	) {}
 
 	isDisabled: boolean = false;
 
@@ -72,6 +78,12 @@ export class InputComponent implements ControlValueAccessor {
 
 	get showPasswordIcon(): string {
 		return this.type === 'text' ? 'lock-off' : 'lock';
+	}
+
+	ngAfterViewInit(): void {
+		if (this.autofocus && this.inputRef?.nativeElement && this.deviceService.isDesktop()) {
+			this.inputRef?.nativeElement.focus();
+		}
 	}
 
 	onChange: (value: string | number) => void = () => {};

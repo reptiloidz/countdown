@@ -34,6 +34,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Input() filterFn = (item: SelectArray, filterValue: string) =>
 		item.value.toString().includes(filterValue) && !item.disabled;
 	@Input() dataSuffix = '';
+	@Input() autofocus = false;
 
 	autocompleteListFiltered!: SelectArray[];
 

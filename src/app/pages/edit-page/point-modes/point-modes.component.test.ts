@@ -6,6 +6,7 @@ import { DropComponent } from '../../../components/drop/drop.component';
 import { InputComponent } from '../../../components/input/input.component';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { NotifyService } from 'src/app/services';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 const dropMock = new DropComponent(
 	new ElementRef(document.createElement('div')),
@@ -85,7 +86,7 @@ describe('PointModesComponent', () => {
 
 	it('should apply filter', () => {
 		jest.useFakeTimers();
-		component.filterRef = new InputComponent(TestBed.inject(ChangeDetectorRef));
+		component.filterRef = new InputComponent(TestBed.inject(ChangeDetectorRef), TestBed.inject(DeviceDetectorService));
 		component.filterRef.value = 'label1';
 		component.emojis = [
 			{

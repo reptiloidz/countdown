@@ -129,10 +129,10 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	setHeightParams() {
-		this.triggerOffsetTop = this.triggerElement.getBoundingClientRect().top;
+		this.triggerOffsetTop = this.triggerElement?.getBoundingClientRect().top;
 		this.bottomSpace = window.innerHeight - this.triggerOffsetTop - this.footerHeight;
 		this.topSpace = this.triggerOffsetTop;
-		this.triggerHeight = parseInt(getComputedStyle(this.triggerElement).height);
+		this.triggerHeight = this.triggerElement && parseInt(getComputedStyle(this.triggerElement).height);
 	}
 
 	openHandler() {
@@ -142,13 +142,13 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.triggerElement = this.triggerTemplate
 			? this.triggerTemplateRef?.element.nativeElement.querySelector('button, input')
 			: this.defaultTriggerButton.nativeElement;
-		this.triggerOffsetLeft = this.triggerElement.getBoundingClientRect().left;
+		this.triggerOffsetLeft = this.triggerElement?.getBoundingClientRect().left;
 
 		this.footerHeight = parseInt(getComputedStyle(document.querySelector('footer') as HTMLElement).height) || 0;
 
 		this.rightSpace = window.innerWidth - this.triggerOffsetLeft;
 		this.setHeightParams();
-		this.triggerWidth = parseInt(getComputedStyle(this.triggerElement).width);
+		this.triggerWidth = this.triggerElement && parseInt(getComputedStyle(this.triggerElement).width);
 
 		requestAnimationFrame(() => {
 			this.dropHeight = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().height;
