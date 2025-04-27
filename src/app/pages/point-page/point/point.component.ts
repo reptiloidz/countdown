@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval, take } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
-import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
+import { DataService, AuthService, ActionService, NotifyService, PopupService } from 'src/app/services';
 import { format, formatDate, formatDistance, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Constants, DateText, PointColors } from 'src/app/enums';
@@ -26,6 +26,7 @@ import {
 } from 'src/app/helpers';
 import { Title } from '@angular/platform-browser';
 import { CheckboxComponent } from '../../../components/checkbox/checkbox.component';
+import { ModeStatsComponent } from 'src/app/components/mode-stats/mode-stats.component';
 
 @Component({
 	selector: 'app-point',
@@ -89,6 +90,7 @@ export class PointComponent implements OnInit, OnDestroy {
 		private action: ActionService,
 		private notify: NotifyService,
 		private title: Title,
+		private popupService: PopupService,
 	) {}
 
 	ngOnInit(): void {
@@ -435,5 +437,11 @@ export class PointComponent implements OnInit, OnDestroy {
 		} else {
 			this.pausedTime = new Date();
 		}
+	}
+
+	showModeStats() {
+		this.popupService.show('Статистика события', ModeStatsComponent, {
+			point: this.point,
+		});
 	}
 }

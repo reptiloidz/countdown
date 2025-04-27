@@ -19,6 +19,15 @@
 ></div>
 <div class="root__invert-possible"></div>
 
+<button
+	*ngIf="point?.modes"
+	app-button
+	mode="ghost"
+	size="sm"
+	(click)="showModeStats()"
+	class="main__nav"
+>Статистика режимов</button>
+
 <div
 	style="--timer-percent: {{ timerPercent() }}"
 	class="content color"
