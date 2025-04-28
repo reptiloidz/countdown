@@ -29,13 +29,13 @@
 >
 	<svg
 		app-svg
-		*ngIf="icon"
+		*ngIf="(icon && !clearButton) || (icon && !value.toString().length)"
 		[name]="icon"
 		class="control__icon"
 	></svg>
 	<button
 		app-button
-		*ngIf="clearButton"
+		*ngIf="clearButton && value.toString().length"
 		mode="negative"
 		icon="cross"
 		[attr.title]="clearButtonTitle || null"

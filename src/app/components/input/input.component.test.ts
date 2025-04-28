@@ -112,8 +112,17 @@ describe('InputComponent', () => {
 		expect(textarea).toBeTruthy();
 	});
 
-	it('should render clear button if clearButton input is true', () => {
+	it('should not render clear button if clearButton input is true and value is empty', () => {
 		component.clearButton = true;
+		fixture.detectChanges();
+
+		const button = fixture.debugElement.query(By.css('button[mode="negative"]'));
+		expect(button).toBeFalsy();
+	});
+
+	it('should render clear button if clearButton input is true and value is not empty', () => {
+		component.clearButton = true;
+		component.value = 'test';
 		fixture.detectChanges();
 
 		const button = fixture.debugElement.query(By.css('button[mode="negative"]'));

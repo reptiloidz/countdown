@@ -170,6 +170,7 @@
 						class="filters__search"
 						placeholder="Поиск"
 						icon="search"
+						[clearButton]="true"
 						#searchInput
 						(input)="changeFilters()"
 						[(ngModel)]="searchInputValue"
