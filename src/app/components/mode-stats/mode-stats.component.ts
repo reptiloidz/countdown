@@ -17,7 +17,10 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 	modeSumSecond = signal(0);
 	startDate = signal(new Date());
 	finalDate = signal(new Date());
-	startIteration = true;
+	firstIterationDate = signal(new Date());
+	lastIterationDate = signal(new Date());
+	isStartIteration = true;
+	isFinalIteration = false;
 	lastMode: 'first' | 'second' = 'second';
 
 	private subscriptions = new Subscription();
@@ -27,13 +30,41 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.dates.set(sortDates(this.point).dates);
 
+		this.firstIterationDate.set(parseDate(this.dates()[0].date));
+		this.lastIterationDate.set(parseDate(this.dates()[this.dates().length - 1].date));
+
+		this.limitDates();
+	}
+
+	limitDates(firstDate = this.firstIterationDate(), lastDate = this.lastIterationDate()) {
+		this.isStartIteration = true;
+		this.startDate.set(firstDate);
+		this.finalDate.set(lastDate);
+
+		this.modeSumFirst.set(0);
+		this.modeSumSecond.set(0);
+
 		let prevDate = new Date();
-		let currDate = new Date();
+		let nextItem = 0;
 
-		this.dates().forEach((iteration, i) => {
-			currDate = parseDate(iteration.date);
+		for (let iteration of this.dates()) {
+			nextItem++;
+			let currDate = parseDate(iteration.date);
 
-			if (this.startIteration) {
+			if (+currDate < +firstDate) {
+				if (+parseDate(this.dates()[nextItem].date) > +firstDate) {
+					currDate = firstDate;
+				} else {
+					continue;
+				}
+			}
+
+			if (+currDate > +lastDate) {
+				currDate = lastDate;
+				this.isFinalIteration = true;
+			}
+
+			if (this.isStartIteration) {
 				prevDate = currDate;
 			}
 
@@ -52,8 +83,28 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 			// TODO: добавить ограничение диапазона, календари, свитчер
 			// TODO: добавить отображение в разных форматах (годы, месяцы, недели, дни, часы, минуты)
 
-			this.startIteration && (this.startIteration = false);
-		});
+			this.isStartIteration && (this.isStartIteration = false);
+			if (this.isFinalIteration) {
+				this.isFinalIteration = false;
+				return;
+			}
+		}
+	}
+
+	setStartDate(date: Date) {
+		this.limitDates(date);
+
+		this.log();
+	}
+
+	setFinalDate(date: Date) {
+		this.limitDates(this.startDate(), date);
+		this.log();
+	}
+
+	log() {
+		console.log(this.startDate());
+		console.log(this.finalDate());
 	}
 
 	ngOnDestroy(): void {

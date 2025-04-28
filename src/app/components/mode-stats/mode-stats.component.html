@@ -1,5 +1,15 @@
-<app-datepicker [date]="startDate()"></app-datepicker>
-<app-datepicker [date]="finalDate()"></app-datepicker>
+<app-datepicker
+	[date]="startDate()"
+	[disabledBefore]="firstIterationDate()"
+	[disabledAfter]="finalDate()"
+	(datePicked)="setStartDate($event)"
+></app-datepicker>
+<app-datepicker
+	[date]="finalDate()"
+	[disabledBefore]="startDate()"
+	[disabledAfter]="lastIterationDate()"
+	(datePicked)="setFinalDate($event)"
+></app-datepicker>
 
-<p>{{ this.modeSumFirst() }}</p>
-<p>{{ this.modeSumSecond() }}</p>
+<p>{{ (lastMode === 'second' && modeSumFirst()) || modeSumSecond() }} {{ point.modes?.[0]?.icon }}</p>
+<p>{{ (lastMode === 'second' && modeSumSecond()) || modeSumFirst() }} {{ point.modes?.[1]?.icon }}</p>

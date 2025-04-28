@@ -385,18 +385,17 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	scrollList(position: 'start' | 'end' | 'home') {
-		let index = 0;
 		switch (position) {
 			case 'start':
+				this.virtualScrollViewport?.scrollTo({ start: 0, behavior: 'smooth' });
 				break;
 			case 'end':
-				index = (this.dates && this.dates?.length + 1000) || 0;
+				this.virtualScrollViewport?.scrollTo({ end: 0, behavior: 'smooth' });
 				break;
 			case 'home':
-				index = this.currentIterationIndex;
+				this.virtualScrollViewport?.scrollToIndex(this.currentIterationIndex, 'smooth');
 				break;
 		}
-		this.virtualScrollViewport?.scrollToIndex(index, 'smooth');
 	}
 
 	dateChecked({ data, check }: { data: Point[] | Iteration[]; check: boolean }) {
