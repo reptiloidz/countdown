@@ -16,6 +16,10 @@
 	flex-direction: column;
 
 	&__list {
+		@include media-breakpoint-down(md) {
+			flex-wrap: wrap;
+		}
+
 		display: flex;
 		gap: 4px;
 		border: 1px solid var(--switcher-border-cl);

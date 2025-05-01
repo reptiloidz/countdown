@@ -1,15 +1,32 @@
-<app-datepicker
-	[date]="startDate()"
-	[disabledBefore]="firstIterationDate()"
-	[disabledAfter]="finalDate()"
-	(datePicked)="setStartDate($event)"
-></app-datepicker>
-<app-datepicker
-	[date]="finalDate()"
-	[disabledBefore]="startDate()"
-	[disabledAfter]="lastIterationDate()"
-	(datePicked)="setFinalDate($event)"
-></app-datepicker>
+<div class="mode-stats__calendars">
+	<div class="mode-stats__calendar">
+		От:
+		<app-datepicker
+			[date]="startDate()"
+			[disabledBefore]="firstIterationDate()"
+			[disabledAfter]="finalDate()"
+			(datePicked)="setStartDate($event)"
+		></app-datepicker>
+	</div>
+	<div class="mode-stats__calendar">
+		До:
+		<app-datepicker
+			[date]="finalDate()"
+			[disabledBefore]="startDate()"
+			[disabledAfter]="now"
+			(datePicked)="setFinalDate($event)"
+		></app-datepicker>
+	</div>
+</div>
 
-<p>{{ (lastMode === 'second' && modeSumFirst()) || modeSumSecond() }} {{ point.modes?.[0]?.icon }}</p>
-<p>{{ (lastMode === 'second' && modeSumSecond()) || modeSumFirst() }} {{ point.modes?.[1]?.icon }}</p>
+<app-switcher
+	class="mode-stats__switcher"
+	[items]="modeList"
+	[value]="activeMode"
+	(valueSwitched)="switchMode($event)"
+></app-switcher>
+
+<p>{{ modeSumFirst() }} {{
+	point.modes?.[0]?.icon }}</p>
+<p>{{ modeSumSecond() }} {{
+	point.modes?.[1]?.icon }}</p>

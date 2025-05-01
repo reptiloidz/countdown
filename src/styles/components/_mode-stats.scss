@@ -1,0 +1,23 @@
+.mode-stats {
+	&__calendars {
+		@include media-breakpoint-down(md) {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	&__calendar {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	&__switcher {
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+}
