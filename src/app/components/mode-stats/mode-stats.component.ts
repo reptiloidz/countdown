@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, OnDestroy, OnInit, signal } from '@angular/core';
-import { differenceInMinutes, endOfYear, startOfYear, subYears } from 'date-fns';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, signal } from '@angular/core';
+import { differenceInMinutes, endOfYear, formatDuration, startOfYear, subMinutes, subYears } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { parseDate, sortDates } from 'src/app/helpers';
 import { Iteration, Point, SwitcherItem } from 'src/app/interfaces';
 
@@ -9,13 +9,15 @@ import { Iteration, Point, SwitcherItem } from 'src/app/interfaces';
 	templateUrl: './mode-stats.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModeStatsComponent implements OnInit, OnDestroy {
+export class ModeStatsComponent {
 	@Input() point!: Point;
 	@HostBinding('class') class = 'mode-stats';
 
 	dates = signal<Iteration[]>([]);
 	modeSumFirst = signal(0);
 	modeSumSecond = signal(0);
+	modeSumFirstFormatted = signal('');
+	modeSumSecondFormatted = signal('');
 	startDate = signal(new Date());
 	finalDate = signal(new Date());
 	firstIterationDate = signal(new Date());
@@ -27,8 +29,8 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 
 	modeList: SwitcherItem[] = [
 		{
-			text: 'Всё время',
-			value: 'all',
+			text: 'Поныне',
+			value: 'toNow',
 		},
 		{
 			text: 'Последний год',
@@ -47,11 +49,37 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 			value: 'toLast',
 		},
 	];
-	activeMode = 'all';
+	activeMode = localStorage.getItem('statMode') ?? 'toNow';
 
-	private subscriptions = new Subscription();
-
-	constructor() {}
+	formatList: SwitcherItem[] = [
+		{
+			text: 'Годы',
+			value: 'years',
+		},
+		{
+			text: 'Месяцы',
+			value: 'months',
+		},
+		{
+			text: 'Недели',
+			value: 'weeks',
+		},
+		{
+			text: 'Дни',
+			value: 'days',
+		},
+		{
+			text: 'Часы',
+			value: 'hours',
+		},
+		{
+			text: 'Минуты',
+			value: 'minutes',
+		},
+	];
+	activeFormat = localStorage.getItem('statFormat') ?? 'minutes';
+	formatValue = 1;
+	formatName: 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years' = 'minutes';
 
 	ngOnInit(): void {
 		this.dates.set(sortDates(this.point).dates);
@@ -59,11 +87,15 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 		this.firstIterationDate.set(parseDate(this.dates()[0].date));
 		this.lastIterationDate.set(parseDate(this.dates()[this.dates().length - 1].date));
 
-		this.limitDates();
+		this.switchMode(this.activeMode);
 	}
 
 	get now() {
 		return new Date();
+	}
+
+	get firstDisable() {
+		return subMinutes(this.firstIterationDate(), 1);
 	}
 
 	reset() {
@@ -74,12 +106,11 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 		this.isFutureNow = false;
 	}
 
-	getIterationModeIcon(date: Date) {
-		return this.point.dates.find(iteration => +parseDate(iteration.date) === +date)?.mode?.icon;
-	}
-
-	getIterationModeName(date: Date) {
-		return this.point.dates.find(iteration => +parseDate(iteration.date) === +date)?.mode?.name;
+	isFirstMode(currentIteration: Iteration) {
+		return (
+			this.dates()[0].mode?.name !== currentIteration.mode?.name &&
+			this.dates()[0].mode?.icon !== currentIteration.mode?.icon
+		);
 	}
 
 	limitDates(firstDate = this.firstIterationDate(), lastDate = this.now) {
@@ -94,23 +125,14 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 		for (let iteration of this.dates()) {
 			nextItem++;
 			let currentDate = parseDate(iteration.date);
-			const isOtherMode =
-				this.getIterationModeName(previousDate) !== this.getIterationModeName(currentDate) &&
-				this.getIterationModeIcon(previousDate) !== this.getIterationModeIcon(currentDate);
-
-			if (isOtherMode) {
-				if (this.currentMode === 'first') {
-					this.currentMode = 'second';
-				} else {
-					this.currentMode = 'first';
-				}
-			}
+			const isNextDateAfterFirst = +parseDate(this.dates()[nextItem]?.date) > +firstDate;
 
 			if (+currentDate < +firstDate) {
-				if (+parseDate(this.dates()[nextItem]?.date) > +firstDate) {
+				if (isNextDateAfterFirst) {
 					currentDate = firstDate;
 				} else {
 					previousDate = currentDate;
+					this.isStartIteration && (this.isStartIteration = false);
 					continue;
 				}
 			}
@@ -130,44 +152,60 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 			}
 
 			const difference = differenceInMinutes(currentDate, previousDate);
-			if (isOtherMode) {
-				if (this.currentMode === 'first') {
-					this.modeSumFirst.set(this.formatDate(this.modeSumFirst() + difference));
+			if (
+				((this.dates()[nextItem - 2]?.mode?.name !== this.dates()[nextItem - 1].mode?.name &&
+					this.dates()[nextItem - 2]?.mode?.icon !== this.dates()[nextItem - 1].mode?.icon &&
+					difference) ||
+					this.isFutureNow) &&
+				isNextDateAfterFirst
+			) {
+				if (this.isFirstMode(this.dates()[nextItem - 1])) {
+					this.modeSumFirst.set(this.modeSumFirst() + difference);
 					if (this.isFutureNow) {
-						this.modeSumSecond.set(this.formatDate(this.modeSumSecond() + differenceInMinutes(lastDate, currentDate)));
+						this.modeSumSecond.set(this.modeSumSecond() + differenceInMinutes(lastDate, currentDate));
 					}
 				} else {
-					this.modeSumSecond.set(this.formatDate(this.modeSumSecond() + difference));
+					this.modeSumSecond.set(this.modeSumSecond() + difference);
 					if (this.isFutureNow) {
-						this.modeSumFirst.set(this.formatDate(this.modeSumFirst() + differenceInMinutes(lastDate, currentDate)));
+						this.modeSumFirst.set(this.modeSumFirst() + differenceInMinutes(lastDate, currentDate));
 					}
 				}
 			}
-
 			previousDate = currentDate;
-
-			// TODO: добавить ограничение диапазона, календари, свитчер, сбрасывать свитчер, если дата изменена вручную
-			// TODO: учитывать часовой пояс
-			// TODO: добавить отображение в разных форматах (годы, месяцы, недели, дни, часы, минуты)
 
 			this.isStartIteration && (this.isStartIteration = false);
 			if (this.isFinalIteration) {
 				this.isFinalIteration = false;
+				this.modeSumFirstFormatted.set(this.formatDate(this.modeSumFirst()));
+				this.modeSumSecondFormatted.set(this.formatDate(this.modeSumSecond()));
 				return;
 			}
 		}
 	}
 
 	formatDate(minutes: number) {
-		return Math.floor(minutes / 60 / 24);
+		const value = Math.floor(minutes / this.formatValue);
+		return formatDuration(
+			{
+				years: this.formatName === 'years' ? value : 0,
+				months: this.formatName === 'months' ? value : 0,
+				weeks: this.formatName === 'weeks' ? value : 0,
+				days: this.formatName === 'days' ? value : 0,
+				hours: this.formatName === 'hours' ? value : 0,
+				minutes: this.formatName === 'minutes' ? value : 0,
+			},
+			{ format: [this.formatName], locale: ru, zero: true },
+		);
 	}
 
 	setStartDate(date: Date) {
-		this.limitDates(date);
+		this.limitDates(date, this.finalDate());
+		this.activeMode = '';
 	}
 
 	setFinalDate(date: Date) {
 		this.limitDates(this.startDate(), date);
+		this.activeMode = '';
 	}
 
 	switchMode(mode: string) {
@@ -200,10 +238,46 @@ export class ModeStatsComponent implements OnInit, OnDestroy {
 				finalDate = this.now;
 				break;
 		}
-		this.limitDates(startDate, finalDate);
+		this.switchFormat(this.activeFormat, startDate, finalDate);
+		this.activeMode = mode;
+		localStorage.setItem('statMode', mode);
 	}
 
-	ngOnDestroy(): void {
-		this.subscriptions.unsubscribe();
+	switchFormat(format: string, startDate = this.startDate(), finalDate = this.finalDate()) {
+		switch (format) {
+			case 'years':
+				this.formatValue = 60 * 24 * 365;
+				this.formatName = 'years';
+				break;
+
+			case 'months':
+				this.formatValue = 60 * 24 * 30;
+				this.formatName = 'months';
+				break;
+
+			case 'weeks':
+				this.formatValue = 60 * 24 * 7;
+				this.formatName = 'weeks';
+				break;
+
+			case 'days':
+				this.formatValue = 60 * 24;
+				this.formatName = 'days';
+				break;
+
+			case 'hours':
+				this.formatValue = 60;
+				this.formatName = 'hours';
+				break;
+
+			default:
+				this.formatValue = 1;
+				this.formatName = 'minutes';
+				break;
+		}
+
+		this.limitDates(startDate, finalDate);
+		this.activeFormat = format;
+		localStorage.setItem('statFormat', format);
 	}
 }

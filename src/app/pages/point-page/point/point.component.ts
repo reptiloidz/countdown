@@ -440,7 +440,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	}
 
 	showModeStats() {
-		this.popupService.show('Статистика события', ModeStatsComponent, {
+		this.popupService.show('Статистика режимов', ModeStatsComponent, {
 			point: this.point,
 		});
 	}

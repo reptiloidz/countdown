@@ -40,4 +40,14 @@
 		flex-direction: column;
 		min-height: 0;
 	}
+
+	&--popup-xs {
+		@include media-breakpoint-down(xs) {
+			--drop-body-brs-tl: 8px;
+
+			.drop__body {
+				margin-left: -16px;
+			}
+		}
+	}
 }
