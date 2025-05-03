@@ -32,8 +32,12 @@
 ></app-switcher>
 
 <div class="mode-stats__result">
-	<h3 class="mode-stats__label">{{ point.modes?.[0]?.icon }} {{ point.modes?.[0]?.name }}</h3>
-	<p class="mode-stats__value">{{ modeSumFirstFormatted() }}</p>
-	<h3 class="mode-stats__label">{{ point.modes?.[1]?.icon }} {{ point.modes?.[1]?.name }}</h3>
-	<p class="mode-stats__value">{{ modeSumSecondFormatted() }}</p>
+	<div class="mode-stats__result-col">
+		<h3 class="mode-stats__label">{{ point.modes?.[0]?.icon }} {{ point.modes?.[0]?.name }}</h3>
+		<p class="mode-stats__value">{{ modeSumFirstFormatted() }}</p>
+	</div>
+	<div class="mode-stats__result-col">
+		<h3 class="mode-stats__label">{{ point.modes?.[1]?.icon }} {{ point.modes?.[1]?.name }}</h3>
+		<p class="mode-stats__value">{{ modeSumSecondFormatted() }}</p>
+	</div>
 </div>
