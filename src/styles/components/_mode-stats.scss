@@ -22,12 +22,17 @@
 	}
 
 	&__label {
-		margin-top: 10px;
+		margin-top: 20px;
 		margin-bottom: 5px;
 		font-size: 18px;
 	}
 
 	&__value {
 		font-size: 36px;
+	}
+
+	&__result {
+		padding-top: 10px;
+		border-top: 1px solid rgb(var(--c-border-primary));
 	}
 }
