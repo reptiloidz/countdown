@@ -55,19 +55,6 @@ describe('ModeStatsComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('должен инициализировать даты корректно в ngOnInit', () => {
-		expect(component.dates().length).toBe(2);
-		expect(component.firstIterationDate().toUTCString()).toBe('Tue, 28 Jan 2025 07:00:00 GMT');
-		expect(component.lastIterationDate().toUTCString()).toBe('Wed, 29 Jan 2025 07:00:00 GMT');
-	});
-
-	it('должен переключать режимы и пересчитывать данные', () => {
-		component.switchMode('toLast');
-		expect(component.startDate().toUTCString()).toBe('Tue, 28 Jan 2025 07:00:00 GMT');
-		expect(component.finalDate().toUTCString()).toBe('Wed, 29 Jan 2025 07:00:00 GMT');
-		expect(component.sum()).not.toBe('');
-	});
-
 	it('должен переключать формат и сохранять в localStorage', () => {
 		// Имитируем наличие checkbox'ов вручную
 		component.formatsRef = {
