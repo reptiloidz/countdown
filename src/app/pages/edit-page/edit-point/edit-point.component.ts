@@ -37,6 +37,13 @@ import { CalendarMode, DifferenceMode, EditPointEvent, PointColorTypes } from 's
 import { DropComponent } from '../../../components/drop/drop.component';
 import { fetchEmojis, fetchMessages } from 'emojibase';
 import { DatePanelComponent } from '../../point-page/date-panel/date-panel.component';
+import {
+	millisecondsInDay,
+	millisecondsInHour,
+	millisecondsInMinute,
+	minutesInDay,
+	minutesInHour,
+} from 'date-fns/constants';
 
 enum EditPointType {
 	Create = 'create',
@@ -371,7 +378,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 		);
 
 		this.subscriptions.add(
-			interval(Constants.msInMinute).subscribe({
+			interval(millisecondsInMinute).subscribe({
 				next: () => {
 					this.dateChanged(this.pointDate);
 				},
@@ -495,11 +502,11 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 	get visibleDifference() {
 		switch (this.differenceMode) {
 			case 'hours':
-				return Math.round(this.difference / 60);
+				return Math.round(this.difference / minutesInHour);
 			case 'days':
-				return Math.round(this.difference / (60 * 24));
+				return Math.round(this.difference / minutesInDay);
 			case 'weeks':
-				return Math.round(this.difference / (60 * 24 * 7));
+				return Math.round(this.difference / (minutesInDay * 7));
 			case 'months':
 				const resInterval = intervalToDuration({
 					start: subMinutes(new Date(), this.difference),
@@ -622,13 +629,13 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 
 		switch (this.differenceMode) {
 			case 'hours':
-				diffMs = diff * Constants.msInMinute * 60;
+				diffMs = diff * millisecondsInHour;
 				break;
 			case 'days':
-				diffMs = diff * Constants.msInMinute * 60 * 24;
+				diffMs = diff * millisecondsInDay;
 				break;
 			case 'weeks':
-				diffMs = diff * Constants.msInMinute * 60 * 24 * 7;
+				diffMs = diff * millisecondsInDay * 7;
 				break;
 			case 'months':
 				targetDate = addMonths(currentDate, diff);
@@ -637,7 +644,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				targetDate = addYears(currentDate, diff);
 				break;
 			default:
-				diffMs = diff * Constants.msInMinute;
+				diffMs = diff * millisecondsInMinute;
 				break;
 		}
 
@@ -662,8 +669,8 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 		!targetDate && (targetDate = new Date(currentDate.getTime() + diffMs));
 		// Пришлось упростить, когда добавил вывод отрицательных значений
 		// const targetDate = this.isForward
-		// 	? new Date(currentDate.getTime() - diff * Constants.msInMinute)
-		// 	: new Date(currentDate.getTime() + diff * Constants.msInMinute);
+		// 	? new Date(currentDate.getTime() - diff * millisecondsInMinute)
+		// 	: new Date(currentDate.getTime() + diff * millisecondsInMinute);
 
 		isDateValid(targetDate) && (this.pointDate = targetDate);
 	}
@@ -702,10 +709,10 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	convertToMinutes(ms: number): number {
-		return Math.ceil(ms / Constants.msInMinute);
+		return Math.ceil(ms / millisecondsInMinute);
 		// Оставил только ceil, когда начал выводить отрицательные значения
 		// return Math[this.isForward ? 'trunc' : 'ceil'](
-		// 	Math.abs(ms) / Constants.msInMinute
+		// 	Math.abs(ms) / millisecondsInMinute
 		// );
 	}
 

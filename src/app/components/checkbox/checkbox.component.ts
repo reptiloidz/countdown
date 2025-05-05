@@ -29,7 +29,7 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 		return ['checkbox state', this.mode !== 'text' && 'checkbox--' + this.mode].filter(_ => _).join(' ');
 	}
 	@HostBinding('attr.for') get for() {
-		return this.name || null;
+		return this.name ?? null;
 	}
 	@Input() formControlName!: string;
 	@Input() control!: FormControl;
@@ -41,10 +41,10 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 
 	private _name: string | null = null;
 	@Input() get name() {
-		return this._name || this.formControlName;
+		return this._name ?? this.formControlName;
 	}
 	set name(value: string | null) {
-		this._name = value || this.formControlName;
+		this._name = value ?? this.formControlName;
 	}
 
 	private subscriptions = new Subscription();

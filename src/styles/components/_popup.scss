@@ -49,6 +49,7 @@
 
 	&__inner {
 		@include media-breakpoint-down(sm) {
+			height: auto;
 			margin: 10px;
 		}
 

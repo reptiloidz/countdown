@@ -19,6 +19,7 @@
 					<app-calendar
 						[points]="filteredPoints"
 						class="calendar"
+						[staticMode]="true"
 					>
 						<ng-template
 							#navTemplate
@@ -174,6 +175,7 @@
 						#searchInput
 						(input)="changeFilters()"
 						[(ngModel)]="searchInputValue"
+						(reset)="changeFilters()"
 					></app-input>
 
 					<button

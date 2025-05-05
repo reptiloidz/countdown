@@ -35,8 +35,10 @@
 		}
 
 		&:focus-within {
-			--state-shadow-cl: var(--state-main-focus-shadow-cl);
-			--checkbox-box-border-cl: var(--state-shadow-cl);
+			&:has(.checkbox__input:focus-visible) {
+				--state-shadow-cl: var(--state-main-focus-shadow-cl);
+				--checkbox-box-border-cl: var(--state-shadow-cl);
+			}
 
 			&:has(.checkbox__input:checked) {
 				--checkbox-focus-checked-shadow-cl: var(--state-shadow-cl);

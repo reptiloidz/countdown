@@ -26,6 +26,7 @@
 				(click)="switchCalendarToNow()"
 			></button>
 			<button
+				*ngIf="!staticMode"
 				app-button
 				icon="clock"
 				mode="ghost"
@@ -74,15 +75,17 @@
 					*ngFor="let item of period; trackBy: trackBy"
 				>
 					<button
-						class="calendar__button state"
+						class="calendar__button"
 						type="button"
 						[ngClass]="{
 							'calendar__button--selected': item.selectedDate,
 							'calendar__button--now': item.nowDate,
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
-							'calendar__button--readonly': urlMode
+							'calendar__button--readonly': staticMode,
+							'state': !staticMode
 						}"
+						[tabIndex]="staticMode ? -1 : 0"
 						[disabled]="item.disabledDate"
 						(click)="dateClicked({
 							date: item.date,

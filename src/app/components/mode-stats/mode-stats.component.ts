@@ -1,23 +1,39 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, signal } from '@angular/core';
-import { differenceInMinutes, endOfYear, formatDuration, startOfYear, subMinutes, subYears } from 'date-fns';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	HostBinding,
+	Input,
+	OnInit,
+	signal,
+	ViewChild,
+	ViewContainerRef,
+} from '@angular/core';
+import { differenceInMinutes, Duration, endOfYear, formatDuration, startOfYear, subMinutes, subYears } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { minutesInDay, minutesInHour, minutesInMonth, minutesInYear } from 'date-fns/constants';
 import { parseDate, sortDates } from 'src/app/helpers';
 import { Iteration, Point, SwitcherItem } from 'src/app/interfaces';
+import { DifferenceMode } from 'src/app/types';
 
 @Component({
 	selector: 'app-mode-stats',
 	templateUrl: './mode-stats.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModeStatsComponent {
+export class ModeStatsComponent implements OnInit, AfterViewInit {
 	@Input() point!: Point;
 	@HostBinding('class') class = 'mode-stats';
+	@ViewChild('formatsRef', { read: ViewContainerRef })
+	formatsRef: ViewContainerRef | undefined;
 
 	dates = signal<Iteration[]>([]);
-	modeSumFirst = signal(0);
-	modeSumSecond = signal(0);
+	modeSumFirst = 0;
+	modeSumSecond = 0;
 	modeSumFirstFormatted = signal('');
 	modeSumSecondFormatted = signal('');
+	changes = signal(0);
+	sum = signal('');
 	startDate = signal(new Date());
 	finalDate = signal(new Date());
 	firstIterationDate = signal(new Date());
@@ -51,42 +67,53 @@ export class ModeStatsComponent {
 	];
 	activeMode = localStorage.getItem('statMode') ?? 'toNow';
 
-	formatList: SwitcherItem[] = [
+	formatList: {
+		text: string;
+		value: DifferenceMode;
+		checked: boolean;
+	}[] = [
 		{
 			text: 'Годы',
 			value: 'years',
+			checked: false,
 		},
 		{
 			text: 'Месяцы',
 			value: 'months',
+			checked: false,
 		},
 		{
 			text: 'Недели',
 			value: 'weeks',
+			checked: false,
 		},
 		{
 			text: 'Дни',
 			value: 'days',
+			checked: false,
 		},
 		{
 			text: 'Часы',
 			value: 'hours',
+			checked: false,
 		},
 		{
 			text: 'Минуты',
 			value: 'minutes',
+			checked: false,
 		},
 	];
 	activeFormat = localStorage.getItem('statFormat') ?? 'minutes';
-	formatValue = 1;
-	formatName: 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years' = 'minutes';
+	formatNames: DifferenceMode[] = this.activeFormat.split('_') as DifferenceMode[];
 
 	ngOnInit(): void {
 		this.dates.set(sortDates(this.point).dates);
 
 		this.firstIterationDate.set(parseDate(this.dates()[0].date));
 		this.lastIterationDate.set(parseDate(this.dates()[this.dates().length - 1].date));
+	}
 
+	ngAfterViewInit(): void {
 		this.switchMode(this.activeMode);
 	}
 
@@ -100,8 +127,10 @@ export class ModeStatsComponent {
 
 	reset() {
 		this.isStartIteration = true;
-		this.modeSumFirst.set(0);
-		this.modeSumSecond.set(0);
+		this.modeSumFirst = 0;
+		this.modeSumSecond = 0;
+		this.changes.set(0);
+		this.sum.set('');
 		this.currentMode = 'first';
 		this.isFutureNow = false;
 	}
@@ -121,11 +150,15 @@ export class ModeStatsComponent {
 
 		let previousDate = new Date(0);
 		let nextItem = 0;
+		let changes = 0;
 
 		for (let iteration of this.dates()) {
 			nextItem++;
 			let currentDate = parseDate(iteration.date);
 			const isNextDateAfterFirst = +parseDate(this.dates()[nextItem]?.date) > +firstDate;
+			const isPrevAndCurrentModeSame =
+				this.dates()[nextItem - 2]?.mode?.name === this.dates()[nextItem - 1].mode?.name &&
+				this.dates()[nextItem - 2]?.mode?.icon === this.dates()[nextItem - 1].mode?.icon;
 
 			if (+currentDate < +firstDate) {
 				if (isNextDateAfterFirst) {
@@ -152,50 +185,71 @@ export class ModeStatsComponent {
 			}
 
 			const difference = differenceInMinutes(currentDate, previousDate);
-			if (
-				((this.dates()[nextItem - 2]?.mode?.name !== this.dates()[nextItem - 1].mode?.name &&
-					this.dates()[nextItem - 2]?.mode?.icon !== this.dates()[nextItem - 1].mode?.icon &&
-					difference) ||
-					this.isFutureNow) &&
-				isNextDateAfterFirst
-			) {
+			if (((!isPrevAndCurrentModeSame && difference) || this.isFutureNow) && isNextDateAfterFirst) {
 				if (this.isFirstMode(this.dates()[nextItem - 1])) {
-					this.modeSumFirst.set(this.modeSumFirst() + difference);
+					this.modeSumFirst += difference;
 					if (this.isFutureNow) {
-						this.modeSumSecond.set(this.modeSumSecond() + differenceInMinutes(lastDate, currentDate));
+						this.modeSumSecond += differenceInMinutes(lastDate, currentDate);
 					}
 				} else {
-					this.modeSumSecond.set(this.modeSumSecond() + difference);
+					this.modeSumSecond += difference;
 					if (this.isFutureNow) {
-						this.modeSumFirst.set(this.modeSumFirst() + differenceInMinutes(lastDate, currentDate));
+						this.modeSumFirst += differenceInMinutes(lastDate, currentDate);
 					}
 				}
+				changes += 1;
 			}
+
 			previousDate = currentDate;
 
 			this.isStartIteration && (this.isStartIteration = false);
 			if (this.isFinalIteration) {
+				if (!isPrevAndCurrentModeSame && difference) {
+					changes += 1;
+				}
 				this.isFinalIteration = false;
-				this.modeSumFirstFormatted.set(this.formatDate(this.modeSumFirst()));
-				this.modeSumSecondFormatted.set(this.formatDate(this.modeSumSecond()));
+				this.modeSumFirstFormatted.set(this.formatDate(this.modeSumFirst));
+				this.modeSumSecondFormatted.set(this.formatDate(this.modeSumSecond));
+				this.changes.set(changes);
+				this.sum.set(this.formatDate(this.modeSumFirst + this.modeSumSecond));
 				return;
 			}
 		}
 	}
 
 	formatDate(minutes: number) {
-		const value = Math.floor(minutes / this.formatValue);
-		return formatDuration(
-			{
-				years: this.formatName === 'years' ? value : 0,
-				months: this.formatName === 'months' ? value : 0,
-				weeks: this.formatName === 'weeks' ? value : 0,
-				days: this.formatName === 'days' ? value : 0,
-				hours: this.formatName === 'hours' ? value : 0,
-				minutes: this.formatName === 'minutes' ? value : 0,
-			},
-			{ format: [this.formatName], locale: ru, zero: true },
-		);
+		let result: Duration = {};
+
+		this.formatList.forEach(item => {
+			let k = 1;
+			switch (item.value) {
+				case 'years':
+					k = minutesInYear;
+					break;
+				case 'months':
+					k = minutesInMonth;
+					break;
+				case 'weeks':
+					k = minutesInDay * 7;
+					break;
+				case 'days':
+					k = minutesInDay;
+					break;
+				case 'hours':
+					k = minutesInHour;
+					break;
+				default:
+					break;
+			}
+
+			if (this.formatNames.includes(item.value)) {
+				const currentResult = Math.floor(minutes / k);
+				result[item.value] = currentResult;
+				minutes -= currentResult * k;
+			}
+		});
+
+		return formatDuration(result, { format: this.formatNames, locale: ru, zero: true });
 	}
 
 	setStartDate(date: Date) {
@@ -238,46 +292,23 @@ export class ModeStatsComponent {
 				finalDate = this.now;
 				break;
 		}
-		this.switchFormat(this.activeFormat, startDate, finalDate);
+		this.switchFormat(false, startDate, finalDate);
 		this.activeMode = mode;
 		localStorage.setItem('statMode', mode);
 	}
 
-	switchFormat(format: string, startDate = this.startDate(), finalDate = this.finalDate()) {
-		switch (format) {
-			case 'years':
-				this.formatValue = 60 * 24 * 365;
-				this.formatName = 'years';
-				break;
-
-			case 'months':
-				this.formatValue = 60 * 24 * 30;
-				this.formatName = 'months';
-				break;
-
-			case 'weeks':
-				this.formatValue = 60 * 24 * 7;
-				this.formatName = 'weeks';
-				break;
-
-			case 'days':
-				this.formatValue = 60 * 24;
-				this.formatName = 'days';
-				break;
-
-			case 'hours':
-				this.formatValue = 60;
-				this.formatName = 'hours';
-				break;
-
-			default:
-				this.formatValue = 1;
-				this.formatName = 'minutes';
-				break;
+	switchFormat(setToLS = false, startDate = this.startDate(), finalDate = this.finalDate()) {
+		if (setToLS) {
+			this.formatNames = this.formatsRef
+				? Array(...this.formatsRef.element.nativeElement.querySelectorAll('input:checked')).map(item => item.name)
+				: [];
+			this.activeFormat = this.formatNames.join('_');
+			localStorage.setItem('statFormat', this.activeFormat);
+		} else {
+			this.formatList.forEach(item => {
+				item.checked = this.activeFormat.includes(item.value);
+			});
 		}
-
 		this.limitDates(startDate, finalDate);
-		this.activeFormat = format;
-		localStorage.setItem('statFormat', format);
 	}
 }

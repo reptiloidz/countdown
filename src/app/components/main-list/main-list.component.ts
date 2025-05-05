@@ -192,7 +192,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.route.queryParams.subscribe({
 				next: (data: any) => {
-					this.searchInputValue = data.search || '';
+					this.searchInputValue = data.search ?? '';
 					data.sort && (this.sortType = data.sort);
 
 					if (data.repeat) {

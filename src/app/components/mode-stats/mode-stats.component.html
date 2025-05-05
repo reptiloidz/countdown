@@ -24,12 +24,19 @@
 	(valueSwitched)="switchMode($event)"
 ></app-switcher>
 
-<app-switcher
-	class="mode-stats__switcher"
-	[items]="formatList"
-	[value]="activeFormat"
-	(valueSwitched)="switchFormat($event)"
-></app-switcher>
+<div
+	#formatsRef
+	class="mode-stats__format"
+>
+	<label
+		*ngFor="let format of formatList"
+		app-checkbox
+		class="mode-stats__format-item"
+		[name]="format.value"
+		[isChecked]="format.checked"
+		(change)="switchFormat(true)"
+	>{{ format.text }}</label>
+</div>
 
 <div class="mode-stats__result">
 	<div class="mode-stats__result-col">
@@ -39,5 +46,15 @@
 	<div class="mode-stats__result-col">
 		<h3 class="mode-stats__label">{{ point.modes?.[1]?.icon }} {{ point.modes?.[1]?.name }}</h3>
 		<p class="mode-stats__value">{{ modeSumSecondFormatted() }}</p>
+	</div>
+</div>
+<div class="mode-stats__result">
+	<div class="mode-stats__result-col">
+		<h3 class="mode-stats__label">Число смен режимов:</h3>
+		<p class="mode-stats__value">{{ changes() }}</p>
+	</div>
+	<div class="mode-stats__result-col">
+		<h3 class="mode-stats__label">Общее время в&nbsp;диапазоне</h3>
+		<p class="mode-stats__value">{{ sum() }}</p>
 	</div>
 </div>

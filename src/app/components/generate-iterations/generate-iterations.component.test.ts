@@ -12,6 +12,7 @@ import { RadioComponent } from '../radio/radio.component';
 import { ButtonComponent } from '../button/button.component';
 import { Iteration } from 'src/app/interfaces';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { millisecondsInHour, millisecondsInMinute } from 'date-fns/constants';
 
 const currentDate = new Date();
 
@@ -74,12 +75,12 @@ describe('GenerateIterationsComponent', () => {
 
 	it('should calculate periodicity value correctly for minutes', () => {
 		component.iterationsForm.controls['periodicity'].setValue('perMinutes');
-		expect(component.periodicityValue).toEqual(Constants.msInMinute);
+		expect(component.periodicityValue).toEqual(millisecondsInMinute);
 	});
 
 	it('should calculate periodicity value correctly for hours', () => {
 		component.iterationsForm.controls['periodicity'].setValue('perHours');
-		expect(component.periodicityValue).toEqual(Constants.msInMinute * 60);
+		expect(component.periodicityValue).toEqual(millisecondsInHour);
 	});
 
 	it('should emit repeats when genRepeats is called', () => {

@@ -19,7 +19,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, On
 import { Subscription, interval } from 'rxjs';
 import { ActionService } from './services';
 import { environment } from 'src/environments/environment';
-import { Constants } from './enums';
+import { millisecondsInSecond } from 'date-fns/constants';
 
 @Component({
 	selector: 'app-root',
@@ -48,7 +48,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		setTimeout(
 			() => {
 				this.subscriptions.add(
-					interval(this.isProd ? 1000 : Constants.tick).subscribe({
+					interval(this.isProd ? 1000 : millisecondsInSecond).subscribe({
 						next: () => {
 							document.documentElement.style.setProperty('--count', (++this.count).toString());
 

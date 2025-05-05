@@ -1,4 +1,7 @@
 .mode-stats {
+	display: block;
+	margin-bottom: 20px;
+
 	&__calendars {
 		@include media-breakpoint-down(md) {
 			flex-direction: column;
@@ -39,6 +42,20 @@
 		font-size: 36px;
 	}
 
+	&__format {
+		@include media-breakpoint-down(sm) {
+			column-count: 2;
+		}
+
+		column-count: 3;
+		column-gap: 10px;
+	}
+
+	&__format-item {
+		align-items: center;
+		margin-bottom: 10px;
+	}
+
 	&__result {
 		@include media-breakpoint-down(md) {
 			flex-direction: column;
@@ -46,6 +63,7 @@
 
 		display: flex;
 		padding-top: 10px;
+		padding-bottom: 30px;
 		border-top: 1px solid rgb(var(--c-border-primary));
 	}
 

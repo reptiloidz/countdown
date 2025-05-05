@@ -1,8 +1,8 @@
 import { isSameDay, isSameHour, isSameMinute, isSameMonth } from 'date-fns';
 import { Iteration, Point } from '../interfaces';
-import { Constants } from '../enums';
 import { CalendarMode } from '../types';
 import { parseDate } from './parseDate';
+import { millisecondsInMinute } from 'date-fns/constants';
 
 export const filterDates = (item: object) => {
 	return item && typeof item === 'object' && !Array.isArray(item);
@@ -19,16 +19,16 @@ export const filterPoints = ({
 }) => {
 	return !points
 		? []
-		: points?.filter((item) => {
-				return item.dates.some((iteration) =>
+		: points?.filter(item => {
+				return item.dates.some(iteration =>
 					findIterations({
 						iteration,
 						date,
 						activeMode,
 						greenwich: item.greenwich,
-					})
+					}),
 				);
-		  });
+			});
 };
 
 export const filterIterations = ({
@@ -42,11 +42,7 @@ export const filterIterations = ({
 	activeMode: CalendarMode;
 	greenwich: boolean;
 }) => {
-	return !iterations
-		? []
-		: iterations?.filter((iteration) =>
-				findIterations({ iteration, date, activeMode, greenwich })
-		  );
+	return !iterations ? [] : iterations?.filter(iteration => findIterations({ iteration, date, activeMode, greenwich }));
 };
 
 function findIterations({
@@ -62,11 +58,7 @@ function findIterations({
 }) {
 	let iterationDate = parseDate(iteration.date);
 
-	iterationDate = new Date(
-		+iterationDate -
-			(greenwich ? iterationDate.getTimezoneOffset() : 0) *
-				Constants.msInMinute
-	);
+	iterationDate = new Date(+iterationDate - (greenwich ? iterationDate.getTimezoneOffset() : 0) * millisecondsInMinute);
 
 	switch (activeMode) {
 		case 'year':

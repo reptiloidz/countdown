@@ -40,6 +40,7 @@ import { Constants } from 'src/app/enums';
 import { getPointDate, parseDate } from 'src/app/helpers';
 import { Iteration, Point, RadioItem, SelectArray, SwitcherItem } from 'src/app/interfaces';
 import { DatepickerComponent } from '../datepicker/datepicker.component';
+import { millisecondsInDay, millisecondsInHour, millisecondsInMinute } from 'date-fns/constants';
 
 @Component({
 	selector: 'app-generate-iterations',
@@ -133,23 +134,23 @@ export class GenerateIterationsComponent implements OnInit {
 
 		switch (this.periodicityModeValue) {
 			case 'perMinutes':
-				periodicity = Constants.msInMinute;
+				periodicity = millisecondsInMinute;
 				break;
 
 			case 'perHours':
-				periodicity = Constants.msInMinute * 60;
+				periodicity = millisecondsInHour;
 				break;
 
 			case 'perDays':
-				periodicity = Constants.msInMinute * 60 * 24;
+				periodicity = millisecondsInDay;
 				break;
 
 			case 'perWeeks':
-				periodicity = Constants.msInMinute * 60 * 24 * 7;
+				periodicity = millisecondsInDay * 7;
 				break;
 
 			default:
-				periodicity = Constants.msInMinute;
+				periodicity = millisecondsInMinute;
 				break;
 		}
 

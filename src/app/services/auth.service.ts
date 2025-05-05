@@ -12,7 +12,6 @@ import {
 	firstValueFrom,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Constants } from '../enums';
 import { UserPoint, Point, UserProfile, UserExtraData } from '../interfaces';
 import {
 	Auth,
@@ -35,6 +34,7 @@ import {
 import { goOnline, objectVal, query, ref, set, update } from '@angular/fire/database';
 import { NotifyService, HttpService } from '.';
 import { generateUserpicName, randomHEXColor } from '../helpers';
+import { millisecondsInDay } from 'date-fns/constants';
 
 @Injectable({
 	providedIn: 'root',
@@ -247,9 +247,9 @@ export class AuthService implements OnDestroy {
 		} else {
 			const expDate = new Date(
 				new Date().getTime() +
-					// response.expiresIn * Constants.msInSecond
+					// response.expiresIn * millisecondsInSecond
 					// Вместо дефолтного expiresIn используем кастомный период (неделю)
-					7 * 24 * 60 * Constants.msInMinute,
+					7 * millisecondsInDay,
 			);
 
 			localStorage.setItem('fb-token', token);

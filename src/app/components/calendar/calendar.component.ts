@@ -71,7 +71,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	@Input() rowsNumber!: number;
 	@Input() disabledBefore: Date | undefined;
 	@Input() disabledAfter: Date | undefined;
-	@Input() urlMode = false;
+	@Input() staticMode = false;
 
 	/**
 	 * При получении значения всегда обновляем календарь, если она обновилась
@@ -259,7 +259,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		points: Point[];
 		iterations: Iteration[];
 	}) {
-		if (this.urlMode) return;
+		if (this.staticMode) return;
 
 		let data: Point[] | Iteration[] = [];
 		if (points.length) {
