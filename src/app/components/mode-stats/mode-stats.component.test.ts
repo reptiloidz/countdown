@@ -57,14 +57,22 @@ describe('ModeStatsComponent', () => {
 
 	it('должен инициализировать даты корректно в ngOnInit', () => {
 		expect(component.dates().length).toBe(2);
-		expect(component.firstIterationDate().toISOString()).toBe('2025-01-28T07:00:00.000Z');
-		expect(component.lastIterationDate().toISOString()).toBe('2025-01-29T07:00:00.000Z');
+		expect(component.firstIterationDate().toString()).toBe(
+			'Tue Jan 28 2025 12:00:00 GMT+0500 (Екатеринбург, стандартное время)',
+		);
+		expect(component.lastIterationDate().toString()).toBe(
+			'Wed Jan 29 2025 12:00:00 GMT+0500 (Екатеринбург, стандартное время)',
+		);
 	});
 
 	it('должен переключать режимы и пересчитывать данные', () => {
 		component.switchMode('toLast');
-		expect(component.startDate().toISOString()).toBe('2025-01-28T07:00:00.000Z');
-		expect(component.finalDate().toISOString()).toBe('2025-01-29T07:00:00.000Z');
+		expect(component.startDate().toString()).toBe(
+			'Tue Jan 28 2025 12:00:00 GMT+0500 (Екатеринбург, стандартное время)',
+		);
+		expect(component.finalDate().toString()).toBe(
+			'Wed Jan 29 2025 12:00:00 GMT+0500 (Екатеринбург, стандартное время)',
+		);
 		expect(component.sum()).not.toBe('');
 	});
 
