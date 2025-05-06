@@ -55,18 +55,22 @@ describe('TooltipComponent', () => {
 
 	it('should show tooltip content if provided', () => {
 		component.tooltipContent = hostComponent.tooltipContent;
+		component.hasOnboardingTimeExpired.set(true);
 		fixture.detectChanges();
 		const tooltipBody = fixture.debugElement.query(By.css('.tooltip__body'));
 		expect(tooltipBody).toBeTruthy();
 	});
 
 	it('should use text input if no template is provided', () => {
+		component.hasOnboardingTimeExpired.set(true);
+		fixture.detectChanges();
 		const tooltipText = fixture.debugElement.query(By.css('.tooltip__content'));
 		expect(tooltipText.nativeElement.textContent).toContain('Test tooltip');
 	});
 
 	it('should mark onboarding as completed when close button is clicked', () => {
 		component.onboarding = 'testOnboarding';
+		component.hasOnboardingTimeExpired.set(true);
 		localStorage.setItem('onboarding-testOnboarding', 'false');
 		fixture.detectChanges();
 

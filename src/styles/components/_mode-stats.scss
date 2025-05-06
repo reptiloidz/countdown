@@ -1,6 +1,22 @@
 .mode-stats {
-	display: block;
-	margin-bottom: 20px;
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__info-tooltip {
+		@include media-breakpoint-down(md) {
+			margin-bottom: auto;
+		}
+
+		z-index: 2;
+	}
+
+	&__info {
+		--icon-w: 24px;
+		--icon-stroke-w: 2px;
+	}
 
 	&__calendars {
 		@include media-breakpoint-down(md) {
@@ -49,6 +65,8 @@
 
 		column-count: 3;
 		column-gap: 10px;
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
 
 	&__format-item {

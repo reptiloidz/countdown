@@ -1,10 +1,20 @@
-import { Component, ContentChild, HostBinding, Input, TemplateRef } from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	ContentChild,
+	HostBinding,
+	Input,
+	signal,
+	TemplateRef,
+} from '@angular/core';
 
 @Component({
 	selector: '[app-tooltip]',
 	templateUrl: './tooltip.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TooltipComponent {
+export class TooltipComponent implements AfterViewInit {
 	@ContentChild('tooltipContent') tooltipContent: TemplateRef<unknown> | undefined;
 	@ContentChild('tooltipTrigger', { static: false }) triggerElement: any;
 
@@ -13,8 +23,8 @@ export class TooltipComponent {
 			'tooltip',
 			'tooltip--' + this.vertical,
 			'tooltip--' + this.horizontal,
-			this.isTooltipOff && 'tooltip--disabled',
-			this.isOnboardingOn && 'tooltip--onboarding',
+			this.isTooltipOff || !this.hasOnboardingTimeExpired() ? 'tooltip--disabled' : '',
+			this.isOnboardingOn ? 'tooltip--onboarding' : '',
 		].join(' ');
 	}
 
@@ -24,6 +34,19 @@ export class TooltipComponent {
 	@Input() text!: string;
 	@Input() onboarding!: string;
 	@Input() onboardingBefore!: string | null;
+	@Input() onboardingTime = 500;
+
+	hasOnboardingTimeExpired = signal(false);
+
+	ngAfterViewInit(): void {
+		if (this.isOnboardingOn) {
+			setTimeout(() => {
+				this.hasOnboardingTimeExpired.set(true);
+			}, this.onboardingTime);
+		} else {
+			this.hasOnboardingTimeExpired.set(true);
+		}
+	}
 
 	get isTooltipOff() {
 		return this.disabled || !this.triggerElement;

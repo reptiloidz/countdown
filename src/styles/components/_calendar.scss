@@ -194,6 +194,7 @@
 		right: var(--calendar-nav-shift);
 		bottom: var(--calendar-nav-shift);
 		display: flex;
+		white-space: normal;
 	}
 
 	&__btn-nav {

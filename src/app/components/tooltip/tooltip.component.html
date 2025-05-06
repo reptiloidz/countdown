@@ -1,7 +1,7 @@
 <ng-content></ng-content>
 <span
 	class="tooltip__body"
-	*ngIf="!isTooltipOff"
+	*ngIf="!isTooltipOff && hasOnboardingTimeExpired()"
 >
 	<button
 		*ngIf="isOnboardingOn"

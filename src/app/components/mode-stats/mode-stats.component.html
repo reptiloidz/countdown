@@ -1,20 +1,40 @@
-<div class="mode-stats__calendars">
-	От:
-	<app-datepicker
-		[date]="startDate()"
-		[disabledBefore]="firstDisable"
-		[disabledAfter]="finalDate()"
-		(datePicked)="setStartDate($event)"
-		dropClass="datepicker--popup-xs"
-	></app-datepicker>
-	До:
-	<app-datepicker
-		[date]="finalDate()"
-		[disabledBefore]="startDate()"
-		[disabledAfter]="now"
-		(datePicked)="setFinalDate($event)"
-		dropClass="datepicker--popup-xs"
-	></app-datepicker>
+<div class="mode-stats__header">
+	<div class="mode-stats__calendars">
+		От:
+		<app-datepicker
+			[date]="startDate()"
+			[disabledBefore]="firstDisable"
+			[disabledAfter]="finalDate()"
+			(datePicked)="setStartDate($event)"
+			dropClass="datepicker--popup-xs"
+		></app-datepicker>
+		До:
+		<app-datepicker
+			[date]="finalDate()"
+			[disabledBefore]="startDate()"
+			[disabledAfter]="now"
+			(datePicked)="setFinalDate($event)"
+			dropClass="datepicker--popup-xs"
+		></app-datepicker>
+	</div>
+	<span
+		app-tooltip
+		horizontal="left"
+		onboarding="modeStats"
+		class="mode-stats__info-tooltip"
+		text="
+			Здесь показано общее время итераций для каждого из&nbsp;2&nbsp;режимов.
+			Можно задать ограничение вручную или с&nbsp;помощью готовых фильтров,
+			а&nbsp;также выбрать удобный формат времени.
+		"
+	>
+		<svg
+			app-svg
+			name="info-circle"
+			class="mode-stats__info"
+			#tooltipTrigger
+		></svg>
+	</span>
 </div>
 
 <app-switcher

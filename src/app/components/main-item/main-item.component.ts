@@ -36,11 +36,11 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@Input() isPopup = false;
 	@Input() showSec = true;
 	@Input() isEdit = false;
+	@Input() remainCalculated = false;
 	@Output() pointCheck = new EventEmitter();
 
 	loading = false;
 	authorLoading = false;
-	remainCalculated = false;
 	timerYears: number | string | undefined;
 	timerMonths: number | string | undefined;
 	timerDays: number | string | undefined;

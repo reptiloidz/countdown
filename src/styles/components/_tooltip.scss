@@ -94,6 +94,11 @@
 		.tooltip__body {
 			top: calc(100% + var(--tooltip-shift));
 		}
+
+		.tooltip__close {
+			top: calc(100% + 4px);
+			bottom: auto;
+		}
 	}
 
 	&--left {

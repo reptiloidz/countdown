@@ -6,6 +6,7 @@ import { PointModule } from './point.module';
 import { ModeStatsComponent } from 'src/app/components/mode-stats/mode-stats.component';
 import { SharedModule } from 'src/app/shared.module';
 import { CommonModule } from '@angular/common';
+import { SvgModule } from 'src/app/components/svg/svg.module';
 
 const routes: Routes = [
 	{
@@ -16,7 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-	imports: [CommonModule, PointModule, SharedModule, RouterModule.forChild(routes)],
+	imports: [CommonModule, PointModule, SvgModule, SharedModule, RouterModule.forChild(routes)],
 	declarations: [ModeStatsComponent],
 	exports: [RouterModule, ModeStatsComponent],
 })
