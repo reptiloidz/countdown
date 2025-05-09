@@ -6,6 +6,7 @@
 	--tabs-item-pseudo-bg-color: var(--c-bg-primary);
 	--tabs-item-pseudo-bg-size: 20px;
 	--tabs-pb: 20px;
+	--tabs-item-minw: 66px;
 
 	width: 100%;
 	overflow: auto hidden;
@@ -29,6 +30,8 @@
 		gap: 4px;
 		align-items: center;
 		align-self: center;
+		justify-content: center;
+		min-width: var(--tabs-item-minw);
 		padding: 0 12px;
 
 		&:first-child,
@@ -115,13 +118,6 @@
 		}
 
 		&--home {
-			width: 24px;
-			height: 24px;
-			padding: 4px;
-			border-radius: 12px;
-			background-color: rgb(var(--c-bg-positive));
-			color: rgb(var(--c-text-inverse));
-
 			&:last-child {
 				&::after {
 					transform: scale(-1, 1);
@@ -134,12 +130,31 @@
 		}
 
 		&--add {
+			min-width: auto;
+
 			&:last-child {
 				&::after {
 					content: none;
 				}
 			}
 		}
+
+		&--md {
+			--tabs-item-minw: 108px;
+		}
+
+		&--lg {
+			--tabs-item-minw: 134px;
+		}
+	}
+
+	&__home-icon {
+		width: 24px;
+		height: 24px;
+		padding: 4px;
+		border-radius: 12px;
+		background-color: rgb(var(--c-bg-positive));
+		color: rgb(var(--c-text-inverse));
 	}
 
 	&__btn {
@@ -150,10 +165,6 @@
 		min-width: 34px;
 		height: 34px;
 		border-radius: 12px;
-	}
-
-	&__check {
-		margin: auto;
 	}
 
 	&__remove {

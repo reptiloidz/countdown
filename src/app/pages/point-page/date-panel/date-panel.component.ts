@@ -9,6 +9,7 @@ import {
 	OnDestroy,
 	OnInit,
 	Output,
+	signal,
 	ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -128,6 +129,8 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	datesAfterLength = 0;
 	datesLength = 0;
 	combinedDates: { type: string; data?: Point | Iteration; time?: string }[] = [];
+	itemSize = signal(0);
+	itemClass = signal('');
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -303,6 +306,21 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		return this.iterationsChecked.filter(item => item);
 	}
 
+	updateItemSize() {
+		let itemSize = 0;
+		if (this.hasAccess && this.point?.modes) {
+			this.itemClass.set('tabs__item--lg');
+			itemSize = 184;
+		} else if (this.hasAccess || this.point?.modes) {
+			this.itemClass.set('tabs__item--md');
+			itemSize = 158;
+		} else {
+			itemSize = 116;
+		}
+
+		this.itemSize.set(itemSize);
+	}
+
 	getCombineDates() {
 		this.datesBeforeLength = this.datesBefore?.length ?? 0;
 		this.datesAfterLength = this.datesAfter?.length ?? 0;
@@ -329,6 +347,8 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						getComputedStyle(this.iterationsTabs?.nativeElement).paddingLeft +
 							getComputedStyle(this.iterationsTabs?.nativeElement).paddingRight,
 				);
+
+		this.updateItemSize();
 		this.cdr.detectChanges();
 	}
 
