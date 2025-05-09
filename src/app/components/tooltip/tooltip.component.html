@@ -4,7 +4,7 @@
 	*ngIf="!isTooltipOff && hasOnboardingTimeExpired()"
 >
 	<button
-		*ngIf="isOnboardingOn"
+		*ngIf="isOnboardingOn()"
 		app-button
 		icon="cross"
 		size="sm"

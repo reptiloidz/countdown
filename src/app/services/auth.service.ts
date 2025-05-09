@@ -243,7 +243,9 @@ export class AuthService implements OnDestroy {
 		id?: string;
 	} = {}) {
 		if (!token || !id) {
-			localStorage.clear();
+			localStorage.removeItem('fb-token');
+			localStorage.removeItem('fb-uid');
+			localStorage.removeItem('fb-token-exp');
 		} else {
 			const expDate = new Date(
 				new Date().getTime() +

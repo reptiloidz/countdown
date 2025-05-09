@@ -24,7 +24,7 @@ export class TooltipComponent implements AfterViewInit {
 			'tooltip--' + this.vertical,
 			'tooltip--' + this.horizontal,
 			this.isTooltipOff || !this.hasOnboardingTimeExpired() ? 'tooltip--disabled' : '',
-			this.isOnboardingOn ? 'tooltip--onboarding' : '',
+			this.isOnboardingOn() ? 'tooltip--onboarding' : '',
 		].join(' ');
 	}
 
@@ -37,13 +37,20 @@ export class TooltipComponent implements AfterViewInit {
 	@Input() onboardingTime = 500;
 
 	hasOnboardingTimeExpired = signal(false);
+	isOnboardingOn = signal(false);
 
 	ngAfterViewInit(): void {
-		if (this.isOnboardingOn) {
+		if (
+			localStorage.getItem(`onboarding-${this.onboarding}`) !== 'true' &&
+			this.onboarding &&
+			(localStorage.getItem(`onboarding-${this.onboardingBefore}`) === 'true' || !this.onboardingBefore)
+		) {
+			this.isOnboardingOn.set(true);
 			setTimeout(() => {
 				this.hasOnboardingTimeExpired.set(true);
 			}, this.onboardingTime);
 		} else {
+			this.isOnboardingOn.set(false);
 			this.hasOnboardingTimeExpired.set(true);
 		}
 	}
@@ -52,15 +59,8 @@ export class TooltipComponent implements AfterViewInit {
 		return this.disabled || !this.triggerElement;
 	}
 
-	get isOnboardingOn() {
-		return (
-			localStorage.getItem(`onboarding-${this.onboarding}`) !== 'true' &&
-			this.onboarding &&
-			(localStorage.getItem(`onboarding-${this.onboardingBefore}`) === 'true' || !this.onboardingBefore)
-		);
-	}
-
 	closeOnboarding() {
 		localStorage.setItem(`onboarding-${this.onboarding}`, 'true');
+		this.isOnboardingOn.set(false);
 	}
 }

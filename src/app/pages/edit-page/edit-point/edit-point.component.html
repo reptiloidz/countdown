@@ -15,12 +15,27 @@
 <div class="content content--row content--edit">
 	<div
 		*ngIf="point && !isCreationUrl && !isCreation; else pointPlaceholder"
-		app-main-item
-		class="color content__col content__col--point"
-		[ngClass]="'color--' + this.form.controls['color'].value"
-		[point]="point"
-		[isEdit]="true"
-	></div>
+		class="content__col content__col--point"
+	>
+		<h3>
+			<a
+				[routerLink]="['/point', point.id]"
+				app-button
+				view="link"
+				size="lg"
+				mode="ghost"
+				icon="chevron-left"
+				title="Вернуться к&nbsp;событию"
+			>Вернуться к&nbsp;событию</a>
+		</h3>
+		<div
+			app-main-item
+			class="color"
+			[ngClass]="'color--' + this.form.controls['color'].value"
+			[point]="point"
+			[isEdit]="true"
+		></div>
+	</div>
 	<form
 		*ngIf="!(checking | async); else loader"
 		class="content__col"
@@ -32,7 +47,6 @@
 				*ngIf="!isCreationUrl"
 				[routerLink]="['/point', point?.id]"
 				app-button
-				icon="plus"
 				view="link"
 				size="lg"
 				mode="positive"
