@@ -54,6 +54,7 @@
 		class="mode-stats__format-item"
 		[name]="format.value"
 		[isChecked]="format.checked"
+		[isDisabled]="format.disabled"
 		(change)="switchFormat(true)"
 	>{{ format.text }}</label>
 </div>

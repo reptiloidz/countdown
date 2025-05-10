@@ -71,36 +71,43 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 		text: string;
 		value: DifferenceMode;
 		checked: boolean;
+		disabled: boolean;
 	}[] = [
 		{
 			text: 'Годы',
 			value: 'years',
 			checked: false,
+			disabled: false,
 		},
 		{
 			text: 'Месяцы',
 			value: 'months',
 			checked: false,
+			disabled: false,
 		},
 		{
 			text: 'Недели',
 			value: 'weeks',
 			checked: false,
+			disabled: false,
 		},
 		{
 			text: 'Дни',
 			value: 'days',
 			checked: false,
+			disabled: false,
 		},
 		{
 			text: 'Часы',
 			value: 'hours',
 			checked: false,
+			disabled: false,
 		},
 		{
 			text: 'Минуты',
 			value: 'minutes',
 			checked: false,
+			disabled: false,
 		},
 	];
 	activeFormat = localStorage.getItem('statFormat') ?? 'minutes';
@@ -307,8 +314,17 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 		} else {
 			this.formatList.forEach(item => {
 				item.checked = this.activeFormat.includes(item.value);
+				item.disabled = false;
 			});
 		}
+		this.formatList
+			.filter(item => this.formatNames.includes(item.value))
+			.forEach(item => {
+				const checkbox = this.formatsRef?.element.nativeElement?.querySelector(`#${item.value}`) as HTMLInputElement;
+				if (checkbox) {
+					checkbox.disabled = this.formatNames.length === 1;
+				}
+			});
 		this.limitDates(startDate, finalDate);
 	}
 }

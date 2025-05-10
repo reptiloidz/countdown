@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModeStatsComponent } from './mode-stats.component';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Point } from 'src/app/interfaces';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -39,7 +39,7 @@ describe('ModeStatsComponent', () => {
 			schemas: [NO_ERRORS_SCHEMA],
 		})
 			.overrideComponent(ModeStatsComponent, {
-				set: { changeDetection: ChangeDetectionStrategy.Default },
+				set: { changeDetection: ChangeDetectionStrategy.OnPush },
 			})
 			.compileComponents();
 	});
@@ -48,6 +48,19 @@ describe('ModeStatsComponent', () => {
 		fixture = TestBed.createComponent(ModeStatsComponent);
 		component = fixture.componentInstance;
 		component.point = mockPoint;
+		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
+		const mockElement = document.createElement('div');
+		mockElement.innerHTML = `
+			<input id="minutes" name="minutes" type="checkbox" checked />
+			<input id="hours" name="hours" type="checkbox" />
+		`;
+
+		component['formatsRef'] = {
+			element: {
+				nativeElement: mockElement,
+			},
+		} as any;
+		cdr.detectChanges();
 		fixture.detectChanges();
 	});
 
@@ -57,16 +70,12 @@ describe('ModeStatsComponent', () => {
 
 	it('должен переключать формат и сохранять в localStorage', () => {
 		// Имитируем наличие checkbox'ов вручную
-		component.formatsRef = {
-			element: {
-				nativeElement: {
-					querySelectorAll: () => [
-						{ name: 'minutes', checked: true },
-						{ name: 'hours', checked: true },
-					],
-				},
-			},
-		} as any;
+		if (component.formatsRef) {
+			component.formatsRef.element.nativeElement.querySelectorAll = () => [
+				{ name: 'minutes', checked: true },
+				{ name: 'hours', checked: true },
+			];
+		}
 
 		component.switchFormat(true);
 		expect(component.activeFormat).toBe('minutes_hours');

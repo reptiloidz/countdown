@@ -75,7 +75,7 @@
 				><ng-container *ngIf="userData?.displayName">
 				{{ userData.displayName }}
 				</ng-container> -->
-			<div class="form__section">
+			<div class="form__section form__section--edit">
 				<div class="form__row">
 					<app-input
 						class="form__control"
@@ -232,7 +232,7 @@
 						type="button"
 						(click)="submit()"
 						title="Сохранить параметры события"
-					>Сохранить</button>
+					>Сохранить событие</button>
 				</div>
 			</div>
 
@@ -321,7 +321,10 @@
 						[attr.disabled]="(loading || (repeatableValueSaved && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"
 						[title]="repeatableValueSaved && !isCreation ? 'Сохранить параметры итерации' :
 											'Сохранить событие'"
-					>Сохранить</button>
+					>{{
+						repeatableValueSaved && !isCreation ? 'Сохранить итерацию' :
+						'Сохранить событие'
+						}}</button>
 				</div>
 			</div>
 

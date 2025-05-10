@@ -10,7 +10,7 @@ describe('NoPageComponent', () => {
 
 	beforeEach(async () => {
 		const actionServiceMock = {
-			_eventShortLinkChecked$: of({}),
+			eventShortLinkChecked$: of({}),
 		};
 
 		await TestBed.configureTestingModule({
@@ -37,7 +37,7 @@ describe('NoPageComponent', () => {
 	});
 
 	it('should set loading to false on subscription error', () => {
-		actionService._eventShortLinkChecked$ = throwError(() => new Error('error'));
+		actionService.eventShortLinkChecked$ = throwError(() => new Error('error'));
 		component.ngOnInit();
 		expect(component.loading).toBe(false);
 	});

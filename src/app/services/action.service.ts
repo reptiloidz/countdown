@@ -10,25 +10,22 @@ export class ActionService {
 	private _eventPointsCheckedSubject = new Subject<boolean>();
 	private _eventIterationSwitchedSubject = new Subject<Date>();
 	private _eventFetchedPointsSubject = new Subject<void>();
-	private _eventUpdatedPointSubject = new BehaviorSubject<Point | undefined>(
-		undefined
-	);
+	private _eventUpdatedPointSubject = new BehaviorSubject<Point | undefined>(undefined);
 	private _eventHasEditablePointsSubject = new Subject<boolean>();
 	private _eventIntervalSwitchedSubject = new Subject<void>();
 	private _eventAutocompleteOpenedSubject = new Subject<void>();
 	private _eventShortLinkCheckedSubject = new Subject<void>();
+	private _eventOnboardingClosedSubject = new Subject<string>();
 	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
 	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
-	eventIterationSwitched$ =
-		this._eventIterationSwitchedSubject.asObservable();
+	eventIterationSwitched$ = this._eventIterationSwitchedSubject.asObservable();
 	eventFetchedPoints$ = this._eventFetchedPointsSubject.asObservable();
 	eventUpdatedPoint$ = this._eventUpdatedPointSubject.asObservable();
-	eventHasEditablePoints$ =
-		this._eventHasEditablePointsSubject.asObservable();
+	eventHasEditablePoints$ = this._eventHasEditablePointsSubject.asObservable();
 	eventIntervalSwitched$ = this._eventIntervalSwitchedSubject.asObservable();
-	eventAutocompleteOpened$ =
-		this._eventAutocompleteOpenedSubject.asObservable();
-	_eventShortLinkChecked$ = this._eventShortLinkCheckedSubject.asObservable();
+	eventAutocompleteOpened$ = this._eventAutocompleteOpenedSubject.asObservable();
+	eventShortLinkChecked$ = this._eventShortLinkCheckedSubject.asObservable();
+	eventOnboardingClosed$ = this._eventOnboardingClosedSubject.asObservable();
 
 	pointsChecked: string[] = [];
 
@@ -79,5 +76,9 @@ export class ActionService {
 
 	shortLinkChecked() {
 		this._eventShortLinkCheckedSubject.next();
+	}
+
+	onboardingClosed(onboarding: string) {
+		this._eventOnboardingClosedSubject.next(onboarding);
 	}
 }

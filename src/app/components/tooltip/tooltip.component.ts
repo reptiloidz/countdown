@@ -5,16 +5,19 @@ import {
 	ContentChild,
 	HostBinding,
 	Input,
+	OnDestroy,
 	signal,
 	TemplateRef,
 } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ActionService } from 'src/app/services';
 
 @Component({
 	selector: '[app-tooltip]',
 	templateUrl: './tooltip.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TooltipComponent implements AfterViewInit {
+export class TooltipComponent implements AfterViewInit, OnDestroy {
 	@ContentChild('tooltipContent') tooltipContent: TemplateRef<unknown> | undefined;
 	@ContentChild('tooltipTrigger', { static: false }) triggerElement: any;
 
@@ -38,8 +41,31 @@ export class TooltipComponent implements AfterViewInit {
 
 	hasOnboardingTimeExpired = signal(false);
 	isOnboardingOn = signal(false);
+	private subscriptions = new Subscription();
+
+	constructor(private action: ActionService) {}
 
 	ngAfterViewInit(): void {
+		this.onboardingUpdate();
+
+		this.subscriptions.add(
+			this.action.eventOnboardingClosed$.subscribe({
+				next: () => {
+					this.onboardingUpdate();
+				},
+			}),
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
+	}
+
+	get isTooltipOff() {
+		return this.disabled || !this.triggerElement;
+	}
+
+	onboardingUpdate() {
 		if (
 			localStorage.getItem(`onboarding-${this.onboarding}`) !== 'true' &&
 			this.onboarding &&
@@ -55,12 +81,9 @@ export class TooltipComponent implements AfterViewInit {
 		}
 	}
 
-	get isTooltipOff() {
-		return this.disabled || !this.triggerElement;
-	}
-
 	closeOnboarding() {
 		localStorage.setItem(`onboarding-${this.onboarding}`, 'true');
 		this.isOnboardingOn.set(false);
+		this.action.onboardingClosed(this.onboarding);
 	}
 }

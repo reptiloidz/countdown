@@ -95,6 +95,12 @@
 			width: clamp(50%, 400px, 100%);
 			margin: 20px auto;
 		}
+
+		&--edit {
+			&:first-child {
+				background-color: rgba(var(--c-bg-primary), 0.06);
+			}
+		}
 	}
 
 	&__section-title {
@@ -128,6 +134,8 @@
 	&--single {
 		.form {
 			&__section {
+				background-color: rgba(var(--c-bg-primary), 0.06);
+
 				&:first-child {
 					border-bottom-right-radius: 0;
 					border-bottom-left-radius: 0;

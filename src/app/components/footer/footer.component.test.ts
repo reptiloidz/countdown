@@ -62,10 +62,12 @@ describe('FooterComponent', () => {
 			eventPointsChecked$: new Subject(),
 			eventHasEditablePoints$: new Subject(),
 			eventUpdatedPoint$: new BehaviorSubject(mockPoint),
+			eventOnboardingClosed$: new Subject<void>(),
 			hasEditablePoints: jest.fn(),
 			checkAllPoints: jest.fn(),
 			uncheckAllPoints: jest.fn(),
 			pointUpdated: jest.fn().mockReturnValue(mockPoint),
+			onboardingClosed: jest.fn().mockReturnValue(''),
 		} as unknown as jest.Mocked<ActionService>;
 
 		notifyServiceMock = {
