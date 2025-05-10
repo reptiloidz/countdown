@@ -276,6 +276,17 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 							this.sortDates();
 						}
 						this.cdr.markForCheck();
+
+						if (this.iterationForm) {
+							const iterationForm = this.iterationForm.nativeElement as HTMLElement;
+							iterationForm.classList.add('form__section--active');
+							this.iterationForm.nativeElement.scrollIntoView({
+								behavior: 'smooth',
+							});
+							setTimeout(() => {
+								iterationForm?.classList.remove('form__section--active');
+							}, 500);
+						}
 					},
 					error: err => {
 						console.error('Ошибка при создании/редактировании:\n', err.message);

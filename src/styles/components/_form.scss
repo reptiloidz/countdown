@@ -80,6 +80,8 @@
 			padding: 5px;
 		}
 
+		@include transition(background-color 0.5s);
+
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
@@ -100,6 +102,10 @@
 			&:first-child {
 				background-color: rgba(var(--c-bg-primary), 0.06);
 			}
+		}
+
+		&--active {
+			background-color: rgba(var(--c-bg-primary), 0.5);
 		}
 	}
 
