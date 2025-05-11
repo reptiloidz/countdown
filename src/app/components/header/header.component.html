@@ -42,6 +42,7 @@
 		mode="positive"
 		title="Политика обработки персональных данных"
 		(click)="showPrivacy()"
+		aria-haspopup="dialog"
 	></button>
 	<!-- <button
 		app-button
@@ -52,10 +53,9 @@
 <a
 	class="nav__logo logo"
 	[ngClass]="isMain ? '' : 'state'"
-	aria-label="Дней без происшествий: 0"
 	[routerLink]="!isMain ? '/' : null"
 	[queryParams]="!isMain ? mainLinkParams : null"
-	[attr.title]="!isMain ? 'Домой' : null"
+	[attr.title]="!isMain ? 'Домой' : 'Дней без происшествий: 0'"
 >
 	<div
 		aria-hidden="true"

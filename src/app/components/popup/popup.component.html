@@ -1,5 +1,8 @@
 <ng-container *ngIf="isVisible">
-	<div class="popup__inner">
+	<div
+		class="popup__inner"
+		aria-live="polite"
+	>
 		<div class="popup__header">
 			<h2 class="popup__title">{{ title }}</h2>
 			<button

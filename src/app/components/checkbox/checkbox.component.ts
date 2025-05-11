@@ -28,9 +28,6 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 	@HostBinding('class') get controlClass() {
 		return ['checkbox state', this.mode !== 'text' && 'checkbox--' + this.mode].filter(_ => _).join(' ');
 	}
-	@HostBinding('attr.for') get for() {
-		return this.name ?? null;
-	}
 	@Input() formControlName!: string;
 	@Input() control!: FormControl;
 	@Input() iconSize: 'sm' | 'md' = 'md';
@@ -48,6 +45,10 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 	}
 
 	private subscriptions = new Subscription();
+
+	id = 'cb-' + Math.floor(Math.random() * 10000);
+
+	@HostBinding('attr.for') for = this.id;
 
 	constructor(
 		private cdr: ChangeDetectorRef,

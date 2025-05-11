@@ -25,6 +25,9 @@ export class RadioComponent implements ControlValueAccessor {
 	@Output() valueSwitched = new EventEmitter<string>();
 
 	private _name: string | null = null;
+
+	id = 'cb-' + Math.floor(Math.random() * 10000);
+
 	@Input() get name() {
 		return this._name ?? this.formControlName;
 	}

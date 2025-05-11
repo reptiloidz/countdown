@@ -2,6 +2,7 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	HostBinding,
 	HostListener,
 	OnInit,
 	ViewChild,
@@ -20,6 +21,7 @@ export class PopupComponent implements OnInit {
 		read: ViewContainerRef,
 	})
 	popupContent!: ViewContainerRef;
+	@HostBinding('role') role = 'dialog';
 
 	title = '';
 	isVisible = false;

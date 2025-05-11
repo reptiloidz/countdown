@@ -3,12 +3,13 @@
 	[ngClass]="switcherListClass"
 >
 	<label
-		*ngFor="let item of items; trackBy: trackBy"
+		*ngFor="let item of items; index as i; trackBy: trackBy"
 		class="switcher__item state"
 		[ngClass]="{
 			'switcher__item--active' : item?.value === value
 		}"
 		[attr.title]="(item?.icon || item?.boolean !== undefined) ? item?.text : null"
+		[for]="id + i"
 	>
 		<input
 			[value]="item?.value"
@@ -17,6 +18,7 @@
 			(change)="onOptionSelected($event)"
 			[attr.name]="name"
 			class="switcher__input"
+			[id]="id + i"
 		>
 		<ng-container *ngIf="item?.icon || item?.boolean || item?.default !== undefined; else textValue;">
 			<svg

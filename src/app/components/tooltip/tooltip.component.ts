@@ -30,6 +30,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 			this.isOnboardingOn() ? 'tooltip--onboarding' : '',
 		].join(' ');
 	}
+	@HostBinding('role') role = 'tooltip';
 
 	@Input() vertical: 'top' | 'bottom' = 'bottom';
 	@Input() horizontal: 'left' | 'right' = 'right';

@@ -4,6 +4,8 @@
 		*ngFor="let notify of notifyList; trackBy: trackBy"
 		class="notify-list__item-wrapper"
 		[attr.id]="'n-' + +notify.date"
+		role="alert"
+		aria-live="assertive"
 	>
 		<div
 			class="notify-list__item"

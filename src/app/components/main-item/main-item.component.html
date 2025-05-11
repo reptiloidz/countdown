@@ -52,6 +52,14 @@
 			minsLabel="Мин"
 			secsLabel="Сек"
 			delayRandomValue="3000"
+			[title]="
+				(timerYears || '00') + '/'
+				+ (timerMonths || '00') + '/'
+				+ (timerDays || '00') + ' '
+				+ (timerHours || '00') + ':'
+				+ (timerMins || '00') + ':'
+				+ (timerSecs || '00')
+			"
 		></app-timers>
 		<ng-container
 			*ngIf="!isSm && !isPopup"

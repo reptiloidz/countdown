@@ -1,8 +1,9 @@
 <label
-	*ngFor="let item of items; trackBy: trackBy"
+	*ngFor="let item of items; index as i; trackBy: trackBy;"
 	class="radio"
 	[ngClass]="radioClass"
 	[attr.title]="item?.text || null"
+	[for]="id + i"
 >
 	<span
 		class="radio__box"
@@ -19,5 +20,6 @@
 		[value]="item?.value"
 		(change)="onRadioChange($event)"
 		[attr.name]="name"
+		[id]="id + i"
 	>
 </label>

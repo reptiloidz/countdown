@@ -193,6 +193,14 @@
 			[hours]="timerHours"
 			[mins]="timerMins"
 			[secs]="timerSecs"
+			[title]="
+				(timerYears || '00') + '/'
+				+ (timerMonths || '00') + '/'
+				+ (timerDays || '00') + ' '
+				+ (timerHours || '00') + ':'
+				+ (timerMins || '00') + ':'
+				+ (timerSecs || '00')
+			"
 		></app-timers>
 		<ng-template #dateLoader>
 			<div class="root__loading-marker"></div>

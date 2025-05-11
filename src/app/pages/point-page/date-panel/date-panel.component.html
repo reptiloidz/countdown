@@ -1,6 +1,7 @@
 <app-panel
 	#panelCalendar
 	icon="calendar"
+	buttonTitle="Календарь"
 	buttonSize="lg"
 	[open]="calendarOpen"
 	(panelVisibilitySwitched)="switchCalendarPanel($event)"
@@ -258,6 +259,7 @@
 				size="sm"
 				icon="trash"
 				class="tabs__remove"
+				title="Удалить итерацию"
 				(click)="removeIteration(i)"
 			></button>
 		</ng-container>

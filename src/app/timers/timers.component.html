@@ -1,4 +1,7 @@
-<div class="timers__wrapper">
+<div
+	class="timers__wrapper"
+	aria-hidden="true"
+>
 	<div
 		*ngIf="years"
 		[@boardVisibility]="{value: ':enter', params: {delay: yearEnterValue}}"

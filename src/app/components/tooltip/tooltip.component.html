@@ -2,6 +2,7 @@
 <span
 	class="tooltip__body"
 	*ngIf="!isTooltipOff && hasOnboardingTimeExpired()"
+	aria-live="polite"
 >
 	<button
 		*ngIf="isOnboardingOn()"
