@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Renderer2, RendererFactory2 } from '@angular/core';
 import { PopupService } from './popup.service';
-import { Subject } from 'rxjs';
 
 describe('PopupService', () => {
 	let service: PopupService;

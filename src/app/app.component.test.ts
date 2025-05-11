@@ -12,8 +12,6 @@ describe('AppComponent', () => {
 	let component: AppComponent;
 	let fixture: ComponentFixture<AppComponent>;
 	let actionService: ActionService;
-	let notifyService: NotifyService;
-	let router: Router;
 	let mockRouter: jest.Mocked<Router>;
 
 	beforeEach(async () => {
@@ -37,8 +35,6 @@ describe('AppComponent', () => {
 		fixture = TestBed.createComponent(AppComponent);
 		component = fixture.componentInstance;
 		actionService = TestBed.inject(ActionService);
-		notifyService = TestBed.inject(NotifyService);
-		router = TestBed.inject(Router);
 	});
 
 	it('should create the app', () => {

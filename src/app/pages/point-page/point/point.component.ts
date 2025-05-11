@@ -27,6 +27,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { CheckboxComponent } from '../../../components/checkbox/checkbox.component';
 import { ModeStatsComponent } from 'src/app/components/mode-stats/mode-stats.component';
+import { DateType, TimeType } from 'src/app/types';
 
 @Component({
 	selector: 'app-point',
@@ -62,12 +63,12 @@ export class PointComponent implements OnInit, OnDestroy {
 	currentIterationIndex!: number;
 	selectedIterationDate = new Date();
 	userData!: UserExtraData;
-	timerYears: number | string | undefined;
-	timerMonths: number | string | undefined;
-	timerDays: number | string | undefined;
-	timerHours!: number | string;
-	timerMins!: number | string;
-	timerSecs!: number | string;
+	timerYears: DateType;
+	timerMonths: DateType;
+	timerDays: DateType;
+	timerHours!: TimeType;
+	timerMins!: TimeType;
+	timerSecs!: TimeType;
 	timerPercent = signal(0);
 	pausedTime: Date | undefined;
 	sound = false;

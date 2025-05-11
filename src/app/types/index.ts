@@ -11,3 +11,5 @@ export * from './iterationReasons.type';
 export * from './ngClass.type';
 export * from './differenceMode.type';
 export * from './notification.type';
+export * from './date.type';
+export * from './time.type';

@@ -24,17 +24,12 @@ export const getPointDate = ({
 				tzOffset,
 				isGreenwich,
 				isInvert,
-			})
+			}),
 		);
-	} else {
-		if (isGreenwich && (tzOffset > 0 || (tzOffset < 0 && isInvert))) {
-			pointDate = addMinutes(pointDate, tzOffset);
-		} else if (
-			isGreenwich &&
-			(tzOffset < 0 || (tzOffset > 0 && isInvert))
-		) {
-			pointDate = subMinutes(pointDate, tzOffset);
-		}
+	} else if (isGreenwich && (tzOffset > 0 || (tzOffset < 0 && isInvert))) {
+		pointDate = addMinutes(pointDate, tzOffset);
+	} else if (isGreenwich && (tzOffset < 0 || (tzOffset > 0 && isInvert))) {
+		pointDate = subMinutes(pointDate, tzOffset);
 	}
 
 	return timePart
@@ -43,6 +38,6 @@ export const getPointDate = ({
 				tzOffset,
 				isGreenwich,
 				isInvert,
-		  })
+			})
 		: pointDate;
 };

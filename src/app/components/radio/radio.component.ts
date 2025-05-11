@@ -26,10 +26,10 @@ export class RadioComponent implements ControlValueAccessor {
 
 	private _name: string | null = null;
 	@Input() get name() {
-		return this._name || this.formControlName;
+		return this._name ?? this.formControlName;
 	}
 	set name(value: string | null) {
-		this._name = value || this.formControlName;
+		this._name = value ?? this.formControlName;
 	}
 
 	onChange: (value: string) => void = () => {};

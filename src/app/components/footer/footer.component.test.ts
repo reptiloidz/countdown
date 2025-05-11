@@ -31,7 +31,6 @@ describe('FooterComponent', () => {
 	let component: FooterComponent;
 	let fixture: ComponentFixture<FooterComponent>;
 	let router: Router;
-	let route: ActivatedRoute;
 	let dataServiceMock: jest.Mocked<DataService>;
 	let authServiceMock: jest.Mocked<AuthService>;
 	let actionServiceMock: jest.Mocked<ActionService>;
@@ -136,7 +135,6 @@ describe('FooterComponent', () => {
 		}).compileComponents();
 
 		router = TestBed.inject(Router);
-		route = TestBed.inject(ActivatedRoute);
 
 		fixture = TestBed.createComponent(FooterComponent);
 		component = fixture.componentInstance;

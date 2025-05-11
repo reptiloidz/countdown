@@ -16,9 +16,6 @@ jest.mock('@angular/router', () => ({
 }));
 
 describe('unauthGuard', () => {
-	let authService: AuthService;
-	let router: Router;
-
 	beforeEach(() => {
 		const authServiceMock = {
 			get token(): string | null {
@@ -49,9 +46,6 @@ describe('unauthGuard', () => {
 				{ provide: Router, useValue: routerMock },
 			],
 		});
-
-		authService = TestBed.inject(AuthService);
-		router = TestBed.inject(Router);
 	});
 
 	it('должен вернуть false, если пользователь не аутентифицирован', () => {

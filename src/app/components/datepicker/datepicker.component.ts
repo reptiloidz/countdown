@@ -43,7 +43,7 @@ export class DatepickerComponent implements OnInit {
 	currentYear = getYear(new Date());
 	monthPatterns: NgxMaskConfig['patterns'] = {
 		A: {
-			pattern: new RegExp('[а-яА-Я0-9]'),
+			pattern: /[а-яА-Я0-9]/,
 		},
 	};
 

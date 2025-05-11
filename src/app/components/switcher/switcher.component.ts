@@ -25,7 +25,7 @@ import { SwitcherItem } from 'src/app/interfaces';
 export class SwitcherComponent implements ControlValueAccessor {
 	@Input() items: SwitcherItem[] = [];
 	@Input() value!: string;
-	@Input() mode: 'ghost' = 'ghost';
+	@Input() mode = 'ghost' as const;
 	@Input() size: 'sm' | undefined;
 	@Input() showTitle = false;
 	@Input() switcherListClass = '';
@@ -41,10 +41,10 @@ export class SwitcherComponent implements ControlValueAccessor {
 
 	private _name: string | null = null;
 	@Input() get name() {
-		return this._name || this.formControlName;
+		return this._name ?? this.formControlName;
 	}
 	set name(value: string | null) {
-		this._name = value || this.formControlName;
+		this._name = value ?? this.formControlName;
 	}
 
 	get valueName() {

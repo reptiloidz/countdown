@@ -1,5 +1,6 @@
 import { AUTO_STYLE, animate, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
+import { DateType, TimeType } from '../types';
 
 @Component({
 	selector: 'app-timers',
@@ -46,12 +47,12 @@ import { Component, Input } from '@angular/core';
 	],
 })
 export class TimersComponent {
-	@Input() years: number | string | undefined;
-	@Input() months: number | string | undefined;
-	@Input() days: number | string | undefined;
-	@Input() hours!: number | string;
-	@Input() mins!: number | string;
-	@Input() secs!: number | string;
+	@Input() years: DateType;
+	@Input() months: DateType;
+	@Input() days: DateType;
+	@Input() hours!: TimeType;
+	@Input() mins!: TimeType;
+	@Input() secs!: TimeType;
 	@Input() size: 'base' | 'sm' = 'base';
 	@Input() yearsLabel = 'Годы';
 	@Input() monthsLabel = 'Месяцы';

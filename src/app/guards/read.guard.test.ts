@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ActivationEnd } from '@angular/router';
 import { BehaviorSubject, of, Subject, Subscription, throwError } from 'rxjs';
 import { AuthService, DataService } from '../services';
 import { readGuard } from './read.guard';
-import { ActivationEnd } from '@angular/router';
 import { Point } from '../interfaces';
 
 const mockPoint = {

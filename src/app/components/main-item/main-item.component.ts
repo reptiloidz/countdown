@@ -19,6 +19,7 @@ import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { getClosestIteration, parseDate } from 'src/app/helpers';
 import { compareAsc, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { DateType, TimeType } from 'src/app/types';
 
 @Component({
 	selector: '[app-main-item]',
@@ -41,19 +42,19 @@ export class MainItemComponent implements OnInit, OnDestroy {
 
 	loading = false;
 	authorLoading = false;
-	timerYears: number | string | undefined;
-	timerMonths: number | string | undefined;
-	timerDays: number | string | undefined;
-	timerHours!: number | string;
-	timerMins!: number | string;
-	timerSecs!: number | string;
+	timerYears: DateType;
+	timerMonths: DateType;
+	timerDays: DateType;
+	timerHours!: TimeType;
+	timerMins!: TimeType;
+	timerSecs!: TimeType;
 	isBoardVisible = false;
 	isPointEdited = false;
 
 	_closestIteration!: {
 		date: Date;
 		index: number;
-		mode?: PointMode | undefined;
+		mode: PointMode | undefined;
 	};
 	_closestIterationDate = new Date();
 	_futureIterationDate: Date | undefined;

@@ -89,7 +89,7 @@ describe('DatepickerComponent', () => {
 		component.dateSelected({ date: expectedDate });
 		fixture.detectChanges();
 		const actualDate = component.date && new Date(component.date);
-		actualDate && actualDate.setHours(0, 0, 0, 0);
+		actualDate?.setHours(0, 0, 0, 0);
 		expect(actualDate).toEqual(expectedDate);
 	});
 

@@ -1,10 +1,10 @@
 /// <reference lib="webworker" />
 
-import { setIterationsMode } from "../helpers/setIterationsMode";
-import { sortDates } from "../helpers/sortDates";
-import { getPointDate } from "../helpers/getPointDate";
+import { setIterationsMode } from '../helpers/setIterationsMode';
+import { sortDates } from '../helpers/sortDates';
+import { getPointDate } from '../helpers/getPointDate';
 import { parseDate } from '../helpers/parseDate';
-import { Point } from "../interfaces/point.interface";
+import { Point } from '../interfaces/point.interface';
 import { Iteration } from '../interfaces/iteration.interface';
 
 addEventListener('message', ({ data }: { data: Point }) => {
@@ -31,17 +31,15 @@ addEventListener('message', ({ data }: { data: Point }) => {
 			) {
 				closestFuture = iteration;
 			}
-		} else {
-			if (
-				!closestPast ||
-				iterationDate >
-					getPointDate({
-						pointDate: parseDate(closestPast.date),
-						isGreenwich: data.greenwich,
-					})
-			) {
-				closestPast = iteration;
-			}
+		} else if (
+			!closestPast ||
+			iterationDate >
+				getPointDate({
+					pointDate: parseDate(closestPast.date),
+					isGreenwich: data.greenwich,
+				})
+		) {
+			closestPast = iteration;
 		}
 	});
 

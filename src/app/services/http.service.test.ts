@@ -33,7 +33,7 @@ jest.mock('@angular/fire/database', () => {
 		ref: jest.fn(() => ({})),
 		query: jest.fn((ref, ...modifiers) => {
 			const queryParams = modifiers.reduce((acc, cur) => {
-				return { ...acc, ...(cur._queryParams || {}) };
+				return { ...acc, ...(cur._queryParams ?? {}) };
 			}, {});
 			return { _queryParams: queryParams };
 		}),
@@ -197,7 +197,6 @@ describe('HttpService', () => {
 		const full = 'https://test.com/page';
 		const links = { a: {}, b: {} }; // уже 2 ссылки
 		const short = 'abc123';
-		const pushMock = jest.fn().mockResolvedValue({ key: 'id123' });
 		const objectValMock = objectVal as jest.Mock;
 
 		objectValMock

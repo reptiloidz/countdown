@@ -227,7 +227,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	addDocumentClickListener() {
 		this.documentClickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
 			const clickedInside =
-				this.elementRef.nativeElement.contains(event.target) || !document.contains(event.target as HTMLElement);
+				this.elementRef.nativeElement.contains(event.target) ?? !document.contains(event.target as HTMLElement);
 			!clickedInside && !this.notify.notificationsOpened && this.closeHandler();
 		});
 	}

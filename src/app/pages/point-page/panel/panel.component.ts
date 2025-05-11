@@ -74,7 +74,7 @@ export class PanelComponent {
 			}
 
 			el.classList.add('panel__content--animating');
-			el.style.height = el.getAttribute('data-height') || 'auto';
+			el.style.height = el.getAttribute('data-height') ?? 'auto';
 
 			requestAnimationFrame(() => {
 				el.style.height = newHeight;

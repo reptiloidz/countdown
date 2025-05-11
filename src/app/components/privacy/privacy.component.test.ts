@@ -22,7 +22,6 @@ describe('PrivacyComponent', () => {
 	});
 
 	it('should have the correct template URL', () => {
-		const componentDef = TestBed.createComponent(PrivacyComponent).componentRef.componentType;
 		expect(TestBed.createComponent(PrivacyComponent).componentRef.componentType).toBeDefined();
 	});
 });

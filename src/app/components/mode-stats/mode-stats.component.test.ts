@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModeStatsComponent } from './mode-stats.component';
-import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Point } from 'src/app/interfaces';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('ModeStatsComponent', () => {
 	let component: ModeStatsComponent;

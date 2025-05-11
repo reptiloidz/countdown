@@ -43,7 +43,6 @@ describe('DataService', () => {
 	let httpMock: HttpTestingController;
 	let httpService: HttpService;
 	let notifyService: NotifyService;
-	let actionService: ActionService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -62,7 +61,6 @@ describe('DataService', () => {
 		httpMock = TestBed.inject(HttpTestingController);
 		httpService = TestBed.inject(HttpService);
 		notifyService = TestBed.inject(NotifyService);
-		actionService = TestBed.inject(ActionService);
 	});
 
 	afterEach(() => {
@@ -131,6 +129,4 @@ describe('DataService', () => {
 
 		expect(service.editPoint).toHaveBeenCalled();
 	});
-
-	// TODO: добавить тестов для покрытия
 });

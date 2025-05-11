@@ -35,9 +35,6 @@ describe('EditPointComponent', () => {
 	let authServiceMock: jest.Mocked<AuthService>;
 	let actionServiceMock: jest.Mocked<ActionService>;
 	let notifyServiceMock: jest.Mocked<NotifyService>;
-	let router: Router;
-	let route: ActivatedRoute;
-	let cdr: ChangeDetectorRef;
 
 	beforeAll(() => {
 		(window as any).ResizeObserver = jest.fn(() => ({
@@ -103,10 +100,6 @@ describe('EditPointComponent', () => {
 			],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
-
-		router = TestBed.inject(Router);
-		route = TestBed.inject(ActivatedRoute);
-		cdr = TestBed.inject(ChangeDetectorRef);
 
 		fixture = TestBed.createComponent(EditPointComponent);
 		component = fixture.componentInstance;

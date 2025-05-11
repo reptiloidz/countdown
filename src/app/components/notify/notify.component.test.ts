@@ -52,7 +52,6 @@ describe('NotifyComponent', () => {
 		fixture = TestBed.createComponent(NotifyComponent);
 		component = fixture.componentInstance;
 		notifyService = TestBed.inject(NotifyService);
-		// fixture.detectChanges();
 	});
 
 	it('should create the component', () => {

@@ -58,7 +58,7 @@ describe('AuthService', () => {
 				return !!this.token;
 			},
 			setToken: function (tokenObj?: { token?: string; id?: string }) {
-				if (tokenObj && tokenObj.token && tokenObj.id) {
+				if (tokenObj?.token && tokenObj.id) {
 					localStorage.setItem('fb-token', tokenObj.token);
 					localStorage.setItem('fb-uid', tokenObj.id);
 					const expDate = new Date();

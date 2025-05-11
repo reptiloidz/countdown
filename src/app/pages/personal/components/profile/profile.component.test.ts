@@ -1,8 +1,6 @@
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { ProfileComponent } from './profile.component';
-import { AuthService } from '../../../../services';
-import { DataService } from '../../../../services';
-import { NotifyService } from '../../../../services';
+import { AuthService, DataService, NotifyService } from '../../../../services';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { DatepickerComponent } from 'src/app/components/datepicker/datepicker.component';

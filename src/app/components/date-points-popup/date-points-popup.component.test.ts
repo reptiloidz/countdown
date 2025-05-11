@@ -44,7 +44,7 @@ describe('DatePointsPopupComponent', () => {
 			events: new Subject(),
 		} as unknown as jest.Mocked<Router>;
 
-		await TestBed.configureTestingModule({
+		TestBed.configureTestingModule({
 			declarations: [DatePointsPopupComponent, CheckEditablePointsPipe],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },

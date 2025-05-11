@@ -4,7 +4,6 @@ import { authGuard } from './auth.guard';
 import { TestBed } from '@angular/core/testing';
 
 describe('authGuard', () => {
-	let authService: AuthService;
 	let router: Router;
 
 	beforeEach(() => {
@@ -38,7 +37,6 @@ describe('authGuard', () => {
 			],
 		});
 
-		authService = TestBed.inject(AuthService);
 		router = TestBed.inject(Router);
 	});
 

@@ -38,9 +38,9 @@ export const getPointFromUrl = (data: any): Point | undefined => {
 	const fullDate = format(dateParsed, data.date ? Constants.fullDateFormat : Constants.reallyFullDateFormat);
 
 	return {
-		color: data.color || 'gray',
-		title: data.title || '',
-		description: data.description || null,
+		color: data.color ?? 'gray',
+		title: data.title ?? '',
+		description: data.description ?? null,
 		dates: [
 			{
 				date: fullDate || format(new Date(), data.date ? Constants.fullDateFormat : Constants.reallyFullDateFormat),

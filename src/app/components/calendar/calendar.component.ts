@@ -331,7 +331,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			this.selectedDate = date;
 		}
 
-		this.activeMode = mode as CalendarMode;
+		this.activeMode = mode;
 
 		/**
 		 * Записываем _visibleDate напрямую, чтобы не вызывать лишних действий через геттер
@@ -488,13 +488,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			(this.disabledAfter && isAfter(date, this.getStartOfDate(this.disabledAfter))) ||
 			(this.disabledBefore && isBefore(date, this.getStartOfDate(this.disabledBefore)))
 		);
-	}
-
-	getAllowedPoints(item: any) {
-		// TODO: метод не используется?
-		// Фильтруем доступные события.
-		// Если выводить кнопку попапа, то уже для всех дат с событиями
-		return item.points?.filter((point: Point) => !point.public) || [];
 	}
 
 	switchCalendarMode(mode: string) {

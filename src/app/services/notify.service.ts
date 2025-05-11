@@ -72,7 +72,7 @@ export class NotifyService {
 			date: new Date(),
 			title: notification.title,
 			text: notification.text,
-			view: notification.view || 'neutral',
+			view: notification.view ?? 'neutral',
 			autoremove: notification.autoremove,
 			short: notification.short,
 			component: notification.component,

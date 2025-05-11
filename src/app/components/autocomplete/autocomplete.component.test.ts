@@ -77,7 +77,7 @@ describe('AutocompleteComponent', () => {
 		// Проверяем, что внутренние свойства обновились правильно
 		expect(component.value).toBe(value);
 
-		const expectedVisibleValue = mockAutocompleteList.find(option => option.value === value)?.key || '';
+		const expectedVisibleValue = mockAutocompleteList.find(option => option.value === value)?.key ?? '';
 
 		expect(component.visibleValue).toBe(expectedVisibleValue);
 	});

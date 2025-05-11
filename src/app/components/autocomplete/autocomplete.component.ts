@@ -50,7 +50,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	constructor(private action: ActionService) {}
 
 	ngOnInit(): void {
-		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() || '';
+		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() ?? '';
 		this.autocompleteListFiltered = this.autocompleteList;
 
 		this.subscriptions.add(
@@ -69,7 +69,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
 	changeHandler(value: string | number) {
 		this.autocompleteChanged.emit(value);
-		this.visibleValue = getKeyByValue(this.autocompleteList, value)?.toString() || this.visibleValue;
+		this.visibleValue = getKeyByValue(this.autocompleteList, value)?.toString() ?? this.visibleValue;
 		this.value = value;
 	}
 
@@ -105,6 +105,6 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	}
 
 	closeHandler() {
-		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() || this.visibleValue;
+		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() ?? this.visibleValue;
 	}
 }

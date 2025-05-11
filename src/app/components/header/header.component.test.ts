@@ -12,7 +12,6 @@ describe('HeaderComponent', () => {
 	let component: HeaderComponent;
 	let fixture: ComponentFixture<HeaderComponent>;
 	let router: Router;
-	let route: ActivatedRoute;
 	let authService: AuthService;
 	let popupService: PopupService;
 
@@ -46,7 +45,6 @@ describe('HeaderComponent', () => {
 		}).compileComponents();
 
 		router = TestBed.inject(Router);
-		route = TestBed.inject(ActivatedRoute);
 		authService = TestBed.inject(AuthService);
 		popupService = TestBed.inject(PopupService);
 

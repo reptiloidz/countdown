@@ -233,8 +233,7 @@ export class GenerateIterationsComponent implements OnInit {
 				text: '3-й с&nbsp;конца день месяца',
 				value: 'thirdFromTheEndDayMonth',
 				checked: !dayNumberSelected,
-			}) &&
-			(dayNumberSelected = true);
+			});
 
 		this.dayWeekNumber &&
 			this.dayWeekNumber < 5 &&

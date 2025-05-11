@@ -387,7 +387,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		// Делаем отложенное срабатывание пересчёта "чекнутых" событий,
 		// чтобы кнопка-триггер не исчезла раньше времени и дроп не закрылся
 		setTimeout(() => {
-			Array.from(this.datePointsList.nativeElement.children).map(
+			Array.from(this.datePointsList.nativeElement.children).forEach(
 				(item: any) =>
 					item?.querySelector('input:not(:disabled)') && (item.querySelector('input:not(:disabled)').checked = check),
 			);
@@ -412,7 +412,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			navigate?: boolean;
 		} = { points: this.points },
 	) {
-		this.sortType = sortType ? sortType : this.sortType;
+		this.sortType = sortType ?? this.sortType;
 
 		navigate &&
 			this.router.navigate([], {
@@ -435,7 +435,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	resetColors() {
 		if (this.colorList) {
-			Array.from(this.colorList.nativeElement.children).map(
+			Array.from(this.colorList.nativeElement.children).forEach(
 				(item: any) => item?.querySelector('input') && (item.querySelector('input').checked = false),
 			);
 			this.changeFilters();

@@ -5,6 +5,9 @@ describe('LetDirective', () => {
 	let viewContainerRef: ViewContainerRef;
 	let templateRef: TemplateRef<any>;
 	let mockEmbeddedView: EmbeddedViewRef<any>;
+	templateRef = {
+		// ничего не нужно мокать, он просто передаётся
+	} as TemplateRef<any>;
 
 	beforeEach(() => {
 		mockEmbeddedView = {} as EmbeddedViewRef<any>;
@@ -33,5 +36,19 @@ describe('LetDirective', () => {
 	it('should call createEmbeddedView with correct arguments', () => {
 		new LetDirective(viewContainerRef, templateRef);
 		expect(viewContainerRef.createEmbeddedView).toHaveBeenCalledWith(templateRef, expect.any(Object));
+	});
+
+	it('should expose appLet via context', () => {
+		let contextPassed: any;
+		(viewContainerRef.createEmbeddedView as jest.Mock).mockImplementation((_template, context) => {
+			contextPassed = context;
+			return mockEmbeddedView;
+		});
+
+		const directive = new LetDirective(viewContainerRef, templateRef);
+		directive.appLet = 'test-value';
+
+		expect(contextPassed.$implicit).toBe('test-value');
+		expect(contextPassed.appLet).toBe('test-value');
 	});
 });

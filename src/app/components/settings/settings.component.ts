@@ -56,11 +56,11 @@ export class SettingsComponent implements OnInit {
 	}
 
 	get themeValue() {
-		return localStorage.getItem('theme') || this.themeValueDefault;
+		return localStorage.getItem('theme') ?? this.themeValueDefault;
 	}
 
 	get soundValue() {
-		return localStorage.getItem('sound') || this.soundValueDefault;
+		return localStorage.getItem('sound') ?? this.soundValueDefault;
 	}
 
 	changeTheme(theme: string) {

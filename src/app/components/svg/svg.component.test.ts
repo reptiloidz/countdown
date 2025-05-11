@@ -5,7 +5,6 @@ import { Renderer2, ElementRef, ChangeDetectorRef } from '@angular/core';
 describe('SvgComponent', () => {
 	let component: SvgComponent;
 	let fixture: ComponentFixture<SvgComponent>;
-	let renderer: Renderer2;
 	let elementRef: ElementRef<SVGElement>;
 
 	beforeEach(async () => {
@@ -22,7 +21,6 @@ describe('SvgComponent', () => {
 
 		fixture = TestBed.createComponent(SvgComponent);
 		component = fixture.componentInstance;
-		renderer = fixture.debugElement.injector.get(Renderer2);
 		elementRef = fixture.debugElement.injector.get(ElementRef);
 		fixture.detectChanges();
 	});

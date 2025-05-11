@@ -354,7 +354,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	removeIteration(i: number) {
 		let newDatesArray = this.dates?.slice(0);
-		newDatesArray && newDatesArray.splice(i, 1);
+		newDatesArray?.splice(i, 1);
 
 		this.notify
 			.confirm({
@@ -438,7 +438,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	checkAllIterations(check = true, iterations?: Iteration[]) {
 		if (iterations?.length) {
-			this.iterationsChecked.map((item, i) => {
+			this.iterationsChecked.forEach((item, i) => {
 				if (iterations.some(iteration => iteration.date === this.point?.dates[i].date)) {
 					this.iterationsChecked[i] = check;
 				}

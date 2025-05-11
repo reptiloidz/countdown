@@ -108,8 +108,6 @@
 	&--header {
 		@include media-breakpoint-down(md) {
 			padding-top: 10px;
-			// Просто так обнулять нельзя, в профиле уродство. Но в других местах большой отступ
-			// padding-bottom: 0;
 		}
 
 		@include media-breakpoint-down(sm) {

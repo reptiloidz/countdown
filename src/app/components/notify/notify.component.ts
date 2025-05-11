@@ -178,7 +178,7 @@ export class NotifyComponent implements OnInit, OnDestroy {
 				next: list => {
 					this.notifyList = list;
 
-					this.promptType = this.notifyList.find(item => item.prompt)?.type || 'text';
+					this.promptType = this.notifyList.find(item => item.prompt)?.type ?? 'text';
 
 					this.form = new FormGroup({
 						email: new FormControl(null, [
@@ -207,10 +207,9 @@ export class NotifyComponent implements OnInit, OnDestroy {
 									},
 									password: {
 										enough: {
-											value: !(
-												this.form.controls['password'].errors?.['minlength']?.actualLength <
-												this.form.controls['password'].errors?.['minlength']?.requiredLength
-											),
+											value:
+												this.form.controls['password'].errors?.['minlength']?.actualLength >=
+												this.form.controls['password'].errors?.['minlength']?.requiredLength,
 										},
 										required: {
 											value: !this.form.controls['password'].errors?.['required'],

@@ -88,7 +88,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 						this.point = point;
 						const iterationNumber = this.iteration || 1;
 
-						if (this.point && this.point.dates && !this.isTimer && !this.isCreateUrl) {
+						if (this.point?.dates && !this.isTimer && !this.isCreateUrl) {
 							const googleLinkDate =
 								point?.dates[iterationNumber - 1]?.date &&
 								formatISO(parseDate(point?.dates[iterationNumber - 1]?.date, this.isTimer, this.isTimer), {

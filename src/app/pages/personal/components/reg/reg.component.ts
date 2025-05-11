@@ -113,10 +113,9 @@ export class RegComponent implements OnInit, OnDestroy {
 							},
 							password: {
 								enough: {
-									value: !(
-										this.passwordsForm.controls['password'].errors?.['minlength']?.actualLength <
-										this.passwordsForm.controls['password'].errors?.['minlength']?.requiredLength
-									),
+									value:
+										this.passwordsForm.controls['password'].errors?.['minlength']?.actualLength >=
+										this.passwordsForm.controls['password'].errors?.['minlength']?.requiredLength,
 								},
 								required: {
 									value: !this.passwordsForm.controls['password'].errors?.['required'],
@@ -128,10 +127,9 @@ export class RegComponent implements OnInit, OnDestroy {
 									value: !this.passwordsForm.errors?.['notSame'],
 								},
 								enough: {
-									value: !(
-										this.passwordsForm.controls['passwordRepeat'].errors?.['minlength']?.actualLength <
-										this.passwordsForm.controls['passwordRepeat'].errors?.['minlength']?.requiredLength
-									),
+									value:
+										this.passwordsForm.controls['passwordRepeat'].errors?.['minlength']?.actualLength >=
+										this.passwordsForm.controls['passwordRepeat'].errors?.['minlength']?.requiredLength,
 								},
 								required: {
 									value: !this.passwordsForm.controls['passwordRepeat'].errors?.['required'],
