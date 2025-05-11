@@ -82,8 +82,8 @@
 							'calendar__button--now': item.nowDate,
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
-							'calendar__button--readonly': staticMode,
-							'state': !staticMode
+							'calendar__button--readonly': staticMode || (staticCellMode && !item.points.length && !item.iterations.length),
+							'state': !(staticMode || (staticCellMode && !item.points.length && !item.iterations.length))
 						}"
 						[tabIndex]="staticMode ? -1 : 0"
 						[disabled]="item.disabledDate"

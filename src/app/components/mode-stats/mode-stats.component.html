@@ -3,7 +3,7 @@
 		От:
 		<app-datepicker
 			[date]="startDate()"
-			[disabledBefore]="firstDisable"
+			[disabledBefore]="firstIterationDate()"
 			[disabledAfter]="finalDate()"
 			(datePicked)="setStartDate($event)"
 			dropClass="datepicker--popup-xs"

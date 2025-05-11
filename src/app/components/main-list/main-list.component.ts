@@ -295,7 +295,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	trackByFilteredPoints(index: number, item: Point): string {
-		return item.id || index.toString();
+		return item.id ?? index.toString();
 	}
 
 	getAvailablePointsVisibility() {
@@ -361,15 +361,16 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.searchInput.value = '';
 		this.resetColors();
 		this.changeFilters();
+		this.action.uncheckAllPoints();
 	}
 
 	changeModes(value?: string) {
-		this.modesValue = ((value || localStorage.getItem('modesValue')) as 'list' | 'grid') || 'grid';
+		this.modesValue = ((value ?? localStorage.getItem('modesValue')) as 'list' | 'grid') || 'grid';
 		value && localStorage.setItem('modesValue', value);
 	}
 
 	checkPoint() {
-		this.action.getCheckedPoints(this.pointsList?.nativeElement || this.elementRef?.nativeElement);
+		this.action.getCheckedPoints(this.pointsList?.nativeElement ?? this.elementRef?.nativeElement);
 		this.cdr.markForCheck();
 	}
 

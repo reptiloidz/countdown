@@ -72,6 +72,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	@Input() disabledBefore: Date | undefined;
 	@Input() disabledAfter: Date | undefined;
 	@Input() staticMode = false;
+	@Input() staticCellMode = false;
 
 	/**
 	 * При получении значения всегда обновляем календарь, если она обновилась
@@ -259,7 +260,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		points: Point[];
 		iterations: Iteration[];
 	}) {
-		if (this.staticMode) return;
+		if (this.staticMode || (this.staticCellMode && !points.length && !iterations.length)) return;
 
 		let data: Point[] | Iteration[] = [];
 		if (points.length) {

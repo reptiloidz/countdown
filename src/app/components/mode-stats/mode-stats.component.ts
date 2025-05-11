@@ -9,7 +9,7 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { differenceInMinutes, Duration, endOfYear, formatDuration, startOfYear, subMinutes, subYears } from 'date-fns';
+import { differenceInMinutes, Duration, endOfYear, formatDuration, startOfYear, subYears } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { minutesInDay, minutesInHour, minutesInMonth, minutesInYear } from 'date-fns/constants';
 import { parseDate, sortDates } from 'src/app/helpers';
@@ -126,10 +126,6 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 
 	get now() {
 		return new Date();
-	}
-
-	get firstDisable() {
-		return subMinutes(this.firstIterationDate(), 1);
 	}
 
 	reset() {
