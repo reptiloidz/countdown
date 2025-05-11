@@ -8,8 +8,8 @@ import {
 	Subject,
 	Subscription,
 	concatMap,
-	take,
 	firstValueFrom,
+	take,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserPoint, Point, UserProfile, UserExtraData } from '../interfaces';
@@ -84,6 +84,8 @@ export class AuthService implements OnDestroy {
 										title: `Заполните профиль`,
 									});
 								});
+						} else {
+							this.router.navigate(['/']);
 						}
 					},
 				}),

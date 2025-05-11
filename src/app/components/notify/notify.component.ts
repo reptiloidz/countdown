@@ -227,11 +227,13 @@ export class NotifyComponent implements OnInit, OnDestroy {
 					this.notifyList.forEach(item => {
 						if (item.component) {
 							this.cdr.markForCheck();
-							const componentRef = this.notifyContent.createComponent(item.component);
+							if (this.notifyContent?.element.nativeElement && !this.notifyContent.length) {
+								const componentRef = this.notifyContent?.createComponent(item.component);
 
-							if (item.inputs) {
-								for (const [key, value] of Object.entries(item.inputs)) {
-									(componentRef.instance as any)[key] = value;
+								if (item?.inputs && componentRef) {
+									for (const [key, value] of Object.entries(item.inputs)) {
+										(componentRef.instance as any)[key] = value;
+									}
 								}
 							}
 						}

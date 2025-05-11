@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, OnDestroy, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { PrivacyComponent } from 'src/app/components/privacy/privacy.component';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
@@ -182,6 +182,7 @@ export class RegComponent implements OnInit, OnDestroy {
 					password: this.passwordsForm.get('password')?.value,
 					returnSecureToken: true,
 				})
+				.pipe(take(1))
 				.subscribe({
 					next: data => {
 						this.isLoading = false;
