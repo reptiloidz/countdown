@@ -207,9 +207,10 @@ export class NotifyComponent implements OnInit, OnDestroy {
 									},
 									password: {
 										enough: {
-											value:
-												this.form.controls['password'].errors?.['minlength']?.actualLength >=
-												this.form.controls['password'].errors?.['minlength']?.requiredLength,
+											value: !(
+												this.form.controls['password'].errors?.['minlength']?.actualLength <
+												this.form.controls['password'].errors?.['minlength']?.requiredLength
+											),
 										},
 										required: {
 											value: !this.form.controls['password'].errors?.['required'],

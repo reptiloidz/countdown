@@ -334,9 +334,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 								value: !this.formPassword.controls['new-password'].errors?.['required'],
 							},
 							enough: {
-								value:
-									this.formPassword.controls['new-password'].errors?.['minlength']?.actualLength >=
-									this.formPassword.controls['new-password'].errors?.['minlength']?.requiredLength,
+								value: !(
+									this.formPassword.controls['new-password'].errors?.['minlength']?.actualLength <
+									this.formPassword.controls['new-password'].errors?.['minlength']?.requiredLength
+								),
 							},
 							same: {
 								value: !(
