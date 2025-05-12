@@ -46,7 +46,7 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 
 	private subscriptions = new Subscription();
 
-	id = 'cb-' + Math.floor(Math.random() * 10000);
+	id = 'i-' + Math.floor(Math.random() * 10000000);
 
 	@HostBinding('attr.for') for = this.id;
 

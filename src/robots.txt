@@ -1,0 +1,22 @@
+# robots.txt for https://cd.funnyroger.ru
+
+# Базовые правила для всех ботов
+User-agent: *
+# Разрешаем доступ ко всем публичным страницам
+Allow: /
+
+# Запрещаем индексацию страниц авторизации и личного кабинета
+Disallow: /auth
+Disallow: /reg
+Disallow: /profile
+
+# Запрещаем индексацию страниц создания и редактирования событий
+Disallow: /create
+Disallow: /create-url
+Disallow: /edit/
+
+# (При необходимости можно также запретить доступ к 404-странице)
+Disallow: /no-page
+
+# Путь к sitemap
+Sitemap: https://cd.funnyroger.ru/sitemap.xml

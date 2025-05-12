@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Главная страница -->
+  <url>
+    <loc>https://cd.funnyroger.ru/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Универсальная точка доступа к событиям (стартовая страница со списком) -->
+  <url>
+    <loc>https://cd.funnyroger.ru/</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Статическая страница просмотра URL (если отличается от /point/…) -->
+  <!-- <url>
+    <loc>https://cd.funnyroger.ru/url</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url> -->
+
+  <!-- Пример динамических URL для событий -->
+  <!--
+    Здесь ваш скрипт должен перебрать все публичные события
+    и сгенерировать для каждого:
+  -->
+  <!--  
+  <url>
+    <loc>https://cd.funnyroger.ru/point/123</loc>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  -->
+
+  <!-- Если у вас есть статические страницы (например, политика конфиденциальности), добавьте их здесь -->
+  <!--
+  <url>
+    <loc>https://cd.funnyroger.ru/privacy-policy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  -->
+
+</urlset>

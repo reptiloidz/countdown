@@ -41,7 +41,7 @@ export class SwitcherComponent implements ControlValueAccessor {
 
 	private _name: string | null = null;
 
-	id = 'cb-' + Math.floor(Math.random() * 10000);
+	id = 'i-' + Math.floor(Math.random() * 10000000);
 
 	@Input() get name() {
 		return this._name ?? this.formControlName;
