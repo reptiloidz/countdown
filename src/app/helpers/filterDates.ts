@@ -45,7 +45,7 @@ export const filterIterations = ({
 	return !iterations ? [] : iterations?.filter(iteration => findIterations({ iteration, date, activeMode, greenwich }));
 };
 
-function findIterations({
+export const findIterations = ({
 	iteration,
 	date,
 	activeMode,
@@ -55,7 +55,7 @@ function findIterations({
 	date: Date;
 	activeMode: CalendarMode;
 	greenwich: boolean;
-}) {
+}) => {
 	let iterationDate = parseDate(iteration.date);
 
 	iterationDate = new Date(+iterationDate - (greenwich ? iterationDate.getTimezoneOffset() : 0) * millisecondsInMinute);
@@ -70,4 +70,4 @@ function findIterations({
 		default:
 			return isSameDay(iterationDate, date);
 	}
-}
+};

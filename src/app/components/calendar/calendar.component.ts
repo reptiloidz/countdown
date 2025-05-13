@@ -40,7 +40,7 @@ import {
 import { ru } from 'date-fns/locale';
 import { Subscription, concatWith, filter, tap } from 'rxjs';
 import { calendarModeNames, Constants } from 'src/app/enums';
-import { filterIterations, filterPoints } from 'src/app/helpers';
+import { filterIterations, filterPoints, findIterations } from 'src/app/helpers';
 import { CalendarDate, Iteration, Point, SwitcherItem } from 'src/app/interfaces';
 import { ActionService, DataService } from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
@@ -73,6 +73,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	@Input() disabledAfter: Date | undefined;
 	@Input() staticMode = false;
 	@Input() staticCellMode = false;
+	@Input() iterationsChecked: boolean[] = [];
 
 	/**
 	 * При получении значения всегда обновляем календарь, если она обновилась
@@ -163,6 +164,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.generateCalendar({
 						force: true,
+					});
+				},
+			}),
+		);
+
+		this.subscriptions.add(
+			this.action.eventIterationsChecked$.subscribe({
+				next: () => {
+					requestAnimationFrame(() => {
+						this.generateCalendar({
+							force: true,
+						});
+						this.cdr.markForCheck();
 					});
 				},
 			}),
@@ -412,6 +426,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							activeMode: this.activeMode,
 							greenwich: this.point?.greenwich || false,
 						}),
+						itemsChecked: this.filterChecked(thisDate),
 					});
 				} else {
 					let thisDate = addDays(previousDate, 1);
@@ -457,6 +472,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 							activeMode: this.activeMode,
 							greenwich: this.point?.greenwich || false,
 						}),
+						itemsChecked: this.filterChecked(thisDate),
 					});
 				}
 			}
@@ -468,6 +484,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
 			fullArray.push(rowArray);
 		}
 		this.calendarArray = fullArray;
+	}
+
+	filterChecked(date: Date) {
+		if (this.iterations?.length) {
+			return this.iterations.filter(
+				(iteration, index) =>
+					findIterations({
+						iteration,
+						date,
+						activeMode: this.activeMode,
+						greenwich: !!this.point?.greenwich,
+					}) && this.iterationsChecked[index],
+			).length;
+		} else if (this.points?.length) {
+			return 0;
+			// TODO: доделать для событий
+		} else {
+			return 0;
+		}
 	}
 
 	isDateMatch(date: Date, matchMode: 'visible' | 'selected' | 'now') {

@@ -83,6 +83,7 @@
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
 							'calendar__button--readonly': staticMode || (staticCellMode && !item.points.length && !item.iterations.length),
+							'calendar__button--checked': item.itemsChecked,
 							'state': !(staticMode || (staticCellMode && !item.points.length && !item.iterations.length))
 						}"
 						[tabIndex]="staticMode ? -1 : 0"
@@ -93,6 +94,7 @@
 							points: item.points,
 							iterations: item.iterations
 						})"
+						[title]="item.itemsChecked ? 'Отмечено: ' + item.itemsChecked : ''"
 					>
 						<ng-container *ngIf="item.points.length || item.iterations.length">
 							<span

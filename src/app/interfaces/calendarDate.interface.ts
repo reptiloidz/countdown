@@ -10,4 +10,5 @@ export interface CalendarDate {
 	otherMonthDate?: boolean;
 	points: Point[];
 	iterations: Iteration[];
+	itemsChecked: number;
 }

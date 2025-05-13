@@ -161,6 +161,19 @@
 			pointer-events: none;
 		}
 
+		&--checked {
+			&::after {
+				content: '';
+				position: absolute;
+				top: 4px;
+				right: 4px;
+				width: 4px;
+				height: 4px;
+				border-radius: 50%;
+				background-color: rgba(var(--c-bg-primary), 0.3);
+			}
+		}
+
 		&:disabled {
 			--calendar-button-cl: rgba(var(--c-text-primary), 0.1);
 

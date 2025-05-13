@@ -423,6 +423,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	checkIteration(event: Event, i: number) {
+		this.action.iterationsChecked();
 		this.iterationsChecked[i] = (event.target as HTMLInputElement).checked;
 	}
 
@@ -447,6 +448,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.updateIterationsCheckedList(check);
 		}
 		this.updateIterationCheckboxes();
+		this.action.iterationsChecked();
 	}
 
 	calendarCreated() {
