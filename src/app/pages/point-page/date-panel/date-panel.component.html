@@ -179,7 +179,7 @@
 						mode="negative"
 						icon="trash"
 						[attr.disabled]="iterationsCheckedForRemove.length ? null : true"
-						title="Удалить выбранные итерации"
+						[title]="'Удалить выбранные итерации (' + iterationsCheckedForRemove.length + '&nbsp;шт.)'"
 						(click)="removeCheckedIterations()"
 					></button>
 				</div>

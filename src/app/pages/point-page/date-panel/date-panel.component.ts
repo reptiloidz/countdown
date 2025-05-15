@@ -377,7 +377,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 		this.notify
 			.confirm({
-				title: 'Удалить выбранные итерации? Если выбраны все, останется только последняя',
+				title: `Удалить выбранные итерации (${this.iterationsCheckedForRemove.length} шт.)? Если выбраны все, останется только последняя`,
 			})
 			.subscribe({
 				next: () => {

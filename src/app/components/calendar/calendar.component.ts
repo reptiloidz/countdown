@@ -498,8 +498,20 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					}) && this.iterationsChecked[index],
 			).length;
 		} else if (this.points?.length) {
-			return 0;
-			// TODO: доделать для событий
+			return this.points.filter(item => {
+				return (
+					item.id &&
+					this.action.checkedPoints.includes(item.id) &&
+					item.dates.some(iteration =>
+						findIterations({
+							iteration,
+							date,
+							activeMode: this.activeMode,
+							greenwich: item.greenwich,
+						}),
+					)
+				);
+			}).length;
 		} else {
 			return 0;
 		}
