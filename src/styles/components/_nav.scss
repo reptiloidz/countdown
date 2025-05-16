@@ -105,6 +105,12 @@
 		}
 	}
 
+	&__qr {
+		@include media-breakpoint-down(md) {
+			display: none;
+		}
+	}
+
 	&--header {
 		@include media-breakpoint-down(md) {
 			padding-top: 10px;
