@@ -175,7 +175,7 @@ export class DataService {
 	} = {}) {
 		this.notify
 			.confirm({
-				title: `Удалить ${id ? 'событие' : 'выбранные события ' + '(' + this.action.checkedPoints.length + ' шт.)'}?`,
+				title: `Удалить ${id ? 'событие' : 'выбранные события ' + '(' + (list?.length ?? this.action.checkedPoints.length) + ' шт.)'}?`,
 			})
 			.subscribe({
 				next: () => {

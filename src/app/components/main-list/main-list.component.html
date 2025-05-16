@@ -368,7 +368,7 @@
 			[size]="size"
 			mode="negative"
 			icon="trash"
-			title="Удалить выбранные события"
+			[title]="'Удалить выбранные события (' + datePointsChecked.length + '&nbsp;шт.)'"
 			(click)="removeDateCheckedPoints()"
 		></button>
 	</ng-container>

@@ -55,6 +55,10 @@ export class FooterComponent implements OnInit, OnDestroy {
 		return this.point?.public || false;
 	}
 
+	get pointsRemovingLength() {
+		return this.action.checkedPoints.length;
+	}
+
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.router.events

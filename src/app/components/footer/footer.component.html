@@ -5,7 +5,7 @@
 			size="lg"
 			mode="positive"
 			icon="document-check"
-			title="Выбрать все доступные события"
+			title="Выбрать все видимые события"
 			(click)="checkAllPoints()"
 		></button>
 		<ng-container *ngIf="pointsChecked">
@@ -22,7 +22,7 @@
 				size="lg"
 				mode="negative"
 				icon="trash"
-				title="Удалить выбранные события"
+				[title]="'Удалить выбранные события (' + pointsRemovingLength + '&nbsp;шт.)'"
 				(click)="removeAllCheckedPoints()"
 			></button>
 		</ng-container>

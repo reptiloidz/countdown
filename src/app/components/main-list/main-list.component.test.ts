@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainListComponent } from './main-list.component';
 import { DataService, ActionService, AuthService, PopupService } from 'src/app/services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
@@ -27,6 +27,7 @@ describe('MainListComponent', () => {
 		};
 
 		const actionServiceMock = {
+			eventPointsCheckedAll$: new Subject(),
 			pointsFetched: jest.fn(),
 			uncheckAllPoints: jest.fn(),
 			hasEditablePoints: jest.fn(),

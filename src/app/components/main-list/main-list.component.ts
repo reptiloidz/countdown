@@ -241,6 +241,16 @@ export class MainListComponent implements OnInit, OnDestroy {
 			}),
 		);
 
+		this.subscriptions.add(
+			this.action.eventPointsCheckedAll$.subscribe({
+				next: () => {
+					requestAnimationFrame(() => {
+						this.action.getCheckedPoints(this.pointsList.nativeElement);
+					});
+				},
+			}),
+		);
+
 		this.data.fetchAllPoints();
 		this.loading = true;
 		this.changeModes();
