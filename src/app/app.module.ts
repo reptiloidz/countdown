@@ -24,12 +24,12 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { ClockModule } from './components/clock/clock.module';
 import { BoardModule } from './components/board/board.module';
 import { TimersModule } from './timers/timers.module';
-import { MainItemModule } from './components/main-item/main-item.module';
 import { CommonModule } from '@angular/common';
 import { SvgModule } from './components/svg/svg.module';
 import { LinkPointComponent } from './components/link-point/link-point.component';
 import { environment } from 'src/environments/environment';
-import { QrCodeComponent } from 'ng-qrcode';
+import { QrCodeModule } from 'ng-qrcode';
+import { MainItemModule } from './components/main-item/main-item.module';
 
 @NgModule({
 	declarations: [
@@ -60,7 +60,7 @@ import { QrCodeComponent } from 'ng-qrcode';
 		SvgModule,
 		ClockModule,
 		MainItemModule,
-		QrCodeComponent,
+		QrCodeModule,
 	],
 	providers: [
 		provideAnimations(),
