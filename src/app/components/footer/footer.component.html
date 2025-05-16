@@ -80,7 +80,6 @@
 			pointId && hasAccess && !isEdit ? 'now' :
 			'createlink'
 		"
-		[text]="isUrl ? 'Создать и&nbsp;копировать короткую ссылку' : 'Копировать ссылку'"
 	>
 		<button
 			app-button
@@ -92,6 +91,17 @@
 			[loading]="shareLinkLoading"
 			title="Поделиться ссылкой"
 		></button>
+		<ng-template #tooltipContent>
+			<qr-code
+				[value]="location + (this.pointId ?? link())"
+				errorCorrectionLevel="M"
+				[size]="178"
+				[margin]="1"
+			/>
+			<p>
+				{{ isUrl ? 'Создать и&nbsp;копировать короткую ссылку' : 'Копировать ссылку' }}
+			</p>
+		</ng-template>
 	</div>
 	<a
 		*ngIf="((pointId && !isEdit) || isUrl) && !isTimer"

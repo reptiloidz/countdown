@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router, Event, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { format, formatISO } from 'date-fns';
-import { filter, Subscription, mergeMap, combineLatestWith, of, distinctUntilChanged } from 'rxjs';
+import { filter, Subscription, mergeMap, combineLatestWith, of, distinctUntilChanged, take } from 'rxjs';
 import { getPointFromUrl, parseDate } from 'src/app/helpers';
 import { Point } from 'src/app/interfaces';
 import { AuthService, DataService, ActionService, NotifyService, HttpService } from 'src/app/services';
@@ -29,6 +29,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	exportGoogleLink = '';
 	hasEditablePoints = false;
 	shareLinkLoading = false;
+	link = signal('');
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -57,6 +58,10 @@ export class FooterComponent implements OnInit, OnDestroy {
 
 	get pointsRemovingLength() {
 		return this.action.checkedPoints.length;
+	}
+
+	get location() {
+		return window.location.origin + '/';
 	}
 
 	ngOnInit(): void {
@@ -174,6 +179,23 @@ export class FooterComponent implements OnInit, OnDestroy {
 				},
 			}),
 		);
+
+		if (!this.pointId && !this.link()) {
+			this.subscriptions.add(
+				this.http
+					.getShortLink(window.location.search.slice(1))
+					.pipe(take(1))
+					.subscribe({
+						next: () => {
+							this.http.postShortLink(window.location.search.slice(1)).subscribe({
+								next: result => {
+									this.link.set(result.short);
+								},
+							});
+						},
+					}),
+			);
+		}
 	}
 
 	ngOnDestroy(): void {
@@ -213,21 +235,26 @@ export class FooterComponent implements OnInit, OnDestroy {
 	share() {
 		if (this.pointId) {
 			this.copyLink(this.pointId);
+		} else if (this.link()) {
+			this.copyLink(this.link());
 		} else {
 			this.shareLinkLoading = true;
-			this.http.getShortLink(window.location.search.slice(1)).subscribe({
-				next: link => {
-					if (link) {
-						this.copyLink(link);
-					} else {
-						this.http.postShortLink(window.location.search.slice(1)).subscribe({
-							next: result => {
-								this.copyLink(result.short);
-							},
-						});
-					}
-				},
-			});
+			this.http
+				.getShortLink(window.location.search.slice(1))
+				.pipe(take(1))
+				.subscribe({
+					next: link => {
+						if (link) {
+							this.copyLink(link);
+						} else {
+							this.http.postShortLink(window.location.search.slice(1)).subscribe({
+								next: result => {
+									this.copyLink(result.short);
+								},
+							});
+						}
+					},
+				});
 		}
 	}
 

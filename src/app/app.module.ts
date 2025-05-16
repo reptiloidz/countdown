@@ -29,6 +29,7 @@ import { CommonModule } from '@angular/common';
 import { SvgModule } from './components/svg/svg.module';
 import { LinkPointComponent } from './components/link-point/link-point.component';
 import { environment } from 'src/environments/environment';
+import { QrCodeComponent } from 'ng-qrcode';
 
 @NgModule({
 	declarations: [
@@ -59,6 +60,7 @@ import { environment } from 'src/environments/environment';
 		SvgModule,
 		ClockModule,
 		MainItemModule,
+		QrCodeComponent,
 	],
 	providers: [
 		provideAnimations(),
