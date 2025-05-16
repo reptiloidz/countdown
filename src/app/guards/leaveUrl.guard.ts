@@ -8,7 +8,7 @@ export const leaveUrlGuard = () => {
 		router.lastSuccessfulNavigation?.finalUrl?.root.children['primary']?.segments[0].path === 'url' &&
 		!router.lastSuccessfulNavigation.finalUrl.queryParams['date']
 	) {
-		return confirm('При покидании страницы с таймером, он сбрасывается. Точно уйти?');
+		return confirm('Покидая страницу, вы сбросите таймер. Продолжить?');
 	} else {
 		return true;
 	}

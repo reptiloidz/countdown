@@ -71,7 +71,7 @@ describe('leaveUrlGuard', () => {
 
 		const result = TestBed.runInInjectionContext(() => leaveUrlGuard());
 
-		expect(confirmSpy).toHaveBeenCalledWith('При покидании страницы с таймером, он сбрасывается. Точно уйти?');
+		expect(confirmSpy).toHaveBeenCalledWith('Покидая страницу, вы сбросите таймер. Продолжить?');
 		expect(result).toBe(true);
 	});
 
