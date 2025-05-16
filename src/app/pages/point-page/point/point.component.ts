@@ -38,8 +38,6 @@ export class PointComponent implements OnInit, OnDestroy {
 	@HostBinding('class') class = 'main__inner';
 	@HostListener('window:beforeunload', ['$event'])
 	handleBeforeUnload(event: Event) {
-		console.log('this.timerMode', this.timerMode);
-
 		if (this.timerMode) {
 			event.preventDefault();
 			// @ts-ignore

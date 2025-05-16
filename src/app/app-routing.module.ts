@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { MainListComponent } from './components/main-list/main-list.component';
 import { AuthComponent } from './pages/personal/components/auth/auth.component';
-import { authGuard } from './guards';
+import { authGuard, leaveUrlGuard } from './guards';
 import { noPointGuard } from './guards/noPoint.guard';
 
 const routes: Routes = [
@@ -14,36 +14,42 @@ const routes: Routes = [
 	{
 		path: '',
 		component: MainListComponent,
-		canActivate: [noPointGuard],
+		canActivate: [leaveUrlGuard, noPointGuard],
 	},
 	{
 		path: 'point/:id',
 		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
+		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'url',
 		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
+		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'auth',
 		component: AuthComponent,
-		canActivate: [noPointGuard, authGuard],
+		canActivate: [leaveUrlGuard, noPointGuard, authGuard],
 	},
 	{
 		path: 'edit/:id',
 		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
+		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'create',
 		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
+		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'create-url',
 		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
+		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: '',
 		loadChildren: () => import('./pages/personal/personal.module').then(m => m.PersonalModule),
+		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: '**',

@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					this.isPrivacy = finalPath !== 'privacy';
 					this.isProfile = finalPath !== 'profile';
 					this.mainLinkParams = {
-						search: localStorage.getItem('searchInputValue') ?? null,
+						search: localStorage.getItem('searchInputValue') || null,
 						sort: localStorage.getItem('sort') === 'titleAsc' ? null : localStorage.getItem('sort'),
 						repeat: localStorage.getItem('repeatableValue') === 'all' ? null : localStorage.getItem('repeatableValue'),
 						greenwich: localStorage.getItem('greenwichValue') === 'all' ? null : localStorage.getItem('greenwichValue'),

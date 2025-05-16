@@ -99,6 +99,17 @@ describe('FooterComponent', () => {
 								},
 							},
 						},
+						getCurrentNavigation: jest.fn().mockReturnValue({
+							finalUrl: {
+								root: {
+									children: {
+										primary: {
+											segments: [{ path: 'edit' }, { path: '1' }],
+										},
+									},
+								},
+							},
+						}),
 					},
 				},
 				{

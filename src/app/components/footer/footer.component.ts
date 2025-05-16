@@ -67,8 +67,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 					combineLatestWith(this.route.queryParams),
 					distinctUntilChanged(),
 					mergeMap(([event, queryParams]: [any, any]) => {
-						const finalPath =
-							this.router.lastSuccessfulNavigation?.finalUrl?.root.children['primary']?.segments[0].path;
+						const finalPath = this.router.getCurrentNavigation()?.finalUrl?.root.children['primary']?.segments[0].path;
 						this.iteration = queryParams.iteration;
 						this.pointId =
 							this.router.lastSuccessfulNavigation?.finalUrl?.root.children['primary']?.segments &&

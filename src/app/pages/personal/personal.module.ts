@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideNgxMask } from 'ngx-mask';
 import { AuthComponent } from './components/auth/auth.component';
 import { RegComponent } from './components/reg/reg.component';
-import { authGuard, unauthGuard } from '../../guards';
+import { authGuard, leaveUrlGuard, unauthGuard } from '../../guards';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SharedModule } from '../../shared.module';
 
@@ -24,7 +24,7 @@ import { SharedModule } from '../../shared.module';
 			{
 				path: 'reg',
 				component: RegComponent,
-				canActivate: [authGuard],
+				canActivate: [leaveUrlGuard, authGuard],
 			},
 			{
 				path: 'profile',
