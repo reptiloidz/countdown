@@ -93,7 +93,7 @@
 		></button>
 		<ng-template #tooltipContent>
 			<qr-code
-				[value]="location + (this.pointId ?? link())"
+				[value]="location + (this.pointId ? ('point/' + this.pointId) : link())"
 				errorCorrectionLevel="M"
 				[size]="178"
 				[margin]="1"
