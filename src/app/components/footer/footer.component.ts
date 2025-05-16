@@ -30,6 +30,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	hasEditablePoints = false;
 	shareLinkLoading = false;
 	link = signal('');
+	isLinkGenerating = false;
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -72,6 +73,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 					combineLatestWith(this.route.queryParams),
 					distinctUntilChanged(),
 					mergeMap(([event, queryParams]: [any, any]) => {
+						this.link.set('');
 						const finalPath = this.router.getCurrentNavigation()?.finalUrl?.root.children['primary']?.segments[0].path;
 						this.iteration = queryParams.iteration;
 						this.pointId =
@@ -85,6 +87,29 @@ export class FooterComponent implements OnInit, OnDestroy {
 						this.isUrl = finalPath === 'url';
 						this.isMain = !finalPath;
 						this.isTimer = this.isUrl && !queryParams.date;
+
+						if (this.isUrl && !this.link() && !this.isLinkGenerating) {
+							this.isLinkGenerating = true;
+							this.subscriptions.add(
+								this.http
+									.getShortLink(window.location.search.slice(1))
+									.pipe(take(1))
+									.subscribe({
+										next: link => {
+											if (!link) {
+												this.http.postShortLink(window.location.search.slice(1)).subscribe({
+													next: result => {
+														this.link.set(result?.short);
+														this.isLinkGenerating = false;
+													},
+												});
+											} else {
+												this.isLinkGenerating = false;
+											}
+										},
+									}),
+							);
+						}
 
 						return this.pointId
 							? this.data.fetchPoint(this.pointId)
@@ -179,23 +204,6 @@ export class FooterComponent implements OnInit, OnDestroy {
 				},
 			}),
 		);
-
-		if (!this.pointId && !this.link()) {
-			this.subscriptions.add(
-				this.http
-					.getShortLink(window.location.search.slice(1))
-					.pipe(take(1))
-					.subscribe({
-						next: () => {
-							this.http.postShortLink(window.location.search.slice(1)).subscribe({
-								next: result => {
-									this.link.set(result.short);
-								},
-							});
-						},
-					}),
-			);
-		}
 	}
 
 	ngOnDestroy(): void {
