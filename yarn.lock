@@ -8215,10 +8215,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ng-qrcode@^19.0.1:
-  version "19.0.1"
-  resolved "https://registry.yarnpkg.com/ng-qrcode/-/ng-qrcode-19.0.1.tgz#163d7187dba17c809ba9031780c409889aa40134"
-  integrity sha512-8m4dqxSY7OSxJA7X0BEC7zJVLZ1QRw4ez5m440J7yq3HA8ixIa/hvQUjQLXJjbGUl33bjR9HNUPd9ZKxBmxnyA==
+ng-qrcode@^18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/ng-qrcode/-/ng-qrcode-18.0.0.tgz#69161d9afbb6084b6825b1b0a4f2fc1fed89648f"
+  integrity sha512-qmtU6n8lxyTGxrtRbzXYPR7JNGwQ6SZXqnEUQksjmFsPLssZRchal9zlw4eUMPm/bRxy+hSV6dWe/59mTNtc8A==
   dependencies:
     qrcode "^1.5.3"
     tslib "^2.6.2"
