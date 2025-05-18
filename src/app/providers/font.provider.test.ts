@@ -25,8 +25,8 @@ describe('FontProvider', () => {
 		const fontProvider = FontProvider();
 		await fontProvider();
 
-		expect(window.FontFace).toHaveBeenCalledTimes(3);
-		expect(document.fonts.add).toHaveBeenCalledTimes(3);
+		expect(window.FontFace).toHaveBeenCalledTimes(5);
+		expect(document.fonts.add).toHaveBeenCalledTimes(5);
 
 		expect(window.FontFace).toHaveBeenCalledWith(
 			'Roboto Slab',

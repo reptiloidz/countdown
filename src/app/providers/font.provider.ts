@@ -1,6 +1,24 @@
 export const FontProvider = () => () => {
 	const fonts = [
 		{
+			family: 'Nimbus Mono',
+			src: './assets/fonts/nimbus-mono/NimbusMono-Bold.woff2',
+			options: {
+				weight: '700',
+				style: 'normal',
+				display: 'swap' as FontDisplay,
+			},
+		},
+		{
+			family: 'Roboto Slab',
+			src: './assets/fonts/roboto-slab/RobotoSlab-Black.woff2',
+			options: {
+				weight: '900',
+				style: 'normal',
+				display: 'swap' as FontDisplay,
+			},
+		},
+		{
 			family: 'Roboto Slab',
 			src: './assets/fonts/roboto-slab/RobotoSlab-Medium.woff2',
 			options: {
@@ -34,7 +52,7 @@ export const FontProvider = () => () => {
 		return font
 			.load()
 			.then(() => document.fonts.add(font))
-			.catch((err) => console.log(err));
+			.catch(err => console.log(err));
 	});
 
 	return Promise.all(fontPromises);
