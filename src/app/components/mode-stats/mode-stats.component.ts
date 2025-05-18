@@ -316,7 +316,9 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 		this.formatList
 			.filter(item => this.formatNames.includes(item.value))
 			.forEach(item => {
-				const checkbox = this.formatsRef?.element.nativeElement?.querySelector(`#${item.value}`) as HTMLInputElement;
+				const checkbox = this.formatsRef?.element.nativeElement?.querySelector(
+					`[name='${item.value}']`,
+				) as HTMLInputElement;
 				if (checkbox) {
 					checkbox.disabled = this.formatNames.length === 1;
 				}
