@@ -80,6 +80,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 			this.isOnboardingOn.set(true);
 			setTimeout(() => {
 				this.hasOnboardingTimeExpired.set(true);
+				this.cdr.detectChanges();
 			}, this.onboardingTime);
 		} else {
 			this.isOnboardingOn.set(false);
