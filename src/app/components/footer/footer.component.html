@@ -67,6 +67,7 @@
 			mode="primary"
 			(click)="setDateNow()"
 			title="Сейчас!"
+			class="tooltip__trigger"
 		></button>
 	</div>
 	<div
@@ -90,6 +91,7 @@
 			(click)="share()"
 			[loading]="shareLinkLoading"
 			title="Поделиться ссылкой"
+			class="tooltip__trigger"
 		></button>
 		<ng-template #tooltipContent>
 			<qr-code
@@ -130,7 +132,7 @@
 			: null
 		"
 		text="
-			Создать событие-ссылку. Не&nbsp;требует регистрации, дает доступ по&nbsp;ссылке (можно создать короткую).
+			Создать событие-ссылку. Не&nbsp;требует регистрации, даёт доступ по&nbsp;ссылке (можно создать короткую).
 		"
 	>
 		<button
@@ -142,6 +144,7 @@
 			icon="calendar-link"
 			(click)="copyPoint()"
 			title="Копировать как событие-ссылку"
+			class="tooltip__trigger"
 		></button>
 		<a
 			*ngIf="!(isUrl || pointId) && !isCreateUrl && !isCreate"
@@ -152,6 +155,7 @@
 			icon="calendar-link"
 			routerLink="/create-url"
 			title="Создать событие-ссылку"
+			class="tooltip__trigger"
 		></a>
 	</div>
 	<div
@@ -173,6 +177,7 @@
 			mode="positive"
 			(click)="copyPoint(true)"
 			title="Сохранить в&nbsp;свои события"
+			class="tooltip__trigger"
 		></button>
 		<a
 			*ngIf="isAuthenticated && !isCreate && !isCreateUrl && !isUrl"
@@ -184,6 +189,7 @@
 			[disabled]="!isVerified"
 			routerLink="/create"
 			title="Создать событие"
+			class="tooltip__trigger"
 		></a>
 		<ng-template #tooltipContent>
 			<ng-container *ngIf="isAuthenticated">
@@ -191,14 +197,14 @@
 					routerLink="/profile"
 					class="link--inline"
 				>Подтвердите почту</a>,
-				чтобы иметь доступ к&nbsp;созданию
+				чтобы иметь доступ к&nbsp;полноценному созданию
 				и&nbsp;редактированию</ng-container>
 			<ng-container *ngIf="!isAuthenticated">
 				<a
 					routerLink="/reg"
 					class="link--inline"
 				>Зарегистрируйтесь</a>,
-				чтобы иметь доступ к&nbsp;созданию
+				чтобы иметь доступ к&nbsp;полноценному созданию
 				и&nbsp;редактированию</ng-container>
 		</ng-template>
 	</div>

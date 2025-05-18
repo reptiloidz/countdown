@@ -6,12 +6,14 @@
 	&:hover {
 		z-index: 3;
 
-		&::before {
-			content: '';
+		&:has(.tooltip__trigger) {
+			.tooltip__body {
+				display: flex;
+			}
 		}
 
-		.tooltip__body {
-			display: flex;
+		&::before {
+			content: '';
 		}
 	}
 

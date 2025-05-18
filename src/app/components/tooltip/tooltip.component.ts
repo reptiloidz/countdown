@@ -1,6 +1,7 @@
 import {
 	AfterViewInit,
 	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
 	ContentChild,
 	HostBinding,
@@ -44,7 +45,10 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 	isOnboardingOn = signal(false);
 	private subscriptions = new Subscription();
 
-	constructor(private action: ActionService) {}
+	constructor(
+		private action: ActionService,
+		private cdr: ChangeDetectorRef,
+	) {}
 
 	ngAfterViewInit(): void {
 		this.onboardingUpdate();
@@ -63,6 +67,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 	}
 
 	get isTooltipOff() {
+		this.cdr.markForCheck();
 		return this.disabled || !this.triggerElement;
 	}
 
