@@ -22,4 +22,14 @@
 			@include get-colors;
 		}
 	}
+
+	::view-transition-old(count),
+	::view-transition-new(count) {
+		animation-name: -ua-view-transition-fade-in;
+		animation-duration: 200ms;
+	}
+
+	::view-transition-old(count) {
+		animation-name: -ua-view-transition-fade-out;
+	}
 }
