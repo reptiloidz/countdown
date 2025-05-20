@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -15,6 +16,36 @@ import { PopupService } from 'src/app/services';
 	selector: 'app-popup',
 	templateUrl: './popup.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	animations: [
+		trigger('popup', [
+			transition(':enter', [
+				style({
+					opacity: 0,
+					transform: 'translateY(-10px)',
+				}),
+				animate(
+					'.2s',
+					style({
+						opacity: 1,
+						transform: 'translateY(0)',
+					}),
+				),
+			]),
+			transition(':leave', [
+				style({
+					opacity: 1,
+					transform: 'translateY(0)',
+				}),
+				animate(
+					'.2s',
+					style({
+						opacity: 0,
+						transform: 'translateY(-10px)',
+					}),
+				),
+			]),
+		]),
+	],
 })
 export class PopupComponent implements OnInit {
 	@ViewChild('popupContent', {

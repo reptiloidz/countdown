@@ -3,6 +3,7 @@ import { PopupComponent } from './popup.component';
 import { PopupService } from 'src/app/services';
 import { ChangeDetectorRef, Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
 	template: `<ng-template #popupContent></ng-template>`,
@@ -24,6 +25,7 @@ describe('PopupComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
 			declarations: [PopupComponent, MockHostComponent],
 			providers: [{ provide: PopupService, useValue: popupServiceMock }, ChangeDetectorRef],
 		}).compileComponents();

@@ -1,0 +1,29 @@
+@mixin discrete() {
+	@include transition(display, opacity);
+
+	display: none;
+	opacity: 0;
+	transition-timing-function: cubic-bezier(0.1, 0.79, 0.24, 0.95);
+	transition-duration: 0.3s;
+	transition-behavior: allow-discrete;
+
+	@starting-style {
+		opacity: 1;
+	}
+}
+
+@mixin discrete-show() {
+	opacity: 1;
+
+	@starting-style {
+		opacity: 0;
+	}
+}
+
+@mixin discrete-hide() {
+	opacity: 0;
+
+	@starting-style {
+		opacity: 1;
+	}
+}

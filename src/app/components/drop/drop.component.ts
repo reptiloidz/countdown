@@ -1,3 +1,4 @@
+import { trigger, transition, style, animate } from '@angular/animations';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -34,6 +35,23 @@ import { ButtonSize, DropHorizontal, DropVertical, NgClassType } from 'src/app/t
 			useExisting: forwardRef(() => DropComponent),
 			multi: true,
 		},
+	],
+	animations: [
+		trigger('drop', [
+			transition(':enter', [
+				style({
+					opacity: 0,
+					transform: 'translateY(-10px)',
+				}),
+				animate(
+					'.2s',
+					style({
+						opacity: 1,
+						transform: 'translateY(0)',
+					}),
+				),
+			]),
+		]),
 	],
 })
 export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {

@@ -30,10 +30,14 @@ import { RouterOutlet } from '@angular/router';
 	animations: [
 		trigger('routerTransition', [
 			transition('* <=> *', [
-				query(':enter, :leave', style({ position: 'absolute' })),
+				query(':enter, :leave', style({ position: 'absolute' }), { optional: true }),
 				group([
-					query(':enter', [style({ opacity: 0 }), animate('.2s ease-in-out', style({ opacity: 1 }))]),
-					query(':leave', [style({ opacity: 1 }), animate('.2s ease-in-out', style({ opacity: 0 }))]),
+					query(':enter', [style({ opacity: 0 }), animate('.2s ease-in-out', style({ opacity: 1 }))], {
+						optional: true,
+					}),
+					query(':leave', [style({ opacity: 1 }), animate('.2s ease-in-out', style({ opacity: 0 }))], {
+						optional: true,
+					}),
 				]),
 			]),
 		]),

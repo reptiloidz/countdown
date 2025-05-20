@@ -8,12 +8,16 @@
 
 		&:has(.tooltip__trigger) {
 			.tooltip__body {
+				@include discrete-show;
+
 				display: flex;
 			}
 		}
 
 		&::before {
-			content: '';
+			@include discrete-show;
+
+			display: block;
 		}
 	}
 
@@ -22,9 +26,13 @@
 	}
 
 	&::before {
+		@include discrete;
+
+		content: '';
 		position: absolute;
 		left: 50%;
 		z-index: 2;
+		display: none;
 		border-right: calc(var(--tooltip-shift) / 2) solid transparent;
 		border-left: calc(var(--tooltip-shift) / 2) solid transparent;
 		filter: drop-shadow(0 var(--tooltip-before-shift) 0 rgba(var(--c-border-primary), 0.3));
@@ -32,14 +40,14 @@
 	}
 
 	&__body {
-		@include glass;
+		@include discrete;
 
 		position: absolute;
 		z-index: 1;
-		display: none;
 		justify-content: flex-end;
 		width: max-content;
 		border-radius: 4px;
+		background-color: rgba(var(--c-bg-inverse), 0.9);
 		color: rgba(var(--c-text-primary), 1);
 		font-size: 16px;
 		font-weight: 400;
@@ -117,19 +125,28 @@
 		}
 	}
 
-	&--disabled {
-		&::before {
-			display: none;
-		}
-	}
-
 	&--onboarding {
 		&::before {
-			content: '';
+			@include discrete-show;
+
+			display: block;
 		}
 
 		.tooltip__body {
+			@include discrete-show;
+
 			display: flex;
+		}
+	}
+
+	&--disabled {
+		&,
+		&:hover {
+			&::before {
+				@include discrete-hide;
+
+				display: none;
+			}
 		}
 	}
 }
