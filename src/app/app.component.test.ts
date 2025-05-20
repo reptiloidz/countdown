@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ActionService, NotifyService } from './services';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NotifyComponent } from './components/notify/notify.component';
@@ -18,8 +18,8 @@ describe('AppComponent', () => {
 		mockRouter = {
 			events: new Subject(),
 		} as unknown as jest.Mocked<Router>;
-
 		await TestBed.configureTestingModule({
+			imports: [RouterModule.forRoot([])],
 			declarations: [AppComponent, NotifyComponent],
 			providers: [
 				{ provide: ActionService, useValue: { intervalSwitched: jest.fn() } },

@@ -20,11 +20,24 @@ import { Subscription, interval } from 'rxjs';
 import { ActionService } from './services';
 import { environment } from 'src/environments/environment';
 import { millisecondsInSecond } from 'date-fns/constants';
+import { animate, group, query, style, transition, trigger } from '@angular/animations';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	animations: [
+		trigger('routerTransition', [
+			transition('* <=> *', [
+				query(':enter, :leave', style({ position: 'absolute' })),
+				group([
+					query(':enter', [style({ opacity: 0 }), animate('.2s ease-in-out', style({ opacity: 1 }))]),
+					query(':leave', [style({ opacity: 1 }), animate('.2s ease-in-out', style({ opacity: 0 }))]),
+				]),
+			]),
+		]),
+	],
 })
 export class AppComponent implements OnInit, OnDestroy {
 	count = 0;
@@ -75,6 +88,10 @@ export class AppComponent implements OnInit, OnDestroy {
 			const newDate = new Date();
 			this.count = Math.floor((+newDate - +this.startTime) / 1000);
 		}
+	}
+
+	getState(outlet: RouterOutlet) {
+		return outlet.activatedRouteData['state'] ?? 'home';
 	}
 
 	// toast() {

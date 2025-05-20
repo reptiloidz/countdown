@@ -8,6 +8,7 @@ import { RegComponent } from './components/reg/reg.component';
 import { authGuard, leaveUrlGuard, unauthGuard } from '../../guards';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SharedModule } from '../../shared.module';
+import { noPointGuard } from 'src/app/guards/noPoint.guard';
 
 @NgModule({
 	declarations: [AuthComponent, RegComponent, ProfileComponent],
@@ -20,16 +21,20 @@ import { SharedModule } from '../../shared.module';
 			{
 				path: 'auth',
 				component: AuthComponent,
+				canActivate: [leaveUrlGuard, noPointGuard, authGuard],
+				data: { state: 'auth' },
 			},
 			{
 				path: 'reg',
 				component: RegComponent,
 				canActivate: [leaveUrlGuard, authGuard],
+				data: { state: 'reg' },
 			},
 			{
 				path: 'profile',
 				component: ProfileComponent,
 				canActivate: [unauthGuard],
+				data: { state: 'profile' },
 			},
 		]),
 	],

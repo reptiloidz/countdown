@@ -15,8 +15,11 @@
 	>Кнопуля</button> -->
 
 
-<main class="main">
-	<router-outlet></router-outlet>
+<main
+	class="main"
+	[@routerTransition]="getState(o)"
+>
+	<router-outlet #o="outlet"></router-outlet>
 </main>
 
 <footer

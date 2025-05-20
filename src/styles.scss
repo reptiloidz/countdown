@@ -22,14 +22,4 @@
 			@include get-colors;
 		}
 	}
-
-	::view-transition-old(root),
-	::view-transition-new(root) {
-		animation-name: -ua-view-transition-fade-in;
-		animation-duration: 200ms;
-	}
-
-	::view-transition-old(root) {
-		animation-name: -ua-view-transition-fade-out;
-	}
 }

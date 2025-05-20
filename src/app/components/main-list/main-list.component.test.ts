@@ -53,7 +53,6 @@ describe('MainListComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			// imports: [CommonModule],
 			declarations: [MainListComponent, InputComponent, DatePointsPopupComponent, FilterPipe],
 			providers: [
 				{ provide: DataService, useValue: dataServiceMock },
