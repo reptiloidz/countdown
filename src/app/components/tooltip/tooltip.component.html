@@ -1,7 +1,7 @@
 <ng-content></ng-content>
 <span
 	class="tooltip__body"
-	*ngIf="!isTooltipOff && hasOnboardingTimeExpired()"
+	*ngIf="!isTooltipOff() && hasOnboardingTimeExpired()"
 	aria-live="polite"
 >
 	<button

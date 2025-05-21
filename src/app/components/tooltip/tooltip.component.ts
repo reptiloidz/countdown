@@ -1,4 +1,5 @@
 import {
+	AfterContentChecked,
 	AfterViewInit,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -6,8 +7,10 @@ import {
 	ContentChild,
 	HostBinding,
 	Input,
+	OnChanges,
 	OnDestroy,
 	signal,
+	SimpleChanges,
 	TemplateRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -18,7 +21,7 @@ import { ActionService } from 'src/app/services';
 	templateUrl: './tooltip.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TooltipComponent implements AfterViewInit, OnDestroy {
+export class TooltipComponent implements AfterViewInit, OnChanges, AfterContentChecked, OnDestroy {
 	@ContentChild('tooltipContent') tooltipContent: TemplateRef<unknown> | undefined;
 	@ContentChild('tooltipTrigger', { static: false }) triggerElement: any;
 
@@ -27,7 +30,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 			'tooltip',
 			'tooltip--' + this.vertical,
 			'tooltip--' + this.horizontal,
-			this.isTooltipOff || !this.hasOnboardingTimeExpired() ? 'tooltip--disabled' : '',
+			this.isTooltipOff() || !this.hasOnboardingTimeExpired() ? 'tooltip--disabled' : '',
 			this.isOnboardingOn() ? 'tooltip--onboarding' : '',
 		].join(' ');
 	}
@@ -43,6 +46,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 
 	hasOnboardingTimeExpired = signal(false);
 	isOnboardingOn = signal(false);
+	isTooltipOff = signal(false);
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -51,6 +55,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 	) {}
 
 	ngAfterViewInit(): void {
+		this.checkIsTooltipOff();
 		this.onboardingUpdate();
 
 		this.subscriptions.add(
@@ -62,13 +67,23 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 		);
 	}
 
+	ngAfterContentChecked(): void {
+		this.checkIsTooltipOff();
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if ('disabled' in changes) {
+			this.checkIsTooltipOff();
+		}
+	}
+
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
 	}
 
-	get isTooltipOff() {
+	checkIsTooltipOff() {
+		this.isTooltipOff.set(this.disabled || !this.triggerElement);
 		this.cdr.markForCheck();
-		return this.disabled || !this.triggerElement;
 	}
 
 	onboardingUpdate() {
