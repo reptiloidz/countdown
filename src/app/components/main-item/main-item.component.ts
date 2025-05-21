@@ -152,7 +152,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	get interval() {
-		this.getClosestIteration();
 		return intervalToDuration({
 			start: this._closestIteration?.date,
 			end: new Date(),
@@ -216,6 +215,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	setTimer() {
+		this.getClosestIteration();
 		const currentInterval = this.interval;
 
 		this.timerHours = this.zeroPad((currentInterval.hours && Math.abs(currentInterval.hours)) || 0);
