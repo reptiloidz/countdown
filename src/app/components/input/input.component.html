@@ -24,7 +24,7 @@
 	(keydown)="keydownHandler($event)"
 >
 <div
-	*ngIf="icon || clearButton || showPasswordButton"
+	*ngIf="icon || (clearButton && value.toString().length) || showPasswordButton"
 	class="control__addon"
 >
 	<svg

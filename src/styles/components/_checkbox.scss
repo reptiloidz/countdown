@@ -25,6 +25,7 @@
 	&:has(:disabled) {
 		--checkbox-border-cl: rgba(var(--c-border-primary), 0.1);
 		--checkbox-check-cl: rgba(var(--c-border-primary), 0.3);
+		--checkbox-cl: rgba(var(--c-border-primary), 0.3);
 
 		pointer-events: none;
 	}

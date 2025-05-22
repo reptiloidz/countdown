@@ -91,12 +91,14 @@
 			.calendar__date-nav,
 			.calendar__counter {
 				opacity: 0;
+				transition: none;
 			}
 
 			.calendar__button {
 				border-color: transparent;
 				background-color: transparent;
 				opacity: 0.2;
+				transition: none;
 			}
 		}
 
