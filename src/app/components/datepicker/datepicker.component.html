@@ -21,7 +21,6 @@
 					[autocompleteList]="yearsArray"
 					(autocompleteChanged)="yearSwitched($event)"
 					dataSuffix="г"
-					[autofocus]="true"
 				></app-autocomplete>
 				<app-autocomplete
 					class="datepicker__nav-item datepicker__nav-item--lg"
@@ -75,6 +74,7 @@
 				[rowsNumber]="6"
 				[disabledBefore]="disabledBefore"
 				[disabledAfter]="disabledAfter"
+				[scrollMoveOff]="true"
 			></app-calendar>
 		</form>
 	</ng-template>

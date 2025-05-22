@@ -71,6 +71,38 @@
 		}
 
 		align-self: flex-start;
+		will-change: transform;
+
+		&--animate-left,
+		&--animate-right {
+			animation-name: calendarMove;
+		}
+
+		&--blink {
+			animation-name: calendarFade;
+		}
+
+		&--animate-left,
+		&--animate-right,
+		&--blink {
+			animation-duration: 0.4s;
+			animation-timing-function: linear;
+
+			.calendar__date-nav,
+			.calendar__counter {
+				opacity: 0;
+			}
+
+			.calendar__button {
+				border-color: transparent;
+				background-color: transparent;
+				opacity: 0.2;
+			}
+		}
+
+		&--animate-left {
+			animation-direction: reverse;
+		}
 	}
 
 	&__table {
@@ -131,6 +163,8 @@
 	}
 
 	&__button {
+		@include transition(background-color 0.3s, border-color 0.3s);
+
 		width: 100%;
 		height: 100%;
 		padding: var(--calendar-button-p);
@@ -210,6 +244,11 @@
 		white-space: normal;
 	}
 
+	&__date-nav,
+	&__counter {
+		@include transition(opacity 0.3s);
+	}
+
 	&__btn-nav {
 		width: 20px;
 		height: 20px;
@@ -252,5 +291,41 @@
 		.calendar__table-wrapper {
 			overflow: auto;
 		}
+	}
+}
+
+@keyframes calendarMove {
+	0% {
+		opacity: 1;
+		transform: none;
+	}
+
+	50% {
+		opacity: 0;
+		transform: translateX(-20px);
+	}
+
+	50.01% {
+		opacity: 0;
+		transform: translateX(20px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes calendarFade {
+	0% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
 	}
 }

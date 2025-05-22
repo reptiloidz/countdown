@@ -3,7 +3,9 @@ import {
 	ChangeDetectorRef,
 	Component,
 	ContentChild,
+	ElementRef,
 	EventEmitter,
+	HostListener,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -74,6 +76,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	@Input() staticMode = false;
 	@Input() staticCellMode = false;
 	@Input() iterationsChecked: boolean[] = [];
+	@Input() scrollMoveOff = false;
 
 	/**
 	 * При получении значения всегда обновляем календарь, если она обновилась
@@ -92,6 +95,50 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	calendarArray: CalendarDate[][] = [];
 	daysOfWeek: string[] = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+	tableWrapper?: HTMLElement;
+	private isThrottled = false;
+	private lastTouchX = 0;
+	private lastTouchY = 0;
+	private readonly THROTTLE_MS = 250;
+
+	@HostListener('wheel', ['$event'])
+	onWheel(event: WheelEvent) {
+		const target = event.target as HTMLElement;
+		if (
+			Math.abs(event.deltaY) <= Math.abs(event.deltaX) ||
+			this.scrollMoveOff ||
+			(target.closest('app-drop') && Array(...target.closest('app-drop')!.classList).includes('calendar__nav--drop'))
+		)
+			return;
+		this.switchCalendarPeriod(event.deltaY > 0);
+		event.preventDefault();
+	}
+
+	@HostListener('touchstart', ['$event'])
+	onTouchStart(event: TouchEvent) {
+		const t = event.touches[0];
+		this.lastTouchX = t.clientX;
+		this.lastTouchY = t.clientY;
+	}
+
+	@HostListener('touchmove', ['$event'])
+	onTouchMove(event: TouchEvent) {
+		const t = event.touches[0];
+		const dx = t.clientX - this.lastTouchX;
+		const dy = t.clientY - this.lastTouchY;
+
+		if (Math.abs(dx) <= Math.abs(dy)) {
+			this.lastTouchX = t.clientX;
+			this.lastTouchY = t.clientY;
+			return;
+		}
+
+		this.switchCalendarPeriod(dx < 0);
+
+		this.lastTouchX = t.clientX;
+		this.lastTouchY = t.clientY;
+		event.preventDefault();
+	}
 
 	@Output() dateSelected = new EventEmitter<{
 		date: Date;
@@ -108,6 +155,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		private cdr: ChangeDetectorRef,
 		private data: DataService,
 		private action: ActionService,
+		private el: ElementRef,
 	) {}
 
 	ngOnInit() {
@@ -194,6 +242,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		});
 		this.created.emit();
 		this.isCalendarInited = true;
+		this.tableWrapper = this.el.nativeElement.querySelector('.calendar__table-wrapper');
 	}
 
 	ngOnDestroy(): void {
@@ -547,18 +596,33 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	switchCalendarToNow() {
+		this.blinkCalendar();
 		this.generateCalendar({
 			date: this.nowDate,
 		});
 	}
 
 	switchCalendarToSelected() {
+		this.blinkCalendar();
 		this.generateCalendar({
 			date: this.selectedDate,
 		});
 	}
 
+	blinkCalendar() {
+		this.tableWrapper?.classList.add('calendar__table-wrapper--blink');
+		setTimeout(() => {
+			this.tableWrapper?.classList.remove('calendar__table-wrapper--blink');
+		}, this.THROTTLE_MS);
+	}
+
 	switchCalendarPeriod(forward = true) {
+		if (this.isThrottled) {
+			return;
+		}
+		this.isThrottled = true;
+		setTimeout(() => (this.isThrottled = false), this.THROTTLE_MS);
+
 		const result = {
 			year: {
 				forward: addYears(this.visibleDate, 1),
@@ -577,6 +641,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				backward: subHours(this.visibleDate, 1),
 			},
 		};
+
+		const animateClass = `calendar__table-wrapper--animate-${forward ? 'right' : 'left'}`;
+
+		this.tableWrapper?.classList.add(animateClass);
+
+		setTimeout(() => {
+			this.tableWrapper?.classList.remove(animateClass);
+		}, this.THROTTLE_MS);
 
 		this.generateCalendar({
 			date: result[this.activeMode][forward ? 'forward' : 'backward'],
