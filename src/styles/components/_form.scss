@@ -72,7 +72,9 @@
 	}
 
 	&__direction {
+		display: flex;
 		grid-area: direction;
+		gap: 8px;
 	}
 
 	&__section {

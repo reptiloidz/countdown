@@ -13,6 +13,8 @@
 
 	display: flex;
 	align-items: baseline;
+	width: fit-content;
+	height: fit-content;
 	border-radius: var(--checkbox-brs);
 	background-color: var(--checkbox-bg-cl);
 	box-shadow: var(--state-shadow-pos) var(--state-shadow-w) var(--checkbox-focus-checked-shadow-cl);

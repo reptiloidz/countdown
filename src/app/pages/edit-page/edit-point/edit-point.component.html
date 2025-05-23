@@ -103,14 +103,24 @@
 						'form__row--settings-link': isCreationUrl
 					}"
 				>
-					<app-switcher
-						*ngIf="!isCreationUrl"
-						[items]="directionList"
-						[value]="this.point?.direction || 'forward'"
-						formControlName="direction"
-						[showTitle]="true"
-						class="form__direction"
-					></app-switcher>
+					<div class="form__direction">
+						<label
+							*ngIf="!(isTimer && isCreationUrl)"
+							app-checkbox
+							mode="custom"
+							(change)="dateOnlySwitch($event)"
+							[isChecked]="!dateOnly"
+							[icon]="timeModeIcon"
+							[title]="'Дата' + (dateOnly ? '' : ' и время')"
+						></label>
+						<app-switcher
+							*ngIf="!isCreationUrl"
+							[items]="directionList"
+							[value]="this.point?.direction || 'forward'"
+							formControlName="direction"
+							[showTitle]="true"
+						></app-switcher>
+					</div>
 					<app-drop
 						#colorDrop
 						formControlName="color"
@@ -142,16 +152,6 @@
 							</button>
 						</ng-template>
 					</app-drop>
-
-					<label
-						*ngIf="!(isTimer && isCreationUrl)"
-						app-checkbox
-						mode="custom"
-						(change)="dateOnlySwitch($event)"
-						[isChecked]="!dateOnly"
-						[icon]="timeModeIcon"
-						[title]="'Дата' + (dateOnly ? '' : ' и время')"
-					></label>
 
 					<app-drop
 						#modesDrop
