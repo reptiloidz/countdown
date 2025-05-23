@@ -30,7 +30,7 @@ import {
 } from 'rxjs';
 import { Point, Iteration, UserExtraData, SwitcherItem, SelectArray, PointMode, GroupEmoji } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
-import { addMonths, addYears, format, getYear, intervalToDuration, setYear, subMinutes } from 'date-fns';
+import { addMonths, addYears, format, getYear, intervalToDuration, setYear, startOfDay, subMinutes } from 'date-fns';
 import { getInvertedObject, getPointDate, isDateValid, parseDate, setIterationsMode, sortDates } from 'src/app/helpers';
 import { Constants, PointColors } from 'src/app/enums';
 import { CalendarMode, DifferenceMode, EditPointEvent, PointColorTypes } from 'src/app/types';
@@ -189,6 +189,9 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	checking = new BehaviorSubject<boolean>(true);
 
+	dateOnly = false;
+	timeModeIcon: 'calendar' | 'calendar-clock' = 'calendar-clock';
+
 	constructor(
 		private data: DataService,
 		private route: ActivatedRoute,
@@ -256,6 +259,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 						if (!this.isCreation && !this.isIterationAdded) {
 							this.point = point;
 						}
+						this.dateOnly = point?.dateOnly || false;
 					}),
 					mergeMap(() => this.auth.getUserData(this.point?.user)),
 					tap(userData => {
@@ -460,6 +464,10 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	get isCreationUrl() {
 		return this.type === EditPointType.CreateUrl;
+	}
+
+	get isTimer() {
+		return this.dateUrlMode === 'timer';
 	}
 
 	get hasManyIterations() {
@@ -803,6 +811,12 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.isModesDropOpened = false;
 	}
 
+	dateOnlySwitch(event: Event) {
+		this.dateOnly = !(event.target as HTMLInputElement).checked;
+		this.timeModeIcon = this.dateOnly ? 'calendar' : 'calendar-clock';
+		this.form.controls['greenwich'].setValue(this.dateOnly ? false : this.point?.greenwich);
+	}
+
 	submit(saveIteration = false, repeats: Iteration[] = []) {
 		if (this.form.invalid) {
 			return;
@@ -854,6 +868,12 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 			newDatesArray = [lastDate];
 		}
 
+		if (this.dateOnly) {
+			newDatesArray.forEach(item => {
+				item.date = format(startOfDay(parseDate(item.date)), Constants.fullDateFormat);
+			});
+		}
+
 		let result = {
 			dates: newDatesArray,
 		} as Point;
@@ -869,6 +889,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				user: this.auth.uid ?? '',
 				color: this.form.controls['color'].value ?? 'gray',
 				modes: this.pointModes.length && this.repeatableValue ? this.pointModes : null,
+				dateOnly: this.dateOnly,
 			});
 		} else {
 			result = Object.assign(result, {

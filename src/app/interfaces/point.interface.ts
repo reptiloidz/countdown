@@ -13,6 +13,7 @@ export interface Point {
 	direction: Direction;
 	greenwich: boolean;
 	repeatable: boolean;
+	dateOnly?: boolean;
 	user?: string;
 	userInfo?: UserExtraData;
 	public?: boolean;

@@ -143,6 +143,16 @@
 						</ng-template>
 					</app-drop>
 
+					<label
+						*ngIf="!(isTimer && isCreationUrl)"
+						app-checkbox
+						mode="custom"
+						(change)="dateOnlySwitch($event)"
+						[isChecked]="!dateOnly"
+						[icon]="timeModeIcon"
+						[title]="'Дата' + (dateOnly ? '' : ' и время')"
+					></label>
+
 					<app-drop
 						#modesDrop
 						*ngIf="!isCreation && repeatableValue"
@@ -196,6 +206,7 @@
 								icon="globe"
 								formControlName="greenwich"
 								[title]="greenwichValue ? 'Глобальное время' : 'Местное время'"
+								[isDisabled]="dateOnly"
 							></label>
 							<label
 								app-checkbox
@@ -262,6 +273,7 @@
 						class="form__btn form__col"
 						(datePicked)="datePicked($event)"
 						[date]="pointDate"
+						[dateOnly]="dateOnly"
 					></app-datepicker>
 					<app-drop
 						[dropList]="differenceModeArray"
