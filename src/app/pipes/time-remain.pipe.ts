@@ -7,13 +7,13 @@ import { Constants } from '../enums';
 	name: 'timeRemain',
 })
 export class TimeRemainPipe implements PipeTransform {
-	transform(time: string, greenwich?: boolean): string {
+	transform(time: string, dateOnly: boolean, greenwich?: boolean): string {
 		return formatDate(
 			getPointDate({
 				pointDate: parseDate(time),
 				isGreenwich: greenwich,
 			}),
-			Constants.fullDateFormat
+			dateOnly ? Constants.shortDateFormat : Constants.fullDateFormat,
 		);
 	}
 }

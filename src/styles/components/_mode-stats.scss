@@ -67,6 +67,10 @@
 		column-gap: 10px;
 		padding-top: 10px;
 		padding-bottom: 10px;
+
+		&--date {
+			column-count: 2;
+		}
 	}
 
 	&__format-item {

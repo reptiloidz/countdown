@@ -9,7 +9,7 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { differenceInMinutes, Duration, endOfYear, formatDuration, startOfYear, subYears } from 'date-fns';
+import { differenceInMinutes, Duration, endOfYear, formatDuration, startOfDay, startOfYear, subYears } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { minutesInDay, minutesInHour, minutesInMonth, minutesInYear } from 'date-fns/constants';
 import { parseDate, sortDates } from 'src/app/helpers';
@@ -110,7 +110,7 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 			disabled: false,
 		},
 	];
-	activeFormat = localStorage.getItem('statFormat') ?? 'minutes';
+	activeFormat = localStorage.getItem('statFormat') ?? (this.dateOnly ? 'days' : 'minutes');
 	formatNames: DifferenceMode[] = this.activeFormat.split('_') as DifferenceMode[];
 
 	ngOnInit(): void {
@@ -121,11 +121,22 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit(): void {
+		if (this.dateOnly) {
+			this.formatList = this.formatList.slice(0, this.formatList.length - 2);
+			if (!(['years', 'months', 'weeks', 'days'] as DifferenceMode[]).some(item => this.formatNames.includes(item))) {
+				this.formatNames = ['days'];
+				this.activeFormat = 'days';
+			}
+		}
 		this.switchMode(this.activeMode);
 	}
 
 	get now() {
 		return new Date();
+	}
+
+	get dateOnly() {
+		return this.point?.dateOnly;
 	}
 
 	reset() {
@@ -272,12 +283,12 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 		switch (mode) {
 			case 'year':
 				startDate = subYears(this.now, 1);
-				finalDate = this.now;
+				finalDate = this.dateOnly ? startOfDay(this.now) : this.now;
 				break;
 
 			case 'currentYear':
 				startDate = startOfYear(this.now);
-				finalDate = this.now;
+				finalDate = this.dateOnly ? startOfDay(this.now) : this.now;
 				break;
 
 			case 'lastYear':
@@ -292,7 +303,7 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 
 			default:
 				startDate = this.firstIterationDate();
-				finalDate = this.now;
+				finalDate = this.dateOnly ? startOfDay(this.now) : this.now;
 				break;
 		}
 		this.switchFormat(false, startDate, finalDate);

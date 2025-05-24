@@ -298,7 +298,7 @@
 							ariaHidden="false"
 							class="tabs__item-icon"
 						></svg>
-						{{ date.date | timeRemain : point?.greenwich }}
+						{{ date.date | timeRemain : !!point?.dateOnly : point?.greenwich }}
 					</div>
 				</ng-container>
 				<p

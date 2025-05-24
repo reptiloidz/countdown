@@ -150,7 +150,7 @@
 							class="point-page__color"
 							[title]="pointColorName"
 						>
-							{{ iterationDate }} {{ iterationTime }}
+							{{ iterationDate }} {{ point?.dateOnly ? '' : iterationTime }}
 						</span>
 					</p>
 					<p

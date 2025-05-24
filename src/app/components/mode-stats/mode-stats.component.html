@@ -7,6 +7,7 @@
 			[disabledAfter]="finalDate()"
 			(datePicked)="setStartDate($event)"
 			dropClass="datepicker--popup-xs"
+			[dateOnly]="!!dateOnly"
 		></app-datepicker>
 		До:
 		<app-datepicker
@@ -15,6 +16,7 @@
 			[disabledAfter]="now"
 			(datePicked)="setFinalDate($event)"
 			dropClass="datepicker--popup-xs"
+			[dateOnly]="!!dateOnly"
 		></app-datepicker>
 	</div>
 	<span
@@ -47,6 +49,9 @@
 <div
 	#formatsRef
 	class="mode-stats__format"
+	[ngClass]="{
+		'mode-stats__format--date': dateOnly
+	}"
 >
 	<label
 		*ngFor="let format of formatList"

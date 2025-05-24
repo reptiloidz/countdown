@@ -33,7 +33,7 @@ describe('TimeRemainPipe', () => {
 		(getPointDate as jest.Mock).mockReturnValue(pointDate);
 		(formatDate as jest.Mock).mockReturnValue(formattedDate);
 
-		const result = pipe.transform(time, true);
+		const result = pipe.transform(time, false, true);
 
 		expect(parseDate).toHaveBeenCalledWith(time);
 		expect(getPointDate).toHaveBeenCalledWith({
@@ -54,7 +54,7 @@ describe('TimeRemainPipe', () => {
 		(getPointDate as jest.Mock).mockReturnValue(pointDate);
 		(formatDate as jest.Mock).mockReturnValue(formattedDate);
 
-		const result = pipe.transform(time);
+		const result = pipe.transform(time, false);
 
 		expect(parseDate).toHaveBeenCalledWith(time);
 		expect(getPointDate).toHaveBeenCalledWith({
