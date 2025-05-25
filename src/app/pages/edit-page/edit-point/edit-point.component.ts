@@ -185,12 +185,18 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.closeNotify('timer');
 			},
 		},
+		dateOnly: {
+			date: undefined,
+			remove: () => {
+				this.closeNotify('dateOnly');
+			},
+		},
 	};
 
 	checking = new BehaviorSubject<boolean>(true);
 
 	dateOnly = false;
-	timeModeIcon: 'calendar' | 'calendar-clock' = 'calendar-clock';
+	timeModeIcon: 'calendar' | 'clock' = 'clock';
 
 	constructor(
 		private data: DataService,
@@ -270,6 +276,12 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				.subscribe({
 					next: ([, { pointId, access }]) => {
 						this.point && this.data.putPoint(this.point);
+						if (this.point?.dateOnly && this.differenceModeArray.length > 4) {
+							this.differenceModeArray = this.differenceModeArray.slice(2, this.differenceModeArray.length);
+							if (this.differenceMode === 'hours' || this.differenceMode === 'minutes') {
+								this.differenceMode = 'days';
+							}
+						}
 						if (access && (pointId === this.point?.id || !pointId)) {
 							this.checking.next(false);
 							this.setValues();
@@ -448,6 +460,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.notifies['greenwich'].remove();
 		this.notifies['repeatable'].remove();
 		this.notifies['timer'].remove();
+		this.notifies['dateOnly'].remove();
 	}
 
 	get formGroup(): any {
@@ -519,13 +532,14 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	get visibleDifference() {
+		//  Поставлю округление ceil, дата ставится точнее. Понаблюдаем.
 		switch (this.differenceMode) {
 			case 'hours':
-				return Math.round(this.difference / minutesInHour);
+				return Math.ceil(this.difference / minutesInHour);
 			case 'days':
-				return Math.round(this.difference / minutesInDay);
+				return Math.ceil(this.difference / minutesInDay);
 			case 'weeks':
-				return Math.round(this.difference / (minutesInDay * 7));
+				return Math.ceil(this.difference / (minutesInDay * 7));
 			case 'months':
 				const resInterval = intervalToDuration({
 					start: subMinutes(new Date(), this.difference),
@@ -813,8 +827,21 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	dateOnlySwitch(event: Event) {
 		this.dateOnly = !(event.target as HTMLInputElement).checked;
-		this.timeModeIcon = this.dateOnly ? 'calendar' : 'calendar-clock';
+		this.timeModeIcon = this.dateOnly ? 'calendar' : 'clock';
 		this.form.controls['greenwich'].setValue(this.dateOnly ? false : this.point?.greenwich);
+		/**
+		 * Если время в календаре отключено, предупреждаем,
+		 * что надо сохранить изменения перед редактированием итераций
+		 * и, дата ставится по местному времени
+		 */
+		if (this.notifies['dateOnly'].date) {
+			this.notifies['dateOnly'].remove();
+		} else if (this.dateOnly && !this.point?.dateOnly) {
+			this.notifies['dateOnly'].date = this.notify.add({
+				title: 'Время в календаре отключено',
+				text: 'Событие будет отображаться по местному времени',
+			});
+		}
 	}
 
 	submit(saveIteration = false, repeats: Iteration[] = []) {
@@ -902,6 +929,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				user: this.point?.user,
 				color: this.point?.color ?? 'gray',
 				modes: this.point?.modes?.length && this.point?.repeatable ? this.point.modes : null,
+				dateOnly: this.point?.dateOnly,
 			});
 			this.isIterationSwitched = true;
 		}

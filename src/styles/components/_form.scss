@@ -33,7 +33,12 @@
 		}
 
 		&--settings-link {
-			grid-template-areas: 'colors checks';
+			grid-template-areas: 'colors checks direction';
+			grid-template-columns: auto 1fr auto;
+
+			.form__checks {
+				margin-left: auto;
+			}
 		}
 	}
 
