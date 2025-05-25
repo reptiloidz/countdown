@@ -266,6 +266,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 							this.point = point;
 						}
 						this.dateOnly = point?.dateOnly || false;
+						this.timeModeIcon = this.dateOnly ? 'calendar' : 'clock';
 					}),
 					mergeMap(() => this.auth.getUserData(this.point?.user)),
 					tap(userData => {
