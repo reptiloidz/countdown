@@ -3,7 +3,7 @@ import { Observable, of, Subject, BehaviorSubject, Subscription, distinctUntilCh
 import { Iteration, Point } from '../interfaces';
 import { ActionService, HttpService, NotifyService } from '.';
 import { EditPointEvent } from '../types';
-import { format } from 'date-fns';
+import { format, startOfDay } from 'date-fns';
 import { getPointDate } from '../helpers';
 import { Constants } from '../enums';
 
@@ -200,14 +200,15 @@ export class DataService {
 
 	setDateNow(point: Point) {
 		let newDatesArray = point?.dates;
+		let newDate = getPointDate({
+			isGreenwich: point.greenwich,
+			isInvert: true,
+		});
+		if (point.dateOnly) {
+			newDate = startOfDay(newDate);
+		}
 		const lastDate = {
-			date: format(
-				getPointDate({
-					isGreenwich: point.greenwich,
-					isInvert: true,
-				}),
-				Constants.fullDateFormat,
-			),
+			date: format(newDate, Constants.fullDateFormat),
 			reason: 'byHand',
 		} as Iteration;
 		if (point.repeatable) {
