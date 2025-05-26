@@ -5,6 +5,7 @@ import { filter, Subscription } from 'rxjs';
 import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
 import { SettingsComponent } from '../settings/settings.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: '[app-header]',
@@ -67,6 +68,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	get isAuthorization() {
 		return this.router.url === '/auth';
+	}
+
+	get isProd(): boolean {
+		return environment.production;
 	}
 
 	showPrivacy() {

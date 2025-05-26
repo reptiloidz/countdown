@@ -89,6 +89,7 @@
 				icon="at-email"
 				placeholder="Почта"
 				formControlName="email"
+				[isDisabled]="isGoogle"
 			></app-input>
 			<div class="profile__footer">
 				<ul
@@ -103,7 +104,7 @@
 				<button
 					app-button
 					type="submit"
-					[attr.disabled]="(formEmail.invalid || isSameEmail) || null"
+					[attr.disabled]="(formEmail.invalid || isSameEmail || isGoogle) || null"
 					class="form__submit profile__submit"
 					mode="ghost-positive"
 					iconPosition="right"
@@ -112,8 +113,12 @@
 			</div>
 		</form>
 
-		<h3 class="form__section-title">Новый пароль</h3>
+		<h3
+			*ngIf="!isGoogle"
+			class="form__section-title"
+		>Новый пароль</h3>
 		<form
+			*ngIf="!isGoogle"
 			class="profile__area form__section"
 			[formGroup]="formPassword"
 			(ngSubmit)="updatePassword()"

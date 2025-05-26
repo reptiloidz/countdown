@@ -10,7 +10,17 @@ import {
 import { User } from '@angular/fire/auth';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format, parse, subYears } from 'date-fns';
-import { debounce, distinctUntilChanged, Subscription, concatMap, switchMap, tap, timer, skipWhile } from 'rxjs';
+import {
+	debounce,
+	distinctUntilChanged,
+	Subscription,
+	concatMap,
+	switchMap,
+	tap,
+	timer,
+	skipWhile,
+	filter,
+} from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { LinkPointComponent } from 'src/app/components/link-point/link-point.component';
 import { Constants } from 'src/app/enums';
@@ -199,6 +209,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		);
 
 		this.subscriptions.add(
+			this.auth.eventEmailUpdateStarted$.pipe(distinctUntilChanged()).subscribe({
+				next: () => {
+					this.emailLoading = false;
+					this.cdr.detectChanges();
+				},
+				error: () => {
+					this.emailLoading = false;
+					this.cdr.detectChanges();
+				},
+				complete: () => {
+					this.emailLoading = false;
+					this.cdr.detectChanges();
+				},
+			}),
+		);
+
+		this.subscriptions.add(
 			this.auth.eventEmailUpdated$.pipe(distinctUntilChanged()).subscribe({
 				next: () => {
 					this.emailLoading = false;
@@ -264,8 +291,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.formData.controls['name'].valueChanges
 				.pipe(
 					tap(() => {
-						this.userpicLoading = true;
+						this.userpicLoading = !this.isGoogle;
 					}),
+					filter(() => !this.isGoogle),
 				)
 				.pipe(debounce(() => timer(this._debounceTime)))
 				.subscribe({
@@ -415,6 +443,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		return this._user;
 	}
 
+	get isGoogle() {
+		return this._user?.providerData[0].providerId === 'google.com';
+	}
+
 	get birthDatePointId() {
 		return this._birthDatePointId;
 	}
@@ -471,7 +503,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	updateEmail() {
-		this.emailLoading = true;
 		this.auth.updateEmail(this._user, this.formEmail.controls['email'].value);
 	}
 

@@ -63,14 +63,14 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 
 	@Input() value: string | number = '';
 
+	@Input() isDisabled: boolean = false;
+
 	@ViewChild('inputRef') inputRef!: ElementRef;
 
 	constructor(
 		private cdr: ChangeDetectorRef,
 		private deviceService: DeviceDetectorService,
 	) {}
-
-	isDisabled: boolean = false;
 
 	get showPasswordTitle(): string {
 		return this.type === 'text' ? 'Скрыть пароль' : 'Показать пароль';

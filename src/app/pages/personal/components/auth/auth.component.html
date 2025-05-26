@@ -1,7 +1,7 @@
 <form
 	[formGroup]="form"
 	(ngSubmit)="submit()"
-	class="form content"
+	class="form content main__auth"
 >
 	<div class="form__section form__section--auth">
 		<app-input
@@ -50,3 +50,19 @@
 		</div>
 	</div>
 </form>
+<div class="main__auth-external">
+	<span class="main__auth-external-inner">
+		Или авторизуйтесь
+		<br>
+		с&nbsp;помощью Google
+		<button
+			app-button
+			mode="ghost"
+			size="lg"
+			class="icon--fill"
+			icon="google"
+			(click)="authGoogle()"
+			title="Google"
+		></button>
+	</span>
+</div>

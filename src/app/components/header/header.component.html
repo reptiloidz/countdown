@@ -44,10 +44,11 @@
 		(click)="showPrivacy()"
 		aria-haspopup="dialog"
 	></button>
-	<!-- <button
+	<button
+		*ngIf="!isProd"
 		app-button
 		(click)="check()"
-		>Проверка</button> -->
+	>Юзер</button>
 </div>
 
 <a

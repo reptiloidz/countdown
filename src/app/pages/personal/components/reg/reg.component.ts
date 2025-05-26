@@ -173,6 +173,20 @@ export class RegComponent implements OnInit, OnDestroy {
 		return item;
 	}
 
+	authGoogle() {
+		this.auth
+			.login({
+				google: true,
+			})
+			.catch(err => {
+				this.notify.add({
+					title: 'Ошибка при авторизации через Google',
+					view: 'negative',
+				});
+				console.error('Ошибка при авторизации через Google:\n', err.message);
+			});
+	}
+
 	submit() {
 		if (this.form.valid) {
 			this.isLoading = true;
@@ -187,9 +201,11 @@ export class RegComponent implements OnInit, OnDestroy {
 					next: data => {
 						this.isLoading = false;
 						this.auth.login({
-							email: data.email,
-							password: this.passwordsForm.get('password')?.value,
-							returnSecureToken: true,
+							user: {
+								email: data.email,
+								password: this.passwordsForm.get('password')?.value,
+								returnSecureToken: true,
+							},
 						});
 					},
 					error: err => {

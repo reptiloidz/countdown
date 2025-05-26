@@ -135,4 +135,31 @@ body {
 		margin-right: 10px;
 		margin-left: auto;
 	}
+
+	&__auth {
+		flex-grow: 0;
+	}
+
+	&__auth-external {
+		position: relative;
+		flex-grow: 1;
+		margin: 0 auto auto;
+
+		&::before {
+			content: '';
+			position: absolute;
+			top: -18px;
+			left: 20%;
+			display: block;
+			width: 60%;
+			height: 1px;
+			background-color: rgba(var(--c-text-primary), 0.2);
+		}
+	}
+
+	&__auth-external-inner {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
 }

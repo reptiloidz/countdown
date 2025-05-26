@@ -47,6 +47,10 @@
 		color: rgba(var(--c-text-primary), 1);
 		font-weight: 300;
 
+		&:disabled {
+			color: rgba(var(--c-text-primary), 0.4);
+		}
+
 		&::placeholder {
 			color: rgba(var(--c-text-primary), 0.4);
 		}

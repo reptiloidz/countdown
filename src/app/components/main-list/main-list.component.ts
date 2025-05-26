@@ -245,7 +245,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			this.action.eventPointsCheckedAll$.subscribe({
 				next: () => {
 					requestAnimationFrame(() => {
-						this.action.getCheckedPoints(this.pointsList.nativeElement);
+						this.action.getCheckedPoints(this.pointsList?.nativeElement);
 					});
 				},
 			}),

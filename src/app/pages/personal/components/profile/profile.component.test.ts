@@ -35,6 +35,7 @@ describe('ProfileComponent', () => {
 			eventPasswordUpdated$: new Subject<boolean>(),
 			eventAccountDeleted$: new Subject<void>(),
 			eventVerifyEmailSent$: new Subject<void>(),
+			eventEmailUpdateStarted$: new Subject<void>(),
 			updateUserBirthDate: jest.fn(),
 			verifyEmail: jest.fn(),
 			updateEmail: jest.fn(),

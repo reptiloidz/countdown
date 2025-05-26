@@ -8,8 +8,8 @@ import {
 	Subject,
 	Subscription,
 	concatMap,
-	firstValueFrom,
 	take,
+	firstValueFrom,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { UserPoint, Point, UserProfile, UserExtraData } from '../interfaces';
@@ -30,6 +30,9 @@ import {
 	EmailAuthProvider,
 	EmailAuthCredential,
 	sendPasswordResetEmail,
+	GoogleAuthProvider,
+	signInWithPopup,
+	reauthenticateWithPopup,
 } from '@angular/fire/auth';
 import { goOnline, objectVal, query, ref, set, update } from '@angular/fire/database';
 import { NotifyService, HttpService } from '.';
@@ -107,6 +110,9 @@ export class AuthService implements OnDestroy {
 	});
 	eventProfileUpdated$ = this._eventProfileUpdatedSubject.asObservable();
 
+	private _eventEmailUpdateStartedSubject = new Subject<void>();
+	eventEmailUpdateStarted$ = this._eventEmailUpdateStartedSubject.asObservable();
+
 	private _eventEmailUpdatedSubject = new Subject<string>();
 	eventEmailUpdated$ = this._eventEmailUpdatedSubject.asObservable();
 
@@ -143,6 +149,10 @@ export class AuthService implements OnDestroy {
 		return localStorage.getItem('fb-uid');
 	}
 
+	get isGoogle() {
+		return this._user?.providerData[0].providerId === 'google.com';
+	}
+
 	get token(): string | null {
 		if (localStorage.getItem('fb-token')) {
 			const expDate = new Date(localStorage.getItem('fb-token-exp') ?? '');
@@ -169,11 +179,34 @@ export class AuthService implements OnDestroy {
 		this._eventBirthDateAddedSubject.next();
 	}
 
-	async login(user: UserPoint): Promise<any> {
-		const value: any = await signInWithEmailAndPassword(getAuth(), user.email, user.password);
+	async login(
+		{
+			user,
+			google,
+		}: {
+			user?: UserPoint;
+			google?: boolean;
+		} = {
+			google: false,
+		},
+	): Promise<any> {
+		const value: any = google
+			? await signInWithPopup(getAuth(), new GoogleAuthProvider())
+			: user && (await signInWithEmailAndPassword(getAuth(), user.email, user.password));
 
 		return await new Promise(resolve => {
-			const displayName = user.email.split('@')[0];
+			let displayName = '';
+			let photoURL = '';
+
+			if (google) {
+				displayName = value.user.displayName;
+				photoURL = value.user.photoURL;
+			} else if (user) {
+				displayName = user.email.split('@')[0];
+				photoURL = `
+					https://ui-avatars.com/api/?name=${generateUserpicName(displayName)}&background=${randomHEXColor()}
+				`;
+			}
 
 			this._user = value.user;
 			this._eventLoginSubject.next(this._user?.uid ?? '');
@@ -185,9 +218,7 @@ export class AuthService implements OnDestroy {
 				(!this._user.displayName || !this._user.photoURL) &&
 				this.updateProfile(this._user, {
 					displayName,
-					photoURL: `https://ui-avatars.com/api/?name=${generateUserpicName(
-						displayName,
-					)}&background=${randomHEXColor()}`,
+					photoURL,
 				});
 			resolve(value);
 		});
@@ -416,6 +447,8 @@ export class AuthService implements OnDestroy {
 			return Promise.resolve(null);
 		} else if (password) {
 			return this.reAuthWithCred(password);
+		} else if (this.isGoogle) {
+			return this.reAuthPopup();
 		} else {
 			return this.reAuthWithCred(
 				await firstValueFrom(
@@ -426,6 +459,12 @@ export class AuthService implements OnDestroy {
 					}),
 				),
 			);
+		}
+	}
+
+	async reAuthPopup(): Promise<any> {
+		if (this.authFB.currentUser) {
+			return reauthenticateWithPopup(this.authFB.currentUser, new GoogleAuthProvider());
 		}
 	}
 
