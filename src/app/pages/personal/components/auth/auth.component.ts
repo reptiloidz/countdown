@@ -156,7 +156,9 @@ export class AuthComponent implements OnInit, OnDestroy {
 			this.isLoading = true;
 
 			this.auth
-				.login(this.form.value)
+				.login({
+					user: this.form.value,
+				})
 				.then(() => {
 					this.isLoading = false;
 					this.router.navigate(['']);

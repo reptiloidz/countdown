@@ -930,7 +930,7 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 				user: this.point?.user,
 				color: this.point?.color ?? 'gray',
 				modes: this.point?.modes?.length && this.point?.repeatable ? this.point.modes : null,
-				dateOnly: this.point?.dateOnly,
+				dateOnly: !!this.point?.dateOnly,
 			});
 			this.isIterationSwitched = true;
 		}

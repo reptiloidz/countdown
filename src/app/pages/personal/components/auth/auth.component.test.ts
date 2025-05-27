@@ -75,8 +75,10 @@ describe('AuthComponent', () => {
 		component.form.setValue({ email: 'test@example.com', password: 'password123' });
 		await component.submit();
 		expect(authServiceMock.login).toHaveBeenCalledWith({
-			email: 'test@example.com',
-			password: 'password123',
+			user: {
+				email: 'test@example.com',
+				password: 'password123',
+			},
 		});
 	});
 
