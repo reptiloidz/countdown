@@ -33,6 +33,8 @@ import {
 	GoogleAuthProvider,
 	signInWithPopup,
 	reauthenticateWithPopup,
+	linkWithPopup,
+	unlink,
 } from '@angular/fire/auth';
 import { goOnline, objectVal, query, ref, set, update } from '@angular/fire/database';
 import { NotifyService, HttpService } from '.';
@@ -203,9 +205,7 @@ export class AuthService implements OnDestroy {
 				photoURL = value.user.photoURL;
 			} else if (user) {
 				displayName = user.email.split('@')[0];
-				photoURL = `
-					https://ui-avatars.com/api/?name=${generateUserpicName(displayName)}&background=${randomHEXColor()}
-				`;
+				photoURL = this.getUserpic(displayName);
 			}
 
 			this._user = value.user;
@@ -228,6 +228,36 @@ export class AuthService implements OnDestroy {
 		await signOut(this.authFB);
 		this.setToken();
 		this.router.navigate(['/auth/']);
+	}
+
+	async linkGoogle(): Promise<User | null> {
+		const currentUser = this.authFB.currentUser;
+		const user = currentUser && (await linkWithPopup(currentUser, new GoogleAuthProvider())).user;
+		return await new Promise(resolve => {
+			currentUser &&
+				this.updateProfile(currentUser, {
+					photoURL: user?.providerData.find(provider => provider.providerId === 'google.com')?.photoURL || '',
+					displayName: currentUser?.displayName || '',
+				});
+			return resolve(user);
+		});
+	}
+
+	async unlinkGoogle(): Promise<User | null> {
+		const currentUser = this.authFB.currentUser;
+		const user = currentUser && (await unlink(currentUser, 'google.com'));
+		return await new Promise(resolve => {
+			currentUser &&
+				this.updateProfile(currentUser, {
+					photoURL: this.getUserpic(currentUser.displayName || ''),
+					displayName: currentUser?.displayName || '',
+				});
+			return resolve(user);
+		});
+	}
+
+	getUserpic(displayName: string) {
+		return `https://ui-avatars.com/api/?name=${generateUserpicName(displayName)}&background=${randomHEXColor()}`;
 	}
 
 	checkIsAuth() {

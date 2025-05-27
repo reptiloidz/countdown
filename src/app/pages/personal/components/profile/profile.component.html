@@ -1,13 +1,13 @@
 <div class="content content--row profile form">
 	<div class="content__col profile__col form__section">
 		<img
-			[src]="userpic"
+			[src]="userpic + '?t=' + timestamp"
 			[alt]="name || 'Юзерпик'"
 			class="profile__userpic userpic"
 		>
 		<div
 			class="root__loading-marker"
-			*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading"
+			*ngIf="userpicLoading || profileLoading || emailLoading || passwordLoading || removeLoading || unlinkLoading"
 		></div>
 
 		<div class="profile__footer profile__footer--aside">
@@ -27,6 +27,23 @@
 				(click)="removeAccount()"
 				icon="trash"
 			>Удалить аккаунт</button>
+			<button
+				*ngIf="!isGoogleLinked && !isGoogle"
+				app-button
+				(click)="linkGoogle()"
+				icon="google"
+				class="icon--fill"
+				size="md"
+			></button>
+			<div *ngIf="isGoogleLinked">
+				Привязан Google аккаунт {{ googleProfile?.email }} ({{ googleProfile?.displayName }})
+				<button
+					*ngIf="isGoogleLinked"
+					app-button
+					(click)="unlinkGoogle()"
+					mode="negative"
+				>Отвязать</button>
+			</div>
 		</div>
 	</div>
 

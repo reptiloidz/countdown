@@ -57,9 +57,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	emailLoading = true;
 	passwordLoading = false;
 	removeLoading = false;
+	unlinkLoading = false;
 	verifyButtonDisabled = false;
 	birthDatePickerValue!: Date;
 	disabledAfter = subYears(new Date(), 1);
+	timestamp = +new Date();
 	private _user!: User;
 	private _birthDate = '';
 	private _birthDatePointId = '';
@@ -444,7 +446,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	get isGoogle() {
-		return this._user?.providerData[0].providerId === 'google.com';
+		return this._user?.providerData.length === 1 && this._user?.providerData[0].providerId === 'google.com';
+	}
+
+	get isGoogleLinked() {
+		return (
+			this._user?.providerData.length > 1 &&
+			this._user?.providerData.some(provider => provider.providerId === 'google.com')
+		);
+	}
+
+	get googleProfile() {
+		return this._user?.providerData.find(provider => provider.providerId === 'google.com');
+	}
+
+	get isPassword() {
+		return this._user?.providerData.length === 1 && this._user?.providerData[0].providerId === 'password';
 	}
 
 	get birthDatePointId() {
@@ -539,5 +556,68 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 	trackBy(index: number, item: string): string {
 		return item;
+	}
+
+	linkGoogle() {
+		this.auth
+			.linkGoogle()
+			.then(user => {
+				this.notify.add({
+					title: `Google аккаунт ${user?.displayName} (${user?.email}) успешно добавлен`,
+					short: true,
+					view: 'positive',
+				});
+				this.timestamp = +new Date();
+				this.cdr.markForCheck();
+			})
+			.catch(err => {
+				this.notify.add({
+					title: 'Не&nbsp;удалось добавить Google аккаунт',
+					short: true,
+					view: 'negative',
+				});
+				console.error(err);
+				this.cdr.markForCheck();
+			});
+	}
+
+	unlinkGoogle() {
+		this.notify
+			.confirm({
+				title: 'Точно отвязать Google аккаунт?',
+			})
+			.subscribe({
+				next: () => {
+					this.unlinkLoading = true;
+					this.auth
+						.unlinkGoogle()
+						.then(() => {
+							this.notify.add({
+								title: 'Google аккаунт успешно отвязан',
+								short: true,
+								view: 'positive',
+							});
+							this.cdr.markForCheck();
+						})
+						.catch(err => {
+							this.notify.add({
+								title: 'Не&nbsp;удалось удалить Google аккаунт',
+								short: true,
+								view: 'negative',
+							});
+							console.error(err);
+							this.cdr.markForCheck();
+						});
+					this.cdr.detectChanges();
+				},
+				error: () => {
+					this.unlinkLoading = false;
+					this.cdr.detectChanges();
+				},
+				complete: () => {
+					this.unlinkLoading = false;
+					this.cdr.detectChanges();
+				},
+			});
 	}
 }
