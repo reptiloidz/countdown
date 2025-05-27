@@ -35,7 +35,7 @@
 					class="profile__external-text"
 				>
 					<span>
-						Привязан<br>
+						<ng-container *ngIf="isGoogleLinked">Привязан<br></ng-container>
 						Google аккаунт
 					</span>
 					<span>
