@@ -2,7 +2,8 @@
 	<div class="content__col profile__col form__section">
 		<img
 			[src]="userpic + '?t=' + timestamp"
-			[alt]="name || 'Юзерпик'"
+			fetchpriority="high"
+			alt=""
 			class="profile__userpic userpic"
 		>
 		<div
@@ -21,29 +22,52 @@
 				(click)="sendEmailVerification()"
 			>Подтвердить почту</button>
 
+			<div class="profile__external">
+				<button
+					*ngIf="!isGoogleLinked && !isGoogle"
+					app-button
+					(click)="linkGoogle()"
+					mode="positive"
+					size="sm"
+				>Привязать аккаунт</button>
+				<span
+					*ngIf="isGoogleLinked || isGoogle"
+					class="profile__external-text"
+				>
+					<span>
+						Привязан<br>
+						Google аккаунт
+					</span>
+					<span>
+						<strong>{{ googleProfile?.email }}</strong><br>
+						({{ googleProfile?.displayName }})
+					</span>
+				</span>
+				<div class="profile__external-aside">
+					<img
+						src="assets/img/google-color.svg"
+						alt="Google"
+						aria-hidden="true"
+						class="profile__external-icon"
+					>
+					<button
+						*ngIf="isGoogleLinked"
+						app-button
+						(click)="unlinkGoogle()"
+						size="sm"
+						mode="ghost"
+						icon="cross"
+						title="Отвязать Google аккаунт"
+						class="profile__external-btn"
+					></button>
+				</div>
+			</div>
 			<button
 				app-button
 				mode="negative"
 				(click)="removeAccount()"
 				icon="trash"
 			>Удалить аккаунт</button>
-			<button
-				*ngIf="!isGoogleLinked && !isGoogle"
-				app-button
-				(click)="linkGoogle()"
-				icon="google"
-				class="icon--fill"
-				size="md"
-			></button>
-			<div *ngIf="isGoogleLinked">
-				Привязан Google аккаунт {{ googleProfile?.email }} ({{ googleProfile?.displayName }})
-				<button
-					*ngIf="isGoogleLinked"
-					app-button
-					(click)="unlinkGoogle()"
-					mode="negative"
-				>Отвязать</button>
-			</div>
 		</div>
 	</div>
 

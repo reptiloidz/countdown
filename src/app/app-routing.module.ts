@@ -19,13 +19,13 @@ const routes: Routes = [
 	{
 		path: 'point/:id',
 		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
-		data: { state: 'point' },
+		// data: { state: 'point' },
 		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'url',
 		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
-		data: { state: 'url' },
+		// data: { state: 'url' },
 		canActivate: [leaveUrlGuard],
 	},
 	// Вернуть, если будут проблемы с роутингом авторизации

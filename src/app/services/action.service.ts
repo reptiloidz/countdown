@@ -36,9 +36,11 @@ export class ActionService {
 	}
 
 	getCheckedPoints(el: Element) {
-		this.pointsChecked = Array.from(el?.children)
-			.filter((item: any) => item?.querySelector('input')?.checked)
-			.map((item: any) => item.getAttribute('data-id'));
+		if (el?.children) {
+			this.pointsChecked = Array.from(el?.children)
+				.filter((item: any) => item?.querySelector('input')?.checked)
+				.map((item: any) => item.getAttribute('data-id'));
+		}
 		this._eventPointsCheckedSubject.next(!!this.pointsChecked.length);
 	}
 

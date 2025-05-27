@@ -27,8 +27,14 @@
 		display: flex;
 
 		&--aside {
+			@include media-breakpoint-down(sm) {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			}
+
 			display: block;
-			margin-right: auto;
+			width: 100%;
 		}
 	}
 
@@ -38,5 +44,48 @@
 
 	&__userpic {
 		margin-bottom: auto;
+	}
+
+	&__external {
+		@include media-breakpoint-down(sm) {
+			margin-bottom: auto;
+		}
+
+		@include media-breakpoint-down(xs) {
+			padding: 4px;
+		}
+
+		display: flex;
+		gap: 4px;
+		justify-content: space-between;
+		margin-bottom: 10px;
+		padding: 10px;
+		border: 1px solid rgba(var(--c-border-primary), 0.2);
+		border-radius: 8px;
+	}
+
+	&__external-text {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		font-size: 12px;
+		font-weight: 300;
+	}
+
+	&__external-btn {
+		margin-left: auto;
+	}
+
+	&__external-icon {
+		display: block;
+		width: 32px;
+		margin-bottom: auto;
+	}
+
+	&__external-aside {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		align-items: flex-end;
 	}
 }

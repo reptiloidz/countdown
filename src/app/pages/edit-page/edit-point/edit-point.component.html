@@ -105,10 +105,10 @@
 				>
 					<div class="form__direction">
 						<label
-							*ngIf="!(isTimer && isCreationUrl)"
 							app-checkbox
 							mode="custom"
 							(change)="dateOnlySwitch($event)"
+							[isDisabled]="isTimer && isCreationUrl"
 							[isChecked]="!dateOnly"
 							[icon]="timeModeIcon"
 							[title]="'Дата' + (dateOnly ? '' : ' и время')"

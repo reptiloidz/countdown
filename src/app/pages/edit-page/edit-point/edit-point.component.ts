@@ -776,6 +776,11 @@ export class EditPointComponent implements OnInit, OnDestroy, AfterViewInit {
 	switchDateUrlMode(mode: string) {
 		this.dateUrlMode = mode as 'date' | 'timer';
 
+		if (this.dateUrlMode === 'timer') {
+			this.dateOnly = false;
+			this.timeModeIcon = 'clock';
+		}
+
 		if (this.notifies['timer'].date) {
 			if (this.dateUrlMode === 'date') {
 				this.notifies['timer'].remove();

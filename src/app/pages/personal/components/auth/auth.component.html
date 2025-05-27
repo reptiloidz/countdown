@@ -52,17 +52,20 @@
 </form>
 <div class="main__auth-external">
 	<span class="main__auth-external-inner">
-		Или авторизуйтесь
-		<br>
-		с&nbsp;помощью Google
+		Войти с&nbsp;Google
 		<button
 			app-button
 			mode="ghost"
 			size="lg"
-			class="icon--fill"
-			icon="google"
 			(click)="authGoogle()"
 			title="Google"
-		></button>
+		>
+			<img
+				src="assets/img/google-color.svg"
+				alt="Google"
+				aria-hidden="true"
+				class="main__auth-external-icon"
+			>
+		</button>
 	</span>
 </div>

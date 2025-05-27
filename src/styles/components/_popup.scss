@@ -89,9 +89,17 @@
 	}
 
 	&__btn {
-		@include media-breakpoint-down(sm) {
+		@include media-breakpoint-down(md) {
+			width: 36px;
+			height: 36px;
 			margin-top: 8px;
 			margin-right: 8px;
+		}
+
+		@include media-breakpoint-down(sm) {
+			margin-top: 4px;
+			margin-right: 4px;
+			border-radius: 10px;
 		}
 
 		z-index: 1;

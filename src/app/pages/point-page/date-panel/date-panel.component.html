@@ -65,15 +65,25 @@
 				app-checkbox
 				iconSize="sm"
 				mode="icon"
-				title="Отображение информации об&nbsp;итерациях"
 				[isChecked]="showIterationsInfo"
 				(change)="iterationsInfoSwitch($event)"
 			>
-				<svg
-					app-svg
-					name="info-circle"
-					class="checkbox__label-icon"
-				></svg>
+				<span
+					app-tooltip
+					onboarding="iterationsInfo"
+				>
+					<ng-template #tooltipContent>
+						Отображение<br>
+						информации<br>
+						об&nbsp;итерациях
+					</ng-template>
+					<svg
+						app-svg
+						name="info-circle"
+						class="checkbox__label-icon tooltip__trigger"
+						#tooltipTrigger
+					></svg>
+				</span>
 			</label>
 		</ng-template>
 		<ng-template #extraTemplate>

@@ -1,3 +1,7 @@
+@import './components/layout';
+@import './components/content';
+@import './components/root';
+@import './components/main';
 @import './components/icon';
 @import './components/notify-list';
 @import './components/marker';
@@ -5,7 +9,6 @@
 @import './components/checkbox';
 @import './components/radio';
 @import './components/switcher';
-@import './components/content';
 @import './components/link';
 @import './components/color';
 @import './components/calendar';
@@ -26,7 +29,6 @@
 @import './components/animations';
 @import './components/info';
 @import './components/loader';
-@import './components/layout';
 @import './components/points-list';
 @import './components/point';
 @import './components/timers';

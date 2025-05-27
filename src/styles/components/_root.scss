@@ -1,0 +1,86 @@
+.root {
+	@include media-breakpoint-down(md) {
+		height: auto;
+	}
+
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+
+	&:has(.panel, .dashboard) {
+		.nav {
+			--nav-header-border-b-cl: transparent;
+		}
+	}
+
+	&:has(.root__loading-marker) {
+		.root__loader {
+			@include media-breakpoint-up(lg) {
+				backdrop-filter: blur(4px);
+			}
+
+			opacity: 1;
+			pointer-events: all;
+		}
+
+		.root__loader-icon {
+			display: flex;
+		}
+	}
+
+	&:has(.root__invert-possible) {
+		&::after {
+			content: '';
+		}
+	}
+
+	&:has(.root__invert-marker) {
+		&::after {
+			filter: invert(1);
+			backdrop-filter: blur(0.01px);
+		}
+	}
+
+	&::after {
+		@include transition(filter 0.5s);
+
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 5;
+		display: block;
+		filter: none;
+		pointer-events: none;
+	}
+
+	&__loader {
+		@include transition(opacity 1s, backdrop-filter 1s);
+
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 3;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	&__loader-icon {
+		@include transition(display 0.8s allow-discrete);
+
+		display: none;
+		height: 100%;
+	}
+
+	&__loading-marker {
+		display: none;
+	}
+
+	&__invert-marker {
+		display: none;
+	}
+}

@@ -33,7 +33,7 @@
 		}
 
 		&--settings-link {
-			grid-template-areas: 'colors checks direction';
+			grid-template-areas: 'colors direction checks';
 			grid-template-columns: auto 1fr auto;
 
 			.form__checks {
@@ -77,6 +77,10 @@
 	}
 
 	&__direction {
+		@include media-breakpoint-down(sm) {
+			margin-left: auto;
+		}
+
 		display: flex;
 		grid-area: direction;
 		gap: 15px;

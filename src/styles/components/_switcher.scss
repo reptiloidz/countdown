@@ -94,4 +94,18 @@
 			--icon-w: 16px;
 		}
 	}
+
+	&--lg {
+		.switcher__icon {
+			--icon-w: 48px;
+		}
+
+		.switcher__value {
+			font-size: 18px;
+		}
+
+		.switcher__item {
+			border-radius: 16px;
+		}
+	}
 }

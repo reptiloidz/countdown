@@ -159,7 +159,7 @@
 	&__timers {
 		@include media-breakpoint-down(md) {
 			order: -1;
-			margin: 30px 0 50px;
+			padding: 30px 0 50px;
 		}
 
 		margin: auto;

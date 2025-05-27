@@ -71,6 +71,10 @@
 	}
 
 	&__close {
+		@include media-breakpoint-down(md) {
+			width: 36px;
+			height: 36px;
+		}
 		--button-bg-cl: rgb(var(--c-bg-inverse));
 
 		position: absolute;

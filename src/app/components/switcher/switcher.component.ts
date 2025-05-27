@@ -26,7 +26,7 @@ export class SwitcherComponent implements ControlValueAccessor {
 	@Input() items: SwitcherItem[] = [];
 	@Input() value!: string;
 	@Input() mode = 'ghost' as const;
-	@Input() size: 'sm' | undefined;
+	@Input() size: 'sm' | 'lg' | undefined;
 	@Input() showTitle = false;
 	@Input() switcherListClass = '';
 	@Input() formControlName!: string;
