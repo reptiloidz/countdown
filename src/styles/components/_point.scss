@@ -199,7 +199,7 @@
 
 		.board__half {
 			&--animate {
-				@include media-breakpoint-down(sm) {
+				@include media-breakpoint-down(md) {
 					/* stylelint-disable-next-line max-nesting-depth */
 					&,
 					&.board__half--bottom {
