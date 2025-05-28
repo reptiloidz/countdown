@@ -98,11 +98,15 @@
 			flex-direction: column;
 		}
 
+		padding-bottom: 0;
+
 		.content__col {
 			@include media-breakpoint-down(md) {
 				width: 100%;
 				margin-bottom: auto;
 			}
+
+			padding-bottom: var(--content-py);
 		}
 	}
 

@@ -573,6 +573,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			.catch(err => {
 				this.notify.add({
 					title: 'Не&nbsp;удалось добавить Google аккаунт',
+					text:
+						err.code === 'auth/credential-already-in-use'
+							? 'Этот Google аккаунт уже используется в&nbsp;другой учётной записи'
+							: undefined,
 					short: true,
 					view: 'negative',
 				});
