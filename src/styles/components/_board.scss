@@ -174,15 +174,15 @@
 				animation-name: none;
 			}
 
+			&.board__half--bottom {
+				animation-name: halfBottom;
+			}
+
 			@media (prefers-reduced-motion: reduce) {
 				&,
 				&.board__half--bottom {
 					animation-name: none;
 				}
-			}
-
-			&.board__half--bottom {
-				animation-name: halfBottom;
 			}
 		}
 

@@ -196,6 +196,18 @@
 		z-index: 0;
 		justify-content: flex-start;
 		margin-left: 20px;
+
+		.board__half {
+			&--animate {
+				@include media-breakpoint-down(sm) {
+					/* stylelint-disable-next-line max-nesting-depth */
+					&,
+					&.board__half--bottom {
+						animation-name: none;
+					}
+				}
+			}
+		}
 	}
 
 	&__direction {
