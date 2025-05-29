@@ -16,12 +16,14 @@
  * ```
  */
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, interval } from 'rxjs';
+import { Subscription, filter, interval } from 'rxjs';
 import { ActionService } from './services';
 import { environment } from 'src/environments/environment';
 import { millisecondsInSecond } from 'date-fns/constants';
 import { animate, group, query, style, transition, trigger } from '@angular/animations';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+
+declare var ym: any;
 
 @Component({
 	selector: 'app-root',
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	constructor(
 		private action: ActionService,
 		private cdr: ChangeDetectorRef,
+		private router: Router,
 	) {}
 
 	private subscriptions = new Subscription();
@@ -76,6 +79,12 @@ export class AppComponent implements OnInit, OnDestroy {
 				);
 			},
 			1000 - (Date.now() % 1000),
+		);
+
+		this.subscriptions.add(
+			this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
+				ym(102265190, 'hit', (event as NavigationEnd).urlAfterRedirects);
+			}),
 		);
 	}
 
