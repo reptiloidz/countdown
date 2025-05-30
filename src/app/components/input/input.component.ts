@@ -50,6 +50,7 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	@Input() validation = false;
 	@Input() maxlength!: number;
 	@Input() min!: number;
+	@Input() max!: number;
 	@Input() clearButton = false;
 	@Input() showPasswordButton = false;
 	@Input() clearButtonValue: string | number = '';

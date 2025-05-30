@@ -291,7 +291,10 @@ export class GenerateIterationsComponent implements OnInit {
 
 	genRepeats() {
 		!+this.rangePeriodValue && this.iterationsForm.controls['rangePeriod'].setValue(1);
-		this.isRepeatsAmountSet && +this.rangeAmountValue < 2 && this.iterationsForm.controls['rangeAmount'].setValue(2);
+		if (this.isRepeatsAmountSet) {
+			if (+this.rangeAmountValue < 2) this.iterationsForm.controls['rangeAmount'].setValue(2);
+			if (+this.rangeAmountValue > 1000) this.iterationsForm.controls['rangeAmount'].setValue(1000);
+		}
 
 		if (this.isRepeatsAmountSet) {
 			for (let i = 0; i < this.iterationsForm.controls['rangeAmount'].value; i++) {

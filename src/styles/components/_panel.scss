@@ -48,8 +48,11 @@
 	}
 
 	&__button-extra {
-		z-index: 1;
 		margin-top: 8px;
+
+		&:has(.tooltip:hover, .tooltip--onboarding) {
+			z-index: 1;
+		}
 	}
 
 	&__footer {

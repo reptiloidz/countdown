@@ -18,6 +18,7 @@
 				placeholder="Число повторов"
 				formControlName="rangeAmount"
 				[min]="2"
+				[max]="1000"
 				[autofocus]="true"
 			></app-input>
 		</ng-container>
@@ -40,6 +41,7 @@
 			[showTitle]="true"
 			(valueSwitched)="repeatsModeSwitcher()"
 		></app-switcher>
+		<p class="form-drop__subtitle form-drop__subtitle--bottom">От&nbsp;2&nbsp;до&nbsp;1000 повторов</p>
 	</div>
 	<div class="form-drop__col form-drop__col--period">
 		<h3 class="form-drop__subtitle">Каждые</h3>

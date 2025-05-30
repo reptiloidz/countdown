@@ -31,6 +31,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 	shareLinkLoading = false;
 	link = signal('');
 	isLinkGenerating = false;
+	hasAccessNoEdit = false;
 	private subscriptions = new Subscription();
 
 	constructor(
@@ -140,6 +141,11 @@ export class FooterComponent implements OnInit, OnDestroy {
 									fromObject: googleLinkParams,
 								}).toString();
 							this.hasAccess = point && this.auth.checkAccessEdit(point);
+							this.hasAccessNoEdit = !!(this.pointId && this.hasAccess && !this.isEdit);
+							requestAnimationFrame(() => {
+								this.action.onboardingClosed();
+							});
+							this.cdr.detectChanges();
 						}
 						this.cdr.markForCheck();
 					},

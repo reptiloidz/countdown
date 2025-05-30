@@ -233,6 +233,10 @@
 		> .drop__body {
 			&,
 			> .drop__inner {
+				@include media-breakpoint-down(md) {
+					overflow: visible;
+				}
+
 				@media (min-height: 701px) {
 					overflow: visible;
 				}

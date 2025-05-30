@@ -47,6 +47,14 @@
 		margin-top: 6px;
 		margin-bottom: 6px;
 		font-size: 14px;
+
+		&--bottom {
+			@include media-breakpoint-down(sm) {
+				margin-top: 10px;
+			}
+
+			margin-top: auto;
+		}
 	}
 
 	&__radio {

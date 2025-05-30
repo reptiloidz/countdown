@@ -106,6 +106,6 @@ export class TooltipComponent implements AfterViewInit, OnChanges, AfterContentC
 	closeOnboarding() {
 		localStorage.setItem(`onboarding-${this.onboarding}`, 'true');
 		this.isOnboardingOn.set(false);
-		this.action.onboardingClosed(this.onboarding);
+		this.action.onboardingClosed();
 	}
 }

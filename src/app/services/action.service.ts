@@ -15,7 +15,7 @@ export class ActionService {
 	private _eventIntervalSwitchedSubject = new Subject<void>();
 	private _eventAutocompleteOpenedSubject = new Subject<void>();
 	private _eventShortLinkCheckedSubject = new Subject<void>();
-	private _eventOnboardingClosedSubject = new Subject<string>();
+	private _eventOnboardingClosedSubject = new Subject<void>();
 	private _eventIterationsCheckedSubject = new Subject<void>();
 	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
 	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
@@ -86,7 +86,7 @@ export class ActionService {
 		this._eventIterationsCheckedSubject.next();
 	}
 
-	onboardingClosed(onboarding: string) {
-		this._eventOnboardingClosedSubject.next(onboarding);
+	onboardingClosed() {
+		this._eventOnboardingClosedSubject.next();
 	}
 }
