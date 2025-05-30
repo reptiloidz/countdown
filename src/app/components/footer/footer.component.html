@@ -41,7 +41,7 @@
 
 <div class="nav__aside nav__aside--right">
 	<a
-		*ngIf="hasAccessNoEdit"
+		*ngIf="pointId && hasAccess && !isEdit"
 		app-button
 		size="lg"
 		icon="pencil"
@@ -52,7 +52,7 @@
 	></a>
 	<div
 		app-tooltip
-		*ngIf="hasAccessNoEdit"
+		*ngIf="pointId && hasAccess && !isEdit"
 		vertical="top"
 		onboarding="now"
 		[onboardingTime]="3000"
