@@ -9,6 +9,7 @@ import { Point } from 'src/app/interfaces';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 const mockAuth = {
 	currentUser: {
@@ -26,6 +27,7 @@ describe('ProfileComponent', () => {
 	let authServiceMock: any;
 	let dataServiceMock: any;
 	let notifyServiceMock: any;
+	let store: MockStore;
 
 	beforeEach(async () => {
 		authServiceMock = {
@@ -35,7 +37,6 @@ describe('ProfileComponent', () => {
 			eventPasswordUpdated$: new Subject<boolean>(),
 			eventAccountDeleted$: new Subject<void>(),
 			eventVerifyEmailSent$: new Subject<void>(),
-			eventEmailUpdateStarted$: new Subject<void>(),
 			updateUserBirthDate: jest.fn(),
 			verifyEmail: jest.fn(),
 			updateEmail: jest.fn(),
@@ -61,11 +62,24 @@ describe('ProfileComponent', () => {
 				{ provide: NotifyService, useValue: notifyServiceMock },
 				{ provide: Auth, useValue: mockAuth },
 				[provideNgxMask()],
+				provideMockStore({
+					initialState: {
+						loading: {
+							userpicLoading: false,
+							profileLoading: false,
+							emailLoading: false,
+							passwordLoading: false,
+							removeLoading: false,
+							unlinkLoading: false,
+						},
+					},
+				}),
 			],
 			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 
+		store = TestBed.inject(MockStore);
 		fixture = TestBed.createComponent(ProfileComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

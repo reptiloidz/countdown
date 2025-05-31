@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +30,11 @@ import { LinkPointComponent } from './components/link-point/link-point.component
 import { environment } from 'src/environments/environment';
 import { QrCodeModule } from 'ng-qrcode';
 import { MainItemModule } from './components/main-item/main-item.module';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { reducers } from './store/reducers';
 
 @NgModule({
 	declarations: [
@@ -61,6 +66,10 @@ import { MainItemModule } from './components/main-item/main-item.module';
 		ClockModule,
 		MainItemModule,
 		QrCodeModule,
+		StoreModule.forRoot(reducers, {}),
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+		EffectsModule.forRoot([]),
+		StoreRouterConnectingModule.forRoot(),
 	],
 	providers: [
 		provideAnimations(),
