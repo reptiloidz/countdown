@@ -116,7 +116,9 @@
 	}
 
 	&--privacy {
-		align-items: flex-start;
+		@include media-breakpoint-down(sm) {
+			align-items: flex-start;
+		}
 
 		.checkbox__box {
 			@include media-breakpoint-up(md) {
