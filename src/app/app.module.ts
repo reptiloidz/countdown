@@ -35,6 +35,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { reducers } from './store/reducers';
+import { DonateComponent } from './components/donate/donate.component';
 
 @NgModule({
 	declarations: [
@@ -51,6 +52,7 @@ import { reducers } from './store/reducers';
 		DatePointsPopupComponent,
 		SettingsComponent,
 		LinkPointComponent,
+		DonateComponent,
 	],
 	bootstrap: [AppComponent],
 	imports: [

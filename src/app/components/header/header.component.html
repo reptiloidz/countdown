@@ -45,6 +45,13 @@
 		aria-haspopup="dialog"
 	></button>
 	<button
+		app-button
+		mode="secondary"
+		title="Помочь проекту"
+		(click)="showDonate()"
+		aria-haspopup="dialog"
+	>👍</button>
+	<button
 		*ngIf="!isProd"
 		app-button
 		(click)="check()"

@@ -6,6 +6,7 @@ import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
 import { SettingsComponent } from '../settings/settings.component';
 import { environment } from 'src/environments/environment';
+import { DonateComponent } from '../donate/donate.component';
 
 @Component({
 	selector: '[app-header]',
@@ -93,5 +94,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.auth.logout().finally(() => {
 			this.logoutLoading = false;
 		});
+	}
+
+	showDonate() {
+		this.popupService.show('Помочь проекту', DonateComponent);
 	}
 }
