@@ -9,9 +9,10 @@ import { authGuard, leaveUrlGuard, unauthGuard } from '../../guards';
 import { ProfileComponent } from './components/profile/profile.component';
 import { SharedModule } from '../../shared.module';
 import { noPointGuard } from 'src/app/guards/noPoint.guard';
+import { GoogleAuthComponent } from 'src/app/components/google-auth/google-auth.component';
 
 @NgModule({
-	declarations: [AuthComponent, RegComponent, ProfileComponent],
+	declarations: [AuthComponent, RegComponent, ProfileComponent, GoogleAuthComponent],
 	imports: [
 		CommonModule,
 		FormsModule,

@@ -31,7 +31,7 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 	@Input() formControlName!: string;
 	@Input() control!: FormControl;
 	@Input() iconSize: 'sm' | 'md' = 'md';
-	@Input() mode: 'text' | 'icon' | 'custom' = 'text';
+	@Input() mode: 'text' | 'icon' | 'custom' | 'privacy' = 'text';
 	@Input() isChecked = false;
 	@Input() isDisabled = false;
 	@Input() icon!: string;

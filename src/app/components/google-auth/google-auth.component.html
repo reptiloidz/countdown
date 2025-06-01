@@ -1,0 +1,37 @@
+<div class="main__auth-external">
+	<span class="main__auth-external-inner">
+		<h3>Войти с&nbsp;Google</h3>
+		<div class="main__auth-external-body">
+			<button
+				app-button
+				mode="ghost"
+				size="lg"
+				(click)="authGoogle()"
+				title="Google"
+				[attr.disabled]="acceptedPrivacy ? null : 'true'"
+			>
+				<img
+					src="assets/img/google-color.svg"
+					alt="Google"
+					aria-hidden="true"
+					class="main__auth-external-icon"
+				>
+			</button>
+			<label
+				app-checkbox
+				mode="privacy"
+				name="privacyAgree"
+				iconSize="md"
+				[isChecked]="acceptedPrivacy"
+				(change)="acceptedPrivacy = !acceptedPrivacy"
+			>
+				Принять условия <button
+					class="link"
+					type="button"
+					aria-haspopup="dialog"
+					(click)="showPrivacy()"
+				>политики обработки персональных данных</button>
+			</label>
+		</div>
+	</span>
+</div>

@@ -50,22 +50,4 @@
 		</div>
 	</div>
 </form>
-<div class="main__auth-external">
-	<span class="main__auth-external-inner">
-		Войти с&nbsp;Google
-		<button
-			app-button
-			mode="ghost"
-			size="lg"
-			(click)="authGoogle()"
-			title="Google"
-		>
-			<img
-				src="assets/img/google-color.svg"
-				alt="Google"
-				aria-hidden="true"
-				class="main__auth-external-icon"
-			>
-		</button>
-	</span>
-</div>
+<app-google-auth></app-google-auth>

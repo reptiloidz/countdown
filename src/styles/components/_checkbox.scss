@@ -114,4 +114,15 @@
 			--checkbox-border-cl: rgba(var(--c-border-primary), 0.4);
 		}
 	}
+
+	&--privacy {
+		align-items: flex-start;
+
+		.checkbox__box {
+			@include media-breakpoint-up(md) {
+				--checkbox-box-w: 16px;
+				--checkbox-icon-w: 12px;
+			}
+		}
+	}
 }
