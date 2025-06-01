@@ -46,6 +46,31 @@ import {
 	selectUserpicLoading,
 } from 'src/app/store/selectors/loading.selector';
 
+const DEFAULT_PASSWORD_VALIDATION: ValidationObject = {
+	password: {
+		required: {
+			value: false,
+			message: 'Вы не ввели пароль',
+		},
+		dirty: false,
+	},
+	passwordNew: {
+		required: {
+			value: false,
+			message: 'Вы не ввели новый пароль',
+		},
+		enough: {
+			value: false,
+			message: 'Новый пароль слишком короткий',
+		},
+		same: {
+			value: false,
+			message: 'Новый пароль совпадает со старым',
+		},
+		dirty: false,
+	},
+};
+
 @Component({
 	selector: 'app-profile',
 	templateUrl: './profile.component.html',
@@ -108,30 +133,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	};
 	emailErrorMessages: string[] = [];
 
-	passwordValidated: ValidationObject = {
-		password: {
-			required: {
-				value: false,
-				message: 'Вы не ввели пароль',
-			},
-			dirty: false,
-		},
-		passwordNew: {
-			required: {
-				value: false,
-				message: 'Вы не ввели новый пароль',
-			},
-			enough: {
-				value: false,
-				message: 'Новый пароль слишком короткий',
-			},
-			same: {
-				value: false,
-				message: 'Новый пароль совпадает со старым',
-			},
-			dirty: false,
-		},
-	};
+	passwordValidated: ValidationObject = DEFAULT_PASSWORD_VALIDATION;
 	passwordErrorMessages: string[] = [];
 	oldPasswordErrorMessages: string[] = [];
 	newPasswordErrorMessages: string[] = [];
@@ -252,9 +254,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							view: 'positive',
 						});
 
-						this.formPassword.controls['password'].setValue(null);
-						this.formPassword.controls['new-password'].setValue(null);
+						this.formPassword.reset();
+						this.formPassword.controls['password'].setValue('');
+						this.formPassword.controls['new-password'].setValue('');
 						this.passwordErrorMessages = [];
+						this.passwordValidated = DEFAULT_PASSWORD_VALIDATION;
 					}
 					this.cdr.detectChanges();
 				},
@@ -348,6 +352,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.formPassword.valueChanges.subscribe({
 				next: () => {
+					if (!this.formPassword.dirty) {
+						return;
+					}
 					this.passwordValidated = mergeDeep(this.passwordValidated, {
 						password: {
 							required: {
