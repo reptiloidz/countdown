@@ -137,20 +137,6 @@ export class AuthComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	authGoogle() {
-		this.auth
-			.login({
-				google: true,
-			})
-			.catch(err => {
-				this.notify.add({
-					title: 'Ошибка при авторизации через Google',
-					view: 'negative',
-				});
-				console.error('Ошибка при авторизации через Google:\n', err.message);
-			});
-	}
-
 	submit() {
 		if (this.form.valid) {
 			this.isLoading = true;
