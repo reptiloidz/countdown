@@ -135,6 +135,9 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	get isAuth() {
 		return this.auth.isAuthenticated;
 	}
+	get hasEmailVerified() {
+		return this.auth.checkEmailVerified;
+	}
 
 	get closestIterationRemain() {
 		return (
