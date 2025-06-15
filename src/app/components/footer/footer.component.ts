@@ -145,7 +145,6 @@ export class FooterComponent implements OnInit, OnDestroy {
 							requestAnimationFrame(() => {
 								this.action.onboardingClosed();
 							});
-							this.cdr.detectChanges();
 						}
 						this.cdr.markForCheck();
 					},
