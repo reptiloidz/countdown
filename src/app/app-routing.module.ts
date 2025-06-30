@@ -19,38 +19,26 @@ const routes: Routes = [
 	{
 		path: 'point/:id',
 		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
-		// data: { state: 'point' },
 		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'url',
 		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
-		// data: { state: 'url' },
 		canActivate: [leaveUrlGuard],
 	},
-	// Вернуть, если будут проблемы с роутингом авторизации
-	// {
-	// 	path: 'auth',
-	// 	component: AuthComponent,
-	// 	data: { state: 'auth' },
-	// 	canActivate: [leaveUrlGuard, noPointGuard, authGuard],
-	// },
 	{
 		path: 'edit/:id',
 		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
-		data: { state: 'edit' },
 		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'create',
 		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
-		data: { state: 'create' },
 		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'create-url',
 		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
-		data: { state: 'create-url' },
 		canActivate: [leaveUrlGuard],
 	},
 	{
