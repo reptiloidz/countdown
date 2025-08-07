@@ -29,7 +29,7 @@ import { DropHorizontal, DropVertical } from 'src/app/types';
 })
 export class DatepickerComponent implements OnInit {
 	@Input() dropClass: string | string[] | null = null;
-	@Input() dateOnly = false;
+	@Input() dateOnly: boolean | undefined = false;
 	@Input() isNow = true;
 	@Input() date: Date | undefined = this.isNow ? new Date() : undefined;
 	@Input() visibleDate = this.date;
