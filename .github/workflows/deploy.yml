@@ -38,20 +38,23 @@ jobs:
     - run: npm run build
     - run: npm test
 
+    - name: Setup SSH key
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
     - name: Clean deployment directory
       env:
         SSH_HOST: ${{ secrets.SSH_HOST }}
         SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_PASS: ${{ secrets.SSH_PASS }}
         DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
       run: |
-        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "rm -rf $DEPLOY_PATH/*"
+        ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "rm -rf $DEPLOY_PATH/*"
 
-    - name: Deploy to external server via SFTP
+    - name: Deploy to external server via rsync
       env:
         SSH_HOST: ${{ secrets.SSH_HOST }}
         SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_PASS: ${{ secrets.SSH_PASS }}
         DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
       run: |
-        sshpass -p "$SSH_PASS" rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dist/cd/ $SSH_USER@$SSH_HOST:$DEPLOY_PATH
+        rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dist/cd/ $SSH_USER@$SSH_HOST:$DEPLOY_PATH
