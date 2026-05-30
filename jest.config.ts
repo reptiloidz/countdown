@@ -19,14 +19,18 @@ const config: Config = {
 	clearMocks: true,
 
 	// Indicates whether the coverage information should be collected while executing the test
-	collectCoverage: true,
+	collectCoverage: false,
 
 	// An array of glob patterns indicating a set of files for which coverage information should be collected
 	// collectCoverageFrom: undefined,
 
 	// The directory where Jest should output its coverage files
 	collectCoverageFrom: [
-		'src/app/{components,personal/components}/**/*.{ts,html}',
+		'src/app/components/**/*.{ts,html}',
+		'src/app/pages/**/*.{ts,html}',
+		'src/app/timers/**/*.{ts,html}',
+		'src/app/state/**/*.ts',
+		'src/app/app.component.ts',
 		'src/app/{services,directives,guards,helpers,pipes,validators,providers}/**/*.ts',
 		'!**/index.ts',
 		'!**/*.module.ts',

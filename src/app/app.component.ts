@@ -22,11 +22,14 @@ import { environment } from 'src/environments/environment';
 import { millisecondsInSecond } from 'date-fns/constants';
 import { animate, group, query, style, transition, trigger } from '@angular/animations';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { AppModule } from './app.module';
 
 declare var ym: any;
 
 @Component({
 	selector: 'app-root',
+	standalone: true,
+	imports: [RouterOutlet, AppModule],
 	templateUrl: './app.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
