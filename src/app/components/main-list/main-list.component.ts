@@ -357,7 +357,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	changeFilters() {
-		this.searchInputValue = this.searchInput?.value.toString();
+		this.searchInputValue = this.searchInput?.value().toString();
 		this.colorType = this.colorList
 			? Array.from(this.colorList.nativeElement.children)
 					.filter((item: any) => item?.querySelector('input')?.checked)
@@ -386,7 +386,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		this.greenwichValue = 'all';
 		this.publicValue = 'false';
 		this.directionValue = 'all';
-		this.searchInput.value = '';
+		this.searchInput?.writeValue('');
 		this.resetColors();
 		this.changeFilters();
 		this.action.uncheckAllPoints();

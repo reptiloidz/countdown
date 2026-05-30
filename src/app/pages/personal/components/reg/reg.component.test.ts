@@ -23,8 +23,8 @@ describe('RegComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [RegComponent, InputComponent],
-			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective, ButtonComponent, CheckboxComponent],
+			declarations: [RegComponent],
+			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective, ButtonComponent, CheckboxComponent, InputComponent],
 			providers: [
 				{ provide: AuthService, useValue: { register: jest.fn(), login: jest.fn() } },
 				{ provide: NotifyService, useValue: { add: jest.fn() } },

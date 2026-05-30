@@ -1,12 +1,12 @@
 <div
 	#triggerTemplateRef
 	*ngIf="triggerTemplate else defaultButton"
-	[ngClass]="navClass"
+	[ngClass]="navClass()"
 >
 	<ng-container
 		[ngTemplateOutlet]="triggerTemplate"
 		[ngTemplateOutletContext]="{
-			value,
+			value: value(),
 			toggle: toggleHandler.bind(this),
 			open: openHandler.bind(this),
 			close: closeHandler.bind(this)
@@ -14,57 +14,57 @@
 	></ng-container>
 </div>
 <ng-template #defaultButton>
-	<div [ngClass]="navClass">
+	<div [ngClass]="navClass()">
 		<button
 			#triggerButton
 			app-button
-			[ngClass]="buttonClass"
-			[textClass]="buttonTextClass"
-			[attr.title]="buttonTitle"
+			[ngClass]="buttonClass()"
+			[textClass]="buttonTextClass()"
+			[attr.title]="buttonTitle()"
 			mode="secondary"
-			[size]="buttonSize"
-			[icon]="icon"
+			[size]="buttonSize()"
+			[icon]="icon()"
 			(click)="toggleHandler()"
-			[attr.disabled]="disabled || null"
-		>{{ buttonLabel || ((dropList) ? keyOfValue || value : null) }}</button>
+			[attr.disabled]="disabled() || null"
+		>{{ buttonLabel() || ((dropList()) ? keyOfValue || value() : null) }}</button>
 	</div>
 </ng-template>
 
 <div
 	*ngIf="open"
 	class="drop__body"
-	[ngClass]="[dropBodyClass, (select || dropList) ? 'drop__body--list' : '']"
+	[ngClass]="[dropBodyClass(), (select() || dropList()) ? 'drop__body--list' : '']"
 	aria-expanded="true"
 	aria-live="polite"
 >
 	<div
 		class="drop__inner"
 		@drop
-		[ngClass]="innerClass"
+		[ngClass]="innerClass()"
 		#selectListRef
 	>
 		<ng-container
 			*ngIf="bodyTemplate else selectList"
 			[ngTemplateOutlet]="bodyTemplate"
 			[ngTemplateOutletContext]="{
-				value,
+				value: value(),
 				change: changeHandler.bind(this)
 			}"
 		></ng-container>
 		<input
-			*ngIf="formControlName || name"
+			*ngIf="formControlName() || name()"
 			type="hidden"
-			[attr.name]="formControlName || name"
-			[value]="value"
+			[attr.name]="formControlName() || name()"
+			[value]="value()"
 		>
 	</div>
 	<ng-container
-		*ngIf="footerTemplate && showFooter"
+		*ngIf="footerTemplate && showFooter()"
 		[ngTemplateOutlet]="footerTemplate"
 	></ng-container>
 </div>
 <ng-template #selectList>
-	<ng-container *ngFor="let item of dropList; trackBy: trackBy">
+	<ng-container *ngFor="let item of dropList(); trackBy: trackBy">
 		<ng-template
 			[ngTemplateOutlet]="selectItem"
 			[ngTemplateOutletContext]="{ item: item }"
@@ -80,17 +80,16 @@
 		app-button
 		class="drop__item"
 		[ngClass]="{
-			'drop__item--selected': value.toString() === item.value.toString()
+			'drop__item--selected': value().toString() === item.value.toString()
 		}"
 		[attr.disabled]="item.disabled || null"
-		[textClass]="[listButtonTextClass, 'drop__item-text']"
+		[textClass]="[listButtonTextClass(), 'drop__item-text']"
 		(click)="changeHandler(item.value)"
 	>
 		{{ item.key }}
 		<svg
 			app-svg
 			name="check"
-			size="sm"
 			class="drop__item-icon"
 		></svg>
 	</button>

@@ -3,7 +3,6 @@ import { CalendarComponent } from './calendar.component';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '@angular/fire/auth';
 import { Iteration, Point } from 'src/app/interfaces';
-import { SwitcherComponent } from '../switcher/switcher.component';
 import { By } from '@angular/platform-browser';
 
 // Mock Data
@@ -52,8 +51,7 @@ describe('CalendarComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [CalendarComponent],
-			imports: [FormsModule, SwitcherComponent],
+			imports: [CalendarComponent, FormsModule],
 			providers: [{ provide: Auth, useValue: mockAuth }],
 		}).compileComponents();
 

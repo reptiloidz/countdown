@@ -3,21 +3,28 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	computed,
 	ElementRef,
-	EventEmitter,
-	HostBinding,
-	Input,
-	Output,
-	ViewChild,
 	forwardRef,
+	HostBinding,
+	input,
+	model,
+	output,
+	signal,
+	viewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { NgxMaskConfig } from 'ngx-mask';
+import { NgxMaskConfig, NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { ValidationObjectFieldValue } from 'src/app/interfaces';
+import { ButtonComponent } from '../button/button.component';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: 'app-input',
+	standalone: true,
+	imports: [CommonModule, FormsModule, NgxMaskDirective, SvgComponent, ButtonComponent],
 	templateUrl: './input.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
@@ -26,47 +33,50 @@ import { ValidationObjectFieldValue } from 'src/app/interfaces';
 			useExisting: forwardRef(() => InputComponent),
 			multi: true,
 		},
+		provideNgxMask(),
 	],
 })
 export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	@HostBinding('class') get controlClass() {
-		return ['control', this.invalid ? 'control--error' : null].join(' ');
+		return ['control', this.invalid() ? 'control--error' : null].join(' ');
 	}
-	@Input() placeholder = '';
-	@Input() autocomplete = '';
-	@Input() invalid: boolean | ValidationObjectFieldValue = false;
-	@Input() formControlName!: string;
-	@Input() name!: string;
-	@Input() type = 'text';
-	@Input() inputmode: string | null = null;
-	@Input() icon!: string;
-	@Input() textarea = false;
-	@Input() autofocus = false;
-	@Input() mask: string | null = null;
-	@Input() patterns!: NgxMaskConfig['patterns'];
-	@Input() suffix: string = '';
-	@Input() prefix: string = '';
-	@Input() allowNegativeNumbers!: boolean;
-	@Input() validation = false;
-	@Input() maxlength!: number;
-	@Input() min!: number;
-	@Input() max!: number;
-	@Input() clearButton = false;
-	@Input() showPasswordButton = false;
-	@Input() clearButtonValue: string | number = '';
-	@Input() clearButtonTitle = '';
-	@Input() textareaRows = 5;
 
-	@Output() focus = new EventEmitter<FocusEvent>();
-	@Output() blur = new EventEmitter<FocusEvent>();
-	@Output() keydown = new EventEmitter<KeyboardEvent>();
-	@Output() reset = new EventEmitter<string | number>();
+	placeholder = input('');
+	autocomplete = input('');
+	invalid = input<boolean | ValidationObjectFieldValue>(false);
+	formControlName = input<string>();
+	name = input<string>();
+	readonly type = model('text');
+	inputmode = input<string | null>(null);
+	icon = input<string>();
+	textarea = input(false);
+	autofocus = input(false);
+	mask = input<string | null>(null);
+	patterns = input<NgxMaskConfig['patterns']>();
+	suffix = input('');
+	prefix = input('');
+	allowNegativeNumbers = input<boolean>();
+	validation = input(false);
+	maxlength = input<number>();
+	min = input<number>();
+	max = input<number>();
+	clearButton = input(false);
+	showPasswordButton = input(false);
+	clearButtonValue = input<string | number>('');
+	clearButtonTitle = input('');
+	textareaRows = input(5);
 
-	@Input() value: string | number = '';
+	focus = output<FocusEvent>();
+	blur = output<FocusEvent>();
+	keydown = output<KeyboardEvent>();
+	reset = output<string | number>();
 
-	@Input() isDisabled: boolean = false;
+	readonly value = model<string | number>('');
+	isDisabled = input(false);
+	private disabledFromCva = signal<boolean | null>(null);
+	readonly isDisabledState = computed(() => this.disabledFromCva() ?? this.isDisabled());
 
-	@ViewChild('inputRef') inputRef!: ElementRef;
+	inputRef = viewChild<ElementRef>('inputRef');
 
 	constructor(
 		private cdr: ChangeDetectorRef,
@@ -74,16 +84,17 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	) {}
 
 	get showPasswordTitle(): string {
-		return this.type === 'text' ? 'Скрыть пароль' : 'Показать пароль';
+		return this.type() === 'text' ? 'Скрыть пароль' : 'Показать пароль';
 	}
 
 	get showPasswordIcon(): string {
-		return this.type === 'text' ? 'lock-off' : 'lock';
+		return this.type() === 'text' ? 'lock-off' : 'lock';
 	}
 
 	ngAfterViewInit(): void {
-		if (this.autofocus && this.inputRef?.nativeElement && this.deviceService.isDesktop()) {
-			this.inputRef?.nativeElement.focus();
+		const inputEl = this.inputRef()?.nativeElement;
+		if (this.autofocus() && inputEl && this.deviceService.isDesktop()) {
+			inputEl.focus();
 		}
 	}
 
@@ -92,36 +103,40 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 
 	writeValue(value: string | number): void {
 		if (typeof value === 'string' || typeof value === 'number') {
-			this.value = value.toString();
+			this.value.set(value.toString());
 		}
 		this.cdr.markForCheck();
 	}
+
 	registerOnChange(fn: (value: string | number) => void): void {
 		this.onChange = fn;
 	}
-	registerOnTouched(fn: any): void {
+
+	registerOnTouched(fn: () => void): void {
 		this.onTouched = fn;
 	}
+
 	setDisabledState?(isDisabled: boolean): void {
-		this.isDisabled = isDisabled;
+		this.disabledFromCva.set(isDisabled);
+		this.cdr.markForCheck();
 	}
 
 	onInput(event: Event): void {
-		this.value = (event.target as HTMLInputElement).value || '';
-		this.onChange(this.value);
+		this.value.set((event.target as HTMLInputElement).value || '');
+		this.onChange(this.value());
 		this.onTouched();
 		this.cdr.markForCheck();
 	}
 
 	resetValue() {
-		this.writeValue(this.clearButtonValue);
-		this.onChange(this.clearButtonValue);
-		this.inputRef.nativeElement.focus();
-		this.reset.emit(this.value);
+		this.writeValue(this.clearButtonValue());
+		this.onChange(this.clearButtonValue());
+		this.inputRef()?.nativeElement.focus();
+		this.reset.emit(this.value());
 	}
 
 	showPassword() {
-		this.type = this.type === 'text' ? 'password' : 'text';
+		this.type.set(this.type() === 'text' ? 'password' : 'text');
 	}
 
 	focusHandler(event: FocusEvent) {
@@ -133,7 +148,7 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	}
 
 	blurInput() {
-		this.inputRef.nativeElement.blur();
+		this.inputRef()?.nativeElement.blur();
 	}
 
 	keydownHandler(event: KeyboardEvent) {

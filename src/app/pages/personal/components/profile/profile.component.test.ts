@@ -53,7 +53,7 @@ describe('ProfileComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [ProfileComponent, DatepickerComponent, InputComponent],
+			declarations: [ProfileComponent],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: DataService, useValue: dataServiceMock },
@@ -62,7 +62,7 @@ describe('ProfileComponent', () => {
 				[provideNgxMask()],
 				ProfileLoadingStore,
 			],
-			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective],
+			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective, DatepickerComponent, InputComponent],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 

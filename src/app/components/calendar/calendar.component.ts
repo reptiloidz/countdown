@@ -12,6 +12,7 @@ import {
 	Output,
 	TemplateRef,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
 	addDays,
 	addHours,
@@ -46,9 +47,14 @@ import { filterIterations, filterPoints, findIterations } from 'src/app/helpers'
 import { CalendarDate, Iteration, Point, SwitcherItem } from 'src/app/interfaces';
 import { ActionService, DataService } from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
+import { ButtonComponent } from '../button/button.component';
+import { SwitcherComponent } from '../switcher/switcher.component';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: 'app-calendar',
+	standalone: true,
+	imports: [CommonModule, ButtonComponent, SwitcherComponent, SvgComponent],
 	templateUrl: './calendar.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

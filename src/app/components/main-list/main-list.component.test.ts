@@ -58,7 +58,8 @@ describe('MainListComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [MainListComponent, InputComponent, DatePointsPopupComponent, FilterPipe],
+			declarations: [MainListComponent, DatePointsPopupComponent, FilterPipe],
+			imports: [InputComponent],
 			providers: [
 				{ provide: DataService, useValue: dataServiceMock },
 				{ provide: ActionService, useValue: actionServiceMock },
@@ -200,13 +201,13 @@ describe('MainListComponent', () => {
 	});
 
 	it('should clear filters', () => {
-		component.searchInput = { value: '111' } as any;
+		component.searchInput = { writeValue: jest.fn(), value: () => '111' } as any;
 		component.clearFilters();
 		expect(component.repeatableValue).toBe('all');
 		expect(component.greenwichValue).toBe('all');
 		expect(component.publicValue).toBe('false');
 		expect(component.directionValue).toBe('all');
-		expect(component.searchInput?.value).toBeFalsy();
+		expect(component.searchInput?.writeValue).toHaveBeenCalledWith('');
 		expect(component.colorType).toEqual([]);
 	});
 

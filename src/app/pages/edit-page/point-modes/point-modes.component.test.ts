@@ -1,24 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PointModesComponent } from './point-modes.component';
-import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ElementRef, NO_ERRORS_SCHEMA, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropComponent } from '../../../components/drop/drop.component';
 import { InputComponent } from '../../../components/input/input.component';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { NotifyService } from 'src/app/services';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
-const dropMock = new DropComponent(
-	new ElementRef(document.createElement('div')),
-	{
-		...jest.fn(),
-		listen: jest.fn(),
-		createElement: jest.fn(),
-		setStyle: jest.fn(),
-	} as unknown as Renderer2,
-	{ detectChanges: jest.fn(), markForCheck: jest.fn() } as unknown as ChangeDetectorRef,
-	new NotifyService(),
-);
+const dropMock = {
+	openHandler: jest.fn(),
+	closeHandler: jest.fn(),
+} as unknown as DropComponent;
 
 describe('PointModesComponent', () => {
 	let component: PointModesComponent;
@@ -26,8 +17,8 @@ describe('PointModesComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [PointModesComponent, DropComponent, InputComponent],
-			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective],
+			declarations: [PointModesComponent],
+			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective, DropComponent, InputComponent],
 			providers: [ChangeDetectorRef, [provideNgxMask()]],
 			schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 		}).compileComponents();
@@ -86,8 +77,9 @@ describe('PointModesComponent', () => {
 
 	it('should apply filter', () => {
 		jest.useFakeTimers();
-		component.filterRef = new InputComponent(TestBed.inject(ChangeDetectorRef), TestBed.inject(DeviceDetectorService));
-		component.filterRef.value = 'label1';
+		const inputFixture = TestBed.createComponent(InputComponent);
+		component.filterRef = inputFixture.componentInstance;
+		component.filterRef.value.set('label1');
 		component.emojis = [
 			{
 				title: 'group1',

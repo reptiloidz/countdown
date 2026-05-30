@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
 	addMinutes,
 	format,
@@ -21,9 +22,14 @@ import { Constants } from 'src/app/enums';
 import { isDateValid, parseDate } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { DropHorizontal, DropVertical } from 'src/app/types';
+import { AutocompleteComponent } from '../autocomplete/autocomplete.component';
+import { CalendarComponent } from '../calendar/calendar.component';
+import { DropComponent } from '../drop/drop.component';
 
 @Component({
 	selector: 'app-datepicker',
+	standalone: true,
+	imports: [CommonModule, DropComponent, AutocompleteComponent, CalendarComponent],
 	templateUrl: './datepicker.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

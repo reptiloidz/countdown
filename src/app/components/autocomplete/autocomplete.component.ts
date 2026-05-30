@@ -8,6 +8,8 @@ import {
 	Output,
 	ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { DropComponent } from '../drop/drop.component';
@@ -18,6 +20,8 @@ import { NgxMaskConfig } from 'ngx-mask';
 
 @Component({
 	selector: 'app-autocomplete',
+	standalone: true,
+	imports: [CommonModule, FormsModule, DropComponent, InputComponent],
 	templateUrl: './autocomplete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

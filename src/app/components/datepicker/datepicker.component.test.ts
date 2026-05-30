@@ -1,9 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatepickerComponent } from './datepicker.component';
-import { FormsModule } from '@angular/forms';
-import { DropComponent } from '../drop/drop.component';
-import { ButtonComponent } from '../button/button.component';
-import { SvgComponent } from '../svg/svg.component';
 
 describe('DatepickerComponent', () => {
 	let component: DatepickerComponent;
@@ -11,8 +7,7 @@ describe('DatepickerComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [DatepickerComponent, DropComponent],
-			imports: [FormsModule, ButtonComponent, SvgComponent],
+			imports: [DatepickerComponent],
 		}).compileComponents();
 	});
 

@@ -74,8 +74,8 @@ describe('EditPointComponent', () => {
 		} as unknown as jest.Mocked<NotifyService>;
 
 		await TestBed.configureTestingModule({
-			declarations: [EditPointComponent, DropComponent, DatePanelComponent],
-			imports: [BrowserAnimationsModule, ReactiveFormsModule],
+			declarations: [EditPointComponent, DatePanelComponent],
+			imports: [BrowserAnimationsModule, ReactiveFormsModule, DropComponent],
 			providers: [
 				{
 					provide: DataService,

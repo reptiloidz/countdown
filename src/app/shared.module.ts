@@ -26,35 +26,17 @@ const STANDALONE_UI = [
 	SwitcherComponent,
 	LoaderComponent,
 	SvgComponent,
+	InputComponent,
+	DropComponent,
+	CalendarComponent,
+	AutocompleteComponent,
+	DatepickerComponent,
 ];
 
 @NgModule({
-	declarations: [
-		InputComponent,
-		PopupComponent,
-		NotifyComponent,
-		DatepickerComponent,
-		DropComponent,
-		CalendarComponent,
-		TooltipComponent,
-		AutocompleteComponent,
-		LetDirective,
-		SafeHtmlPipe,
-	],
+	declarations: [PopupComponent, NotifyComponent, TooltipComponent, LetDirective, SafeHtmlPipe],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective, ...STANDALONE_UI],
-	exports: [
-		...STANDALONE_UI,
-		InputComponent,
-		PopupComponent,
-		NotifyComponent,
-		DatepickerComponent,
-		DropComponent,
-		CalendarComponent,
-		TooltipComponent,
-		AutocompleteComponent,
-		LetDirective,
-		SafeHtmlPipe,
-	],
+	exports: [...STANDALONE_UI, PopupComponent, NotifyComponent, TooltipComponent, LetDirective, SafeHtmlPipe],
 	providers: [[provideNgxMask()]],
 })
 export class SharedModule {}

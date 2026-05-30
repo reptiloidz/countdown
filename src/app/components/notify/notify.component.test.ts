@@ -38,8 +38,9 @@ describe('NotifyComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [NotifyComponent, InputComponent],
+			declarations: [NotifyComponent],
 			imports: [
+				InputComponent,
 				BrowserAnimationsModule.withConfig({ disableAnimations: true }),
 				ReactiveFormsModule,
 				FormsModule,

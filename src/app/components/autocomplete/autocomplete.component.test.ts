@@ -1,12 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AutocompleteComponent } from './autocomplete.component';
 import { ActionService } from 'src/app/services';
-import { DropComponent } from '../drop/drop.component';
-import { InputComponent } from '../input/input.component';
 import { of } from 'rxjs';
 import { SelectArray } from 'src/app/interfaces';
-import { FormsModule } from '@angular/forms';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 describe('AutocompleteComponent', () => {
 	let component: AutocompleteComponent;
@@ -26,9 +22,8 @@ describe('AutocompleteComponent', () => {
 		};
 
 		TestBed.configureTestingModule({
-			imports: [FormsModule, NgxMaskDirective],
-			declarations: [AutocompleteComponent, DropComponent, InputComponent],
-			providers: [{ provide: ActionService, useValue: mockActionService }, [provideNgxMask()]],
+			imports: [AutocompleteComponent],
+			providers: [{ provide: ActionService, useValue: mockActionService }],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(AutocompleteComponent);
