@@ -51,6 +51,7 @@ import { DonateComponent } from './components/donate/donate.component';
 		MainItemModule,
 		QrCodeModule,
 	],
+	providers: [FilterPipe],
 	exports: [
 		RouterModule,
 		SharedModule,
