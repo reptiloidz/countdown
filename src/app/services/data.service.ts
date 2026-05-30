@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject, BehaviorSubject, Subscription, distinctUntilChanged } from 'rxjs';
+import { Observable, of, Subject, Subscription, distinctUntilChanged } from 'rxjs';
 import { Iteration, Point } from '../interfaces';
 import { ActionService, HttpService, NotifyService } from '.';
 import { EditPointEvent } from '../types';
 import { format, startOfDay } from 'date-fns';
 import { getPointDate } from '../helpers';
 import { Constants } from '../enums';
+import { PointsStore } from '../state/points.store';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class DataService {
-	private _loading = false;
-
-	private _points: Point[] = [];
 	private subscriptions = new Subscription();
 
-	private _eventFetchAllPointsSubject = new BehaviorSubject<Point[]>(this._points);
+	private _eventFetchAllPointsSubject = new Subject<Point[]>();
 	private _eventAddPointSubject = new Subject<Point>();
 	private _eventEditPointSubject = new Subject<[Point, EditPointEvent, Iteration?]>();
 	private _eventStartEditPointSubject = new Subject<void>();
@@ -34,11 +32,12 @@ export class DataService {
 		private http: HttpService,
 		private notify: NotifyService,
 		private action: ActionService,
+		private pointsStore: PointsStore,
 	) {
 		this.subscriptions.add(
 			this.eventFetchAllPoints$.subscribe({
 				next: points => {
-					this.points = points;
+					this.pointsStore.setPoints(points);
 				},
 				error: err => {
 					console.error('Ошибка при сохранении списка событий:\n', err.message);
@@ -49,7 +48,7 @@ export class DataService {
 		this.subscriptions.add(
 			this.eventAddPoint$.subscribe({
 				next: point => {
-					this._points.push(point);
+					this.pointsStore.addPoint(point);
 				},
 				error: err => {
 					console.error('Ошибка при сохранении события в список:\n', err.message);
@@ -60,10 +59,7 @@ export class DataService {
 		this.subscriptions.add(
 			this.eventEditPoint$.pipe(distinctUntilChanged()).subscribe({
 				next: ([updatedPoint]) => {
-					const index = this._points.findIndex(item => item.id === updatedPoint.id);
-					if (index !== -1) {
-						this._points[index] = updatedPoint;
-					}
+					this.pointsStore.updatePoint(updatedPoint);
 				},
 				error: err => {
 					console.error('Ошибка при редактировании события в списке:\n', err.message);
@@ -74,7 +70,7 @@ export class DataService {
 		this.subscriptions.add(
 			this.eventRemovePoint$.subscribe({
 				next: id => {
-					this.points = this.points.filter(point => point.id !== id);
+					this.pointsStore.removePoint(id);
 				},
 				error: err => {
 					console.error('Ошибка при удалении события из списка:\n', err.message);
@@ -84,19 +80,19 @@ export class DataService {
 	}
 
 	set points(points: Point[]) {
-		this._points = points;
+		this.pointsStore.setPoints(points);
 	}
 
-	get points() {
-		return this._points;
+	get points(): Point[] {
+		return this.pointsStore.points();
 	}
 
 	set loading(isLoading: boolean) {
-		this._loading = isLoading;
+		this.pointsStore.setLoading(isLoading);
 	}
 
-	get loading() {
-		return this._loading;
+	get loading(): boolean {
+		return this.pointsStore.loading();
 	}
 
 	fetchAllPoints() {
@@ -118,13 +114,11 @@ export class DataService {
 	}
 
 	putPoint(point: Point) {
-		if (!this.points.find(item => item.id === point.id)) {
-			this.points.push(point);
-		}
+		this.pointsStore.putPoint(point);
 	}
 
 	addPoint(point: Point | undefined) {
-		if (point && !this._points.find(item => item.id === point?.id)) {
+		if (point && !this.points.find(item => item.id === point?.id)) {
 			this.http
 				.postPoint(point)
 				.then(id => {
