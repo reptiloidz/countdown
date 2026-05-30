@@ -34,7 +34,7 @@ const mockAuthService = {
 };
 
 const mockActionService = {
-	eventPointsCheckedAll$: new Subject(),
+	eventPointsCheckedAll$: new Subject<boolean>(),
 	eventIntervalSwitched$: new Subject(),
 };
 
@@ -57,8 +57,8 @@ describe('MainItemComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
-			declarations: [MainItemComponent, CheckboxComponent, CheckAccessEditPipe, LetDirective, TimersComponent],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), CheckboxComponent],
+			declarations: [MainItemComponent, CheckAccessEditPipe, LetDirective, TimersComponent],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
 				{ provide: AuthService, useValue: mockAuthService },
@@ -153,10 +153,19 @@ describe('MainItemComponent', () => {
 	});
 
 	it('should handle action events for checking all points', () => {
-		const checkboxComponent = { isDisabled: false, isChecked: false };
-		component['pointCheckbox'] = checkboxComponent as CheckboxComponent;
+		const checked = {
+			value: false,
+			set(value: boolean) {
+				this.value = value;
+			},
+		};
+		const checkboxComponent = {
+			isDisabledState: () => false,
+			checked,
+		};
+		component['pointCheckbox'] = checkboxComponent as unknown as CheckboxComponent;
 
 		mockActionService.eventPointsCheckedAll$.next(true);
-		expect(component['pointCheckbox'].isChecked).toBeTruthy();
+		expect(checked.value).toBeTruthy();
 	});
 });

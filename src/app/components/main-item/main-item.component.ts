@@ -108,7 +108,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.action.eventPointsCheckedAll$.subscribe({
 				next: check => {
-					this.pointCheckbox && !this.pointCheckbox.isDisabled && (this.pointCheckbox.isChecked = check);
+					this.pointCheckbox && !this.pointCheckbox.isDisabledState() && this.pointCheckbox.checked.set(check);
 					this.cdr.markForCheck();
 				},
 			}),

@@ -1,12 +1,12 @@
 <div
 	class="switcher__list"
-	[ngClass]="switcherListClass"
+	[ngClass]="switcherListClass()"
 >
 	<label
-		*ngFor="let item of items; index as i; trackBy: trackBy"
+		*ngFor="let item of items(); index as i; trackBy: trackBy"
 		class="switcher__item state"
 		[ngClass]="{
-			'switcher__item--active' : item?.value === value
+			'switcher__item--active' : item?.value === value()
 		}"
 		[attr.title]="(item?.icon || item?.boolean !== undefined) ? item?.text : null"
 		[for]="id + i"
@@ -14,7 +14,7 @@
 		<input
 			[value]="item?.value"
 			type="radio"
-			[checked]="item?.value === value || null"
+			[checked]="item?.value === value() || null"
 			(change)="onOptionSelected($event)"
 			[attr.name]="name"
 			class="switcher__input"
@@ -30,7 +30,7 @@
 				}"
 				[name]="item?.boolean ? 'check' :
 					item?.boolean === false ? 'cross' :
-					item?.default ? (item?.value === value ? 'check' : 'cross') :
+					item?.default ? (item?.value === value() ? 'check' : 'cross') :
 					item?.icon || 'warning'
 				"
 			></svg>
@@ -41,6 +41,6 @@
 	</label>
 </div>
 <span
-	*ngIf="showTitle"
+	*ngIf="showTitle()"
 	class="switcher__value"
 >{{ valueName }}</span>

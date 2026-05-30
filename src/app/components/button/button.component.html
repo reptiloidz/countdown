@@ -1,37 +1,37 @@
 <ng-container
-	*ngIf="iconPosition === 'left' && !loading && icon"
+	*ngIf="iconPosition() === 'left' && !loading() && icon()"
 	[ngTemplateOutlet]="iconTemplate"
 ></ng-container>
 <ng-container
-	*ngIf="iconPosition === 'left' && loading"
+	*ngIf="iconPosition() === 'left' && loading()"
 	[ngTemplateOutlet]="loaderTemplate"
 ></ng-container>
 
 <span [ngClass]="textClasses"><ng-content></ng-content></span>
 
 <ng-container
-	*ngIf="iconPosition === 'right' && !loading && icon"
+	*ngIf="iconPosition() === 'right' && !loading() && icon()"
 	[ngTemplateOutlet]="iconTemplate"
 ></ng-container>
 <ng-container
-	*ngIf="iconPosition === 'right' && loading"
+	*ngIf="iconPosition() === 'right' && loading()"
 	[ngTemplateOutlet]="loaderTemplate"
 ></ng-container>
 
 <ng-template #iconTemplate>
 	<svg
 		app-svg
-		[name]="icon"
+		[name]="icon()"
 		[ngClass]="{
-			'button__icon': view === 'button',
-			'link__icon': view === 'link',
-			'icon--fill': fillModeIcon,
+			'button__icon': view() === 'button',
+			'link__icon': view() === 'link',
+			'icon--fill': fillModeIcon(),
 		}"
-		[title]="iconTitle || undefined"
-		[attr.aria-label]="iconTitle"
-		[ariaHidden]="iconAriaHidden"
+		[title]="iconTitle() || undefined"
+		[attr.aria-label]="iconTitle()"
+		[ariaHidden]="iconAriaHidden()"
 	></svg>
 </ng-template>
 <ng-template #loaderTemplate>
-	<app-loader [iconClass]="view === 'button' ? 'button__icon' : 'link__icon'"></app-loader>
+	<app-loader [iconClass]="view() === 'button' ? 'button__icon' : 'link__icon'"></app-loader>
 </ng-template>

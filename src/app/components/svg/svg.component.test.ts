@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SvgComponent } from './svg.component';
-import { Renderer2, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { ElementRef } from '@angular/core';
 
 describe('SvgComponent', () => {
 	let component: SvgComponent;
@@ -9,9 +9,8 @@ describe('SvgComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [SvgComponent],
+			imports: [SvgComponent],
 			providers: [
-				Renderer2,
 				{
 					provide: ElementRef,
 					useValue: { nativeElement: document.createElementNS('http://www.w3.org/2000/svg', 'svg') },
@@ -30,7 +29,7 @@ describe('SvgComponent', () => {
 	});
 
 	it('should set name and update SVG use element', () => {
-		component.name = 'test-icon';
+		fixture.componentRef.setInput('name', 'test-icon');
 		fixture.detectChanges();
 
 		const useElement = elementRef.nativeElement.querySelector('use');
@@ -39,9 +38,7 @@ describe('SvgComponent', () => {
 	});
 
 	it('should set the title when provided', () => {
-		component.title = 'Test Title';
-		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
-		cdr.detectChanges();
+		fixture.componentRef.setInput('title', 'Test Title');
 		fixture.detectChanges();
 
 		const titleElement = elementRef.nativeElement.querySelector('title');
@@ -55,18 +52,11 @@ describe('SvgComponent', () => {
 	});
 
 	it('should update width and height when inputs are provided', () => {
-		component.width = 32;
-		component.height = 32;
+		fixture.componentRef.setInput('width', 32);
+		fixture.componentRef.setInput('height', 32);
 		fixture.detectChanges();
 
 		expect(component.widthAttr).toBe(32);
 		expect(component.heightAttr).toBe(32);
-	});
-
-	it('should set aria-hidden attribute', () => {
-		component.ariaHidden = 'false';
-		fixture.detectChanges();
-
-		expect(component.ariaHiddenAttr).toBe('false');
 	});
 });

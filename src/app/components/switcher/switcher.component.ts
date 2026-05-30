@@ -1,17 +1,13 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	EventEmitter,
-	HostBinding,
-	Input,
-	Output,
-	forwardRef,
-} from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, forwardRef, HostBinding, input, model, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { SwitcherItem } from 'src/app/interfaces';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: 'app-switcher',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, SvgComponent],
 	templateUrl: './switcher.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
@@ -23,57 +19,59 @@ import { SwitcherItem } from 'src/app/interfaces';
 	],
 })
 export class SwitcherComponent implements ControlValueAccessor {
-	@Input() items: SwitcherItem[] = [];
-	@Input() value!: string;
-	@Input() mode = 'ghost' as const;
-	@Input() size: 'sm' | 'lg' | undefined;
-	@Input() showTitle = false;
-	@Input() switcherListClass = '';
-	@Input() formControlName!: string;
-	@Input() control!: FormControl;
-	@Output() valueSwitched = new EventEmitter<string>();
+	items = input<SwitcherItem[]>([]);
+	mode = input<'ghost'>('ghost');
+	size = input<'sm' | 'lg'>();
+	showTitle = input(false);
+	switcherListClass = input('');
+	formControlName = input<string>();
+	control = input<FormControl>();
+	nameOverride = input<string | null>(null, { alias: 'name' });
+	valueSwitched = output<string>();
+
+	readonly value = model('', { alias: 'value' });
+
 	@HostBinding('class') get componentClass(): string | null {
 		const baseClass = 'switcher';
-		const modeClass = this.mode && `${baseClass}--${this.mode}`;
-		const sizeClass = this.size && `${baseClass}--${this.size}`;
+		const modeClass = this.mode() && `${baseClass}--${this.mode()}`;
+		const sizeClass = this.size() && `${baseClass}--${this.size()}`;
 		return [baseClass, modeClass, sizeClass].filter(_ => _).join(' ');
 	}
 
-	private _name: string | null = null;
-
 	id = 'i-' + Math.floor(Math.random() * 10000000);
 
-	@Input() get name() {
-		return this._name ?? this.formControlName;
-	}
-	set name(value: string | null) {
-		this._name = value ?? this.formControlName;
+	get name() {
+		return this.nameOverride() ?? this.formControlName();
 	}
 
 	get valueName() {
-		return this.items.find(item => item.value === this.value)?.text;
+		return this.items().find(item => item.value === this.value())?.text;
 	}
 
-	onChange: (value: any) => void = () => {};
+	onChange: (value: string) => void = () => {};
 	onTouched: () => void = () => {};
 
 	onOptionSelected(event: Event) {
-		this.value = (event.target as HTMLInputElement).value;
-		this.onChange(this.value);
+		const nextValue = (event.target as HTMLInputElement).value;
+		this.value.set(nextValue);
+		this.onChange(nextValue);
 		this.onTouched();
-		this.valueSwitched.emit(this.value);
+		this.valueSwitched.emit(nextValue);
 	}
 
 	writeValue(value: string): void {
-		this.value = value;
+		this.value.set(value);
 	}
-	registerOnChange(fn: any): void {
+
+	registerOnChange(fn: (value: string) => void): void {
 		this.onChange = fn;
 	}
-	registerOnTouched(fn: any): void {
+
+	registerOnTouched(fn: () => void): void {
 		this.onTouched = fn;
 	}
-	setDisabledState?(isDisabled: boolean): void {}
+
+	setDisabledState?(_isDisabled: boolean): void {}
 
 	trackBy(index: number, item: SwitcherItem) {
 		return item.value;

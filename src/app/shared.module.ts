@@ -15,38 +15,41 @@ import { PopupComponent } from './components/popup/popup.component';
 import { NotifyComponent } from './components/notify/notify.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
-import { SvgModule } from './components/svg/svg.module';
+import { RadioComponent } from './components/radio/radio.component';
+import { SvgComponent } from './components/svg/svg.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+
+const STANDALONE_UI = [
+	ButtonComponent,
+	CheckboxComponent,
+	RadioComponent,
+	SwitcherComponent,
+	LoaderComponent,
+	SvgComponent,
+];
 
 @NgModule({
 	declarations: [
-		ButtonComponent,
 		InputComponent,
-		CheckboxComponent,
 		PopupComponent,
 		NotifyComponent,
-		LoaderComponent,
 		DatepickerComponent,
 		DropComponent,
 		CalendarComponent,
-		SwitcherComponent,
 		TooltipComponent,
 		AutocompleteComponent,
 		LetDirective,
 		SafeHtmlPipe,
 	],
-	imports: [CommonModule, FormsModule, ReactiveFormsModule, SvgModule, NgxMaskDirective],
+	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective, ...STANDALONE_UI],
 	exports: [
-		ButtonComponent,
+		...STANDALONE_UI,
 		InputComponent,
-		CheckboxComponent,
 		PopupComponent,
 		NotifyComponent,
-		LoaderComponent,
 		DatepickerComponent,
 		DropComponent,
 		CalendarComponent,
-		SwitcherComponent,
 		TooltipComponent,
 		AutocompleteComponent,
 		LetDirective,

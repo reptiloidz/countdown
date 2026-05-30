@@ -42,7 +42,8 @@ describe('DropComponent', () => {
 		});
 
 		await TestBed.configureTestingModule({
-			declarations: [DropComponent, ButtonComponent, SvgComponent, MockCustomTemplateComponent],
+			declarations: [DropComponent, MockCustomTemplateComponent],
+			imports: [ButtonComponent, SvgComponent],
 			providers: [
 				{ provide: NotifyService, useValue: mockNotifyService },
 				{ provide: ElementRef, useValue: mockElementRef },

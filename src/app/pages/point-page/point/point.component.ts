@@ -321,7 +321,7 @@ export class PointComponent implements OnInit, OnDestroy {
 	changeSound() {
 		if (this.sound && this.timerPercent() === 100) {
 			this.audioFinish.nativeElement.pause();
-			this.soundCheckbox.isDisabled = true;
+			this.soundCheckbox.setDisabledState?.(true);
 		}
 		this.sound = !this.sound;
 	}
@@ -399,7 +399,7 @@ export class PointComponent implements OnInit, OnDestroy {
 					this.audioFinish.nativeElement.play();
 
 					if (this.localStorageSound === 'short') {
-						this.soundCheckbox.isDisabled = true;
+						this.soundCheckbox.setDisabledState?.(true);
 						this.sound = false;
 					}
 				}

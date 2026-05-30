@@ -38,8 +38,9 @@ const routes: Routes = [
 		ClockModule,
 		MainItemModule,
 		RouterModule.forChild(routes),
+		RadioComponent,
 	],
-	declarations: [EditPointComponent, PointModesComponent, RadioComponent, GenerateIterationsComponent],
-	exports: [EditPointComponent, PointModesComponent, RadioComponent, GenerateIterationsComponent],
+	declarations: [EditPointComponent, PointModesComponent, GenerateIterationsComponent],
+	exports: [EditPointComponent, PointModesComponent, GenerateIterationsComponent],
 })
 export class EditPageModule {}

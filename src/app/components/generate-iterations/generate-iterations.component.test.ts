@@ -22,16 +22,8 @@ describe('GenerateIterationsComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [
-				GenerateIterationsComponent,
-				DatepickerComponent,
-				SwitcherComponent,
-				DropComponent,
-				InputComponent,
-				RadioComponent,
-				ButtonComponent,
-			],
-			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective],
+			declarations: [GenerateIterationsComponent, DatepickerComponent, DropComponent, InputComponent],
+			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective, SwitcherComponent, RadioComponent, ButtonComponent],
 			schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 			providers: [
 				FormBuilder,

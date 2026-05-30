@@ -52,8 +52,8 @@ describe('CalendarComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [CalendarComponent, SwitcherComponent],
-			imports: [FormsModule],
+			declarations: [CalendarComponent],
+			imports: [FormsModule, SwitcherComponent],
 			providers: [{ provide: Auth, useValue: mockAuth }],
 		}).compileComponents();
 

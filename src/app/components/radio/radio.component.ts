@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwardRef } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, forwardRef, input, output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { RadioItem } from 'src/app/interfaces';
 
 @Component({
 	selector: 'app-radio',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule],
 	templateUrl: './radio.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
@@ -15,46 +18,46 @@ import { RadioItem } from 'src/app/interfaces';
 	],
 })
 export class RadioComponent implements ControlValueAccessor {
-	@Input() formControlName!: string;
-	@Input() control!: FormControl;
-	@Input() dotSize: 'sm' | 'md' = 'md';
-	@Input() mode: 'text' | 'icon' | 'custom' = 'text';
-	@Input() items: RadioItem[] = [];
-	@Input() value!: string;
-	@Input() radioClass = '';
-	@Output() valueSwitched = new EventEmitter<string>();
+	formControlName = input<string>();
+	control = input<FormControl>();
+	dotSize = input<'sm' | 'md'>('md');
+	mode = input<'text' | 'icon' | 'custom'>('text');
+	items = input<RadioItem[]>([]);
+	radioClass = input('');
+	nameOverride = input<string | null>(null, { alias: 'name' });
+	valueSwitched = output<string>();
 
-	private _name: string | null = null;
+	readonly value = signal('');
 
 	id = 'i-' + Math.floor(Math.random() * 10000000);
 
-	@Input() get name() {
-		return this._name ?? this.formControlName;
-	}
-	set name(value: string | null) {
-		this._name = value ?? this.formControlName;
+	get name() {
+		return this.nameOverride() ?? this.formControlName();
 	}
 
 	onChange: (value: string) => void = () => {};
 	onTouched: () => void = () => {};
 
 	writeValue(value: string): void {
-		this.value = value;
+		this.value.set(value);
 	}
+
 	registerOnChange(fn: (value: string) => void): void {
 		this.onChange = fn;
 	}
-	registerOnTouched(fn: any): void {
+
+	registerOnTouched(fn: () => void): void {
 		this.onTouched = fn;
 	}
 
-	setDisabledState?(isDisabled: boolean): void {}
+	setDisabledState?(_isDisabled: boolean): void {}
 
 	onRadioChange(event: Event) {
-		this.value = (event.target as HTMLInputElement).value;
-		this.onChange(this.value);
+		const nextValue = (event.target as HTMLInputElement).value;
+		this.value.set(nextValue);
+		this.onChange(nextValue);
 		this.onTouched();
-		this.valueSwitched.emit(this.value);
+		this.valueSwitched.emit(nextValue);
 	}
 
 	trackBy(index: number, item: RadioItem) {

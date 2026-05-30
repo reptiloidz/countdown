@@ -33,8 +33,8 @@ describe('AuthComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [AuthComponent, InputComponent, ButtonComponent],
-			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective],
+			declarations: [AuthComponent, InputComponent],
+			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective, ButtonComponent],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: NotifyService, useValue: notifyServiceMock },

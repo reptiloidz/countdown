@@ -11,8 +11,8 @@ describe('DatepickerComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [DatepickerComponent, DropComponent, ButtonComponent, SvgComponent],
-			imports: [FormsModule], // Для поддержки ngModel и других директив
+			declarations: [DatepickerComponent, DropComponent],
+			imports: [FormsModule, ButtonComponent, SvgComponent],
 		}).compileComponents();
 	});
 
