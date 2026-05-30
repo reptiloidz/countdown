@@ -1,12 +1,5 @@
 <ng-container *ngIf="!loading; else loader">
-	<ng-container *appLet="points | filter: {
-		search: searchInputValue,
-		isRepeatable: repeatableValue,
-		isGreenwich: greenwichValue,
-		isPublic: publicValue,
-		direction: directionValue,
-		color: colorTypeString
-	} as filteredPoints">
+	<ng-container>
 		<div class="dashboard">
 			<app-drop
 				class="dashboard__calendar drop--nested"
@@ -269,7 +262,7 @@
 					[isLine]="modesValue === 'list'"
 					[attr.data-id]="point.id"
 					class="points-list__item"
-					*ngFor="let point of (filteredPoints | sortPoints : sortType) | async | slice:0:(showMore ? filteredPoints.length : 5); let i = index; trackBy: trackByFilteredPoints"
+					*ngFor="let point of visibleSortedPoints; let i = index; trackBy: trackByFilteredPoints"
 					[point]="point"
 					(pointCheck)="checkPoint()"
 				></li>
@@ -323,7 +316,7 @@
 			[isSm]="isSm"
 			[isPopup]="isPopup"
 			[attr.data-id]="point.id"
-			*ngFor="let point of pointsList | sortPoints : sortType | async; let i = index; trackBy: trackByFilteredPoints"
+			*ngFor="let point of pointsList; let i = index; trackBy: trackByFilteredPoints"
 			[point]="point"
 		>
 			<ng-template

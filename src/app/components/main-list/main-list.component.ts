@@ -15,6 +15,7 @@ import { PointColors, SortTypeNames } from 'src/app/enums';
 import { Point, SwitcherItem } from 'src/app/interfaces';
 import { DataService, ActionService, AuthService, PopupService } from 'src/app/services';
 import { SortService } from 'src/app/services/sort.service';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { CalendarMode, Direction, FilterSelected, PointColorTypes, SortTypes } from 'src/app/types';
 import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
@@ -41,6 +42,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	private datePointsPopupRef!: DatePointsPopupComponent;
 	@HostBinding('class') class = 'main__inner';
 	points: Point[] = [];
+	sortedPoints: Point[] = [];
 	loading = true;
 	isDatePointsChecked = false;
 	datePointsChecked: string[] = [];
@@ -149,6 +151,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private auth: AuthService,
 		private sort: SortService,
+		private filterPipe: FilterPipe,
 		public elementRef: ElementRef,
 		private popupService: PopupService,
 		private cdr: ChangeDetectorRef,
@@ -166,10 +169,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (points: Point[]) => {
 						this.points = points;
-						this.sortPoints({
-							points: this.points,
-							navigate: false,
-						});
+						this.refreshSortedPoints({ navigate: false });
 						this.action.pointsFetched();
 						this.getAvailablePointsVisibility();
 						this.cdr.markForCheck();
@@ -184,6 +184,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			this.data.eventRemovePoint$.subscribe({
 				next: id => {
 					this.points = this.points.filter(point => point.id !== id);
+					this.refreshSortedPoints({ navigate: false });
 					this.checkPoint();
 				},
 			}),
@@ -233,6 +234,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 					localStorage.setItem('directionValue', this.directionValue);
 					localStorage.setItem('colorValue', this.colorType.join('+') || 'all');
 
+					this.refreshSortedPoints({ navigate: false });
 					this.cdr.markForCheck();
 				},
 				error: err => {
@@ -275,6 +277,21 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	get pointColors() {
 		return Object.keys(PointColors) as PointColorTypes[];
+	}
+
+	get filteredPoints(): Point[] {
+		return this.filterPipe.transform(this.points, {
+			search: this.searchInputValue,
+			isRepeatable: this.repeatableValue,
+			isGreenwich: this.greenwichValue,
+			isPublic: this.publicValue,
+			direction: this.directionValue,
+			color: this.colorTypeString,
+		});
+	}
+
+	get visibleSortedPoints(): Point[] {
+		return this.showMore ? this.sortedPoints : this.sortedPoints.slice(0, 5);
 	}
 
 	get filtersFilled() {
@@ -359,6 +376,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 			},
 			queryParamsHandling: 'merge',
 		});
+		this.refreshSortedPoints();
 		this.getAvailablePointsVisibility();
 		this.checkPoint();
 	}
@@ -411,17 +429,13 @@ export class MainListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	sortPoints(
-		{
-			points,
-			sortType,
-			navigate = true,
-		}: {
-			points: Point[];
-			sortType?: SortTypes;
-			navigate?: boolean;
-		} = { points: this.points },
-	) {
+	refreshSortedPoints({
+		sortType,
+		navigate = true,
+	}: {
+		sortType?: SortTypes;
+		navigate?: boolean;
+	} = {}): void {
 		this.sortType = sortType ?? this.sortType;
 
 		navigate &&
@@ -433,14 +447,14 @@ export class MainListComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 			});
 
-		return this.sort.sort(points, this.sortType);
+		void this.sort.sort(this.filteredPoints, this.sortType).then(points => {
+			this.sortedPoints = points;
+			this.cdr.markForCheck();
+		});
 	}
 
 	sortPointsClick(sort: SortTypes) {
-		this.sortPoints({
-			points: this.points,
-			sortType: sort,
-		});
+		this.refreshSortedPoints({ sortType: sort });
 	}
 
 	resetColors() {
@@ -457,6 +471,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	openDatePointPopup(date: { date: Date; points: Point[] }) {
 		let popupDateFormat = '';
 		this.isDatePointsChecked = false;
+		const pointsList = date.points;
 		switch (localStorage.getItem('calendarMode') as CalendarMode) {
 			case 'year':
 				popupDateFormat = "yyyy 'г.'";
@@ -471,18 +486,20 @@ export class MainListComponent implements OnInit, OnDestroy {
 				popupDateFormat = "yyyy 'г.' / LLL";
 				break;
 		}
-		this.popupService.show(
-			format(date.date, popupDateFormat, {
-				locale: ru,
-			}),
-			DatePointsPopupComponent,
-			{
-				pointsList: date.points,
-				sortType: this.sortType,
-				listRef: this.listTemplate,
-				footerRef: this.footerRef,
-			},
-		);
+		void this.sort.sort(pointsList, this.sortType).then(sortedPoints => {
+			this.popupService.show(
+				format(date.date, popupDateFormat, {
+					locale: ru,
+				}),
+				DatePointsPopupComponent,
+				{
+					pointsList: sortedPoints,
+					sortType: this.sortType,
+					listRef: this.listTemplate,
+					footerRef: this.footerRef,
+				},
+			);
+		});
 	}
 
 	onShowMore() {

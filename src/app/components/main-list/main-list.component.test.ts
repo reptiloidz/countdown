@@ -8,6 +8,7 @@ import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
 import { Point } from 'src/app/interfaces';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { SortService } from 'src/app/services/sort.service';
 
 describe('MainListComponent', () => {
 	let component: MainListComponent;
@@ -27,11 +28,15 @@ describe('MainListComponent', () => {
 		};
 
 		const actionServiceMock = {
-			eventPointsCheckedAll$: new Subject(),
+			eventPointsCheckedAll$: new Subject<boolean>(),
 			pointsFetched: jest.fn(),
 			uncheckAllPoints: jest.fn(),
 			hasEditablePoints: jest.fn(),
 			getCheckedPoints: jest.fn(),
+		};
+
+		const sortServiceMock = {
+			sort: jest.fn().mockImplementation((points: Point[]) => Promise.resolve(points)),
 		};
 
 		const authServiceMock = {
@@ -57,6 +62,8 @@ describe('MainListComponent', () => {
 			providers: [
 				{ provide: DataService, useValue: dataServiceMock },
 				{ provide: ActionService, useValue: actionServiceMock },
+				{ provide: SortService, useValue: sortServiceMock },
+				FilterPipe,
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: PopupService, useValue: popupServiceMock },
 				{ provide: Router, useValue: routerMock },
@@ -122,6 +129,9 @@ describe('MainListComponent', () => {
 		component.ngOnInit();
 		expect(component.points).toEqual(points);
 		expect(actionService.pointsFetched).toHaveBeenCalled();
+		return fixture.whenStable().then(() => {
+			expect(component.sortedPoints).toEqual(points);
+		});
 	});
 
 	it('should handle point removal event', () => {
@@ -206,9 +216,10 @@ describe('MainListComponent', () => {
 		expect(localStorage.getItem('modesValue')).toBe('list');
 	});
 
-	it('should open date point popup', () => {
+	it('should open date point popup', async () => {
 		const date = { date: new Date(), points: [] };
 		component.openDatePointPopup(date);
+		await fixture.whenStable();
 		expect(popupService.show).toHaveBeenCalled();
 	});
 });
