@@ -1,14 +1,16 @@
 import {
-	ElementRef,
-	ViewChild,
-	Component,
-	OnDestroy,
-	OnInit,
-	HostBinding,
-	TemplateRef,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
+	Component,
+	ElementRef,
+	HostBinding,
+	inject,
+	OnDestroy,
+	OnInit,
+	TemplateRef,
+	ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { PointColors, SortTypeNames } from 'src/app/enums';
@@ -21,13 +23,40 @@ import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { SharedModule } from 'src/app/shared.module';
+import { ClockModule } from '../clock/clock.module';
+import { MainItemComponent } from '../main-item/main-item.component';
+import { ColorsCheckPipe } from 'src/app/pipes/colors-check.pipe';
+import { SortTrendingPipe } from 'src/app/pipes/sort-trending.pipe';
+import { CheckEditablePointsPipe } from 'src/app/pipes/check-editable-points.pipe';
 
 @Component({
 	selector: 'app-main-list',
+	standalone: true,
+	imports: [
+		CommonModule,
+		SharedModule,
+		ClockModule,
+		MainItemComponent,
+		DatePointsPopupComponent,
+		ColorsCheckPipe,
+		SortTrendingPipe,
+		CheckEditablePointsPipe,
+	],
+	providers: [FilterPipe],
 	templateUrl: './main-list.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainListComponent implements OnInit, OnDestroy {
+	private readonly route = inject(ActivatedRoute);
+	private readonly router = inject(Router);
+	private readonly data = inject(DataService);
+	private readonly action = inject(ActionService);
+	private readonly auth = inject(AuthService);
+	private readonly popupService = inject(PopupService);
+	private readonly sortService = inject(SortService);
+	private readonly filterPipe = inject(FilterPipe);
+	private readonly cdr = inject(ChangeDetectorRef);
 	@ViewChild('pointsList') private pointsList!: ElementRef;
 	@ViewChild('datePointsList') private datePointsList!: ElementRef;
 	@ViewChild('searchInput', { static: false }) searchInput!: InputComponent;
@@ -144,18 +173,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 
 	private subscriptions = new Subscription();
 
-	constructor(
-		private data: DataService,
-		private action: ActionService,
-		private router: Router,
-		private route: ActivatedRoute,
-		private auth: AuthService,
-		private sort: SortService,
-		private filterPipe: FilterPipe,
-		public elementRef: ElementRef,
-		private popupService: PopupService,
-		private cdr: ChangeDetectorRef,
-	) {}
+	readonly elementRef = inject(ElementRef);
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -447,7 +465,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 			});
 
-		void this.sort.sort(this.filteredPoints, this.sortType).then(points => {
+		void this.sortService.sort(this.filteredPoints, this.sortType).then(points => {
 			this.sortedPoints = points;
 			this.cdr.markForCheck();
 		});
@@ -486,7 +504,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 				popupDateFormat = "yyyy 'г.' / LLL";
 				break;
 		}
-		void this.sort.sort(pointsList, this.sortType).then(sortedPoints => {
+		void this.sortService.sort(pointsList, this.sortType).then(sortedPoints => {
 			this.popupService.show(
 				format(date.date, popupDateFormat, {
 					locale: ru,

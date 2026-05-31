@@ -7,7 +7,7 @@ describe('DonateComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [DonateComponent],
+			imports: [DonateComponent],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(DonateComponent);

@@ -45,7 +45,7 @@ describe('DatePointsPopupComponent', () => {
 		} as unknown as jest.Mocked<Router>;
 
 		TestBed.configureTestingModule({
-			declarations: [DatePointsPopupComponent, CheckEditablePointsPipe],
+			imports: [DatePointsPopupComponent, CheckEditablePointsPipe],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
 				{ provide: AuthService, useValue: mockAuthService },

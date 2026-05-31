@@ -5,9 +5,10 @@ import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { of, Subject } from 'rxjs';
 import { CheckAccessEditPipe } from 'src/app/pipes/check-access-edit.pipe';
 import { LetDirective } from 'src/app/directives/let.directive';
-import { TimersComponent } from '../../timers/timers.component';
+import { TimersModule } from '../../timers/timers.module';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const mockAnimations = () => {
 	Element.prototype.animate = jest.fn().mockImplementation(() => ({
@@ -36,6 +37,10 @@ const mockAuthService = {
 const mockActionService = {
 	eventPointsCheckedAll$: new Subject<boolean>(),
 	eventIntervalSwitched$: new Subject(),
+	eventOnboardingClosed$: new Subject<void>(),
+	tryActivateOnboarding: jest.fn(() => true),
+	deactivateOnboarding: jest.fn(),
+	onboardingClosed: jest.fn(),
 };
 
 const mockNotifyService = {
@@ -53,12 +58,21 @@ describe('MainItemComponent', () => {
 			unobserve: jest.fn(),
 			disconnect: jest.fn(),
 		}));
+		(window as any).IntersectionObserver = jest.fn(() => ({
+			observe: jest.fn(),
+			unobserve: jest.fn(),
+			disconnect: jest.fn(),
+		}));
 	});
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), CheckboxComponent],
-			declarations: [MainItemComponent, CheckAccessEditPipe, LetDirective, TimersComponent],
+			imports: [
+				BrowserAnimationsModule.withConfig({ disableAnimations: true }),
+				RouterTestingModule,
+				MainItemComponent,
+				TimersModule,
+			],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
 				{ provide: AuthService, useValue: mockAuthService },

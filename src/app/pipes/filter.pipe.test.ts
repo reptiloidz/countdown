@@ -1,3 +1,4 @@
+import { TestBed } from '@angular/core/testing';
 import { FilterPipe } from './filter.pipe';
 import { Point } from '../interfaces';
 import { AuthService } from '../services';
@@ -10,7 +11,10 @@ describe('FilterPipe', () => {
 		authService = {
 			checkAccessEdit: jest.fn(),
 		} as unknown as AuthService;
-		pipe = new FilterPipe(authService);
+		TestBed.configureTestingModule({
+			providers: [FilterPipe, { provide: AuthService, useValue: authService }],
+		});
+		pipe = TestBed.inject(FilterPipe);
 		(authService.checkAccessEdit as jest.Mock).mockReturnValue(true);
 	});
 

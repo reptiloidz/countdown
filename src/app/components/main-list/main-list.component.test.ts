@@ -58,13 +58,11 @@ describe('MainListComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [MainListComponent, DatePointsPopupComponent, FilterPipe],
-			imports: [InputComponent],
+			imports: [MainListComponent, DatePointsPopupComponent, FilterPipe],
 			providers: [
 				{ provide: DataService, useValue: dataServiceMock },
 				{ provide: ActionService, useValue: actionServiceMock },
 				{ provide: SortService, useValue: sortServiceMock },
-				FilterPipe,
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: PopupService, useValue: popupServiceMock },
 				{ provide: Router, useValue: routerMock },

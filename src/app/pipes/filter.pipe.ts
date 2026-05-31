@@ -1,13 +1,14 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { Point } from '../interfaces';
 import { Direction, FilterSelected } from '../types';
 import { AuthService } from '../services';
 
 @Pipe({
 	name: 'filter',
+	standalone: true,
 })
 export class FilterPipe implements PipeTransform {
-	constructor(private auth: AuthService) {}
+	private readonly auth = inject(AuthService);
 
 	transform(
 		points: Point[],
@@ -36,19 +37,19 @@ export class FilterPipe implements PipeTransform {
 			color === ''
 		) {
 			return points;
-		} else {
-			return points.filter(point => {
-				return (
-					point.title.toLowerCase().includes(search.toLowerCase().trim()) &&
-					(point.repeatable.toString() === isRepeatable || isRepeatable === 'all') &&
-					(point.greenwich.toString() === isGreenwich || isGreenwich === 'all') &&
-					(this.auth.checkAccessEdit(point).toString() !== isPublic ||
-						isPublic === 'all' ||
-						!this.auth.isAuthenticated) &&
-					(point.direction === direction || direction === 'all') &&
-					(color?.split('+').includes(point.color || 'gray') || color === '')
-				);
-			});
 		}
+
+		return points.filter(point => {
+			return (
+				point.title.toLowerCase().includes(search.toLowerCase().trim()) &&
+				(point.repeatable.toString() === isRepeatable || isRepeatable === 'all') &&
+				(point.greenwich.toString() === isGreenwich || isGreenwich === 'all') &&
+				(this.auth.checkAccessEdit(point).toString() !== isPublic ||
+					isPublic === 'all' ||
+					!this.auth.isAuthenticated) &&
+				(point.direction === direction || direction === 'all') &&
+				(color?.split('+').includes(point.color || 'gray') || color === '')
+			);
+		});
 	}
 }

@@ -1,17 +1,20 @@
 import {
-	Component,
-	Input,
-	Output,
-	EventEmitter,
-	OnDestroy,
-	OnInit,
-	ViewChild,
-	ContentChild,
-	TemplateRef,
-	ElementRef,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
+	Component,
+	ContentChild,
+	ElementRef,
+	EventEmitter,
+	inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+	TemplateRef,
+	ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { Subscription, first } from 'rxjs';
 import { Point, PointMode, UserExtraData } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService, NotifyService } from 'src/app/services';
@@ -20,13 +23,39 @@ import { getClosestIteration, parseDate } from 'src/app/helpers';
 import { compareAsc, formatDistanceToNow, intervalToDuration } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { DateType, TimeType } from 'src/app/types';
+import { LetDirective } from 'src/app/directives/let.directive';
+import { CheckAccessEditPipe } from 'src/app/pipes/check-access-edit.pipe';
+import { TimersModule } from 'src/app/timers/timers.module';
+import { RemainModule } from 'src/app/pipes/remain/remain.module';
+import { ButtonComponent } from '../button/button.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: '[app-main-item]',
+	standalone: true,
+	imports: [
+		CommonModule,
+		RouterModule,
+		LetDirective,
+		CheckAccessEditPipe,
+		TimersModule,
+		RemainModule,
+		ButtonComponent,
+		CheckboxComponent,
+		TooltipComponent,
+		SvgComponent,
+	],
 	templateUrl: './main-item.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainItemComponent implements OnInit, OnDestroy {
+	private readonly data = inject(DataService);
+	private readonly auth = inject(AuthService);
+	private readonly action = inject(ActionService);
+	private readonly notify = inject(NotifyService);
+	private readonly el = inject(ElementRef);
+	private readonly cdr = inject(ChangeDetectorRef);
 	@ViewChild('pointCheckbox') private pointCheckbox!: CheckboxComponent;
 	@ContentChild('checkboxTemplate') checkboxTemplate: TemplateRef<unknown> | undefined;
 
@@ -60,15 +89,6 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	_futureIterationDate: Date | undefined;
 	_closestIterationModeSet = false;
 	closestIterationMode: PointMode | undefined;
-
-	constructor(
-		private data: DataService,
-		private auth: AuthService,
-		private action: ActionService,
-		private notify: NotifyService,
-		private el: ElementRef,
-		private cdr: ChangeDetectorRef,
-	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
