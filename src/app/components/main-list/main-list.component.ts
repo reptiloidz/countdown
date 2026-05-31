@@ -20,11 +20,16 @@ import { DataService, ActionService, AuthService, PopupService } from 'src/app/s
 import { SortService } from 'src/app/services/sort.service';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
 import { CalendarMode, Direction, FilterSelected, PointColorTypes, SortTypes } from 'src/app/types';
-import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { SharedModule } from 'src/app/shared.module';
+import { ButtonComponent } from '../button/button.component';
+import { CalendarComponent } from '../calendar/calendar.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { DropComponent } from '../drop/drop.component';
+import { InputComponent } from '../input/input.component';
+import { SwitcherComponent } from '../switcher/switcher.component';
+import { SvgComponent } from '../svg/svg.component';
 import { ClockComponent } from '../clock/clock.component';
 import { MainItemComponent } from '../main-item/main-item.component';
 import { ColorsCheckPipe } from 'src/app/pipes/colors-check.pipe';
@@ -37,7 +42,13 @@ import { CheckEditablePointsPipe } from 'src/app/pipes/check-editable-points.pip
 	imports: [
 		CommonModule,
 		FormsModule,
-		SharedModule,
+		ButtonComponent,
+		CheckboxComponent,
+		SwitcherComponent,
+		InputComponent,
+		DropComponent,
+		CalendarComponent,
+		SvgComponent,
 		ClockComponent,
 		MainItemComponent,
 		DatePointsPopupComponent,
