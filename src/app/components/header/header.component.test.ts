@@ -5,7 +5,7 @@ import { AuthService, PopupService } from 'src/app/services';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { PrivacyComponent } from '../privacy/privacy.component';
-import { BoardComponent } from '../board/board.component';
+import { BoardModule } from '../board/board.module';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('HeaderComponent', () => {
@@ -25,9 +25,18 @@ describe('HeaderComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [HeaderComponent, BoardComponent],
+			imports: [HeaderComponent, BoardModule],
 			providers: [
-				{ provide: Router, useValue: { events: new Subject<Event>(), url: '/home', navigate: jest.fn() } },
+				{
+					provide: Router,
+					useValue: {
+						events: new Subject<Event>(),
+						url: '/home',
+						navigate: jest.fn(),
+						createUrlTree: jest.fn(),
+						serializeUrl: jest.fn().mockReturnValue('/'),
+					},
+				},
 				{ provide: ActivatedRoute, useValue: { queryParams: of({}) } },
 				{
 					provide: AuthService,

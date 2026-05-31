@@ -12,13 +12,12 @@ import { ColorsCheckPipe } from './pipes/colors-check.pipe';
 import { SortTrendingPipe } from './pipes/sort-trending.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
 import { DatePointsPopupComponent } from './components/date-points-popup/date-points-popup.component';
-import { SettingsComponent } from './components/settings/settings.component';
+import { LinkPointComponent } from './components/link-point/link-point.component';
 import { ClockModule } from './components/clock/clock.module';
 import { BoardModule } from './components/board/board.module';
 import { TimersModule } from './timers/timers.module';
 import { CommonModule } from '@angular/common';
 import { SvgModule } from './components/svg/svg.module';
-import { LinkPointComponent } from './components/link-point/link-point.component';
 import { QrCodeModule } from 'ng-qrcode';
 import { MainItemModule } from './components/main-item/main-item.module';
 import { DonateComponent } from './components/donate/donate.component';
@@ -31,11 +30,8 @@ import { DonateComponent } from './components/donate/donate.component';
 		ColorsCheckPipe,
 		FilterPipe,
 		MainListComponent,
-		HeaderComponent,
-		FooterComponent,
 		PrivacyComponent,
 		DatePointsPopupComponent,
-		SettingsComponent,
 		LinkPointComponent,
 		DonateComponent,
 	],
@@ -50,6 +46,8 @@ import { DonateComponent } from './components/donate/donate.component';
 		ClockModule,
 		MainItemModule,
 		QrCodeModule,
+		HeaderComponent,
+		FooterComponent,
 	],
 	providers: [FilterPipe],
 	exports: [
@@ -65,7 +63,6 @@ import { DonateComponent } from './components/donate/donate.component';
 		FilterPipe,
 		PrivacyComponent,
 		DatePointsPopupComponent,
-		SettingsComponent,
 		LinkPointComponent,
 		DonateComponent,
 		BoardModule,

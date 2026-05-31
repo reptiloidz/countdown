@@ -1,10 +1,4 @@
-import {
-	Directive,
-	Inject,
-	Input,
-	TemplateRef,
-	ViewContainerRef,
-} from '@angular/core';
+import { Directive, Inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 class AppLetContext<T> {
 	constructor(private readonly internalDirectiveInstance: LetDirective<T>) {}
@@ -27,23 +21,21 @@ class AppLetContext<T> {
  */
 @Directive({
 	selector: '[appLet]',
+	standalone: true,
 })
 export class LetDirective<T> {
 	@Input() appLet!: T;
 
 	constructor(
 		@Inject(ViewContainerRef) viewContainer: ViewContainerRef,
-		@Inject(TemplateRef) templateRef: TemplateRef<AppLetContext<T>>
+		@Inject(TemplateRef) templateRef: TemplateRef<AppLetContext<T>>,
 	) {
-		viewContainer.createEmbeddedView(
-			templateRef,
-			new AppLetContext<T>(this)
-		);
+		viewContainer.createEmbeddedView(templateRef, new AppLetContext<T>(this));
 	}
 
 	static ngTemplateContextGuard<T>(
 		_dir: LetDirective<T>,
-		_ctx: any
+		_ctx: unknown,
 	): _ctx is LetDirective<Exclude<T, null | undefined>> {
 		return true;
 	}

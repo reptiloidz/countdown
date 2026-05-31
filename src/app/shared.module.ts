@@ -34,12 +34,12 @@ const STANDALONE_UI = [
 	PopupComponent,
 	NotifyComponent,
 	TooltipComponent,
+	LetDirective,
 ];
 
 @NgModule({
-	declarations: [LetDirective],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMaskDirective, SafeHtmlPipe, ...STANDALONE_UI],
-	exports: [...STANDALONE_UI, LetDirective, SafeHtmlPipe],
+	exports: [...STANDALONE_UI, SafeHtmlPipe],
 	providers: [[provideNgxMask()]],
 })
 export class SharedModule {}

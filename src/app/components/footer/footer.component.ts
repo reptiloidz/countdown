@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { Router, Event, ActivatedRoute, NavigationEnd } from '@angular/router';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	inject,
+	OnDestroy,
+	OnInit,
+	signal,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, Event, ActivatedRoute, NavigationEnd, RouterModule } from '@angular/router';
 import { format, formatISO } from 'date-fns';
 import { filter, Subscription, mergeMap, combineLatestWith, of, distinctUntilChanged, take } from 'rxjs';
 import { getPointFromUrl, parseDate } from 'src/app/helpers';
@@ -8,9 +17,14 @@ import { AuthService, DataService, ActionService, NotifyService, HttpService } f
 import { HttpParams } from '@angular/common/http';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Constants } from 'src/app/enums';
+import { ButtonComponent } from '../button/button.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
+import { QrCodeModule } from 'ng-qrcode';
 
 @Component({
 	selector: '[app-footer]',
+	standalone: true,
+	imports: [CommonModule, RouterModule, ButtonComponent, TooltipComponent, QrCodeModule],
 	templateUrl: './footer.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -34,17 +48,15 @@ export class FooterComponent implements OnInit, OnDestroy {
 	hasAccessNoEdit = false;
 	private subscriptions = new Subscription();
 
-	constructor(
-		private router: Router,
-		private route: ActivatedRoute,
-		private data: DataService,
-		private action: ActionService,
-		private auth: AuthService,
-		private notify: NotifyService,
-		private http: HttpService,
-		private deviceService: DeviceDetectorService,
-		private cdr: ChangeDetectorRef,
-	) {}
+	private readonly router = inject(Router);
+	private readonly route = inject(ActivatedRoute);
+	private readonly data = inject(DataService);
+	private readonly action = inject(ActionService);
+	private readonly auth = inject(AuthService);
+	private readonly notify = inject(NotifyService);
+	private readonly http = inject(HttpService);
+	private readonly deviceService = inject(DeviceDetectorService);
+	private readonly cdr = inject(ChangeDetectorRef);
 
 	get isAuthenticated() {
 		return this.auth.isAuthenticated;

@@ -94,13 +94,14 @@ describe('FooterComponent', () => {
 		} as unknown as jest.Mocked<HttpService>;
 
 		await TestBed.configureTestingModule({
-			declarations: [FooterComponent],
-			imports: [TooltipComponent],
+			imports: [FooterComponent, TooltipComponent],
 			providers: [
 				{
 					provide: Router,
 					useValue: {
 						navigate: jest.fn(),
+						createUrlTree: jest.fn(),
+						serializeUrl: jest.fn().mockReturnValue('/'),
 						events: new Subject(),
 						lastSuccessfulNavigation: {
 							finalUrl: {

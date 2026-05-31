@@ -6,7 +6,7 @@ describe('SettingsComponent', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			declarations: [SettingsComponent],
+			imports: [SettingsComponent],
 		}).compileComponents();
 
 		const fixture = TestBed.createComponent(SettingsComponent);

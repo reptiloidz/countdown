@@ -9,15 +9,23 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { differenceInMinutes, Duration, endOfYear, formatDuration, startOfDay, startOfYear, subYears } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { minutesInDay, minutesInHour, minutesInMonth, minutesInYear } from 'date-fns/constants';
 import { parseDate, sortDates } from 'src/app/helpers';
 import { Iteration, Point, SwitcherItem } from 'src/app/interfaces';
 import { DifferenceMode } from 'src/app/types';
+import { DatepickerComponent } from '../datepicker/datepicker.component';
+import { SwitcherComponent } from '../switcher/switcher.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
+import { SvgComponent } from '../svg/svg.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 
 @Component({
 	selector: 'app-mode-stats',
+	standalone: true,
+	imports: [CommonModule, DatepickerComponent, SwitcherComponent, TooltipComponent, SvgComponent, CheckboxComponent],
 	templateUrl: './mode-stats.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

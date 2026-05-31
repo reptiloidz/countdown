@@ -1,14 +1,14 @@
 <app-switcher
-	[size]="isPopup ? 'lg' : 'sm'"
+	[size]="isPopup() ? 'lg' : 'sm'"
 	[items]="sounds"
 	[value]="soundValue"
-	[showTitle]="isPopup"
+	[showTitle]="isPopup()"
 	(valueSwitched)="changeSound($event)"
 ></app-switcher>
 <app-switcher
-	[size]="isPopup ? 'lg' : 'sm'"
+	[size]="isPopup() ? 'lg' : 'sm'"
 	[items]="themes"
 	[value]="themeValue"
-	[showTitle]="isPopup"
+	[showTitle]="isPopup()"
 	(valueSwitched)="changeTheme($event)"
 ></app-switcher>

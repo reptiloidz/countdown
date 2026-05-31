@@ -34,7 +34,7 @@ describe('ModeStatsComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ModeStatsComponent],
+			imports: [ModeStatsComponent],
 			schemas: [NO_ERRORS_SCHEMA],
 		})
 			.overrideComponent(ModeStatsComponent, {

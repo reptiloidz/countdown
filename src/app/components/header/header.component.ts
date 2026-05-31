@@ -1,25 +1,36 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	inject,
+	OnDestroy,
+	OnInit,
+	signal,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { User } from '@angular/fire/auth';
-import { NavigationEnd, Params, Router } from '@angular/router';
+import { NavigationEnd, Params, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AuthService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
 import { SettingsComponent } from '../settings/settings.component';
 import { environment } from 'src/environments/environment';
 import { DonateComponent } from '../donate/donate.component';
+import { ButtonComponent } from '../button/button.component';
+import { BoardModule } from '../board/board.module';
 
 @Component({
 	selector: '[app-header]',
+	standalone: true,
+	imports: [CommonModule, RouterModule, ButtonComponent, BoardModule, SettingsComponent],
 	templateUrl: './header.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-	constructor(
-		private auth: AuthService,
-		private router: Router,
-		private popupService: PopupService,
-		private cdr: ChangeDetectorRef,
-	) {}
+	private readonly auth = inject(AuthService);
+	private readonly router = inject(Router);
+	private readonly popupService = inject(PopupService);
+	private readonly cdr = inject(ChangeDetectorRef);
 
 	private subscriptions = new Subscription();
 

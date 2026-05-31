@@ -7,9 +7,10 @@ import { CheckAccessEditPipe } from '../../pipes/check-access-edit.pipe';
 import { SvgModule } from '../svg/svg.module';
 import { RemainModule } from '../../pipes/remain/remain.module';
 import { RouterModule } from '@angular/router';
+import { LetDirective } from '../../directives/let.directive';
 
 @NgModule({
-	imports: [CommonModule, SharedModule, SvgModule, RouterModule, TimersModule, RemainModule],
+	imports: [CommonModule, SharedModule, SvgModule, RouterModule, TimersModule, RemainModule, LetDirective],
 	declarations: [MainItemComponent, CheckAccessEditPipe],
 	exports: [MainItemComponent, CheckAccessEditPipe],
 })

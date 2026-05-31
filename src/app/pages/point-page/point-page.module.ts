@@ -17,8 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-	imports: [CommonModule, PointModule, SvgModule, SharedModule, RouterModule.forChild(routes)],
-	declarations: [ModeStatsComponent],
+	imports: [CommonModule, PointModule, SvgModule, SharedModule, ModeStatsComponent, RouterModule.forChild(routes)],
 	exports: [RouterModule, ModeStatsComponent],
 })
 export class PointPageModule {}
