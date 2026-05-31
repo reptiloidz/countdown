@@ -12,7 +12,17 @@ import {
 	signal,
 	ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { CalendarComponent } from 'src/app/components/calendar/calendar.component';
+import { CheckboxComponent } from 'src/app/components/checkbox/checkbox.component';
+import { SvgComponent } from 'src/app/components/svg/svg.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { CheckCopiesPipe } from 'src/app/pipes/check-copies.pipe';
+import { RemainModule } from 'src/app/pipes/remain/remain.module';
+import { PanelComponent } from '../panel/panel.component';
 import {
 	filterIterations,
 	getClosestIteration,
@@ -25,7 +35,6 @@ import {
 import { Iteration, Point } from 'src/app/interfaces';
 import { ActionService, AuthService, DataService, NotifyService } from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
-import { PanelComponent } from '../panel/panel.component';
 import { formatDate } from 'date-fns';
 import { Constants } from 'src/app/enums';
 import { Subscription, combineLatestWith, debounceTime, distinctUntilChanged, filter, fromEvent, tap } from 'rxjs';
@@ -34,6 +43,19 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
 	selector: 'app-date-panel',
+	standalone: true,
+	imports: [
+		CommonModule,
+		ScrollingModule,
+		PanelComponent,
+		CalendarComponent,
+		ButtonComponent,
+		CheckboxComponent,
+		TooltipComponent,
+		SvgComponent,
+		CheckCopiesPipe,
+		RemainModule,
+	],
 	templateUrl: './date-panel.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,
 	animations: [

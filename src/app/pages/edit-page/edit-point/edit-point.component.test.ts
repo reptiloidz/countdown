@@ -66,6 +66,9 @@ describe('EditPointComponent', () => {
 			pointUpdated: jest.fn(),
 			eventUpdatedPoint$: new Subject(),
 			eventIntervalSwitched$: new Subject(),
+			eventIterationSwitched$: new Subject(),
+			eventIterationsChecked$: new Subject(),
+			eventPointsCheckedAll$: new Subject(),
 		} as unknown as jest.Mocked<ActionService>;
 
 		notifyServiceMock = {
@@ -74,8 +77,8 @@ describe('EditPointComponent', () => {
 		} as unknown as jest.Mocked<NotifyService>;
 
 		await TestBed.configureTestingModule({
-			declarations: [EditPointComponent, DatePanelComponent],
-			imports: [BrowserAnimationsModule, ReactiveFormsModule, DropComponent],
+			declarations: [EditPointComponent],
+			imports: [BrowserAnimationsModule, ReactiveFormsModule, DropComponent, DatePanelComponent],
 			providers: [
 				{
 					provide: DataService,

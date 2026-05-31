@@ -12,12 +12,12 @@ export const appRoutes: Routes = [
 	},
 	{
 		path: 'point/:id',
-		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
+		loadChildren: () => import('./pages/point-page/point-page.routes').then(m => m.pointPageRoutes),
 		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'url',
-		loadChildren: () => import('./pages/point-page/point-page.module').then(m => m.PointPageModule),
+		loadChildren: () => import('./pages/point-page/point-page.routes').then(m => m.pointPageRoutes),
 		canActivate: [leaveUrlGuard],
 	},
 	{

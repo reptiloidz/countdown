@@ -11,11 +11,15 @@ import {
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { timer } from 'rxjs';
+import { ButtonComponent } from 'src/app/components/button/button.component';
 import { ButtonSize } from 'src/app/types';
 
 @Component({
 	selector: 'app-panel',
+	standalone: true,
+	imports: [CommonModule, ButtonComponent],
 	templateUrl: './panel.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [

@@ -31,8 +31,7 @@ describe('PanelComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
-			declarations: [PanelComponent],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), PanelComponent],
 			providers: [provideAnimations()],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();

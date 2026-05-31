@@ -9,7 +9,14 @@ import {
 	ElementRef,
 	signal,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { CheckboxComponent } from 'src/app/components/checkbox/checkbox.component';
+import { SvgComponent } from 'src/app/components/svg/svg.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { TimersModule } from 'src/app/timers/timers.module';
+import { DatePanelComponent } from '../date-panel/date-panel.component';
 import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval, take } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
 import { DataService, AuthService, ActionService, NotifyService, PopupService } from 'src/app/services';
@@ -25,12 +32,21 @@ import {
 	sortDates,
 } from 'src/app/helpers';
 import { Title } from '@angular/platform-browser';
-import { CheckboxComponent } from '../../../components/checkbox/checkbox.component';
 import { ModeStatsComponent } from 'src/app/components/mode-stats/mode-stats.component';
 import { DateType, TimeType } from 'src/app/types';
 
 @Component({
 	selector: 'app-point',
+	standalone: true,
+	imports: [
+		CommonModule,
+		DatePanelComponent,
+		ButtonComponent,
+		CheckboxComponent,
+		TooltipComponent,
+		SvgComponent,
+		TimersModule,
+	],
 	templateUrl: './point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,
 })
