@@ -8,6 +8,7 @@ import {
 	model,
 	OnDestroy,
 	output,
+	signal,
 	untracked,
 	ViewChild,
 } from '@angular/core';
@@ -49,24 +50,33 @@ export class AutocompleteComponent implements OnDestroy {
 
 	autocompleteChanged = output<string | number>();
 
-	/** Текст в поле ввода; связан с app-input через ngModel */
+	/** Текст в поле ввода; связан с app-input */
 	readonly visibleValue = model('');
+
+	/**
+	 * Строка фильтра списка (как filter() в релизе).
+	 * undefined — показывать весь список (после открытия, до ввода).
+	 */
+	private readonly listFilterQuery = signal<string | undefined>(undefined);
 
 	readonly autocompleteListFiltered = computed(() => {
 		const list = this.autocompleteList();
-		const filterString = this.visibleValue();
-		if (!filterString) {
+		const query = this.listFilterQuery();
+		if (query === undefined || query === '') {
 			return list;
 		}
-		const filtered = list.filter(item => this.filterFn()(item, filterString));
+		const filtered = list.filter(item => this.filterFn()(item, query));
 		return filtered.length ? filtered : list;
 	});
 
 	readonly firstFilteredValue = computed(() => this.autocompleteListFiltered()[0]);
 
 	@ViewChild(DropComponent, { static: true }) drop!: DropComponent;
+	@ViewChild(InputComponent) input?: InputComponent;
 
 	private isOpening = false;
+	/** Значение только что применено — value() с родителя ещё не обновился при dropClosed */
+	private lastCommittedValue: string | number | null = null;
 	private readonly subscriptions = new Subscription();
 
 	constructor() {
@@ -103,35 +113,76 @@ export class AutocompleteComponent implements OnDestroy {
 	}
 
 	changeHandler(value: string | number) {
+		this.lastCommittedValue = value;
 		this.autocompleteChanged.emit(value);
 		const visible = getKeyByValue(this.autocompleteList(), value)?.toString() ?? this.visibleValue();
 		this.visibleValue.set(visible);
 	}
 
 	onVisibleValueChange(filterValue?: string | number | null) {
-		this.visibleValue.set(filterValue == null ? '' : String(filterValue));
+		const next = filterValue == null ? '' : String(filterValue);
+		this.visibleValue.set(next);
+		this.listFilterQuery.set(next);
 	}
 
 	selectFirstOption() {
+		const committed = this.resolveValueOnCommit();
+		this.changeHandler(committed);
+		this.listFilterQuery.set(undefined);
 		this.drop.closeHandler();
-		(document.activeElement as HTMLElement | null)?.blur();
-		this.changeHandler(this.firstFilteredValue() ? this.firstFilteredValue()!.value : this.value());
+		this.input?.blurInput();
 	}
 
 	keydown(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
+			event.preventDefault();
+			event.stopPropagation();
 			this.selectFirstOption();
 		}
 	}
 
+	private resolveValueOnCommit(): string | number {
+		const typed = this.visibleValue().trim();
+		const isFiltering = this.listFilterQuery() !== undefined;
+
+		if (isFiltering && typed) {
+			const filtered = this.autocompleteListFiltered().filter(item => !item.disabled);
+			const usesCalendarNumber = this.filterFn() !== defaultFilterFn;
+
+			if (usesCalendarNumber) {
+				const byCalendarNumber = filtered.find(item => (+item.value + 1).toString() === typed);
+				if (byCalendarNumber) {
+					return byCalendarNumber.value;
+				}
+			}
+
+			const exactInFiltered = filtered.find(item => String(item.key) === typed || String(item.value) === typed);
+			if (exactInFiltered) {
+				return exactInFiltered.value;
+			}
+
+			const first = filtered[0];
+			if (first) {
+				return first.value;
+			}
+			return typed;
+		}
+
+		return this.value();
+	}
+
 	openHandler() {
 		this.isOpening = true;
+		this.listFilterQuery.set(undefined);
 		this.action.autocompleteOpened();
 		this.drop.openHandler();
 	}
 
 	closeHandler() {
-		const visible = getKeyByValue(this.autocompleteList(), this.value())?.toString() ?? this.visibleValue();
+		const lookup = this.lastCommittedValue ?? this.value();
+		const visible = getKeyByValue(this.autocompleteList(), lookup)?.toString() ?? this.visibleValue();
 		this.visibleValue.set(visible);
+		this.lastCommittedValue = null;
+		this.listFilterQuery.set(undefined);
 	}
 }
