@@ -15,15 +15,14 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm cache clean --force
-    - run: rm -rf node_modules package-lock.json
-    - run: npm install
+        cache: 'yarn'
+    - run: corepack enable
+    - run: yarn install --immutable
     - name: Create environment.prod.ts
       run: |
         echo "NG_APP_FIREBASE_API_KEY=${{ secrets.NG_APP_FIREBASE_API_KEY }}
@@ -35,8 +34,8 @@ jobs:
         NG_APP_FIREBASE_APP_ID=${{ secrets.NG_APP_FIREBASE_APP_ID }}
         NG_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.NG_APP_FIREBASE_MEASUREMENT_ID }}
         " > .env
-    - run: npm run build
-    - run: npm test
+    - run: yarn build
+    - run: yarn test
 
     - name: Setup SSH key
       uses: webfactory/ssh-agent@v0.9.0

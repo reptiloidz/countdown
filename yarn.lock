@@ -4984,7 +4984,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sass-fairy/exception@npm:^1.0.0":
+"@sass-fairy/exception@npm:1.1.1":
   version: 1.1.1
   resolution: "@sass-fairy/exception@npm:1.1.1"
   checksum: 10c0/2c221cd2bd0e8fd072bdb4900e3b8d72927ad81cae7183a9410832e3e752097db2827b9d030eddc00739c1c9073e953aa7b983a36b4eccb8b34eecb7f110e803
