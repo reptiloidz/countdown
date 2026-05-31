@@ -42,7 +42,6 @@ export const appRoutes: Routes = [
 	},
 	{
 		path: '**',
-		loadChildren: () => import('./pages/no-page/no-page.module').then(m => m.NoPageModule),
-		data: { state: 'no-page' },
+		loadChildren: () => import('./pages/no-page/no-page.routes').then(m => m.noPageRoutes),
 	},
 ];

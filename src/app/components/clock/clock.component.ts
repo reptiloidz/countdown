@@ -7,9 +7,12 @@ import {
 	Renderer2,
 	RendererStyleFlags2,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'app-clock',
+	standalone: true,
+	imports: [CommonModule],
 	templateUrl: './clock.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

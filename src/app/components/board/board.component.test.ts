@@ -15,7 +15,7 @@ describe('BoardComponent', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			declarations: [BoardComponent],
+			imports: [BoardComponent],
 			providers: [],
 		}).compileComponents();
 

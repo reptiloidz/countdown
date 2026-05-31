@@ -4,7 +4,7 @@ import { DataService, AuthService, ActionService, NotifyService, PopupService } 
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { of } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { TimersModule } from '../../../timers/timers.module';
+import { TimersComponent } from '../../../timers/timers.component';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Point } from 'src/app/interfaces';
@@ -81,7 +81,7 @@ describe('PointComponent', () => {
 		mockTitleService = { setTitle: jest.fn() };
 
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), PointComponent, TimersModule],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), PointComponent, TimersComponent],
 			providers: [
 				{ provide: PopupService, useValue: { show: jest.fn() } },
 				{ provide: DataService, useValue: mockDataService },

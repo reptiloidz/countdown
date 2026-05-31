@@ -15,7 +15,7 @@ import { ButtonComponent } from 'src/app/components/button/button.component';
 import { CheckboxComponent } from 'src/app/components/checkbox/checkbox.component';
 import { SvgComponent } from 'src/app/components/svg/svg.component';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
-import { TimersModule } from 'src/app/timers/timers.module';
+import { TimersComponent } from 'src/app/timers/timers.component';
 import { DatePanelComponent } from '../date-panel/date-panel.component';
 import { Subscription, distinctUntilChanged, tap, mergeMap, filter, BehaviorSubject, of, interval, take } from 'rxjs';
 import { Point, UserExtraData } from 'src/app/interfaces';
@@ -45,7 +45,7 @@ import { DateType, TimeType } from 'src/app/types';
 		CheckboxComponent,
 		TooltipComponent,
 		SvgComponent,
-		TimersModule,
+		TimersComponent,
 	],
 	templateUrl: './point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,

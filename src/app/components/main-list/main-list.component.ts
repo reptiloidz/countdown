@@ -25,7 +25,7 @@ import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { SharedModule } from 'src/app/shared.module';
-import { ClockModule } from '../clock/clock.module';
+import { ClockComponent } from '../clock/clock.component';
 import { MainItemComponent } from '../main-item/main-item.component';
 import { ColorsCheckPipe } from 'src/app/pipes/colors-check.pipe';
 import { SortTrendingPipe } from 'src/app/pipes/sort-trending.pipe';
@@ -38,7 +38,7 @@ import { CheckEditablePointsPipe } from 'src/app/pipes/check-editable-points.pip
 		CommonModule,
 		FormsModule,
 		SharedModule,
-		ClockModule,
+		ClockComponent,
 		MainItemComponent,
 		DatePointsPopupComponent,
 		ColorsCheckPipe,

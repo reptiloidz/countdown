@@ -17,12 +17,12 @@ import { SettingsComponent } from '../settings/settings.component';
 import { environment } from 'src/environments/environment';
 import { DonateComponent } from '../donate/donate.component';
 import { ButtonComponent } from '../button/button.component';
-import { BoardModule } from '../board/board.module';
+import { BoardComponent } from '../board/board.component';
 
 @Component({
 	selector: '[app-header]',
 	standalone: true,
-	imports: [CommonModule, RouterModule, ButtonComponent, BoardModule, SettingsComponent],
+	imports: [CommonModule, RouterModule, ButtonComponent, BoardComponent, SettingsComponent],
 	templateUrl: './header.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

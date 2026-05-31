@@ -5,7 +5,7 @@ import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { of, Subject } from 'rxjs';
 import { CheckAccessEditPipe } from 'src/app/pipes/check-access-edit.pipe';
 import { LetDirective } from 'src/app/directives/let.directive';
-import { TimersModule } from '../../timers/timers.module';
+import { TimersComponent } from '../../timers/timers.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -71,7 +71,7 @@ describe('MainItemComponent', () => {
 				BrowserAnimationsModule.withConfig({ disableAnimations: true }),
 				RouterTestingModule,
 				MainItemComponent,
-				TimersModule,
+				TimersComponent,
 			],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },

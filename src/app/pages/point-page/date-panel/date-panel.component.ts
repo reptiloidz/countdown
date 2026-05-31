@@ -21,7 +21,8 @@ import { CheckboxComponent } from 'src/app/components/checkbox/checkbox.componen
 import { SvgComponent } from 'src/app/components/svg/svg.component';
 import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 import { CheckCopiesPipe } from 'src/app/pipes/check-copies.pipe';
-import { RemainModule } from 'src/app/pipes/remain/remain.module';
+import { TimeRemainPipe } from 'src/app/pipes/time-remain.pipe';
+import { TimeRemainTextPipe } from 'src/app/pipes/time-remain-text.pipe';
 import { PanelComponent } from '../panel/panel.component';
 import {
 	filterIterations,
@@ -54,7 +55,8 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 		TooltipComponent,
 		SvgComponent,
 		CheckCopiesPipe,
-		RemainModule,
+		TimeRemainPipe,
+		TimeRemainTextPipe,
 	],
 	templateUrl: './date-panel.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,

@@ -25,8 +25,9 @@ import { ru } from 'date-fns/locale';
 import { DateType, TimeType } from 'src/app/types';
 import { LetDirective } from 'src/app/directives/let.directive';
 import { CheckAccessEditPipe } from 'src/app/pipes/check-access-edit.pipe';
-import { TimersModule } from 'src/app/timers/timers.module';
-import { RemainModule } from 'src/app/pipes/remain/remain.module';
+import { TimersComponent } from 'src/app/timers/timers.component';
+import { TimeRemainPipe } from 'src/app/pipes/time-remain.pipe';
+import { TimeRemainTextPipe } from 'src/app/pipes/time-remain-text.pipe';
 import { ButtonComponent } from '../button/button.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { SvgComponent } from '../svg/svg.component';
@@ -39,8 +40,9 @@ import { SvgComponent } from '../svg/svg.component';
 		RouterModule,
 		LetDirective,
 		CheckAccessEditPipe,
-		TimersModule,
-		RemainModule,
+		TimersComponent,
+		TimeRemainPipe,
+		TimeRemainTextPipe,
 		ButtonComponent,
 		CheckboxComponent,
 		TooltipComponent,

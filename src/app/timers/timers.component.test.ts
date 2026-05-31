@@ -2,8 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimersComponent } from './timers.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { BoardComponent } from '../components/board/board.component';
-
 describe('TimersComponent', () => {
 	let component: TimersComponent;
 	let fixture: ComponentFixture<TimersComponent>;
@@ -18,8 +16,7 @@ describe('TimersComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [TimersComponent, BoardComponent],
-			imports: [NoopAnimationsModule],
+			imports: [NoopAnimationsModule, TimersComponent],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 	});

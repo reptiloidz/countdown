@@ -10,7 +10,7 @@ describe('ClockComponent', () => {
 	beforeEach(() => {
 		// Настроим TestBed
 		TestBed.configureTestingModule({
-			declarations: [ClockComponent],
+			imports: [ClockComponent],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(ClockComponent);

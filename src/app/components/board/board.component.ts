@@ -10,12 +10,15 @@ import {
 	OnInit,
 	SimpleChanges,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { filter, timer } from 'rxjs';
 
 const ANIMATION_SPEED = 200;
 
 @Component({
 	selector: 'app-board',
+	standalone: true,
+	imports: [CommonModule],
 	templateUrl: './board.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

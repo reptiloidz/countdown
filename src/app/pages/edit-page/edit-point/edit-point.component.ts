@@ -15,7 +15,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MainItemComponent } from 'src/app/components/main-item/main-item.component';
 import { GenerateIterationsComponent } from 'src/app/components/generate-iterations/generate-iterations.component';
 import { SharedModule } from 'src/app/shared.module';
-import { ClockModule } from 'src/app/components/clock/clock.module';
+import { ClockComponent } from 'src/app/components/clock/clock.component';
 import { PointModesComponent } from '../point-modes/point-modes.component';
 import {
 	Subscription,
@@ -79,7 +79,7 @@ enum EditPointSuccessMessage {
 		MainItemComponent,
 		PointModesComponent,
 		GenerateIterationsComponent,
-		ClockModule,
+		ClockComponent,
 	],
 	templateUrl: './edit-point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,

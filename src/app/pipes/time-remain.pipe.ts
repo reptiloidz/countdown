@@ -5,6 +5,7 @@ import { Constants } from '../enums';
 
 @Pipe({
 	name: 'timeRemain',
+	standalone: true,
 })
 export class TimeRemainPipe implements PipeTransform {
 	transform(time: string, dateOnly: boolean, greenwich?: boolean): string {

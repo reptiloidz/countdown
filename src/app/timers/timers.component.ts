@@ -1,9 +1,13 @@
 import { AUTO_STYLE, animate, style, transition, trigger } from '@angular/animations';
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BoardComponent } from '../components/board/board.component';
 import { DateType, TimeType } from '../types';
 
 @Component({
 	selector: 'app-timers',
+	standalone: true,
+	imports: [CommonModule, BoardComponent],
 	templateUrl: './timers.component.html',
 	animations: [
 		trigger('boardVisibility', [

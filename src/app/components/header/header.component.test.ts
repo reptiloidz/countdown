@@ -5,7 +5,7 @@ import { AuthService, PopupService } from 'src/app/services';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { User } from '@angular/fire/auth';
 import { PrivacyComponent } from '../privacy/privacy.component';
-import { BoardModule } from '../board/board.module';
+import { BoardComponent } from '../board/board.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('HeaderComponent', () => {
@@ -25,7 +25,7 @@ describe('HeaderComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [HeaderComponent, BoardModule],
+			imports: [HeaderComponent, BoardComponent],
 			providers: [
 				{
 					provide: Router,
