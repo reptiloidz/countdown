@@ -7,8 +7,13 @@
 	(panelVisibilitySwitched)="switchCalendarPanel($event)"
 >
 	<ng-template #bodyTemplate>
+		<div
+			*ngIf="!dates?.length"
+			class="date-panel__calendar-placeholder"
+			aria-hidden="true"
+		></div>
 		<app-calendar
-			*ngIf="this.dates?.length"
+			*ngIf="dates?.length"
 			(dateSelected)="dateSelected($event)"
 			(modeSelected)="modeSelected($event)"
 			[iterations]="point()?.dates ?? []"
@@ -118,6 +123,7 @@
 				<div
 					#iterationsTabs
 					class="tabs"
+					[style.--tabs-item-height.px]="itemSize()"
 					[ngClass]="{
 						'tabs--scrollable': iterationsListScrollable,
 						'tabs--expanded': showIterationsInfo,

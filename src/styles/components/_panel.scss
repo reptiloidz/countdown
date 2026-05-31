@@ -1,3 +1,7 @@
+.date-panel__calendar-placeholder {
+	min-height: 280px;
+}
+
 .panel {
 	@include media-breakpoint-down(sm) {
 		--panel-px: 30px;

@@ -1,4 +1,9 @@
 .dashboard {
+	&--pending {
+		visibility: hidden;
+		pointer-events: none;
+	}
+
 	@include media-breakpoint-down(lg) {
 		display: grid;
 		grid-template-areas: 'left right' 'bottom bottom';

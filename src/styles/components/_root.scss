@@ -25,7 +25,8 @@
 		}
 
 		.root__loader-icon {
-			display: flex;
+			opacity: 1;
+			visibility: visible;
 		}
 	}
 
@@ -70,10 +71,14 @@
 	}
 
 	&__loader-icon {
-		@include transition(display 0.8s allow-discrete);
+		@include transition(opacity 0.8s, visibility 0.8s);
 
-		display: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		height: 100%;
+		opacity: 0;
+		visibility: hidden;
 	}
 
 	&__loading-marker {

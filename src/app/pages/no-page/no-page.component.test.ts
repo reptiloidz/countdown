@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NoPageComponent } from './no-page.component';
 import { ActionService } from 'src/app/services';
 import { of, throwError } from 'rxjs';
@@ -14,7 +15,7 @@ describe('NoPageComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			imports: [NoPageComponent],
+			imports: [NoPageComponent, RouterTestingModule],
 			providers: [{ provide: ActionService, useValue: actionServiceMock }],
 		}).compileComponents();
 

@@ -166,7 +166,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	selectedIterationsNumber = 0;
 	hasAccess: boolean | undefined = false;
 	iterationsChecked: boolean[] = [];
-	showIterationsInfo = false;
+	showIterationsInfo = !!localStorage.getItem('showIterationsInfo');
 	removedIterationIndex = 0;
 	resizeObserver: ResizeObserver | null = null;
 	iterationsListScrollable = false;
@@ -174,7 +174,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	datesAfterLength = 0;
 	datesLength = 0;
 	combinedDates: { type: string; data?: Point | Iteration; time?: string }[] = [];
-	itemSize = signal(0);
+	itemSize = signal(184);
 	itemClass = signal('');
 
 	ngOnInit(): void {
@@ -219,7 +219,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						}
 
 						setTimeout(() => {
-							this.getIterationsListScrollable();
+							this.scheduleIterationsLayout();
 							this.scrollList('home');
 						}, 1000);
 
@@ -255,7 +255,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						this.checkAllIterations(false);
 						this.datesLength = point.dates.length;
 					}
-					this.getIterationsListScrollable();
+					this.scheduleIterationsLayout();
 					this.getCombineDates();
 				},
 				error: err => {
@@ -283,22 +283,22 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 				.subscribe({
 					next: () => {
 						setTimeout(() => {
-							this.getIterationsListScrollable();
+							this.scheduleIterationsLayout();
 						}, 100);
 					},
 				}),
 		);
 
 		this.switchCalendarPanel();
-
-		this.showIterationsInfo = !!localStorage.getItem('showIterationsInfo');
+		this.updateItemSize();
 	}
 
 	ngAfterViewInit(): void {
 		this.resizeObserver = new ResizeObserver(() => {
-			this.getIterationsListScrollable();
+			this.scheduleIterationsLayout();
 		});
 		this.resizeObserver.observe(this.elementRef?.nativeElement);
+		this.scheduleIterationsLayout();
 	}
 
 	ngOnDestroy(): void {
@@ -383,15 +383,23 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 	}
 
+	scheduleIterationsLayout() {
+		requestAnimationFrame(() => {
+			this.getIterationsListScrollable();
+		});
+	}
+
 	getIterationsListScrollable() {
-		this.iterationsListScrollable =
-			this.iterationsList?.nativeElement?.clientWidth >
-			this.iterationsTabs?.nativeElement?.clientWidth -
-				parseInt(
-					this.iterationsTabs?.nativeElement &&
-						getComputedStyle(this.iterationsTabs?.nativeElement).paddingLeft +
-							getComputedStyle(this.iterationsTabs?.nativeElement).paddingRight,
-				);
+		if (!this.iterationsTabs?.nativeElement) {
+			return;
+		}
+
+		const tabsEl = this.iterationsTabs.nativeElement;
+		const listEl = this.iterationsList?.nativeElement;
+		const padding =
+			parseInt(getComputedStyle(tabsEl).paddingLeft, 10) + parseInt(getComputedStyle(tabsEl).paddingRight, 10);
+
+		this.iterationsListScrollable = listEl ? listEl.clientWidth > tabsEl.clientWidth - padding : false;
 
 		this.updateItemSize();
 		this.cdr.detectChanges();

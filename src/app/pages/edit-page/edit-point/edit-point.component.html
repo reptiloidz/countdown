@@ -1,10 +1,11 @@
 <div
 	class="root__loading-marker"
-	*ngIf="loading"
+	*ngIf="loading || (checking | async)"
 ></div>
 <app-date-panel
-	*ngIf="this.dates?.length && !isCreationUrl && !isCreation"
+	*ngIf="!isCreationUrl && !isCreation"
 	#datePanel
+	[point]="point"
 	[loading]="loading"
 	[pointDate]="pointDate"
 	[selectedIterationDate]="selectedIterationDate"
@@ -37,8 +38,8 @@
 		></div>
 	</div>
 	<form
-		*ngIf="!(checking | async); else loader"
 		class="content__col"
+		[class.content--pending]="checking | async"
 		[formGroup]="form"
 		(ngSubmit)="submit(repeatableValueSaved && !isCreation)"
 	>
@@ -343,10 +344,6 @@
 		</div>
 	</form>
 </div>
-
-<ng-template #loader>
-	<div class="root__loading-marker"></div>
-</ng-template>
 
 <ng-template #pointPlaceholder>
 	<app-clock
