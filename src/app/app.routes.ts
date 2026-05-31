@@ -6,11 +6,6 @@ import { noPointGuard } from './guards/noPoint.guard';
 export const appRoutes: Routes = [
 	{
 		path: '',
-		redirectTo: '',
-		pathMatch: 'full',
-	},
-	{
-		path: '',
 		component: MainListComponent,
 		data: { state: 'home' },
 		canActivate: [leaveUrlGuard, noPointGuard],

@@ -22,14 +22,18 @@ import { environment } from 'src/environments/environment';
 import { millisecondsInSecond } from 'date-fns/constants';
 import { animate, group, query, style, transition, trigger } from '@angular/animations';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { AppModule } from './app.module';
+import { FooterComponent } from './components/footer/footer.component';
+import { HeaderComponent } from './components/header/header.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { NotifyComponent } from './components/notify/notify.component';
+import { PopupComponent } from './components/popup/popup.component';
 
 declare var ym: any;
 
 @Component({
 	selector: 'app-root',
 	standalone: true,
-	imports: [RouterOutlet, AppModule],
+	imports: [RouterOutlet, HeaderComponent, FooterComponent, NotifyComponent, PopupComponent, LoaderComponent],
 	templateUrl: './app.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
