@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, OnInit, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
 	addMinutes,
@@ -46,8 +46,8 @@ export class DatepickerComponent implements OnInit {
 
 	datePicked = output<Date>();
 
-	private _date: Date | undefined;
-	private _visibleDate: Date | undefined;
+	private readonly dateState = signal<Date | undefined>(undefined);
+	private readonly visibleDateState = signal<Date | undefined>(undefined);
 
 	currentYear = getYear(new Date());
 	monthPatterns: NgxMaskConfig['patterns'] = {
@@ -57,35 +57,42 @@ export class DatepickerComponent implements OnInit {
 	};
 
 	constructor() {
-		effect(() => {
-			const date = this.dateInput();
-			if (date !== undefined) {
-				this._date = date;
-			}
-		});
+		effect(
+			() => {
+				const date = this.dateInput();
+				if (date !== undefined) {
+					this.dateState.set(date);
+				}
+			},
+			{ allowSignalWrites: true },
+		);
 
-		effect(() => {
-			const visibleDate = this.visibleDateInput();
-			if (visibleDate !== undefined) {
-				this._visibleDate = visibleDate;
-			}
-		});
+		effect(
+			() => {
+				const visibleDate = this.visibleDateInput();
+				if (visibleDate !== undefined) {
+					this.visibleDateState.set(visibleDate);
+				}
+			},
+			{ allowSignalWrites: true },
+		);
 	}
 
 	get date(): Date | undefined {
-		return this._date ?? (this.isNow() ? new Date() : undefined);
+		const value = this.dateState();
+		return value ?? (this.isNow() ? new Date() : undefined);
 	}
 
 	set date(value: Date | undefined) {
-		this._date = value;
+		this.dateState.set(value);
 	}
 
 	get visibleDate(): Date | undefined {
-		return this._visibleDate;
+		return this.visibleDateState();
 	}
 
 	set visibleDate(value: Date | undefined) {
-		this._visibleDate = value;
+		this.visibleDateState.set(value);
 	}
 
 	ngOnInit(): void {

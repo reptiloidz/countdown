@@ -21,6 +21,18 @@ describe('DatepickerComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
+	it('should update formatted label when date input is set after init', () => {
+		fixture.componentRef.setInput('isNow', false);
+		fixture.componentRef.setInput('dateOnly', true);
+		fixture.detectChanges();
+		expect(component.dateFormatted).toBe('Выберите дату');
+
+		fixture.componentRef.setInput('date', new Date(1991, 11, 25));
+		fixture.detectChanges();
+
+		expect(component.dateFormatted).toBe('25.12.1991');
+	});
+
 	it('should display the correct date format when date is valid', () => {
 		component.date = new Date(2025, 0, 19); // Устанавливаем дату для теста
 		fixture.detectChanges();
