@@ -5,8 +5,16 @@ import { By } from '@angular/platform-browser';
 import { ActionService } from 'src/app/services';
 
 @Component({
+	imports: [TooltipComponent],
 	template: `
-		<div app-tooltip [text]="'Test tooltip'" [onboarding]="'testOnboarding'">
+		<div
+			app-tooltip
+			[text]="text"
+			[onboarding]="onboarding"
+			[vertical]="vertical"
+			[horizontal]="horizontal"
+			[disabled]="disabled"
+		>
 			<span #tooltipTrigger>Trigger</span>
 		</div>
 
@@ -14,11 +22,18 @@ import { ActionService } from 'src/app/services';
 	`,
 })
 class TestHostComponent {
+	text = 'Test tooltip';
+	onboarding = 'testOnboarding';
+	vertical: 'top' | 'bottom' = 'bottom';
+	horizontal: 'left' | 'right' = 'right';
+	disabled = false;
+
 	@ViewChild(TooltipComponent) tooltipComponent!: TooltipComponent;
-	@ViewChild('tooltipContent', { static: true }) tooltipContent!: TemplateRef<any>;
+	@ViewChild('tooltipContent', { static: true }) tooltipContent!: TemplateRef<unknown>;
 }
 
 @Component({
+	imports: [TooltipComponent],
 	template: `
 		<div app-tooltip onboarding="second" [onboardingBefore]="'first'" text="Second">
 			<span #tooltipTrigger>Second</span>
@@ -38,7 +53,8 @@ describe('TooltipComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [TooltipComponent, TestHostComponent, SequentialHostComponent],
+			imports: [TooltipComponent],
+			declarations: [TestHostComponent, SequentialHostComponent],
 		}).compileComponents();
 	});
 
@@ -60,8 +76,8 @@ describe('TooltipComponent', () => {
 	});
 
 	it('should apply correct classes based on inputs', () => {
-		component.vertical = 'top';
-		component.horizontal = 'left';
+		hostComponent.vertical = 'top';
+		hostComponent.horizontal = 'left';
 		fixture.detectChanges();
 		expect(component.dropClass).toContain('tooltip--top');
 		expect(component.dropClass).toContain('tooltip--left');
@@ -90,7 +106,6 @@ describe('TooltipComponent', () => {
 	});
 
 	it('should mark onboarding as completed when close button is clicked', () => {
-		component.onboarding = 'testOnboarding';
 		component.isOnboardingOn.set(true);
 		component.hasOnboardingTimeExpired.set(true);
 		localStorage.setItem('onboarding-testOnboarding', 'false');
@@ -104,8 +119,8 @@ describe('TooltipComponent', () => {
 	});
 
 	it('should not start onboarding when disabled', () => {
-		component.onboarding = 'disabledOnboarding';
-		component.disabled = true;
+		hostComponent.onboarding = 'disabledOnboarding';
+		hostComponent.disabled = true;
 		component.checkIsTooltipOff();
 		component.onboardingUpdate();
 		fixture.detectChanges();
@@ -142,7 +157,8 @@ describe('TooltipComponent', () => {
 		const slotComponent = slotFixture.componentInstance.tooltipComponent;
 		action.deactivateOnboarding('testOnboarding');
 
-		slotComponent.onboarding = 'slotA';
+		slotFixture.componentInstance.onboarding = 'slotA';
+		slotFixture.detectChanges();
 		slotComponent.checkIsTooltipOff();
 		slotComponent.onboardingUpdate();
 		expect(action.tryActivateOnboarding('slotB')).toBe(false);

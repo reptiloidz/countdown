@@ -94,7 +94,8 @@ describe('FooterComponent', () => {
 		} as unknown as jest.Mocked<HttpService>;
 
 		await TestBed.configureTestingModule({
-			declarations: [FooterComponent, TooltipComponent],
+			declarations: [FooterComponent],
+			imports: [TooltipComponent],
 			providers: [
 				{
 					provide: Router,

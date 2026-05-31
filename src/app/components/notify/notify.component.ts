@@ -48,21 +48,27 @@ import {
 	ChangeDetectorRef,
 	Component,
 	HostListener,
+	inject,
 	OnDestroy,
 	OnInit,
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
 import { Notification, ValidationObject, ValidationObjectField } from 'src/app/interfaces';
 import { NotifyService } from 'src/app/services';
 import { InputComponent } from '../input/input.component';
 import { NotificationType } from 'src/app/types';
+import { ButtonComponent } from '../button/button.component';
+import { SafeHtmlPipe } from 'src/app/pipes/safe-html.pipe';
 
 @Component({
 	selector: 'app-notify',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, InputComponent, ButtonComponent, SafeHtmlPipe],
 	templateUrl: './notify.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
@@ -129,10 +135,8 @@ import { NotificationType } from 'src/app/types';
 	],
 })
 export class NotifyComponent implements OnInit, OnDestroy {
-	constructor(
-		private notify: NotifyService,
-		private cdr: ChangeDetectorRef,
-	) {}
+	private readonly notify = inject(NotifyService);
+	private readonly cdr = inject(ChangeDetectorRef);
 	@ViewChild('control') private control!: InputComponent;
 	@ViewChild('notifyContent', {
 		read: ViewContainerRef,

@@ -19,6 +19,6 @@
 			*ngIf="tooltipContent else tooltipContentTextTemplate;"
 			[ngTemplateOutlet]="tooltipContent"
 		></ng-container>
-		<ng-template #tooltipContentTextTemplate>{{ text }}</ng-template>
+		<ng-template #tooltipContentTextTemplate>{{ text() }}</ng-template>
 	</span>
 </span>
