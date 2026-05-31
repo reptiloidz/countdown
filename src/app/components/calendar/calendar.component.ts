@@ -14,6 +14,7 @@ import {
 	output,
 	signal,
 	TemplateRef,
+	untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -168,14 +169,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	private readonly el = inject(ElementRef);
 
 	constructor() {
-		effect(() => {
-			const value = this.visibleDateInput();
-			if (value !== undefined && this.isCalendarInited && +this._visibleDate() !== +value) {
-				this.generateCalendar({
-					date: value,
-				});
-			}
-		});
+		effect(
+			() => {
+				const value = this.visibleDateInput();
+				if (value === undefined || !this.isCalendarInited) {
+					return;
+				}
+
+				const normalizedVisible = +this.getStartOfDate(value);
+				const currentVisible = untracked(() => +this._visibleDate());
+
+				if (currentVisible !== normalizedVisible) {
+					this.generateCalendar({
+						date: value,
+					});
+				}
+			},
+			{ allowSignalWrites: true },
+		);
 	}
 
 	private getMatchDate(matchMode: 'visible' | 'selected' | 'now'): Date {

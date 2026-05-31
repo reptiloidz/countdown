@@ -47,9 +47,12 @@ export class DatePointsPopupComponent implements OnInit, OnDestroy {
 	private subscriptions = new Subscription();
 
 	constructor() {
-		effect(() => {
-			this.pointsList.set(this.pointsListInput());
-		});
+		effect(
+			() => {
+				this.pointsList.set(this.pointsListInput());
+			},
+			{ allowSignalWrites: true },
+		);
 	}
 
 	ngOnInit(): void {

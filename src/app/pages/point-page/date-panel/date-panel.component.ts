@@ -12,6 +12,7 @@ import {
 	OnInit,
 	output,
 	signal,
+	untracked,
 	ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -141,12 +142,20 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	private readonly elementRef = inject(ElementRef);
 
 	constructor() {
-		effect(() => {
-			const incoming = this.pointInput();
-			if (incoming !== undefined) {
-				this.point.set(incoming);
-			}
-		});
+		effect(
+			() => {
+				const incoming = this.pointInput();
+				if (incoming === undefined) {
+					return;
+				}
+
+				const current = untracked(() => this.point());
+				if (incoming !== current) {
+					this.point.set(incoming);
+				}
+			},
+			{ allowSignalWrites: true },
+		);
 	}
 
 	isCalendarPanelOpen = false;

@@ -7,6 +7,7 @@ import {
 	HostListener,
 	inject,
 	OnInit,
+	Type,
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
@@ -84,19 +85,20 @@ export class PopupComponent implements OnInit {
 		);
 	}
 
-	show(title: string, component: unknown, inputs?: Record<string, unknown>) {
+	show(title: string, component: Type<unknown>, inputs?: Record<string, unknown>) {
 		this.isVisible = true;
 		this.title = title;
 		this.cdr.detectChanges();
 
-		const componentRef = this.popupContent.createComponent(component as never);
+		const componentRef = this.popupContent.createComponent(component);
 
 		if (inputs) {
 			for (const [key, value] of Object.entries(inputs)) {
-				(componentRef.instance as Record<string, unknown>)[key] = value;
+				componentRef.setInput(key, value);
 			}
 		}
 
+		componentRef.changeDetectorRef.detectChanges();
 		this.cdr.markForCheck();
 	}
 

@@ -63,7 +63,7 @@ describe('DatePointsPopupComponent', () => {
 		fixture.componentRef.setInput('sortType', 'titleAsc');
 		fixture.componentRef.setInput('footerRef', null);
 		fixture.componentRef.setInput('listRef', null);
-		component.ngOnInit();
+		fixture.detectChanges();
 	});
 
 	afterEach(() => {
@@ -106,8 +106,6 @@ describe('DatePointsPopupComponent', () => {
 
 	it('should close popup on router ActivationStart event', () => {
 		const routerEvents = mockRouter.events as Subject<any>;
-
-		component.ngOnInit();
 
 		// Emit router activation event
 		routerEvents.next(new ActivationStart(null!));
