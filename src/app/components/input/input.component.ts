@@ -116,6 +116,7 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 
 	ngAfterViewInit(): void {
 		this.scheduleMaskWrite();
+		this.syncNativeInputValue();
 
 		if (this.autofocus() && this.inputRef?.nativeElement && this.deviceService.isDesktop()) {
 			this.inputRef.nativeElement.focus();
@@ -133,6 +134,7 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 		}
 		this.cdr.markForCheck();
 		this.scheduleMaskWrite();
+		this.syncNativeInputValue();
 	}
 
 	registerOnChange(fn: (value: string | number) => void): void {
@@ -190,14 +192,25 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 	}
 
 	private scheduleMaskWrite(): void {
-		if (!this.valueStr || !this.mask) {
+		if (!this.valueStr || !this.mask || this.allowNegativeNumbers) {
 			return;
 		}
 		setTimeout(() => void this.applyMaskValue(), 0);
 	}
 
+	/** Без ngx-mask (allowNegativeNumbers): синхронизируем DOM после CVA writeValue */
+	private syncNativeInputValue(): void {
+		if (!this.allowNegativeNumbers || !this.inputRef) {
+			return;
+		}
+		const el = this.inputRef.nativeElement;
+		if (el.value !== this.valueStr) {
+			el.value = this.valueStr;
+		}
+	}
+
 	private async applyMaskValue(): Promise<void> {
-		if (!this.valueStr || !this.mask || !this.maskDirective) {
+		if (!this.valueStr || !this.mask || !this.maskDirective || this.allowNegativeNumbers) {
 			return;
 		}
 

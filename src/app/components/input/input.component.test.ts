@@ -36,6 +36,20 @@ describe('InputComponent', () => {
 		expect(component.value).toBe('cva value');
 	});
 
+	it('should display negative number with mask 0* and allowNegativeNumbers', () => {
+		component.mask = '0*';
+		component.allowNegativeNumbers = true;
+		fixture.detectChanges();
+
+		component.writeValue(-328);
+		fixture.detectChanges();
+
+		const input = fixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+		expect(input.getAttribute('mask')).toBeNull();
+		expect(component.value).toBe('-328');
+		expect(input.value).toBe('-328');
+	});
+
 	it('should propagate DOM input to value and valueChange', () => {
 		const spy = jest.fn();
 		component.valueChange.subscribe(spy);

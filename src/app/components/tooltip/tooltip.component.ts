@@ -41,13 +41,14 @@ export class TooltipComponent implements AfterViewInit, OnChanges, AfterContentC
 	@Input() disabled = false;
 	@Input() text!: string;
 	@Input() onboarding!: string;
-	@Input() onboardingBefore!: string | null;
+	@Input() onboardingBefore: string | null = null;
 	@Input() onboardingTime = 500;
 
 	hasOnboardingTimeExpired = signal(false);
 	isOnboardingOn = signal(false);
 	isTooltipOff = signal(false);
 	private subscriptions = new Subscription();
+	private onboardingTimer: ReturnType<typeof setTimeout> | null = null;
 
 	constructor(
 		private action: ActionService,
@@ -75,9 +76,16 @@ export class TooltipComponent implements AfterViewInit, OnChanges, AfterContentC
 		if ('disabled' in changes) {
 			this.checkIsTooltipOff();
 		}
+		if ('disabled' in changes || 'onboarding' in changes || 'onboardingBefore' in changes) {
+			this.onboardingUpdate();
+		}
 	}
 
 	ngOnDestroy(): void {
+		this.clearOnboardingTimer();
+		if (this.isOnboardingOn()) {
+			this.action.deactivateOnboarding(this.onboarding);
+		}
 		this.subscriptions.unsubscribe();
 	}
 
@@ -86,26 +94,58 @@ export class TooltipComponent implements AfterViewInit, OnChanges, AfterContentC
 		this.cdr.markForCheck();
 	}
 
-	onboardingUpdate() {
-		if (
+	private clearOnboardingTimer(): void {
+		if (this.onboardingTimer !== null) {
+			clearTimeout(this.onboardingTimer);
+			this.onboardingTimer = null;
+		}
+	}
+
+	private isPreviousOnboardingDone(): boolean {
+		if (this.onboardingBefore == null || this.onboardingBefore === '') {
+			return true;
+		}
+		return localStorage.getItem(`onboarding-${this.onboardingBefore}`) === 'true';
+	}
+
+	private shouldShowOnboarding(): boolean {
+		return (
+			!!this.onboarding &&
+			!this.isTooltipOff() &&
 			localStorage.getItem(`onboarding-${this.onboarding}`) !== 'true' &&
-			this.onboarding &&
-			(localStorage.getItem(`onboarding-${this.onboardingBefore}`) === 'true' || !this.onboardingBefore)
-		) {
+			this.isPreviousOnboardingDone()
+		);
+	}
+
+	onboardingUpdate() {
+		this.clearOnboardingTimer();
+
+		if (this.shouldShowOnboarding() && this.action.tryActivateOnboarding(this.onboarding)) {
 			this.isOnboardingOn.set(true);
-			setTimeout(() => {
-				this.hasOnboardingTimeExpired.set(true);
-				this.cdr.detectChanges();
+			this.hasOnboardingTimeExpired.set(false);
+			this.onboardingTimer = setTimeout(() => {
+				this.onboardingTimer = null;
+				if (this.isOnboardingOn()) {
+					this.hasOnboardingTimeExpired.set(true);
+				}
+				this.cdr.markForCheck();
 			}, this.onboardingTime);
 		} else {
+			if (this.isOnboardingOn()) {
+				this.action.deactivateOnboarding(this.onboarding);
+			}
 			this.isOnboardingOn.set(false);
 			this.hasOnboardingTimeExpired.set(true);
 		}
+		this.cdr.markForCheck();
 	}
 
 	closeOnboarding() {
 		localStorage.setItem(`onboarding-${this.onboarding}`, 'true');
+		this.clearOnboardingTimer();
 		this.isOnboardingOn.set(false);
+		this.hasOnboardingTimeExpired.set(true);
+		this.action.deactivateOnboarding(this.onboarding);
 		this.action.onboardingClosed();
 	}
 }

@@ -31,7 +31,24 @@ export class ActionService {
 	eventOnboardingClosed$ = this._eventOnboardingClosedSubject.asObservable();
 	eventIterationsChecked$ = this._eventIterationsCheckedSubject.asObservable();
 
+	/** Только один onboarding-тултип может быть активен одновременно */
+	private activeOnboardingId: string | null = null;
+
 	constructor(private uiStore: UiStore) {}
+
+	tryActivateOnboarding(id: string): boolean {
+		if (this.activeOnboardingId !== null && this.activeOnboardingId !== id) {
+			return false;
+		}
+		this.activeOnboardingId = id;
+		return true;
+	}
+
+	deactivateOnboarding(id: string): void {
+		if (this.activeOnboardingId === id) {
+			this.activeOnboardingId = null;
+		}
+	}
 
 	get checkedPoints(): string[] {
 		return this.uiStore.pointsChecked();

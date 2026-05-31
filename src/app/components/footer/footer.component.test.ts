@@ -57,6 +57,7 @@ describe('FooterComponent', () => {
 			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
 		} as unknown as jest.Mocked<AuthService>;
 
+		let activeOnboardingId: string | null = null;
 		actionServiceMock = {
 			eventPointsChecked$: new Subject(),
 			eventHasEditablePoints$: new Subject(),
@@ -67,6 +68,18 @@ describe('FooterComponent', () => {
 			uncheckAllPoints: jest.fn(),
 			pointUpdated: jest.fn().mockReturnValue(mockPoint),
 			onboardingClosed: jest.fn().mockReturnValue(''),
+			tryActivateOnboarding: jest.fn((id: string) => {
+				if (activeOnboardingId !== null && activeOnboardingId !== id) {
+					return false;
+				}
+				activeOnboardingId = id;
+				return true;
+			}),
+			deactivateOnboarding: jest.fn((id: string) => {
+				if (activeOnboardingId === id) {
+					activeOnboardingId = null;
+				}
+			}),
 		} as unknown as jest.Mocked<ActionService>;
 
 		notifyServiceMock = {

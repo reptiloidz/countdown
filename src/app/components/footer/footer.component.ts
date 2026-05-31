@@ -142,9 +142,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 								}).toString();
 							this.hasAccess = point && this.auth.checkAccessEdit(point);
 							this.hasAccessNoEdit = !!(this.pointId && this.hasAccess && !this.isEdit);
-							requestAnimationFrame(() => {
-								this.action.onboardingClosed();
-							});
+							setTimeout(() => this.action.onboardingClosed(), 0);
 						}
 						this.cdr.markForCheck();
 					},

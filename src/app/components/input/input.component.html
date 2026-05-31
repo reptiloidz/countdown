@@ -11,7 +11,7 @@
 	(input)="onInput($event)"
 	[disabled]="isDisabledState()"
 	[attr.name]="formControlName() || name() || null"
-	[mask]="mask"
+	[mask]="allowNegativeNumbers ? null : mask"
 	[suffix]="suffix"
 	[prefix]="prefix"
 	[patterns]="patterns"
