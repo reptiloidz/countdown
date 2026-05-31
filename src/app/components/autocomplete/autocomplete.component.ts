@@ -70,10 +70,10 @@ export class AutocompleteComponent implements OnDestroy {
 	private readonly subscriptions = new Subscription();
 
 	constructor() {
+		// autocompleteList не в deps: datepicker.yearsArray каждый CD — новый [], иначе сброс ввода
 		effect(() => {
 			this.value();
 			this.visibleValueInput();
-			this.autocompleteList();
 			untracked(() => this.syncVisibleValueFromInputs());
 		});
 

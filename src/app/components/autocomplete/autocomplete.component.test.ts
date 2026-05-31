@@ -110,6 +110,24 @@ describe('AutocompleteComponent', () => {
 		expect(component.visibleValue()).toBe('2');
 	});
 
+	it('should keep user input when autocompleteList reference changes', fakeAsync(() => {
+		const years: SelectArray[] = [{ key: 2026, value: '2026', disabled: false }];
+		const yearFixture = TestBed.createComponent(AutocompleteComponent);
+		yearFixture.componentRef.setInput('autocompleteList', years);
+		yearFixture.componentRef.setInput('value', '2026');
+		yearFixture.componentRef.setInput('visibleValue', '2026');
+		yearFixture.detectChanges();
+		TestBed.flushEffects();
+
+		const yearComponent = yearFixture.componentInstance;
+		yearComponent.onVisibleValueChange('2025');
+		yearFixture.componentRef.setInput('autocompleteList', [...years]);
+		yearFixture.detectChanges();
+		TestBed.flushEffects();
+
+		expect(yearComponent.visibleValue()).toBe('2025');
+	}));
+
 	it('should pass visibleValue to nested input for masked year-like field', fakeAsync(() => {
 		const years: SelectArray[] = [{ key: 2026, value: '2026', disabled: false }];
 		const yearFixture = TestBed.createComponent(AutocompleteComponent);

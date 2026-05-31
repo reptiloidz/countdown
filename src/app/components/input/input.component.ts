@@ -93,6 +93,10 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 		}
 		this._value = next;
 		this.cdr.markForCheck();
+		if (this.inputFromUser) {
+			this.inputFromUser = false;
+			return;
+		}
 		this.scheduleMaskWrite();
 		if (this.inputRef) {
 			void this.syncNativeDisplay();
@@ -109,6 +113,8 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 	@ViewChild(NgxMaskDirective) maskDirective?: NgxMaskDirective;
 
 	private syncingMask = false;
+	/** Не перезаписывать DOM при round-trip [value] после собственного valueChange */
+	private inputFromUser = false;
 
 	constructor(
 		private cdr: ChangeDetectorRef,
@@ -193,7 +199,9 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 		if (this._value === normalized) {
 			return;
 		}
-		this.value = normalized;
+		this.inputFromUser = true;
+		this._value = normalized;
+		this.cdr.markForCheck();
 		this.valueChange.emit(this._value);
 		// Всегда пробрасываем в host ngModel — иначе autocomplete filter не вызывается
 		this.onChange(this._value);
