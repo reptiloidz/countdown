@@ -1,14 +1,14 @@
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
-	EventEmitter,
-	Input,
-	OnChanges,
+	computed,
+	effect,
+	inject,
+	input,
+	model,
 	OnDestroy,
-	OnInit,
-	Output,
-	SimpleChanges,
+	output,
+	untracked,
 	ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,9 @@ import { ActionService } from 'src/app/services';
 import { filter, Subscription } from 'rxjs';
 import { NgxMaskConfig } from 'ngx-mask';
 
+const defaultFilterFn = (item: SelectArray, filterValue: string) =>
+	item.value.toString().includes(filterValue) && !item.disabled;
+
 @Component({
 	selector: 'app-autocomplete',
 	standalone: true,
@@ -28,93 +31,88 @@ import { NgxMaskConfig } from 'ngx-mask';
 	templateUrl: './autocomplete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AutocompleteComponent implements OnInit, OnChanges, OnDestroy {
-	@Input() value: string | number = '';
-	@Input() visibleValue: string = '';
-	@Input() placeholder = '';
-	@Input() inputmode: string | null = null;
-	@Input() autocompleteList!: SelectArray[];
-	@Input() mask: string | null = null;
-	@Input() patterns!: NgxMaskConfig['patterns'];
-	@Input() suffix: string = '';
-	@Input() prefix: string = '';
-	@Input() filterFn = (item: SelectArray, filterValue: string) =>
-		item.value.toString().includes(filterValue) && !item.disabled;
-	@Input() dataSuffix = '';
-	@Input() autofocus = false;
+export class AutocompleteComponent implements OnDestroy {
+	private readonly action = inject(ActionService);
 
-	autocompleteListFiltered!: SelectArray[];
+	value = input<string | number>('');
+	/** Начальное отображаемое значение с родителя (datepicker) */
+	visibleValueInput = input('', { alias: 'visibleValue' });
+	placeholder = input('');
+	inputmode = input<string | null>(null);
+	autocompleteList = input.required<SelectArray[]>();
+	mask = input<string | null>(null);
+	patterns = input<NgxMaskConfig['patterns']>({});
+	suffix = input('');
+	prefix = input('');
+	filterFn = input(defaultFilterFn);
+	dataSuffix = input('');
+	autofocus = input(false);
 
-	firstFilteredValue!: SelectArray;
-	private subscriptions = new Subscription();
-	isOpening = false;
+	autocompleteChanged = output<string | number>();
 
-	@Output() autocompleteChanged = new EventEmitter<string | number>();
+	/** Текст в поле ввода; связан с app-input через ngModel */
+	readonly visibleValue = model('');
+
+	readonly autocompleteListFiltered = computed(() => {
+		const list = this.autocompleteList();
+		const filterString = this.visibleValue();
+		if (!filterString) {
+			return list;
+		}
+		const filtered = list.filter(item => this.filterFn()(item, filterString));
+		return filtered.length ? filtered : list;
+	});
+
+	readonly firstFilteredValue = computed(() => this.autocompleteListFiltered()[0]);
 
 	@ViewChild(DropComponent, { static: true }) drop!: DropComponent;
 
-	constructor(
-		private action: ActionService,
-		private cdr: ChangeDetectorRef,
-	) {}
+	private isOpening = false;
+	private readonly subscriptions = new Subscription();
 
-	ngOnInit(): void {
-		this.syncVisibleValue();
-		this.autocompleteListFiltered = this.autocompleteList;
+	constructor() {
+		effect(() => {
+			this.value();
+			this.visibleValueInput();
+			this.autocompleteList();
+			untracked(() => this.syncVisibleValueFromInputs());
+		});
 
 		this.subscriptions.add(
 			this.action.eventAutocompleteOpened$.pipe(filter(() => this.isOpening)).subscribe({
 				next: () => {
-					!this.isOpening && this.drop.closeHandler();
+					if (!this.isOpening) {
+						this.drop.closeHandler();
+					}
 					this.isOpening = false;
 				},
 			}),
 		);
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['value'] || changes['visibleValue'] || changes['autocompleteList']) {
-			this.syncVisibleValue();
-		}
-	}
-
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
 	}
 
-	private syncVisibleValue(): void {
-		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() ?? this.visibleValue;
+	private syncVisibleValueFromInputs(): void {
+		const fromValue = getKeyByValue(this.autocompleteList(), this.value())?.toString();
+		this.visibleValue.set(fromValue ?? this.visibleValueInput());
 	}
 
 	changeHandler(value: string | number) {
 		this.autocompleteChanged.emit(value);
-		this.visibleValue = getKeyByValue(this.autocompleteList, value)?.toString() ?? this.visibleValue;
-		this.value = value;
+		const visible = getKeyByValue(this.autocompleteList(), value)?.toString() ?? this.visibleValue();
+		this.visibleValue.set(visible);
 	}
 
 	onVisibleValueChange(filterValue?: string | number | null) {
-		this.visibleValue = filterValue == null ? '' : String(filterValue);
-		this.filter(this.visibleValue);
-	}
-
-	filter(filterValue?: string | number) {
-		const filterString = filterValue?.toString();
-		const autocompleteListFilteredArray = filterString
-			? this.autocompleteList.filter(item => this.filterFn(item, filterString))
-			: this.autocompleteList;
-
-		this.firstFilteredValue = autocompleteListFilteredArray[0];
-		this.autocompleteListFiltered = autocompleteListFilteredArray.length
-			? autocompleteListFilteredArray
-			: this.autocompleteList;
-		this.cdr.markForCheck();
+		this.visibleValue.set(filterValue == null ? '' : String(filterValue));
 	}
 
 	selectFirstOption() {
 		this.drop.closeHandler();
 		(document.activeElement as HTMLElement | null)?.blur();
-		this.changeHandler(this.firstFilteredValue ? this.firstFilteredValue.value : this.value);
-		this.autocompleteListFiltered = this.autocompleteList;
+		this.changeHandler(this.firstFilteredValue() ? this.firstFilteredValue()!.value : this.value());
 	}
 
 	keydown(event: KeyboardEvent) {
@@ -126,11 +124,11 @@ export class AutocompleteComponent implements OnInit, OnChanges, OnDestroy {
 	openHandler() {
 		this.isOpening = true;
 		this.action.autocompleteOpened();
-		this.filter();
 		this.drop.openHandler();
 	}
 
 	closeHandler() {
-		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() ?? this.visibleValue;
+		const visible = getKeyByValue(this.autocompleteList(), this.value())?.toString() ?? this.visibleValue();
+		this.visibleValue.set(visible);
 	}
 }

@@ -30,9 +30,9 @@ describe('AutocompleteComponent', () => {
 		fixture = TestBed.createComponent(AutocompleteComponent);
 		component = fixture.componentInstance;
 
-		component.autocompleteList = mockAutocompleteList;
-		component.value = 'Option 1';
-		component.visibleValue = 'Option 1';
+		fixture.componentRef.setInput('autocompleteList', mockAutocompleteList);
+		fixture.componentRef.setInput('value', 'Option 1');
+		fixture.componentRef.setInput('visibleValue', '1');
 		fixture.detectChanges();
 	});
 
@@ -41,48 +41,37 @@ describe('AutocompleteComponent', () => {
 	});
 
 	it('should initialize with the correct visibleValue', () => {
-		component.visibleValue = 'Option 1'; // Явно устанавливаем значение
-		fixture.detectChanges(); // Обновляем представление
-		expect(component.visibleValue).toBe('Option 1');
+		expect(component.visibleValue()).toBe('1');
 	});
 
-	it('should call filter when onVisibleValueChange is triggered', () => {
-		const filterSpy = jest.spyOn(component, 'filter');
-
+	it('should update visibleValue when onVisibleValueChange is triggered', () => {
 		component.onVisibleValueChange('Option 1');
 
-		expect(filterSpy).toHaveBeenCalledWith('Option 1');
-		expect(component.visibleValue).toBe('Option 1');
+		expect(component.visibleValue()).toBe('Option 1');
+		expect(component.autocompleteListFiltered().length).toBe(1);
 	});
 
 	it('should emit autocompleteChanged when changeHandler is called', () => {
 		const emitSpy = jest.spyOn(component.autocompleteChanged, 'emit');
 		const value = 'Option 2';
 
-		component.changeHandler(value); // Вызываем обработчик изменения
+		component.changeHandler(value);
 		fixture.detectChanges();
 
-		// Проверяем, что событие было вызвано с правильным значением
 		expect(emitSpy).toHaveBeenCalledWith(value);
-
-		// Проверяем, что внутренние свойства обновились правильно
-		expect(component.value).toBe(value);
-
-		const expectedVisibleValue = mockAutocompleteList.find(option => option.value === value)?.key ?? '';
-
-		expect(component.visibleValue).toBe(expectedVisibleValue);
+		expect(component.visibleValue()).toBe('2');
 	});
 
-	it('should filter the list correctly', () => {
-		component.filter('Option 1');
-		expect(component.autocompleteListFiltered.length).toBe(1);
-		expect(component.autocompleteListFiltered[0].value).toBe('Option 1');
+	it('should filter the list via computed', () => {
+		component.onVisibleValueChange('Option 1');
+		expect(component.autocompleteListFiltered().length).toBe(1);
+		expect(component.autocompleteListFiltered()[0].value).toBe('Option 1');
 	});
 
 	it('should select the first filtered option when selectFirstOption is called', () => {
-		component.filter('Option');
+		component.onVisibleValueChange('Option');
 		component.selectFirstOption();
-		expect(component.value).toBe(component.firstFilteredValue?.value);
+		expect(component.visibleValue()).toBe('1');
 	});
 
 	it('should handle keydown event and select option on Enter', () => {
@@ -105,8 +94,17 @@ describe('AutocompleteComponent', () => {
 	});
 
 	it('should correctly filter the list based on the filter function', () => {
-		const filteredList = component.autocompleteList.filter(item => component.filterFn(item, 'Option 1'));
+		const filteredList = mockAutocompleteList.filter(item => component.filterFn()(item, 'Option 1'));
 		expect(filteredList.length).toBe(1);
 		expect(filteredList[0].value).toBe('Option 1');
+	});
+
+	it('should sync visibleValue when value input changes', () => {
+		fixture.componentRef.setInput('value', 'Option 2');
+		fixture.componentRef.setInput('visibleValue', '');
+		fixture.detectChanges();
+		TestBed.flushEffects();
+
+		expect(component.visibleValue()).toBe('2');
 	});
 });
