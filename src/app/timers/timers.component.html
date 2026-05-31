@@ -3,45 +3,45 @@
 	aria-hidden="true"
 >
 	<div
-		*ngIf="years"
+		*ngIf="years()"
 		[@boardVisibility]="{value: ':enter', params: {delay: yearEnterValue}}"
 		class="timers__item-wrapper timers__item-wrapper--date"
 	>
 		<app-board
-			[value]="years"
-			[mode]="size"
-			[label]="yearsLabel"
+			[value]="years() ?? ''"
+			[mode]="size()"
+			[label]="yearsLabel()"
 			class="timers__item"
-			[delayRandomValue]="delayRandomValue"
-			[delayValue]="delayValue"
+			[delayRandomValue]="delayRandomValue()"
+			[delayValue]="delayValue()"
 		></app-board>
 	</div>
 	<div
-		*ngIf="months"
+		*ngIf="months()"
 		[@boardVisibility]="{value: ':enter', params: {delay: monthEnterValue}}"
 		class="timers__item-wrapper timers__item-wrapper--date"
 	>
 		<app-board
-			[value]="months"
-			[mode]="size"
-			[label]="monthsLabel"
+			[value]="months() ?? ''"
+			[mode]="size()"
+			[label]="monthsLabel()"
 			class="timers__item timers__item--date"
-			[delayValue]="delayValue"
-			[delayRandomValue]="delayRandomValue"
+			[delayValue]="delayValue()"
+			[delayRandomValue]="delayRandomValue()"
 		></app-board>
 	</div>
 	<div
-		*ngIf="days"
+		*ngIf="days()"
 		[@boardVisibility]="{value: ':enter', params: {delay: dayEnterValue}}"
 		class="timers__item-wrapper timers__item-wrapper--date"
 	>
 		<app-board
-			[value]="days"
-			[mode]="size"
-			[label]="daysLabel"
+			[value]="days() ?? ''"
+			[mode]="size()"
+			[label]="daysLabel()"
 			class="timers__item timers__item--date"
-			[delayValue]="delayValue"
-			[delayRandomValue]="delayRandomValue"
+			[delayValue]="delayValue()"
+			[delayRandomValue]="delayRandomValue()"
 		></app-board>
 	</div>
 	<div
@@ -49,12 +49,12 @@
 		class="timers__item-wrapper timers__item-wrapper--time"
 	>
 		<app-board
-			[value]="hours"
-			[mode]="size"
-			[label]="hoursLabel"
+			[value]="hours()"
+			[mode]="size()"
+			[label]="hoursLabel()"
 			class="timers__item timers__item--time"
-			[delayValue]="delayValue"
-			[delayRandomValue]="delayRandomValue"
+			[delayValue]="delayValue()"
+			[delayRandomValue]="delayRandomValue()"
 		></app-board>
 	</div>
 	<div
@@ -62,24 +62,25 @@
 		class="timers__item-wrapper timers__item-wrapper--time"
 	>
 		<app-board
-			[value]="mins"
-			[mode]="size"
-			[label]="minsLabel"
+			[value]="mins()"
+			[mode]="size()"
+			[label]="minsLabel()"
 			class="timers__item timers__item--time"
-			[delayValue]="delayValue"
-			[delayRandomValue]="delayRandomValue"
+			[delayValue]="delayValue()"
+			[delayRandomValue]="delayRandomValue()"
 		></app-board>
 	</div>
 	<div
 		@boardVisibility
-		*ngIf="showSec"
+		*ngIf="showSec()"
 		class="timers__item-wrapper timers__item-wrapper--time"
 	>
 		<app-board
-			[value]="secs"
-			[mode]="size"
-			[label]="secsLabel"
-			[delayValue]="delayValue"
+			[value]="secs()"
+			[mode]="size()"
+			[label]="secsLabel()"
+			[delayValue]="delayValue()"
+			[delayRandomValue]="delayRandomValue()"
 			[delay]="false"
 			class="timers__item timers__item--time"
 			boardHalfClass="board__half--second"

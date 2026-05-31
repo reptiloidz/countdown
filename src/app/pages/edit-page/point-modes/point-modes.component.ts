@@ -2,11 +2,10 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
-	EventEmitter,
-	Input,
+	input,
 	OnDestroy,
 	OnInit,
-	Output,
+	output,
 	TemplateRef,
 	ViewChild,
 	ViewContainerRef,
@@ -28,14 +27,14 @@ import { debounceTime, interval, Subject, Subscription } from 'rxjs';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PointModesComponent implements OnInit, OnDestroy {
-	@Input() form!: FormGroup;
-	@Input() point: Point | undefined;
-	@Input() emojis: GroupEmoji[] = [];
+	form = input.required<FormGroup>();
+	point = input<Point | undefined>();
+	emojis = input<GroupEmoji[]>([]);
 
 	emojisCurrent: GroupEmoji[] = [];
 
-	@Output() pointModeChanged = new EventEmitter<PointMode[]>();
-	@Output() pointModeClosed = new EventEmitter<void>();
+	pointModeChanged = output<PointMode[]>();
+	pointModeClosed = output<void>();
 	@ViewChild('filterRef') filterRef!: InputComponent;
 	@ViewChild('groupContainer', { read: ViewContainerRef })
 	groupContainer!: ViewContainerRef;
@@ -67,7 +66,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	}
 
 	get pointModesForm() {
-		return this.form.get('pointModesForm') as FormGroup;
+		return this.form().get('pointModesForm') as FormGroup;
 	}
 
 	get firstModeTitle() {
@@ -153,7 +152,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 		this.filterEmojiValue = this.filterRef.value?.toString().toLowerCase().trim() ?? '';
 
 		requestAnimationFrame(() => {
-			this.emojis.forEach(group => {
+			this.emojis().forEach(group => {
 				this.emojisCurrent.push({
 					title: group.title,
 					list: group.list.filter(emoji => this.filterEmoji(emoji)),
@@ -162,7 +161,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 
 			let index = 0;
 
-			this.emojisCurrent = this.emojisCurrent || [...this.emojis];
+			this.emojisCurrent = this.emojisCurrent || [...this.emojis()];
 
 			const emojisInterval = interval(10).subscribe({
 				next: () => {

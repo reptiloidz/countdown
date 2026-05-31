@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ChangeDetectorRef, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, NO_ERRORS_SCHEMA, ViewContainerRef } from '@angular/core';
 import { Router, ActivationStart } from '@angular/router';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { AuthService, DataService, PopupService } from 'src/app/services';
@@ -46,6 +46,7 @@ describe('DatePointsPopupComponent', () => {
 
 		TestBed.configureTestingModule({
 			imports: [DatePointsPopupComponent, CheckEditablePointsPipe],
+			schemas: [NO_ERRORS_SCHEMA],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
 				{ provide: AuthService, useValue: mockAuthService },
@@ -58,7 +59,11 @@ describe('DatePointsPopupComponent', () => {
 
 		fixture = TestBed.createComponent(DatePointsPopupComponent);
 		component = fixture.componentInstance;
-		fixture.detectChanges();
+		fixture.componentRef.setInput('pointsList', initialPoints);
+		fixture.componentRef.setInput('sortType', 'titleAsc');
+		fixture.componentRef.setInput('footerRef', null);
+		fixture.componentRef.setInput('listRef', null);
+		component.ngOnInit();
 	});
 
 	afterEach(() => {
@@ -75,7 +80,7 @@ describe('DatePointsPopupComponent', () => {
 		];
 		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
 		jest.spyOn(cdr, 'detectChanges');
-		component.pointsList = initialPoints;
+		component.pointsList.set(initialPoints);
 
 		jest.spyOn(mockDataService, 'removePoints').mockImplementation(data => {
 			data?.id && (mockDataService.eventRemovePoint$ as Subject<string>).next(data.id);
@@ -87,8 +92,8 @@ describe('DatePointsPopupComponent', () => {
 		fixture.detectChanges();
 		cdr.detectChanges();
 
-		expect(+component.pointsList.length).toBe(1);
-		component.pointsList.length && expect(component.pointsList[0]?.id).toBe('1');
+		expect(component.pointsList().length).toBe(1);
+		expect(component.pointsList()[0]?.id).toBe('1');
 		expect(cdr.detectChanges).toHaveBeenCalled();
 		expect(mockPopupService.close).not.toHaveBeenCalled();
 

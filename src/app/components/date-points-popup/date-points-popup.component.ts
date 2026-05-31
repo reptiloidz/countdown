@@ -2,11 +2,13 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	effect,
 	HostBinding,
 	inject,
-	Input,
+	input,
 	OnDestroy,
 	OnInit,
+	signal,
 	TemplateRef,
 	ViewChild,
 	ViewContainerRef,
@@ -34,24 +36,31 @@ export class DatePointsPopupComponent implements OnInit, OnDestroy {
 
 	@HostBinding('class') class = 'date-points-popup';
 
-	@Input() pointsList: Point[] = [];
-	@Input() sortType!: SortTypes;
-	@Input() footerRef!: TemplateRef<unknown>;
-	@Input() listRef!: TemplateRef<unknown>;
+	pointsListInput = input<Point[]>([], { alias: 'pointsList' });
+	pointsList = signal<Point[]>([]);
+	sortType = input<SortTypes>('titleAsc');
+	footerRef = input<TemplateRef<unknown> | null>(null);
+	listRef = input<TemplateRef<unknown> | null>(null);
 	@ViewChild('containerRef', { read: ViewContainerRef, static: true })
 	containerRef!: ViewContainerRef;
 
 	private subscriptions = new Subscription();
 
+	constructor() {
+		effect(() => {
+			this.pointsList.set(this.pointsListInput());
+		});
+	}
+
 	ngOnInit(): void {
 		this.subscriptions.add(
 			this.data.eventRemovePoint$.pipe(switchMap(() => this.data.eventFetchAllPoints$)).subscribe({
 				next: (points: Point[]) => {
-					this.pointsList = this.pointsList.filter(point => points.some(item => item.id === point.id));
+					this.pointsList.update(list => list.filter(point => points.some(item => item.id === point.id)));
 
 					this.cdr.markForCheck();
 
-					if (!this.pointsList.length) {
+					if (!this.pointsList().length) {
 						this.popupService.close();
 					}
 				},

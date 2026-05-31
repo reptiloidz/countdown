@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -9,6 +9,6 @@ import { RouterLink } from '@angular/router';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkPointComponent {
-	@Input() pointId = '';
-	@Input() pointName = '';
+	pointId = input('');
+	pointName = input('');
 }

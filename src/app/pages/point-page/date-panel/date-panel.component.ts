@@ -3,12 +3,14 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	computed,
+	effect,
 	ElementRef,
-	EventEmitter,
-	Input,
+	inject,
+	input,
 	OnDestroy,
 	OnInit,
-	Output,
+	output,
 	signal,
 	ViewChild,
 } from '@angular/core';
@@ -114,28 +116,38 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild('panelCalendar') private panelCalendar!: PanelComponent;
 
 	private subscriptions = new Subscription();
-	@Input() point: Point | undefined;
-	@Input() loading = false;
-	@Input() dateLoading = false;
-	@Input() urlMode = false;
-	@Input() selectedIterationDate = new Date();
-	@Input() isEditing = false;
-	@Input() isIterationAdded = false;
-	@Input() pointDate = new Date();
+	pointInput = input<Point | undefined>(undefined, { alias: 'point' });
+	point = signal<Point | undefined>(undefined);
+	loading = input(false);
+	dateLoading = input(false);
+	urlMode = input(false);
+	selectedIterationDate = input(new Date());
+	isEditing = input(false);
+	isIterationAddedInput = input(false, { alias: 'isIterationAdded' });
+	private readonly isIterationAddedLocal = signal(false);
+	isIterationAdded = computed(() => this.isIterationAddedInput() || this.isIterationAddedLocal());
+	pointDate = input(new Date());
 
-	@Output() iterationSwitched = new EventEmitter<number>();
-	@Output() addIteration = new EventEmitter<void>();
+	iterationSwitched = output<number>();
+	addIteration = output<void>();
 
-	constructor(
-		private data: DataService,
-		private router: Router,
-		private route: ActivatedRoute,
-		private auth: AuthService,
-		private cdr: ChangeDetectorRef,
-		private action: ActionService,
-		private notify: NotifyService,
-		private elementRef: ElementRef,
-	) {}
+	private readonly data = inject(DataService);
+	private readonly router = inject(Router);
+	private readonly route = inject(ActivatedRoute);
+	private readonly auth = inject(AuthService);
+	private readonly cdr = inject(ChangeDetectorRef);
+	private readonly action = inject(ActionService);
+	private readonly notify = inject(NotifyService);
+	private readonly elementRef = inject(ElementRef);
+
+	constructor() {
+		effect(() => {
+			const incoming = this.pointInput();
+			if (incoming !== undefined) {
+				this.point.set(incoming);
+			}
+		});
+	}
 
 	isCalendarPanelOpen = false;
 	isCalendarCreated = false;
@@ -165,33 +177,33 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						return !!point;
 					}),
 					tap(([point]) => {
-						this.point = point && setIterationsMode(sortDates(point));
-						this.datesLength = this.point?.dates.length ?? 0;
-						!this.urlMode && this.setIterationsParam();
+						this.point.set(point && setIterationsMode(sortDates(point)));
+						this.datesLength = this.point()?.dates.length ?? 0;
+						!this.urlMode() && this.setIterationsParam();
 						!this.iterationsChecked.length && this.updateIterationsCheckedList();
 					}),
 					distinctUntilChanged(),
 				)
 				.subscribe({
 					next: ([, data]) => {
-						if (this.urlMode) return;
+						if (this.urlMode()) return;
 						this.currentIterationIndex = data['iteration'] - 1;
 						this.hasAccess = this.hasAccess
 							? this.hasAccess
-							: this.point
-								? this.auth.checkAccessEdit(this.point)
+							: this.point()
+								? this.auth.checkAccessEdit(this.point()!)
 								: false;
 
-						if (this.dates?.length && this.point?.repeatable) {
+						if (this.dates?.length && this.point()?.repeatable) {
 							if (
 								this.currentIterationIndex > this.dates.length ||
 								typeof this.currentIterationIndex !== 'number' ||
 								isNaN(this.currentIterationIndex) ||
 								this.currentIterationIndex < 0
 							) {
-								this.point &&
-									!this.isIterationAdded &&
-									getClosestIteration(this.point).then(({ index }) => this.switchIteration(index));
+								this.point() &&
+									!this.isIterationAdded() &&
+									getClosestIteration(this.point()!).then(({ index }) => this.switchIteration(index));
 							}
 						} else {
 							this.switchIteration();
@@ -202,12 +214,12 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 							this.scrollList('home');
 						}, 1000);
 
-						if (this.urlMode) {
+						if (this.urlMode()) {
 							this.currentIterationIndex = 0;
 						} else if (data['iteration']) {
 							this.currentIterationIndex = data['iteration'] - 1;
 						}
-						!this.isIterationAdded && this.iterationSwitched.emit(this.currentIterationIndex);
+						!this.isIterationAdded() && this.iterationSwitched.emit(this.currentIterationIndex);
 					},
 					error: err => {
 						console.error('Ошибка при обновлении таймеров:\n', err.message);
@@ -225,7 +237,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 						typeof newIterationIndex !== 'undefined'
 					) {
 						this.currentIterationIndex = newIterationIndex;
-					} else if (this.currentIterationIndex >= this.removedIterationIndex && this.point) {
+					} else if (this.currentIterationIndex >= this.removedIterationIndex && this.point()) {
 						this.currentIterationIndex = (await getClosestIteration(point)).index;
 					}
 					this.switchIteration(this.currentIterationIndex);
@@ -287,7 +299,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	get pointValue() {
-		return this.point;
+		return this.point();
 	}
 
 	get calendarOpen() {
@@ -295,7 +307,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	get dates() {
-		return this.point?.dates;
+		return this.point()?.dates;
 	}
 
 	get datesBefore() {
@@ -303,7 +315,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			item =>
 				getPointDate({
 					pointDate: parseDate(item.date),
-					isGreenwich: this.point?.greenwich,
+					isGreenwich: this.point()?.greenwich,
 				}) < new Date(),
 		);
 	}
@@ -317,7 +329,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			item =>
 				getPointDate({
 					pointDate: parseDate(item.date),
-					isGreenwich: this.point?.greenwich,
+					isGreenwich: this.point()?.greenwich,
 				}) > new Date(),
 		);
 	}
@@ -332,10 +344,10 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	updateItemSize() {
 		let itemSize = 0;
-		if (this.hasAccess && this.point?.modes) {
+		if (this.hasAccess && this.point()?.modes) {
 			this.itemClass.set('tabs__item--lg');
 			itemSize = 184;
-		} else if (this.hasAccess || this.point?.modes) {
+		} else if (this.hasAccess || this.point()?.modes) {
 			this.itemClass.set('tabs__item--md');
 			itemSize = 158;
 		} else {
@@ -357,7 +369,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	updateIterationsCheckedList(checked = false) {
 		this.iterationsChecked = [];
-		this.point?.dates.forEach((item, i) => {
+		this.point()?.dates.forEach((item, i) => {
 			this.iterationsChecked.push(checked);
 		});
 	}
@@ -387,8 +399,8 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			.subscribe({
 				next: () => {
 					this.removedIterationIndex = i;
-					this.data.editPoint(this.point?.id, {
-						...this.point,
+					this.data.editPoint(this.point()?.id, {
+						...this.point()!,
 						dates: newDatesArray,
 					} as Point);
 				},
@@ -405,8 +417,8 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			})
 			.subscribe({
 				next: () => {
-					this.data.editPoint(this.point?.id, {
-						...this.point,
+					this.data.editPoint(this.point()?.id, {
+						...this.point()!,
 						dates: newDatesArray?.length ? newDatesArray : [this.dates?.[this.dates?.length - 1]],
 					} as Point);
 					this.checkAllIterations(false);
@@ -464,7 +476,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	checkAllIterations(check = true, iterations?: Iteration[]) {
 		if (iterations?.length) {
 			this.iterationsChecked.forEach((item, i) => {
-				if (iterations.some(iteration => iteration.date === this.point?.dates[i].date)) {
+				if (iterations.some(iteration => iteration.date === this.point()?.dates[i].date)) {
 					this.iterationsChecked[i] = check;
 				}
 			});
@@ -490,7 +502,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 			replaceUrl: true,
 		});
 
-		this.isIterationAdded = false;
+		this.isIterationAddedLocal.set(false);
 	}
 
 	modeSelected(mode: CalendarMode) {
@@ -507,7 +519,7 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	dateSelected({ data }: { data: Point[] | Iteration[] }) {
-		const iterationIndex = this.point && getFirstIteration(data as Iteration[], this.point);
+		const iterationIndex = this.point() && getFirstIteration(data as Iteration[], this.point()!);
 		if ((iterationIndex || iterationIndex === 0) && iterationIndex >= 0) {
 			this.switchIteration(iterationIndex);
 		}
@@ -515,17 +527,17 @@ export class DatePanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	setIterationsParam() {
 		const filteredIterations = filterIterations({
-			date: this.pointDate,
-			iterations: this.point?.dates || [],
+			date: this.pointDate(),
+			iterations: this.point()?.dates || [],
 			activeMode: this.calendarMode,
-			greenwich: this.point?.greenwich || false,
+			greenwich: this.point()?.greenwich || false,
 		});
-		this.firstIterationIndex = (this.point && getFirstIteration(filteredIterations, this.point)) || 0;
+		this.firstIterationIndex = (this.point() && getFirstIteration(filteredIterations, this.point()!)) || 0;
 		this.selectedIterationsNumber = filteredIterations.length;
 	}
 
 	addIterationClick() {
-		this.isIterationAdded = true;
+		this.isIterationAddedLocal.set(true);
 		this.router.navigate([], {
 			relativeTo: this.route,
 			queryParams: {

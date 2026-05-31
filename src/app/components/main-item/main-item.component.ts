@@ -4,12 +4,13 @@ import {
 	Component,
 	ContentChild,
 	ElementRef,
-	EventEmitter,
+	computed,
 	inject,
-	Input,
+	input,
 	OnDestroy,
 	OnInit,
-	Output,
+	output,
+	signal,
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
@@ -62,14 +63,16 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	@ContentChild('checkboxTemplate') checkboxTemplate: TemplateRef<unknown> | undefined;
 
 	private readonly subscriptions = new Subscription();
-	@Input() point!: Point;
-	@Input() isLine = false;
-	@Input() isSm = false;
-	@Input() isPopup = false;
-	@Input() showSec = true;
-	@Input() isEdit = false;
-	@Input() remainCalculated = false;
-	@Output() pointCheck = new EventEmitter();
+	point = input.required<Point>();
+	isLine = input(false);
+	isSm = input(false);
+	isPopup = input(false);
+	showSec = input(true);
+	isEdit = input(false);
+	remainCalculatedInput = input(false, { alias: 'remainCalculated' });
+	private readonly remainCalculatedLocal = signal(false);
+	remainCalculated = computed(() => this.remainCalculatedInput() || this.remainCalculatedLocal());
+	pointCheck = output();
 
 	loading = false;
 	authorLoading = false;
@@ -96,7 +99,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.data.eventStartRemovePoint$.subscribe({
 				next: id => {
-					if (this.point.id === id) {
+					if (this.point().id === id) {
 						this.loading = true;
 					}
 					this.cdr.detectChanges();
@@ -154,6 +157,10 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
+	get userCanEdit(): boolean {
+		return this.auth.checkAccessEdit(this.point());
+	}
+
 	get isAuth() {
 		return this.auth.isAuthenticated;
 	}
@@ -170,7 +177,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			}) +
 			(this.isDirectionCorrect
 				? ''
-				: this.point.direction === 'forward'
+				: this.point().direction === 'forward'
 					? '. Прямой отсчёт, но событие ещё не наступило'
 					: '. Обратный отсчёт, но событие уже в прошлом')
 		);
@@ -187,20 +194,20 @@ export class MainItemComponent implements OnInit, OnDestroy {
 		const currentDate = new Date();
 
 		return (
-			(this._closestIterationDate < currentDate && this.point.direction === 'forward') ||
-			(this._closestIterationDate > currentDate && this.point.direction === 'backward')
+			(this._closestIterationDate < currentDate && this.point().direction === 'forward') ||
+			(this._closestIterationDate > currentDate && this.point().direction === 'backward')
 		);
 	}
 
 	get directionTitle() {
-		return `${this.point.direction === 'forward' ? 'Прямой отсчёт' : 'Обратный отсчёт'}${
+		return `${this.point().direction === 'forward' ? 'Прямой отсчёт' : 'Обратный отсчёт'}${
 			this.isDirectionCorrect ? '' : '. Но&nbsp;есть нюанс. Подробнее в&nbsp;описании'
 		}`;
 	}
 
 	getClosestIteration() {
 		if (!this._futureIterationDate) {
-			const datesSorted = this.point.dates.sort((a, b) => compareAsc(parseDate(a.date), parseDate(b.date)));
+			const datesSorted = this.point().dates.sort((a, b) => compareAsc(parseDate(a.date), parseDate(b.date)));
 			for (const item of datesSorted) {
 				const parsedDate = parseDate(item.date);
 				if (parsedDate > new Date()) {
@@ -210,11 +217,11 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		getClosestIteration(this.point).then(res => {
+		getClosestIteration(this.point()).then(res => {
 			if (this._futureIterationDate) {
 				const toFuture = +this._futureIterationDate - +new Date();
 
-				if (this.isPointEdited || (toFuture < 0 && toFuture > -1000 && this.point.repeatable)) {
+				if (this.isPointEdited || (toFuture < 0 && toFuture > -1000 && this.point().repeatable)) {
 					this._closestIterationDate = res.date || new Date();
 					this._closestIteration = res;
 					this._futureIterationDate = undefined;
@@ -224,7 +231,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			if (this.isPointEdited || !this._closestIteration) {
 				this._closestIterationDate = res.date || new Date();
 				this._closestIteration = res;
-				this.remainCalculated = true;
+				this.remainCalculatedLocal.set(true);
 			}
 
 			if (this.isPointEdited || !this._closestIterationModeSet) {
@@ -263,14 +270,14 @@ export class MainItemComponent implements OnInit, OnDestroy {
 	}
 
 	loadUserInfo(id?: string) {
-		if (id && !this.point.userInfo) {
+		if (id && !this.point().userInfo) {
 			this.authorLoading = true;
 			this.auth
 				.getUserData(id)
 				.pipe(first())
 				.subscribe({
 					next: (userData: UserExtraData) => {
-						this.point.userInfo = userData;
+						this.point().userInfo = userData;
 					},
 					error: err => {
 						console.error('Ошибка при получении информации о пользователе:\n', err.message);
@@ -289,7 +296,7 @@ export class MainItemComponent implements OnInit, OnDestroy {
 			})
 			.subscribe({
 				next: () => {
-					this.point && this.data.setDateNow(this.point);
+					this.point() && this.data.setDateNow(this.point());
 				},
 			});
 	}

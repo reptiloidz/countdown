@@ -24,6 +24,9 @@ describe('TimersComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TimersComponent);
 		component = fixture.componentInstance;
+		fixture.componentRef.setInput('hours', '00');
+		fixture.componentRef.setInput('mins', '00');
+		fixture.componentRef.setInput('secs', '00');
 		fixture.detectChanges();
 	});
 
@@ -32,25 +35,25 @@ describe('TimersComponent', () => {
 	});
 
 	it('should correctly apply input values', () => {
-		component.years = 5;
-		component.months = 10;
-		component.days = 15;
-		component.hours = '12';
-		component.mins = '30';
-		component.secs = '45';
-		component.showSec = true;
+		fixture.componentRef.setInput('years', 5);
+		fixture.componentRef.setInput('months', 10);
+		fixture.componentRef.setInput('days', 15);
+		fixture.componentRef.setInput('hours', '12');
+		fixture.componentRef.setInput('mins', '30');
+		fixture.componentRef.setInput('secs', '45');
+		fixture.componentRef.setInput('showSec', true);
 		fixture.detectChanges();
 
-		expect(component.years).toBe(5);
-		expect(component.months).toBe(10);
-		expect(component.days).toBe(15);
-		expect(component.hours).toBe('12');
-		expect(component.mins).toBe('30');
-		expect(component.secs).toBe('45');
+		expect(component.years()).toBe(5);
+		expect(component.months()).toBe(10);
+		expect(component.days()).toBe(15);
+		expect(component.hours()).toBe('12');
+		expect(component.mins()).toBe('30');
+		expect(component.secs()).toBe('45');
 	});
 
 	it('should not display seconds when showSec is false', () => {
-		component.showSec = false;
+		fixture.componentRef.setInput('showSec', false);
 		fixture.detectChanges();
 		const compiled = fixture.nativeElement;
 		expect(compiled.querySelector('[label="Секунды"]')).toBeNull();

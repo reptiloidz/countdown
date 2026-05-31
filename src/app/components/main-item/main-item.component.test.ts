@@ -50,6 +50,7 @@ const mockNotifyService = {
 describe('MainItemComponent', () => {
 	let component: MainItemComponent;
 	let fixture: ComponentFixture<MainItemComponent>;
+	let mockPoint: Parameters<typeof fixture.componentRef.setInput>[1];
 
 	beforeAll(() => {
 		mockAnimations();
@@ -85,7 +86,7 @@ describe('MainItemComponent', () => {
 
 		fixture = TestBed.createComponent(MainItemComponent);
 		component = fixture.componentInstance;
-		component.point = {
+		mockPoint = {
 			id: '1',
 			dates: [
 				{
@@ -102,6 +103,7 @@ describe('MainItemComponent', () => {
 			public: true,
 			user: 'userId',
 		};
+		fixture.componentRef.setInput('point', mockPoint);
 		fixture.detectChanges();
 	});
 
@@ -130,9 +132,10 @@ describe('MainItemComponent', () => {
 	});
 
 	it('should emit pointCheck on checkPoint', () => {
-		jest.spyOn(component.pointCheck, 'emit');
+		const emitted: unknown[] = [];
+		component.pointCheck.subscribe(value => emitted.push(value));
 		component.checkPoint();
-		expect(component.pointCheck.emit).toHaveBeenCalled();
+		expect(emitted.length).toBe(1);
 	});
 
 	it('should call getUserData on loadUserInfo', () => {
@@ -143,7 +146,7 @@ describe('MainItemComponent', () => {
 	it('should call setDateNow on setDateNow', () => {
 		component.setDateNow();
 		expect(mockNotifyService.confirm).toHaveBeenCalled();
-		expect(mockDataService.setDateNow).toHaveBeenCalledWith(component.point);
+		expect(mockDataService.setDateNow).toHaveBeenCalledWith(mockPoint);
 	});
 
 	it('should correctly calculate isDirectionCorrect', () => {

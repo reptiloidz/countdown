@@ -4,10 +4,10 @@ import {
 	Component,
 	ContentChild,
 	ElementRef,
-	EventEmitter,
 	HostBinding,
-	Input,
-	Output,
+	input,
+	model,
+	output,
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
@@ -47,7 +47,7 @@ export class PanelComponent {
 		return ['panel'].join(' ');
 	}
 	@HostBinding('attr.data-open') get dataOpen() {
-		return this.open;
+		return this.open();
 	}
 
 	@ContentChild('buttonTemplate') buttonTemplate: TemplateRef<unknown> | undefined;
@@ -56,12 +56,12 @@ export class PanelComponent {
 	@ContentChild('extraButton') extraButton: TemplateRef<unknown> | undefined;
 	@ViewChild('panelContentRef') private panelContentRef!: ElementRef;
 
-	@Input() open = false;
-	@Input() icon: string = 'chevron-down';
-	@Input() buttonSize!: ButtonSize;
-	@Input() buttonClass = '';
-	@Input() buttonTitle: string | null = null;
-	@Output() panelVisibilitySwitched = new EventEmitter<boolean>();
+	open = model(false);
+	icon = input('chevron-down');
+	buttonSize = input<ButtonSize>('lg');
+	buttonClass = input('');
+	buttonTitle = input<string | null>(null);
+	panelVisibilitySwitched = output<boolean>();
 
 	hasFirstUpdateHappened = false;
 	panelAnimated = false;
@@ -93,24 +93,24 @@ export class PanelComponent {
 	}
 
 	openHandler() {
-		this.open = true;
+		this.open.set(true);
 	}
 
 	closeHandler() {
-		this.open = false;
+		this.open.set(false);
 	}
 
 	toggleHandler() {
-		if (this.open) {
+		if (this.open()) {
 			this.closeHandler();
 		} else {
 			this.openHandler();
 		}
 
-		this.panelVisibilitySwitched.emit(this.open);
+		this.panelVisibilitySwitched.emit(this.open());
 	}
 
 	panelAnimatedHandler() {
-		this.panelAnimated = !this.open;
+		this.panelAnimated = !this.open();
 	}
 }

@@ -5,15 +5,14 @@ import {
 	Component,
 	computed,
 	ElementRef,
-	EventEmitter,
 	forwardRef,
+	inject,
 	HostBinding,
 	input,
 	Input,
 	model,
 	OnChanges,
 	output,
-	Output,
 	signal,
 	SimpleChanges,
 	ViewChild,
@@ -103,7 +102,7 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 		}
 	}
 
-	@Output() valueChange = new EventEmitter<string | number>();
+	valueChange = output<string | number>();
 
 	isDisabled = input(false);
 	private disabledFromCva = signal<boolean | null>(null);
@@ -116,10 +115,8 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 	/** Не перезаписывать DOM при round-trip [value] после собственного valueChange */
 	private inputFromUser = false;
 
-	constructor(
-		private cdr: ChangeDetectorRef,
-		private deviceService: DeviceDetectorService,
-	) {}
+	private readonly cdr = inject(ChangeDetectorRef);
+	private readonly deviceService = inject(DeviceDetectorService);
 
 	get showPasswordTitle(): string {
 		return this.type() === 'text' ? 'Скрыть пароль' : 'Показать пароль';

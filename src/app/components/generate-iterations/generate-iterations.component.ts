@@ -1,13 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	EventEmitter,
-	Input,
-	OnInit,
-	Output,
-	ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input, OnInit, output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -67,10 +58,10 @@ import { millisecondsInDay, millisecondsInHour, millisecondsInMinute } from 'dat
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GenerateIterationsComponent implements OnInit {
-	@Input() form!: FormGroup;
-	@Input() loading = false;
-	@Input() point: Point | undefined;
-	@Output() repeatsAreGenerated = new EventEmitter<Iteration[]>();
+	form = input.required<FormGroup>();
+	loading = input(false);
+	point = input<Point | undefined>();
+	repeatsAreGenerated = output<Iteration[]>();
 	@ViewChild('rangeEndRef', { static: false }) rangeEndRef!: DatepickerComponent;
 
 	rangeStartDate = new Date();
@@ -125,7 +116,7 @@ export class GenerateIterationsComponent implements OnInit {
 	}
 
 	get iterationsForm() {
-		return this.form.get('iterationsForm') as FormGroup;
+		return this.form().get('iterationsForm') as FormGroup;
 	}
 
 	get isRepeatsAmountSet() {
@@ -335,7 +326,7 @@ export class GenerateIterationsComponent implements OnInit {
 	getDateTime(k: number) {
 		const startPointDate = +getPointDate({
 			pointDate: this.rangeStartDate,
-			isGreenwich: this.point?.greenwich,
+			isGreenwich: this.point()?.greenwich,
 			isInvert: true,
 		});
 
@@ -398,7 +389,7 @@ export class GenerateIterationsComponent implements OnInit {
 	setRangeStartTime(date: Date) {
 		return getPointDate({
 			pointDate: addMinutes(addHours(startOfDay(date), getHours(this.rangeStartDate)), getMinutes(this.rangeStartDate)),
-			isGreenwich: this.point?.greenwich,
+			isGreenwich: this.point()?.greenwich,
 			isInvert: true,
 		});
 	}
@@ -419,7 +410,7 @@ export class GenerateIterationsComponent implements OnInit {
 
 		const dateTime = getPointDate({
 			pointDate: this.rangeEndDate,
-			isGreenwich: this.form.controls['greenwich'].value,
+			isGreenwich: this.form().controls['greenwich'].value,
 			isInvert: true,
 		});
 

@@ -36,7 +36,7 @@ describe('DatepickerComponent', () => {
 
 	it('should disable year if it is before the disabledBefore date', () => {
 		const date = new Date(2020, 0, 1);
-		component.disabledBefore = date;
+		fixture.componentRef.setInput('disabledBefore', date);
 		fixture.detectChanges();
 		const year = component.yearsArray.find(year => year.key === 2019);
 		expect(year?.disabled).toBe(true);

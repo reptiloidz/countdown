@@ -24,14 +24,17 @@ describe('PointModesComponent', () => {
 
 		fixture = TestBed.createComponent(PointModesComponent);
 		component = fixture.componentInstance;
-		component.form = new FormGroup({
-			pointModesForm: new FormGroup({
-				firstModeTitle: new FormControl(''),
-				secondModeTitle: new FormControl(''),
-				firstModeEmoji: new FormControl(''),
-				secondModeEmoji: new FormControl(''),
+		fixture.componentRef.setInput(
+			'form',
+			new FormGroup({
+				pointModesForm: new FormGroup({
+					firstModeTitle: new FormControl(''),
+					secondModeTitle: new FormControl(''),
+					firstModeEmoji: new FormControl(''),
+					secondModeEmoji: new FormControl(''),
+				}),
 			}),
-		});
+		);
 		fixture.detectChanges();
 	});
 
@@ -40,7 +43,7 @@ describe('PointModesComponent', () => {
 	});
 
 	it('should have default values', () => {
-		expect(component.emojis).toEqual([]);
+		expect(component.emojis()).toEqual([]);
 		expect(component.emojisCurrent).toEqual([]);
 		expect(component.filterEmojiValue).toBe('');
 		expect(component.loading).toBe(false);
@@ -79,7 +82,7 @@ describe('PointModesComponent', () => {
 		const inputFixture = TestBed.createComponent(InputComponent);
 		component.filterRef = inputFixture.componentInstance;
 		component.filterRef.value = 'label1';
-		component.emojis = [
+		fixture.componentRef.setInput('emojis', [
 			{
 				title: 'group1',
 				list: [
@@ -93,7 +96,7 @@ describe('PointModesComponent', () => {
 					},
 				],
 			},
-		];
+		]);
 
 		component.applyFilter('firstModeEmoji', dropMock);
 		jest.advanceTimersByTime(50);

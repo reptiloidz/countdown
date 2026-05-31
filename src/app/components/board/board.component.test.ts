@@ -53,22 +53,15 @@ describe('BoardComponent', () => {
 	});
 
 	it('should return the correct componentClass', () => {
-		component.mode = 'sm';
+		fixture.componentRef.setInput('mode', 'sm');
 		fixture.detectChanges();
 		expect(component.componentClass).toBe('board board--sm');
 	});
 
 	it('should update static and animated values when initialValue changes', () => {
 		const newValue = '99';
-		component.initialValue = newValue;
-		component.ngOnChanges({
-			initialValue: {
-				currentValue: newValue,
-				previousValue: '00',
-				firstChange: false,
-				isFirstChange: () => false,
-			},
-		});
+		fixture.componentRef.setInput('initialValue', newValue);
+		fixture.detectChanges();
 		expect(component.topStaticValue).toBe(newValue);
 		expect(component.bottomStaticValue).toBe(newValue);
 		expect(component.topAnimatedValue).toBe(newValue);
@@ -78,23 +71,17 @@ describe('BoardComponent', () => {
 	it('should call switchBoard when value changes', () => {
 		jest.spyOn(component, 'switchBoard');
 		const newValue = '42';
-		component.value = newValue;
-		component.ngOnChanges({
-			value: {
-				currentValue: newValue,
-				previousValue: '00',
-				firstChange: false,
-				isFirstChange: () => false,
-			},
-		});
+		fixture.componentRef.setInput('value', newValue);
+		fixture.detectChanges();
 		expect(component.switchBoard).toHaveBeenCalled();
 	});
 
 	it('should call animateBoard after delay when delay is true', done => {
 		jest.spyOn(component, 'animateBoard');
-		component.delay = true;
-		component.value = '42';
-		component.delayValue = 100; // Установим задержку
+		fixture.componentRef.setInput('delay', true);
+		fixture.componentRef.setInput('value', '42');
+		fixture.componentRef.setInput('delayValue', 100);
+		fixture.detectChanges();
 		component.switchBoard();
 
 		setTimeout(() => {
@@ -105,14 +92,16 @@ describe('BoardComponent', () => {
 
 	it('should call animateBoard immediately when delay is false', () => {
 		jest.spyOn(component, 'animateBoard');
-		component.delay = false;
-		component.value = '42';
+		fixture.componentRef.setInput('delay', false);
+		fixture.componentRef.setInput('value', '42');
+		fixture.detectChanges();
 		component.switchBoard();
 		expect(component.animateBoard).toHaveBeenCalled();
 	});
 
 	it('should update values correctly during animation', done => {
-		component.value = '42';
+		fixture.componentRef.setInput('value', '42');
+		fixture.detectChanges();
 		component.animateBoard();
 
 		// Проверяем начальное состояние
@@ -198,7 +187,7 @@ describe('BoardComponent', () => {
 	});
 
 	it('should apply correct classes to the component', () => {
-		component.mode = 'logo';
+		fixture.componentRef.setInput('mode', 'logo');
 		fixture.detectChanges();
 
 		const hostElement = fixture.nativeElement; // Хост-элемент компонента
@@ -206,7 +195,7 @@ describe('BoardComponent', () => {
 	});
 
 	it('should update label correctly', () => {
-		component.label = 'Test Label';
+		fixture.componentRef.setInput('label', 'Test Label');
 		fixture.detectChanges();
 
 		const labelElement = fixture.nativeElement.querySelector('.board__label');

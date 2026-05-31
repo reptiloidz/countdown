@@ -26,8 +26,8 @@ describe('LinkPointComponent', () => {
 	});
 
 	it('should render link with pointName and correct routerLink', () => {
-		component.pointId = '123';
-		component.pointName = 'Test Point';
+		fixture.componentRef.setInput('pointId', '123');
+		fixture.componentRef.setInput('pointName', 'Test Point');
 		fixture.detectChanges();
 
 		const linkDebugEl = fixture.debugElement.query(By.css('.notify-list__link'));

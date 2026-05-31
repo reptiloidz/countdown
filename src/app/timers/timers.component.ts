@@ -1,5 +1,5 @@
 import { AUTO_STYLE, animate, style, transition, trigger } from '@angular/animations';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardComponent } from '../components/board/board.component';
 import { DateType, TimeType } from '../types';
@@ -51,22 +51,22 @@ import { DateType, TimeType } from '../types';
 	],
 })
 export class TimersComponent {
-	@Input() years: DateType;
-	@Input() months: DateType;
-	@Input() days: DateType;
-	@Input() hours!: TimeType;
-	@Input() mins!: TimeType;
-	@Input() secs!: TimeType;
-	@Input() size: 'base' | 'sm' = 'base';
-	@Input() yearsLabel = 'Годы';
-	@Input() monthsLabel = 'Месяцы';
-	@Input() daysLabel = 'Дни';
-	@Input() hoursLabel = 'Часы';
-	@Input() minsLabel = 'Минуты';
-	@Input() secsLabel = 'Секунды';
-	@Input() delayValue!: number;
-	@Input() delayRandomValue!: string | number;
-	@Input() showSec = true;
+	years = input<DateType>();
+	months = input<DateType>();
+	days = input<DateType>();
+	hours = input.required<TimeType>();
+	mins = input.required<TimeType>();
+	secs = input.required<TimeType>();
+	size = input<'base' | 'sm'>('base');
+	yearsLabel = input('Годы');
+	monthsLabel = input('Месяцы');
+	daysLabel = input('Дни');
+	hoursLabel = input('Часы');
+	minsLabel = input('Минуты');
+	secsLabel = input('Секунды');
+	delayValue = input(0);
+	delayRandomValue = input<string | number>(0);
+	showSec = input(true);
 	yearEnterValue = this.randomDelay;
 	monthEnterValue = this.randomDelay;
 	dayEnterValue = this.randomDelay;

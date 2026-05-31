@@ -49,16 +49,19 @@ describe('GenerateIterationsComponent', () => {
 
 		fixture = TestBed.createComponent(GenerateIterationsComponent);
 		component = fixture.componentInstance;
-		component.form = new FormBuilder().group({
-			iterationsForm: new FormBuilder().group({
-				repeatsMode: ['setRepeatsAmount'],
-				rangeAmount: [2],
-				rangePeriod: [1],
-				periodicity: ['perMinutes'],
-				monthOptions: ['dayOfMonth'],
+		fixture.componentRef.setInput(
+			'form',
+			new FormBuilder().group({
+				iterationsForm: new FormBuilder().group({
+					repeatsMode: ['setRepeatsAmount'],
+					rangeAmount: [2],
+					rangePeriod: [1],
+					periodicity: ['perMinutes'],
+					monthOptions: ['dayOfMonth'],
+				}),
+				greenwich: [false],
 			}),
-			greenwich: [false],
-		});
+		);
 		fixture.detectChanges();
 	});
 

@@ -66,11 +66,11 @@
 
 <div class="mode-stats__result">
 	<div class="mode-stats__result-col">
-		<h3 class="mode-stats__label">{{ point.modes?.[0]?.icon }} {{ point.modes?.[0]?.name }}</h3>
+		<h3 class="mode-stats__label">{{ point().modes?.[0]?.icon }} {{ point().modes?.[0]?.name }}</h3>
 		<p class="mode-stats__value">{{ modeSumFirstFormatted() }}</p>
 	</div>
 	<div class="mode-stats__result-col">
-		<h3 class="mode-stats__label">{{ point.modes?.[1]?.icon }} {{ point.modes?.[1]?.name }}</h3>
+		<h3 class="mode-stats__label">{{ point().modes?.[1]?.icon }} {{ point().modes?.[1]?.name }}</h3>
 		<p class="mode-stats__value">{{ modeSumSecondFormatted() }}</p>
 	</div>
 </div>

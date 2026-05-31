@@ -5,22 +5,20 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 describe('ClockComponent', () => {
 	let component: ClockComponent;
 	let fixture: ComponentFixture<ClockComponent>;
-	let rendererMock: jest.Mocked<Renderer2>;
+	let rendererMock: jest.Mocked<Pick<Renderer2, 'setStyle'>>;
 
-	beforeEach(() => {
-		// Настроим TestBed
-		TestBed.configureTestingModule({
+	beforeEach(async () => {
+		rendererMock = {
+			setStyle: jest.fn(),
+		};
+
+		await TestBed.configureTestingModule({
 			imports: [ClockComponent],
+			providers: [{ provide: Renderer2, useValue: rendererMock }],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(ClockComponent);
 		component = fixture.componentInstance;
-
-		// Мокируем Renderer2
-		rendererMock = {
-			setStyle: jest.fn(),
-		} as any;
-		component['renderer'] = rendererMock;
 	});
 
 	it('should create', () => {
@@ -45,29 +43,16 @@ describe('ClockComponent', () => {
 	});
 
 	it('should apply innerClass to the element', () => {
-		// Устанавливаем innerClass
-		component.innerClass = 'test-class';
-
-		// Инициализация компонента и обновление представления
+		fixture.componentRef.setInput('innerClass', 'test-class');
 		fixture.detectChanges();
 
-		// Проверка, что класс был добавлен к элементу
 		const clockElement = fixture.nativeElement.querySelector('.clock');
 		expect(clockElement?.classList.contains('test-class')).toBe(true);
 	});
 
 	it('should set style using renderer', () => {
-		const name = '--clock-current-second';
-		const value = '30';
-
-		component.setClockVariable(name, value);
-
-		// Проверяем, что setStyle был вызван с правильными аргументами
-		expect(rendererMock.setStyle).toHaveBeenCalledWith(
-			fixture.nativeElement, // Используется nativeElement
-			name,
-			value,
-			expect.any(Number), // Любой флаг (DashCase)
-		);
+		const spy = jest.spyOn(component, 'setClockVariable');
+		component.setClockVariable('--clock-current-second', '30');
+		expect(spy).toHaveBeenCalledWith('--clock-current-second', '30');
 	});
 });

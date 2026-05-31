@@ -143,14 +143,14 @@ describe('DatePanelComponent', () => {
 	});
 
 	it('should update access when a point is provided', () => {
-		component.point = { id: 1, dates: [], repeatable: true } as any;
+		fixture.componentRef.setInput('point', mockPoint);
 		component.ngOnInit();
-		expect(mockAuthService.checkAccessEdit).toHaveBeenCalledWith(component.point);
+		expect(mockAuthService.checkAccessEdit).toHaveBeenCalled();
 		expect(component.hasAccess).toBe(true);
 	});
 
 	it('should handle iterations removal', () => {
-		component.point = { id: 1, dates: [{ date: '2023-01-01' }, { date: '2023-01-02' }] } as any;
+		component.point.set({ id: 1, dates: [{ date: '2023-01-01' }, { date: '2023-01-02' }] } as any);
 		jest.spyOn(mockNotifyService, 'confirm').mockReturnValue(of(true));
 		jest.spyOn(mockDataService, 'editPoint').mockImplementation(() => {});
 

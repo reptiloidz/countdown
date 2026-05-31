@@ -1,14 +1,14 @@
-import { Directive, Inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, inject, input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 class AppLetContext<T> {
 	constructor(private readonly internalDirectiveInstance: LetDirective<T>) {}
 
 	get $implicit(): T {
-		return this.internalDirectiveInstance.appLet;
+		return this.internalDirectiveInstance.appLet();
 	}
 
 	get appLet(): T {
-		return this.internalDirectiveInstance.appLet;
+		return this.internalDirectiveInstance.appLet();
 	}
 }
 
@@ -24,12 +24,11 @@ class AppLetContext<T> {
 	standalone: true,
 })
 export class LetDirective<T> {
-	@Input() appLet!: T;
+	appLet = input.required<T>({ alias: 'appLet' });
 
-	constructor(
-		@Inject(ViewContainerRef) viewContainer: ViewContainerRef,
-		@Inject(TemplateRef) templateRef: TemplateRef<AppLetContext<T>>,
-	) {
+	constructor() {
+		const viewContainer = inject(ViewContainerRef);
+		const templateRef = inject(TemplateRef<AppLetContext<T>>);
 		viewContainer.createEmbeddedView(templateRef, new AppLetContext<T>(this));
 	}
 

@@ -58,9 +58,8 @@ describe('CalendarComponent', () => {
 		fixture = TestBed.createComponent(CalendarComponent);
 		component = fixture.componentInstance;
 
-		// Set initial inputs
-		component.points = mockDataPoints;
-		component.iterations = mockIterations;
+		fixture.componentRef.setInput('points', mockDataPoints);
+		fixture.componentRef.setInput('iterations', mockIterations);
 
 		fixture.detectChanges();
 	});
@@ -71,9 +70,9 @@ describe('CalendarComponent', () => {
 
 	it('should initialize with the current date', () => {
 		const today = new Date();
-		expect(component.selectedDate.getDate()).toEqual(today.getDate());
-		expect(component.selectedDate.getMonth()).toEqual(today.getMonth());
-		expect(component.selectedDate.getFullYear()).toEqual(today.getFullYear());
+		expect(component.selectedDate().getDate()).toEqual(today.getDate());
+		expect(component.selectedDate().getMonth()).toEqual(today.getMonth());
+		expect(component.selectedDate().getFullYear()).toEqual(today.getFullYear());
 	});
 
 	it('should generate the correct days for the current month', () => {
@@ -110,7 +109,7 @@ describe('CalendarComponent', () => {
 			iterations: [],
 			points: [],
 		});
-		expect(component.selectedDate).toEqual(date);
+		expect(+component.selectedDate()).toEqual(+date);
 	});
 
 	it('should highlight dates with data points', () => {
@@ -173,8 +172,8 @@ describe('CalendarComponent', () => {
 	it('should visibleDate changed to selectedDate', () => {
 		component.visibleDate = new Date(2025, 2, 1);
 		component.switchCalendarToSelected();
-		expect(component.visibleDate.getDate()).toEqual(component.selectedDate.getDate());
-		expect(component.visibleDate.getMonth()).toEqual(component.selectedDate.getMonth());
-		expect(component.visibleDate.getFullYear()).toEqual(component.selectedDate.getFullYear());
+		expect(component.visibleDate.getDate()).toEqual(component.selectedDate().getDate());
+		expect(component.visibleDate.getMonth()).toEqual(component.selectedDate().getMonth());
+		expect(component.visibleDate.getFullYear()).toEqual(component.selectedDate().getFullYear());
 	});
 });

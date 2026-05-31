@@ -3,7 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	HostBinding,
-	Input,
+	input,
 	OnInit,
 	signal,
 	ViewChild,
@@ -30,7 +30,7 @@ import { CheckboxComponent } from '../checkbox/checkbox.component';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModeStatsComponent implements OnInit, AfterViewInit {
-	@Input() point!: Point;
+	point = input.required<Point>();
 	@HostBinding('class') class = 'mode-stats';
 	@ViewChild('formatsRef', { read: ViewContainerRef })
 	formatsRef: ViewContainerRef | undefined;
@@ -118,11 +118,16 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 			disabled: false,
 		},
 	];
-	activeFormat = localStorage.getItem('statFormat') ?? (this.dateOnly ? 'days' : 'minutes');
-	formatNames: DifferenceMode[] = this.activeFormat.split('_') as DifferenceMode[];
+	activeFormat = localStorage.getItem('statFormat') ?? 'minutes';
+	formatNames: DifferenceMode[] = (localStorage.getItem('statFormat')?.split('_') ?? ['minutes']) as DifferenceMode[];
 
 	ngOnInit(): void {
-		this.dates.set(sortDates(this.point).dates);
+		if (!localStorage.getItem('statFormat')) {
+			this.activeFormat = this.dateOnly ? 'days' : 'minutes';
+			this.formatNames = this.activeFormat.split('_') as DifferenceMode[];
+		}
+
+		this.dates.set(sortDates(this.point()).dates);
 
 		this.firstIterationDate.set(parseDate(this.dates()[0].date));
 		this.lastIterationDate.set(parseDate(this.dates()[this.dates().length - 1].date));
@@ -144,7 +149,7 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 	}
 
 	get dateOnly() {
-		return this.point?.dateOnly;
+		return this.point()?.dateOnly;
 	}
 
 	reset() {
