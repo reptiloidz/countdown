@@ -96,10 +96,8 @@
 	&--edit {
 		@include media-breakpoint-down(md) {
 			flex-direction: column;
-			min-height: 480px;
 		}
 
-		min-height: 640px;
 		padding-bottom: 0;
 
 		.content__col {
@@ -109,10 +107,6 @@
 			}
 
 			padding-bottom: var(--content-py);
-
-			&--point {
-				min-height: 280px;
-			}
 		}
 	}
 

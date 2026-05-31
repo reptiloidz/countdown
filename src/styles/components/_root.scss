@@ -26,7 +26,6 @@
 
 		.root__loader-icon {
 			opacity: 1;
-			visibility: visible;
 		}
 	}
 
@@ -71,14 +70,13 @@
 	}
 
 	&__loader-icon {
-		@include transition(opacity 0.8s, visibility 0.8s);
+		@include transition(opacity 0.8s);
 
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		height: 100%;
 		opacity: 0;
-		visibility: hidden;
 	}
 
 	&__loading-marker {

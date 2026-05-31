@@ -15,339 +15,375 @@
 ></app-date-panel>
 <div class="content content--row content--edit">
 	<div
-		*ngIf="point && !isCreationUrl && !isCreation; else pointPlaceholder"
-		class="content__col content__col--point"
+		*ngIf="!isCreationUrl && !isCreation"
+		class="content__col content__col--point edit-point-shell"
 	>
-		<h3>
-			<a
-				[routerLink]="['/point', point.id]"
-				app-button
-				view="link"
-				size="lg"
-				mode="ghost"
-				icon="chevron-left"
-				title="Вернуться к&nbsp;событию"
-			>Вернуться к&nbsp;событию</a>
-		</h3>
 		<div
-			app-main-item
-			class="color"
-			[ngClass]="'color--' + this.form.controls['color'].value"
-			[point]="point"
-			[isEdit]="true"
-		></div>
+			class="edit-point-shell__layer"
+			[class.edit-point-shell__layer--hidden]="point && !(checking | async)"
+			aria-hidden="true"
+		>
+			<div class="edit-skeleton edit-skeleton--preview">
+				<div class="edit-skeleton__link"></div>
+				<div class="edit-skeleton__card"></div>
+			</div>
+		</div>
+		<div
+			class="edit-point-shell__layer"
+			[class.edit-point-shell__layer--hidden]="!point || (checking | async)"
+		>
+			<h3>
+				<a
+					[routerLink]="['/point', point?.id]"
+					app-button
+					view="link"
+					size="lg"
+					mode="ghost"
+					icon="chevron-left"
+					title="Вернуться к&nbsp;событию"
+				>Вернуться к&nbsp;событию</a>
+			</h3>
+			<div
+				*ngIf="point"
+				app-main-item
+				class="color"
+				[ngClass]="'color--' + this.form.controls['color'].value"
+				[point]="point"
+				[isEdit]="true"
+			></div>
+		</div>
 	</div>
-	<form
-		class="content__col"
-		[class.content--pending]="checking | async"
-		[formGroup]="form"
-		(ngSubmit)="submit(repeatableValueSaved && !isCreation)"
-	>
-		<h3 class="form__section-title form__section-title--top">
-			<a
-				*ngIf="!isCreationUrl"
-				[routerLink]="['/point', point?.id]"
-				app-button
-				view="link"
-				size="lg"
-				mode="positive"
-				icon="chevron-left"
-				title="Вернуться к&nbsp;событию"
-				class="form__button-mobile"
-				[ngClass]="{
+	<div class="content__col edit-form-shell">
+		<div
+			class="edit-form-shell__layer"
+			[class.edit-form-shell__layer--hidden]="!(checking | async)"
+			aria-hidden="true"
+		>
+			<div class="edit-skeleton edit-skeleton--form">
+				<div class="edit-skeleton__title"></div>
+				<div class="edit-skeleton__field"></div>
+				<div class="edit-skeleton__field edit-skeleton__field--lg"></div>
+				<div class="edit-skeleton__row">
+					<div class="edit-skeleton__chip"></div>
+					<div class="edit-skeleton__chip"></div>
+					<div class="edit-skeleton__chip"></div>
+					<div class="edit-skeleton__chip"></div>
+				</div>
+				<div class="edit-skeleton__row edit-skeleton__row--date">
+					<div class="edit-skeleton__chip"></div>
+					<div class="edit-skeleton__field"></div>
+				</div>
+				<div class="edit-skeleton__submit"></div>
+			</div>
+		</div>
+		<div
+			class="edit-form-shell__layer"
+			[class.edit-form-shell__layer--hidden]="checking | async"
+		>
+			<form
+				[formGroup]="form"
+				(ngSubmit)="submit(repeatableValueSaved && !isCreation)"
+			>
+				<h3 class="form__section-title form__section-title--top">
+					<a
+						*ngIf="!isCreationUrl"
+						[routerLink]="['/point', point?.id]"
+						app-button
+						view="link"
+						size="lg"
+						mode="positive"
+						icon="chevron-left"
+						title="Вернуться к&nbsp;событию"
+						class="form__button-mobile"
+						[ngClass]="{
 					'form__button-mobile--hidden': isCreation
 				}"
-			></a>
-			{{ pageTitle }}
-		</h3>
-		<div
-			class="form"
-			[ngClass]="{
+					></a>
+					{{ pageTitle }}
+				</h3>
+				<div
+					class="form"
+					[ngClass]="{
 				'form--single': !repeatableValueSaved || isCreation,
 			}"
-		>
-			<!-- Надо ли показывать автора? Сейчас редактировать больше никто не может -->
-			<!-- <img
-				*ngIf="userData?.photoURL"
-				class="userpic userpic--sm"
-				[src]="userData.photoURL"
-				[alt]="userData.displayName"
-				aria-hidden="true"
-				><ng-container *ngIf="userData?.displayName">
-				{{ userData.displayName }}
-				</ng-container> -->
-			<div class="form__section form__section--edit">
-				<div class="form__row">
-					<app-input
-						class="form__control"
-						placeholder="Название"
-						icon="flag"
-						formControlName="title"
-						[maxlength]="100"
-						[autofocus]="true"
-					></app-input>
-				</div>
-				<div class="form__row">
-					<app-input
-						class="form__control"
-						[textarea]="true"
-						[textareaRows]="3"
-						placeholder="Описание события"
-						formControlName="description"
-						[maxlength]="10000"
-					></app-input>
-				</div>
+				>
+					<!-- Надо ли показывать автора? Сейчас редактировать больше никто не может -->
+					<!-- <img
+						*ngIf="userData?.photoURL"
+						class="userpic userpic--sm"
+						[src]="userData.photoURL"
+						[alt]="userData.displayName"
+						aria-hidden="true"
+						><ng-container *ngIf="userData?.displayName">
+						{{ userData.displayName }}
+						</ng-container> -->
+					<div class="form__section form__section--edit">
+						<div class="form__row">
+							<app-input
+								class="form__control"
+								placeholder="Название"
+								icon="flag"
+								formControlName="title"
+								[maxlength]="100"
+								[autofocus]="true"
+							></app-input>
+						</div>
+						<div class="form__row">
+							<app-input
+								class="form__control"
+								[textarea]="true"
+								[textareaRows]="3"
+								placeholder="Описание события"
+								formControlName="description"
+								[maxlength]="10000"
+							></app-input>
+						</div>
 
-				<div
-					class="form__row form__row--settings"
-					[ngClass]="{
+						<div
+							class="form__row form__row--settings"
+							[ngClass]="{
 						'form__row--settings-link': isCreationUrl
 					}"
-				>
-					<div class="form__direction">
-						<label
-							app-checkbox
-							mode="custom"
-							(change)="dateOnlySwitch($event)"
-							[isDisabled]="isTimer && isCreationUrl"
-							[isChecked]="!dateOnly"
-							[icon]="timeModeIcon"
-							[title]="'Дата' + (dateOnly ? '' : ' и время')"
-						></label>
-						<app-switcher
-							*ngIf="!isCreationUrl"
-							[items]="directionList"
-							[value]="this.point?.direction || 'forward'"
-							formControlName="direction"
-							[showTitle]="true"
-						></app-switcher>
-					</div>
-					<app-drop
-						#colorDrop
-						formControlName="color"
-						class="form__color"
-						[buttonTextClass]="['color', 'color--' + pointColor, 'drop__item-color']"
-						[select]="true"
-						[buttonLabel]="pointColorName"
-					>
-						<ng-template #bodyTemplate>
-							<button
-								*ngFor="let pointColorsItem of pointColors; trackBy: trackBy"
-								app-button
-								class="drop__item"
-								[ngClass]="{
+						>
+							<div class="form__direction">
+								<label
+									app-checkbox
+									mode="custom"
+									(change)="dateOnlySwitch($event)"
+									[isDisabled]="isTimer && isCreationUrl"
+									[isChecked]="!dateOnly"
+									[icon]="timeModeIcon"
+									[title]="'Дата' + (dateOnly ? '' : ' и время')"
+								></label>
+								<app-switcher
+									*ngIf="!isCreationUrl"
+									[items]="directionList"
+									[value]="this.point?.direction || 'forward'"
+									formControlName="direction"
+									[showTitle]="true"
+								></app-switcher>
+							</div>
+							<app-drop
+								#colorDrop
+								formControlName="color"
+								class="form__color"
+								[buttonTextClass]="['color', 'color--' + pointColor, 'drop__item-color']"
+								[select]="true"
+								[buttonLabel]="pointColorName"
+							>
+								<ng-template #bodyTemplate>
+									<button
+										*ngFor="let pointColorsItem of pointColors; trackBy: trackBy"
+										app-button
+										class="drop__item"
+										[ngClass]="{
 									'drop__item--selected': pointColorsItem === pointColor
 								}"
-								[textClass]="['drop__item-text']"
-								(click)="switchColor(pointColorsItem)"
-							>
-								<span [class]="'drop__item-color color color--' + pointColorsItem">
-									{{ pointColorNames[pointColorsItem] }}
-								</span>
-								<svg
-									app-svg
-									name="check"
-									size="sm"
-									class="drop__item-icon"
-								></svg>
-							</button>
-						</ng-template>
-					</app-drop>
+										[textClass]="['drop__item-text']"
+										(click)="switchColor(pointColorsItem)"
+									>
+										<span [class]="'drop__item-color color color--' + pointColorsItem">
+											{{ pointColorNames[pointColorsItem] }}
+										</span>
+										<svg
+											app-svg
+											name="check"
+											size="sm"
+											class="drop__item-icon"
+										></svg>
+									</button>
+								</ng-template>
+							</app-drop>
 
-					<app-drop
-						#modesDrop
-						*ngIf="!isCreation && repeatableValue"
-						class="drop--modes form__modes"
-						(dropOpened)="pointModesOpened()"
-						(dropClosed)="pointModesClosed()"
-					>
-						<ng-template
-							#triggerTemplate
-							let-toggle="toggle"
-						>
-							<div
-								app-tooltip
-								[disabled]="isModesDropOpened"
-								vertical="top"
-								onboarding="modes"
-								text="
+							<app-drop
+								#modesDrop
+								*ngIf="!isCreation && repeatableValue"
+								class="drop--modes form__modes"
+								(dropOpened)="pointModesOpened()"
+								(dropClosed)="pointModesClosed()"
+							>
+								<ng-template
+									#triggerTemplate
+									let-toggle="toggle"
+								>
+									<div
+										app-tooltip
+										[disabled]="isModesDropOpened"
+										vertical="top"
+										onboarding="modes"
+										text="
 									Режимы чередования итераций для многократных событий.
 									Удобно для подсчёта времени, проведённого за&nbsp;границей.
 									При каждом пересечении нужно создавать итерацию.
 								"
-							>
-								<button
-									app-button
-									#tooltipTrigger
-									class="form__btn button--emoji tooltip__trigger"
-									mode="secondary"
-									icon="chevron-down"
-									(click)="toggle()"
-								>{{ pointModes.length ? pointModes[0].icon + '/' + pointModes[1].icon : 'Режимы'
-									}}</button>
+									>
+										<button
+											app-button
+											#tooltipTrigger
+											class="form__btn button--emoji tooltip__trigger"
+											mode="secondary"
+											icon="chevron-down"
+											(click)="toggle()"
+										>{{ pointModes.length ? pointModes[0].icon + '/' + pointModes[1].icon : 'Режимы'
+											}}</button>
+									</div>
+								</ng-template>
+								<ng-template #bodyTemplate>
+									<app-point-modes
+										class="form-drop form-drop--emoji"
+										[form]="formGroup"
+										[emojis]="emojis"
+										(pointModeChanged)="pointModeChanged($event)"
+										(pointModeClosed)="pointModeClosed()"
+										[point]="point"
+									></app-point-modes>
+								</ng-template>
+							</app-drop>
+
+							<div class="form__checks">
+								<ng-container *ngIf="!isCreationUrl">
+									<label
+										app-checkbox
+										mode="custom"
+										icon="globe"
+										formControlName="greenwich"
+										[title]="greenwichValue ? 'Глобальное время' : 'Местное время'"
+										[isDisabled]="dateOnly"
+									></label>
+									<label
+										app-checkbox
+										mode="custom"
+										icon="users"
+										formControlName="public"
+										[title]="publicValue ? 'Публичное событие' : 'Приватное событие'"
+									></label>
+									<label
+										app-checkbox
+										mode="custom"
+										icon="refresh"
+										formControlName="repeatable"
+										[title]="repeatableValue ? 'Многократное событие' : 'Однократное событие'"
+									></label>
+								</ng-container>
+								<app-switcher
+									*ngIf="isCreationUrl"
+									[items]="dateModeList"
+									[value]="dateUrlMode"
+									[showTitle]="true"
+									(valueSwitched)="switchDateUrlMode($event)"
+								></app-switcher>
 							</div>
-						</ng-template>
-						<ng-template #bodyTemplate>
-							<app-point-modes
-								class="form-drop form-drop--emoji"
-								[form]="formGroup"
-								[emojis]="emojis"
-								(pointModeChanged)="pointModeChanged($event)"
-								(pointModeClosed)="pointModeClosed()"
-								[point]="point"
-							></app-point-modes>
-						</ng-template>
-					</app-drop>
-
-					<div class="form__checks">
-						<ng-container *ngIf="!isCreationUrl">
-							<label
-								app-checkbox
-								mode="custom"
-								icon="globe"
-								formControlName="greenwich"
-								[title]="greenwichValue ? 'Глобальное время' : 'Местное время'"
-								[isDisabled]="dateOnly"
-							></label>
-							<label
-								app-checkbox
-								mode="custom"
-								icon="users"
-								formControlName="public"
-								[title]="publicValue ? 'Публичное событие' : 'Приватное событие'"
-							></label>
-							<label
-								app-checkbox
-								mode="custom"
-								icon="refresh"
-								formControlName="repeatable"
-								[title]="repeatableValue ? 'Многократное событие' : 'Однократное событие'"
-							></label>
-						</ng-container>
-						<app-switcher
-							*ngIf="isCreationUrl"
-							[items]="dateModeList"
-							[value]="dateUrlMode"
-							[showTitle]="true"
-							(valueSwitched)="switchDateUrlMode($event)"
-						></app-switcher>
+						</div>
+						<div class="form__row">
+							<button
+								*ngIf="repeatableValueSaved && !isCreation"
+								app-button
+								class="form__submit"
+								mode="ghost-positive"
+								iconPosition="right"
+								icon="arrow-right"
+								type="button"
+								(click)="submit()"
+								title="Сохранить параметры события"
+							>Сохранить событие</button>
+						</div>
 					</div>
-				</div>
-				<div class="form__row">
-					<button
-						*ngIf="repeatableValueSaved && !isCreation"
-						app-button
-						class="form__submit"
-						mode="ghost-positive"
-						iconPosition="right"
-						icon="arrow-right"
-						type="button"
-						(click)="submit()"
-						title="Сохранить параметры события"
-					>Сохранить событие</button>
-				</div>
-			</div>
 
-			<h3
-				*ngIf="repeatableValueSaved && !isCreation"
-				class="form__section-title"
-			>{{ isIterationAdded ? 'Создание' : 'Редактирование'}} итерации
-				<button
-					app-button
-					*ngIf="!isIterationAdded"
-					icon="plus"
-					view="link"
-					size="lg"
-					mode="positive"
-					title="Добавить итерацию"
-					(click)="datePanel.addIterationClick()"
-				></button>
-			</h3>
-
-			<div
-				#iterationForm
-				class="form__section"
-			>
-				<div class="form__row">
-					<app-datepicker
-						horizontal="left"
-						class="form__btn form__col"
-						(datePicked)="datePicked($event)"
-						[date]="pointDate"
-						[dateOnly]="dateOnly"
-					></app-datepicker>
-					<app-drop
-						[dropList]="differenceModeArray"
-						(dropChanged)="differenceModeChanged($event)"
-						[value]="differenceMode"
-						class="form__col form__col--right"
-					></app-drop>
-					<app-input
-						placeholder="Прошло/осталось"
-						formControlName="difference"
-						autocomplete="off"
-						mask="0*"
-						inputmode="numeric"
-						[allowNegativeNumbers]="true"
-						[validation]="false"
-						[maxlength]="validatorDifferenceMaxLength"
-						[clearButton]="true"
-						clearButtonTitle="Сброс (итерация произошла сейчас)"
-						clearButtonValue="0"
-						(reset)="differenceChanged(0)"
-					></app-input>
-				</div>
-				<div class="form__row">
-					<app-drop
+					<h3
 						*ngIf="repeatableValueSaved && !isCreation"
-						class="drop--nested form__col"
+						class="form__section-title"
+					>{{ isIterationAdded ? 'Создание' : 'Редактирование'}} итерации
+						<button
+							app-button
+							*ngIf="!isIterationAdded"
+							icon="plus"
+							view="link"
+							size="lg"
+							mode="positive"
+							title="Добавить итерацию"
+							(click)="datePanel.addIterationClick()"
+						></button>
+					</h3>
+
+					<div
+						#iterationForm
+						class="form__section"
 					>
-						<ng-template
-							#triggerTemplate
-							let-toggle="toggle"
-						>
+						<div class="form__row">
+							<app-datepicker
+								horizontal="left"
+								class="form__btn form__col"
+								(datePicked)="datePicked($event)"
+								[date]="pointDate"
+								[dateOnly]="dateOnly"
+							></app-datepicker>
+							<app-drop
+								[dropList]="differenceModeArray"
+								(dropChanged)="differenceModeChanged($event)"
+								[value]="differenceMode"
+								class="form__col form__col--right"
+							></app-drop>
+							<app-input
+								placeholder="Прошло/осталось"
+								formControlName="difference"
+								autocomplete="off"
+								mask="0*"
+								inputmode="numeric"
+								[allowNegativeNumbers]="true"
+								[validation]="false"
+								[maxlength]="validatorDifferenceMaxLength"
+								[clearButton]="true"
+								clearButtonTitle="Сброс (итерация произошла сейчас)"
+								clearButtonValue="0"
+								(reset)="differenceChanged(0)"
+							></app-input>
+						</div>
+						<div class="form__row">
+							<app-drop
+								*ngIf="repeatableValueSaved && !isCreation"
+								class="drop--nested form__col"
+							>
+								<ng-template
+									#triggerTemplate
+									let-toggle="toggle"
+								>
+									<button
+										app-button
+										class="form__btn"
+										mode="secondary"
+										icon="chevron-down"
+										(click)="toggle()"
+									>Генерация итераций</button>
+								</ng-template>
+								<ng-template #bodyTemplate>
+									<app-generate-iterations
+										class="form-drop"
+										[loading]="loading"
+										[form]="formGroup"
+										(repeatsAreGenerated)="getRepeats($event)"
+										[point]="point"
+									></app-generate-iterations>
+								</ng-template>
+							</app-drop>
 							<button
 								app-button
-								class="form__btn"
-								mode="secondary"
-								icon="chevron-down"
-								(click)="toggle()"
-							>Генерация итераций</button>
-						</ng-template>
-						<ng-template #bodyTemplate>
-							<app-generate-iterations
-								class="form-drop"
-								[loading]="loading"
-								[form]="formGroup"
-								(repeatsAreGenerated)="getRepeats($event)"
-								[point]="point"
-							></app-generate-iterations>
-						</ng-template>
-					</app-drop>
-					<button
-						app-button
-						class="form__submit"
-						type="submit"
-						mode="ghost-positive"
-						icon="arrow-right"
-						iconPosition="right"
-						[attr.disabled]="(loading || (repeatableValueSaved && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"
-						[title]="repeatableValueSaved && !isCreation ? 'Сохранить параметры итерации' :
+								class="form__submit"
+								type="submit"
+								mode="ghost-positive"
+								icon="arrow-right"
+								iconPosition="right"
+								[attr.disabled]="(loading || (repeatableValueSaved && !isCreation ? !isDateFormValid : !isBaseFormValid || !isDateFormValid)) || null"
+								[title]="repeatableValueSaved && !isCreation ? 'Сохранить параметры итерации' :
 											'Сохранить событие'"
-					>{{
-						repeatableValueSaved && !isCreation ? 'Сохранить итерацию' :
-						'Сохранить событие'
-						}}</button>
+							>{{
+								repeatableValueSaved && !isCreation ? 'Сохранить итерацию' :
+								'Сохранить событие'
+								}}</button>
+						</div>
+					</div>
+
 				</div>
-			</div>
-
+			</form>
 		</div>
-	</form>
+	</div>
 </div>
-
-<ng-template #pointPlaceholder>
-	<app-clock
-		class="content__col content__clock content__clock--form"
-		innerClass="content__clock-inner"
-	></app-clock>
-</ng-template>
