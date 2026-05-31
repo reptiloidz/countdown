@@ -6,8 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { ButtonComponent } from 'src/app/components/button/button.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { GoogleAuthComponent } from 'src/app/components/google-auth/google-auth.component';
 
 describe('AuthComponent', () => {
 	let component: AuthComponent;
@@ -33,15 +33,21 @@ describe('AuthComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [AuthComponent],
-			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective, ButtonComponent, InputComponent],
+			imports: [
+				AuthComponent,
+				GoogleAuthComponent,
+				ReactiveFormsModule,
+				FormsModule,
+				NgxMaskDirective,
+				ButtonComponent,
+				InputComponent,
+			],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: NotifyService, useValue: notifyServiceMock },
 				{ provide: Router, useValue: routerMock },
 				[provideNgxMask()],
 			],
-			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(AuthComponent);

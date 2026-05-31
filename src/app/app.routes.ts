@@ -37,7 +37,7 @@ export const appRoutes: Routes = [
 	},
 	{
 		path: '',
-		loadChildren: () => import('./pages/personal/personal.module').then(m => m.PersonalModule),
+		loadChildren: () => import('./pages/personal/personal.routes').then(m => m.personalRoutes),
 		canActivate: [leaveUrlGuard],
 	},
 	{

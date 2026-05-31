@@ -8,8 +8,8 @@ import { Auth, User } from '@angular/fire/auth';
 import { Point } from 'src/app/interfaces';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ProfileLoadingStore } from 'src/app/state/profile-loading.store';
+import { ButtonComponent } from 'src/app/components/button/button.component';
 
 const mockAuth = {
 	currentUser: {
@@ -53,7 +53,15 @@ describe('ProfileComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [ProfileComponent],
+			imports: [
+				ProfileComponent,
+				ReactiveFormsModule,
+				FormsModule,
+				NgxMaskDirective,
+				DatepickerComponent,
+				InputComponent,
+				ButtonComponent,
+			],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: DataService, useValue: dataServiceMock },
@@ -62,8 +70,6 @@ describe('ProfileComponent', () => {
 				[provideNgxMask()],
 				ProfileLoadingStore,
 			],
-			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective, DatepickerComponent, InputComponent],
-			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(ProfileComponent);

@@ -28,8 +28,7 @@ describe('GoogleAuthComponent', () => {
 		} as any;
 
 		await TestBed.configureTestingModule({
-			declarations: [GoogleAuthComponent],
-			imports: [CheckboxComponent],
+			imports: [GoogleAuthComponent, CheckboxComponent],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: NotifyService, useValue: notifyServiceMock },

@@ -7,8 +7,11 @@ import {
 	OnInit,
 	ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { User } from '@angular/fire/auth';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { DatepickerComponent } from 'src/app/components/datepicker/datepicker.component';
 import { ProfileLoadingStore } from 'src/app/state/profile-loading.store';
 import { format, parse, subYears } from 'date-fns';
 import {
@@ -55,6 +58,8 @@ const DEFAULT_PASSWORD_VALIDATION: ValidationObject = {
 
 @Component({
 	selector: 'app-profile',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, InputComponent, ButtonComponent, DatepickerComponent],
 	templateUrl: './profile.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
