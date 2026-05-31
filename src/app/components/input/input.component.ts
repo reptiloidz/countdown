@@ -79,7 +79,26 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 	keydown = output<KeyboardEvent>();
 	reset = output<string | number>();
 
-	@Input() value: string | number = '';
+	private _value = '';
+
+	@Input()
+	get value(): string | number {
+		return this._value;
+	}
+
+	set value(v: string | number) {
+		const next = v == null ? '' : String(v);
+		if (this._value === next) {
+			return;
+		}
+		this._value = next;
+		this.cdr.markForCheck();
+		this.scheduleMaskWrite();
+		if (this.inputRef) {
+			void this.syncNativeDisplay();
+		}
+	}
+
 	@Output() valueChange = new EventEmitter<string | number>();
 
 	isDisabled = input(false);
@@ -108,15 +127,23 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 		return this.value == null ? '' : String(this.value);
 	}
 
+	/** `0*` + программная запись ломает отображение в ngx-mask v19 */
+	get maskForTemplate(): string | null {
+		return this.mask === '0*' ? null : this.mask;
+	}
+
 	ngOnChanges(changes: SimpleChanges): void {
 		if (changes['value'] || changes['mask']) {
 			this.scheduleMaskWrite();
+			if (changes['value']) {
+				this.cdr.markForCheck();
+			}
 		}
 	}
 
 	ngAfterViewInit(): void {
 		this.scheduleMaskWrite();
-		this.syncNativeInputValue();
+		this.syncNativeDisplay();
 
 		if (this.autofocus() && this.inputRef?.nativeElement && this.deviceService.isDesktop()) {
 			this.inputRef.nativeElement.focus();
@@ -132,9 +159,6 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 		} else if (value === null) {
 			this.value = '';
 		}
-		this.cdr.markForCheck();
-		this.scheduleMaskWrite();
-		this.syncNativeInputValue();
 	}
 
 	registerOnChange(fn: (value: string | number) => void): void {
@@ -150,25 +174,37 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 		this.cdr.markForCheck();
 	}
 
+	onNgModelChange(next: string | number): void {
+		if (this.syncingMask) {
+			return;
+		}
+		this.setValueFromView(next);
+	}
+
 	onInput(event: Event): void {
 		if (this.syncingMask) {
 			return;
 		}
+		this.setValueFromView((event.target as HTMLInputElement).value ?? '');
+	}
 
-		const next = (event.target as HTMLInputElement).value ?? '';
-		this.value = next;
-		this.valueChange.emit(this.value);
+	private setValueFromView(next: string | number): void {
+		const normalized = next == null ? '' : String(next);
+		if (this._value === normalized) {
+			return;
+		}
+		this.value = normalized;
+		this.valueChange.emit(this._value);
 		// Всегда пробрасываем в host ngModel — иначе autocomplete filter не вызывается
-		this.onChange(this.value);
+		this.onChange(this._value);
 		this.onTouched();
-		this.cdr.markForCheck();
 	}
 
 	resetValue() {
 		this.writeValue(this.clearButtonValue());
 		this.onChange(this.clearButtonValue());
 		this.inputRef?.nativeElement.focus();
-		this.reset.emit(this.value);
+		this.reset.emit(this._value);
 	}
 
 	showPassword() {
@@ -192,31 +228,55 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit, OnCh
 	}
 
 	private scheduleMaskWrite(): void {
-		if (!this.valueStr || !this.mask || this.allowNegativeNumbers) {
+		if (!this.valueStr || !this.mask || this.allowNegativeNumbers || this.mask === '0*') {
 			return;
 		}
-		setTimeout(() => void this.applyMaskValue(), 0);
+		setTimeout(() => void this.syncNativeDisplay(), 0);
 	}
 
-	/** Без ngx-mask (allowNegativeNumbers): синхронизируем DOM после CVA writeValue */
-	private syncNativeInputValue(): void {
-		if (!this.allowNegativeNumbers || !this.inputRef) {
+	/** Синхронизация отображения: ngx-mask или прямой value (без маски / allowNegativeNumbers) */
+	private syncNativeDisplay(): void {
+		if (!this.inputRef || !this.valueStr) {
+			if (this.mask && this.valueStr) {
+				this.scheduleMaskWrite();
+			}
 			return;
 		}
+
+		if (this.allowNegativeNumbers) {
+			const el = this.inputRef.nativeElement;
+			if (el.value !== this.valueStr) {
+				el.value = this.valueStr;
+			}
+			return;
+		}
+
 		const el = this.inputRef.nativeElement;
+
+		if (this.mask) {
+			if (this.mask === '0*') {
+				el.value = this.valueStr;
+			} else if (this.maskDirective) {
+				void this.applyMaskValue();
+			} else {
+				this.scheduleMaskWrite();
+			}
+			return;
+		}
 		if (el.value !== this.valueStr) {
 			el.value = this.valueStr;
 		}
 	}
 
 	private async applyMaskValue(): Promise<void> {
-		if (!this.valueStr || !this.mask || !this.maskDirective || this.allowNegativeNumbers) {
+		if (!this.valueStr || !this.mask || !this.inputRef || this.allowNegativeNumbers) {
 			return;
 		}
 
+		// ngx-mask writeValue из кода часто оставляет пустое поле; для отображения достаточно native value
 		this.syncingMask = true;
 		try {
-			await this.maskDirective.writeValue(this.valueStr);
+			this.inputRef.nativeElement.value = this.valueStr;
 		} finally {
 			this.syncingMask = false;
 			this.cdr.markForCheck();

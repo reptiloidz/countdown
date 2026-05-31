@@ -12,7 +12,6 @@ import {
 	ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { DropComponent } from '../drop/drop.component';
@@ -27,7 +26,7 @@ const defaultFilterFn = (item: SelectArray, filterValue: string) =>
 @Component({
 	selector: 'app-autocomplete',
 	standalone: true,
-	imports: [CommonModule, FormsModule, DropComponent, InputComponent],
+	imports: [CommonModule, DropComponent, InputComponent],
 	templateUrl: './autocomplete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -95,8 +94,12 @@ export class AutocompleteComponent implements OnDestroy {
 	}
 
 	private syncVisibleValueFromInputs(): void {
-		const fromValue = getKeyByValue(this.autocompleteList(), this.value())?.toString();
-		this.visibleValue.set(fromValue ?? this.visibleValueInput());
+		const fromKey = getKeyByValue(this.autocompleteList(), this.value())?.toString();
+		const fromParent = this.visibleValueInput();
+		const next = fromKey ?? (fromParent !== '' && fromParent != null ? String(fromParent) : this.visibleValue());
+		if (this.visibleValue() !== next) {
+			this.visibleValue.set(next);
+		}
 	}
 
 	changeHandler(value: string | number) {

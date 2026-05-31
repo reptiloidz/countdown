@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNgxMask } from 'ngx-mask';
 import { InputComponent } from './input.component';
@@ -35,6 +35,20 @@ describe('InputComponent', () => {
 
 		expect(component.value).toBe('cva value');
 	});
+
+	it('should display masked numeric value when value is set after render', fakeAsync(() => {
+		const maskFixture = TestBed.createComponent(InputComponent);
+		const maskComponent = maskFixture.componentInstance;
+		maskComponent.mask = '0*';
+		maskFixture.detectChanges();
+		maskComponent.value = '2026';
+		maskFixture.detectChanges();
+		tick();
+
+		const input = maskFixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+		expect(maskComponent.value).toBe('2026');
+		expect(input.value).toBe('2026');
+	}));
 
 	it('should display negative number with mask 0* and allowNegativeNumbers', () => {
 		component.mask = '0*';

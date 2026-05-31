@@ -1,6 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideNgxMask } from 'ngx-mask';
 import { AutocompleteComponent } from './autocomplete.component';
+import { InputComponent } from '../input/input.component';
 import { ActionService } from 'src/app/services';
 import { of } from 'rxjs';
 import { SelectArray } from 'src/app/interfaces';
@@ -107,4 +109,24 @@ describe('AutocompleteComponent', () => {
 
 		expect(component.visibleValue()).toBe('2');
 	});
+
+	it('should pass visibleValue to nested input for masked year-like field', fakeAsync(() => {
+		const years: SelectArray[] = [{ key: 2026, value: '2026', disabled: false }];
+		const yearFixture = TestBed.createComponent(AutocompleteComponent);
+		yearFixture.componentRef.setInput('autocompleteList', years);
+		yearFixture.componentRef.setInput('value', '2026');
+		yearFixture.componentRef.setInput('visibleValue', '2026');
+		yearFixture.componentRef.setInput('mask', '0*');
+		yearFixture.detectChanges();
+		TestBed.flushEffects();
+		yearFixture.detectChanges();
+		tick();
+
+		const yearComponent = yearFixture.componentInstance;
+		const inputComp = yearFixture.debugElement.query(By.css('app-input')).componentInstance as InputComponent;
+		const inputEl = yearFixture.nativeElement.querySelector('input.control__input') as HTMLInputElement | null;
+		expect(yearComponent.visibleValue()).toBe('2026');
+		expect(inputComp.value).toBe('2026');
+		expect(inputEl?.value).toBe('2026');
+	}));
 });
