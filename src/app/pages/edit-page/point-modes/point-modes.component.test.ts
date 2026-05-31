@@ -79,7 +79,7 @@ describe('PointModesComponent', () => {
 		jest.useFakeTimers();
 		const inputFixture = TestBed.createComponent(InputComponent);
 		component.filterRef = inputFixture.componentInstance;
-		component.filterRef.value.set('label1');
+		component.filterRef.value = 'label1';
 		component.emojis = [
 			{
 				title: 'group1',

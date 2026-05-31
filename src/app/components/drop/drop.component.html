@@ -26,14 +26,14 @@
 			[icon]="icon()"
 			(click)="toggleHandler()"
 			[attr.disabled]="disabled() || null"
-		>{{ buttonLabel() || ((dropList()) ? keyOfValue || value() : null) }}</button>
+		>{{ buttonLabel() || (dropList()?.length ? keyOfValue || value() : null) }}</button>
 	</div>
 </ng-template>
 
 <div
 	*ngIf="open"
 	class="drop__body"
-	[ngClass]="[dropBodyClass(), (select() || dropList()) ? 'drop__body--list' : '']"
+	[ngClass]="[dropBodyClass(), isListDrop() ? 'drop__body--list' : '']"
 	aria-expanded="true"
 	aria-live="polite"
 >
@@ -64,7 +64,7 @@
 	></ng-container>
 </div>
 <ng-template #selectList>
-	<ng-container *ngFor="let item of dropList(); trackBy: trackBy">
+	<ng-container *ngFor="let item of dropList() ?? []; trackBy: trackBy">
 		<ng-template
 			[ngTemplateOutlet]="selectItem"
 			[ngTemplateOutletContext]="{ item: item }"

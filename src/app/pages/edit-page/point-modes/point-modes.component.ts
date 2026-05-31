@@ -145,7 +145,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	applyFilter(control: string, drop: DropComponent) {
 		this.emojisCurrent = [];
 		this.groupContainer?.clear();
-		this.filterEmojiValue = this.filterRef.value().toString().toLowerCase().trim();
+		this.filterEmojiValue = this.filterRef.value?.toString().toLowerCase().trim() ?? '';
 
 		requestAnimationFrame(() => {
 			this.emojis.forEach(group => {

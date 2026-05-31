@@ -3,6 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	computed,
 	ContentChild,
 	ElementRef,
 	HostBinding,
@@ -82,7 +83,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	buttonLabel = input<string | null>(null);
 	dropBodyClass = input<string | string[]>('');
 	select = input(false);
-	dropList = input<SelectArray[]>([]);
+	dropList = input<SelectArray[]>();
 	formControlName = input<string>();
 	name = input<string>();
 	readonly value = model<string | number>('');
@@ -98,6 +99,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	dropClosed = output();
 	dropOpened = output();
 
+	readonly isListDrop = computed(() => this.select() || (this.dropList()?.length ?? 0) > 0);
+
 	private triggerOffsetTop = 0;
 	private triggerOffsetLeft = 0;
 	private footerHeight = 0;
@@ -111,6 +114,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	private lastTopState = false;
 	private documentClickListener: (() => void) | null = null;
 	private subscriptions = new Subscription();
+	private pendingFrameId: number | null = null;
+	private destroyed = false;
 	private triggerElement!: HTMLElement;
 
 	constructor(
@@ -128,7 +133,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				.subscribe({
 					next: () => {
 						if (this.open) {
-							requestAnimationFrame(() => {
+							this.scheduleFrame(() => {
 								this.setHeightParams();
 								this.setDropMaxH(this.lastTopState);
 							});
@@ -139,12 +144,32 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	ngOnDestroy(): void {
+		this.destroyed = true;
+		this.cancelPendingFrame();
 		this.removeDocumentClickListener();
 		this.subscriptions.unsubscribe();
 	}
 
+	private cancelPendingFrame() {
+		if (this.pendingFrameId !== null) {
+			cancelAnimationFrame(this.pendingFrameId);
+			this.pendingFrameId = null;
+		}
+	}
+
+	private scheduleFrame(callback: () => void) {
+		this.cancelPendingFrame();
+		this.pendingFrameId = requestAnimationFrame(() => {
+			this.pendingFrameId = null;
+			if (this.destroyed) {
+				return;
+			}
+			callback();
+		});
+	}
+
 	get keyOfValue() {
-		return getKeyByValue(this.dropList(), this.value());
+		return getKeyByValue(this.dropList() ?? [], this.value());
 	}
 
 	trackBy(index: number, item: SelectArray): string | number {
@@ -173,7 +198,11 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.setHeightParams();
 		this.triggerWidth = this.triggerElement && parseInt(getComputedStyle(this.triggerElement).width);
 
-		requestAnimationFrame(() => {
+		this.scheduleFrame(() => {
+			if (!this.open) {
+				return;
+			}
+
 			this.dropHeight = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().height;
 			this.dropWidth = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().width;
 
@@ -212,18 +241,22 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	closeHandler() {
+		if (!this.open) {
+			return;
+		}
+
 		this.open = false;
 		this.removeDocumentClickListener();
 		this.cdr.markForCheck();
+		this.dropClosed.emit();
 
-		requestAnimationFrame(() => {
+		this.scheduleFrame(() => {
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--top');
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--bottom');
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--left');
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--right');
 
 			this.renderer.setStyle(this.elementRef.nativeElement, '--drop-max-h', null, RendererStyleFlags2.DashCase);
-			this.dropClosed.emit();
 		});
 	}
 

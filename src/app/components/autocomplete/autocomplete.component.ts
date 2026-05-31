@@ -1,11 +1,14 @@
 import {
 	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
 	EventEmitter,
 	Input,
+	OnChanges,
 	OnDestroy,
 	OnInit,
 	Output,
+	SimpleChanges,
 	ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -25,7 +28,7 @@ import { NgxMaskConfig } from 'ngx-mask';
 	templateUrl: './autocomplete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AutocompleteComponent implements OnInit, OnDestroy {
+export class AutocompleteComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() value: string | number = '';
 	@Input() visibleValue: string = '';
 	@Input() placeholder = '';
@@ -49,12 +52,14 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 	@Output() autocompleteChanged = new EventEmitter<string | number>();
 
 	@ViewChild(DropComponent, { static: true }) drop!: DropComponent;
-	@ViewChild(InputComponent) input!: InputComponent;
 
-	constructor(private action: ActionService) {}
+	constructor(
+		private action: ActionService,
+		private cdr: ChangeDetectorRef,
+	) {}
 
 	ngOnInit(): void {
-		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() ?? '';
+		this.syncVisibleValue();
 		this.autocompleteListFiltered = this.autocompleteList;
 
 		this.subscriptions.add(
@@ -67,8 +72,18 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['value'] || changes['visibleValue'] || changes['autocompleteList']) {
+			this.syncVisibleValue();
+		}
+	}
+
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	private syncVisibleValue(): void {
+		this.visibleValue = getKeyByValue(this.autocompleteList, this.value)?.toString() ?? this.visibleValue;
 	}
 
 	changeHandler(value: string | number) {
@@ -77,20 +92,27 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 		this.value = value;
 	}
 
-	filter(filterValue?: string) {
-		const autocompleteListFilteredArray = filterValue
-			? this.autocompleteList.filter(item => this.filterFn(item, filterValue))
+	onVisibleValueChange(filterValue?: string | number | null) {
+		this.visibleValue = filterValue == null ? '' : String(filterValue);
+		this.filter(this.visibleValue);
+	}
+
+	filter(filterValue?: string | number) {
+		const filterString = filterValue?.toString();
+		const autocompleteListFilteredArray = filterString
+			? this.autocompleteList.filter(item => this.filterFn(item, filterString))
 			: this.autocompleteList;
 
 		this.firstFilteredValue = autocompleteListFilteredArray[0];
 		this.autocompleteListFiltered = autocompleteListFilteredArray.length
 			? autocompleteListFilteredArray
 			: this.autocompleteList;
+		this.cdr.markForCheck();
 	}
 
 	selectFirstOption() {
 		this.drop.closeHandler();
-		this.input.blurInput();
+		(document.activeElement as HTMLElement | null)?.blur();
 		this.changeHandler(this.firstFilteredValue ? this.firstFilteredValue.value : this.value);
 		this.autocompleteListFiltered = this.autocompleteList;
 	}

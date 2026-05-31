@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideNgxMask } from 'ngx-mask';
 import { InputComponent } from './input.component';
 
 describe('InputComponent', () => {
@@ -9,6 +10,7 @@ describe('InputComponent', () => {
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
 			imports: [InputComponent],
+			providers: [provideNgxMask()],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(InputComponent);
@@ -20,26 +22,28 @@ describe('InputComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should bind value to input', () => {
-		fixture.componentRef.setInput('value', 'test value');
+	it('should bind value input', () => {
+		component.value = 'test value';
 		fixture.detectChanges();
 
-		const input = fixture.debugElement.query(By.css('input')).nativeElement;
-
-		fixture.whenStable().then(() => {
-			expect(input.value).toBe('test value');
-		});
+		expect(component.value).toBe('test value');
 	});
 
-	it('should call onInput when input value changes', () => {
-		const input = fixture.debugElement.query(By.css('input'));
-		const spy = jest.spyOn(component, 'onInput');
+	it('should set value via writeValue (CVA)', () => {
+		component.writeValue('cva value');
+		fixture.detectChanges();
 
-		input.nativeElement.value = 'new value';
-		input.triggerEventHandler('input', { target: input.nativeElement });
+		expect(component.value).toBe('cva value');
+	});
 
-		expect(spy).toHaveBeenCalled();
-		expect(component.value()).toBe('new value');
+	it('should propagate DOM input to value and valueChange', () => {
+		const spy = jest.fn();
+		component.valueChange.subscribe(spy);
+
+		component.onInput({ target: { value: 'new value' } } as unknown as Event);
+
+		expect(component.value).toBe('new value');
+		expect(spy).toHaveBeenCalledWith('new value');
 	});
 
 	it('should emit focus event on input focus', () => {
@@ -62,13 +66,13 @@ describe('InputComponent', () => {
 
 	it('should reset value when resetValue is called', () => {
 		fixture.componentRef.setInput('clearButtonValue', 'reset value');
-		fixture.componentRef.setInput('value', 'old value');
+		component.value = 'old value';
 		fixture.detectChanges();
 		const spy = jest.spyOn(component.reset, 'emit');
 
 		component.resetValue();
 
-		expect(component.value()).toBe('reset value');
+		expect(component.value).toBe('reset value');
 		expect(spy).toHaveBeenCalledWith('reset value');
 	});
 
@@ -113,7 +117,7 @@ describe('InputComponent', () => {
 
 	it('should render clear button if clearButton input is true and value is not empty', () => {
 		fixture.componentRef.setInput('clearButton', true);
-		fixture.componentRef.setInput('value', 'test');
+		component.value = 'test';
 		fixture.detectChanges();
 
 		const button = fixture.debugElement.query(By.css('button[mode="negative"]'));

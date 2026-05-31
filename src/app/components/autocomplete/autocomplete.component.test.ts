@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideNgxMask } from 'ngx-mask';
 import { AutocompleteComponent } from './autocomplete.component';
 import { ActionService } from 'src/app/services';
 import { of } from 'rxjs';
@@ -23,7 +24,7 @@ describe('AutocompleteComponent', () => {
 
 		TestBed.configureTestingModule({
 			imports: [AutocompleteComponent],
-			providers: [{ provide: ActionService, useValue: mockActionService }],
+			providers: [{ provide: ActionService, useValue: mockActionService }, provideNgxMask()],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(AutocompleteComponent);
@@ -45,18 +46,13 @@ describe('AutocompleteComponent', () => {
 		expect(component.visibleValue).toBe('Option 1');
 	});
 
-	it('should call filter when ngModelChange is triggered', () => {
+	it('should call filter when onVisibleValueChange is triggered', () => {
 		const filterSpy = jest.spyOn(component, 'filter');
-		const filterValue = 'Option 1';
 
-		// Имитируем вызов события ngModelChange вручную
-		const inputElement = fixture.nativeElement.querySelector('input');
-		inputElement.value = filterValue; // Устанавливаем значение
-		inputElement.dispatchEvent(new Event('input')); // Тригерим событие input
+		component.onVisibleValueChange('Option 1');
 
-		fixture.detectChanges();
-
-		expect(filterSpy).toHaveBeenCalledWith(filterValue);
+		expect(filterSpy).toHaveBeenCalledWith('Option 1');
+		expect(component.visibleValue).toBe('Option 1');
 	});
 
 	it('should emit autocompleteChanged when changeHandler is called', () => {

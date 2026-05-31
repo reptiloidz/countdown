@@ -5,13 +5,18 @@ import {
 	Component,
 	computed,
 	ElementRef,
+	EventEmitter,
 	forwardRef,
 	HostBinding,
 	input,
+	Input,
 	model,
+	OnChanges,
 	output,
+	Output,
 	signal,
-	viewChild,
+	SimpleChanges,
+	ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -36,7 +41,7 @@ import { SvgComponent } from '../svg/svg.component';
 		provideNgxMask(),
 	],
 })
-export class InputComponent implements ControlValueAccessor, AfterViewInit {
+export class InputComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
 	@HostBinding('class') get controlClass() {
 		return ['control', this.invalid() ? 'control--error' : null].join(' ');
 	}
@@ -51,12 +56,15 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	icon = input<string>();
 	textarea = input(false);
 	autofocus = input(false);
-	mask = input<string | null>(null);
-	patterns = input<NgxMaskConfig['patterns']>();
-	suffix = input('');
-	prefix = input('');
-	allowNegativeNumbers = input<boolean>();
-	validation = input(false);
+
+	/** @Input, не signal: ngx-mask v19 вешается на `input[mask]` только когда атрибут уже есть */
+	@Input() mask: string | null = null;
+	@Input() patterns: NgxMaskConfig['patterns'] = {};
+	@Input() suffix = '';
+	@Input() prefix = '';
+	@Input() allowNegativeNumbers: boolean | null = null;
+	@Input() validation = false;
+
 	maxlength = input<number>();
 	min = input<number>();
 	max = input<number>();
@@ -71,12 +79,17 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	keydown = output<KeyboardEvent>();
 	reset = output<string | number>();
 
-	readonly value = model<string | number>('');
+	@Input() value: string | number = '';
+	@Output() valueChange = new EventEmitter<string | number>();
+
 	isDisabled = input(false);
 	private disabledFromCva = signal<boolean | null>(null);
 	readonly isDisabledState = computed(() => this.disabledFromCva() ?? this.isDisabled());
 
-	inputRef = viewChild<ElementRef>('inputRef');
+	@ViewChild('inputRef') inputRef?: ElementRef<HTMLInputElement>;
+	@ViewChild(NgxMaskDirective) maskDirective?: NgxMaskDirective;
+
+	private syncingMask = false;
 
 	constructor(
 		private cdr: ChangeDetectorRef,
@@ -91,21 +104,35 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 		return this.type() === 'text' ? 'lock-off' : 'lock';
 	}
 
+	get valueStr(): string {
+		return this.value == null ? '' : String(this.value);
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['value'] || changes['mask']) {
+			this.scheduleMaskWrite();
+		}
+	}
+
 	ngAfterViewInit(): void {
-		const inputEl = this.inputRef()?.nativeElement;
-		if (this.autofocus() && inputEl && this.deviceService.isDesktop()) {
-			inputEl.focus();
+		this.scheduleMaskWrite();
+
+		if (this.autofocus() && this.inputRef?.nativeElement && this.deviceService.isDesktop()) {
+			this.inputRef.nativeElement.focus();
 		}
 	}
 
 	onChange: (value: string | number) => void = () => {};
 	onTouched: () => void = () => {};
 
-	writeValue(value: string | number): void {
+	writeValue(value: string | number | null): void {
 		if (typeof value === 'string' || typeof value === 'number') {
-			this.value.set(value.toString());
+			this.value = value.toString();
+		} else if (value === null) {
+			this.value = '';
 		}
 		this.cdr.markForCheck();
+		this.scheduleMaskWrite();
 	}
 
 	registerOnChange(fn: (value: string | number) => void): void {
@@ -122,8 +149,15 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	}
 
 	onInput(event: Event): void {
-		this.value.set((event.target as HTMLInputElement).value || '');
-		this.onChange(this.value());
+		if (this.syncingMask) {
+			return;
+		}
+
+		const next = (event.target as HTMLInputElement).value ?? '';
+		this.value = next;
+		this.valueChange.emit(this.value);
+		// Всегда пробрасываем в host ngModel — иначе autocomplete filter не вызывается
+		this.onChange(this.value);
 		this.onTouched();
 		this.cdr.markForCheck();
 	}
@@ -131,8 +165,8 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	resetValue() {
 		this.writeValue(this.clearButtonValue());
 		this.onChange(this.clearButtonValue());
-		this.inputRef()?.nativeElement.focus();
-		this.reset.emit(this.value());
+		this.inputRef?.nativeElement.focus();
+		this.reset.emit(this.value);
 	}
 
 	showPassword() {
@@ -148,10 +182,31 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit {
 	}
 
 	blurInput() {
-		this.inputRef()?.nativeElement.blur();
+		this.inputRef?.nativeElement.blur();
 	}
 
 	keydownHandler(event: KeyboardEvent) {
 		this.keydown.emit(event);
+	}
+
+	private scheduleMaskWrite(): void {
+		if (!this.valueStr || !this.mask) {
+			return;
+		}
+		setTimeout(() => void this.applyMaskValue(), 0);
+	}
+
+	private async applyMaskValue(): Promise<void> {
+		if (!this.valueStr || !this.mask || !this.maskDirective) {
+			return;
+		}
+
+		this.syncingMask = true;
+		try {
+			await this.maskDirective.writeValue(this.valueStr);
+		} finally {
+			this.syncingMask = false;
+			this.cdr.markForCheck();
+		}
 	}
 }

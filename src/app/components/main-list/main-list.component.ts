@@ -357,7 +357,7 @@ export class MainListComponent implements OnInit, OnDestroy {
 	}
 
 	changeFilters() {
-		this.searchInputValue = this.searchInput?.value().toString();
+		this.searchInputValue = this.searchInput?.value?.toString() ?? '';
 		this.colorType = this.colorList
 			? Array.from(this.colorList.nativeElement.children)
 					.filter((item: any) => item?.querySelector('input')?.checked)
