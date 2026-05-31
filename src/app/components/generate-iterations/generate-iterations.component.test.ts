@@ -22,8 +22,8 @@ describe('GenerateIterationsComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [GenerateIterationsComponent],
 			imports: [
+				GenerateIterationsComponent,
 				FormsModule,
 				ReactiveFormsModule,
 				NgxMaskDirective,

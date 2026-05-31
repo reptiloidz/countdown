@@ -8,7 +8,15 @@ import {
 	Output,
 	ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NgxMaskDirective } from 'ngx-mask';
+import { ButtonComponent } from '../button/button.component';
+import { DatepickerComponent } from '../datepicker/datepicker.component';
+import { DropComponent } from '../drop/drop.component';
+import { InputComponent } from '../input/input.component';
+import { RadioComponent } from '../radio/radio.component';
+import { SwitcherComponent } from '../switcher/switcher.component';
 import {
 	Day,
 	addDays,
@@ -39,11 +47,22 @@ import { ru } from 'date-fns/locale';
 import { Constants } from 'src/app/enums';
 import { getPointDate, parseDate } from 'src/app/helpers';
 import { Iteration, Point, RadioItem, SelectArray, SwitcherItem } from 'src/app/interfaces';
-import { DatepickerComponent } from '../datepicker/datepicker.component';
 import { millisecondsInDay, millisecondsInHour, millisecondsInMinute } from 'date-fns/constants';
 
 @Component({
 	selector: 'app-generate-iterations',
+	standalone: true,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		NgxMaskDirective,
+		ButtonComponent,
+		DatepickerComponent,
+		DropComponent,
+		InputComponent,
+		RadioComponent,
+		SwitcherComponent,
+	],
 	templateUrl: './generate-iterations.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

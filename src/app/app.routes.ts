@@ -22,17 +22,17 @@ export const appRoutes: Routes = [
 	},
 	{
 		path: 'edit/:id',
-		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
+		loadChildren: () => import('./pages/edit-page/edit-page.routes').then(m => m.editPageRoutes),
 		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'create',
-		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
+		loadChildren: () => import('./pages/edit-page/edit-page.routes').then(m => m.editPageRoutes),
 		canActivate: [leaveUrlGuard],
 	},
 	{
 		path: 'create-url',
-		loadChildren: () => import('./pages/edit-page/edit-page.module').then(m => m.EditPageModule),
+		loadChildren: () => import('./pages/edit-page/edit-page.routes').then(m => m.editPageRoutes),
 		canActivate: [leaveUrlGuard],
 	},
 	{

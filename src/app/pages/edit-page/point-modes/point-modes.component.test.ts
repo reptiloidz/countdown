@@ -17,8 +17,7 @@ describe('PointModesComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [PointModesComponent],
-			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective, DropComponent, InputComponent],
+			imports: [PointModesComponent, FormsModule, ReactiveFormsModule, NgxMaskDirective],
 			providers: [ChangeDetectorRef, [provideNgxMask()]],
 			schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 		}).compileComponents();

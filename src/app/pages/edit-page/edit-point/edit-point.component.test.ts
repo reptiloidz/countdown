@@ -1,13 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPointComponent } from './edit-point.component';
 import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
-import { DropComponent } from '../../../components/drop/drop.component';
-import { DatePanelComponent } from '../../point-page/date-panel/date-panel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Point } from 'src/app/interfaces';
 
 const mockPoint: Point = {
@@ -42,24 +39,30 @@ describe('EditPointComponent', () => {
 			unobserve: jest.fn(),
 			disconnect: jest.fn(),
 		}));
+		(global as any).IntersectionObserver = jest.fn(() => ({
+			observe: jest.fn(),
+			unobserve: jest.fn(),
+			disconnect: jest.fn(),
+		}));
 	});
 
 	beforeEach(async () => {
 		dataServiceMock = {
 			putPoint: jest.fn(),
+			loading: false,
 			eventAddPoint$: new Subject(),
 			eventEditPoint$: new Subject(),
+			eventStartRemovePoint$: new Subject(),
+			eventRemovePoint$: new Subject(),
 			fetchPoint: jest.fn(() => of(mockPoint)),
 		} as unknown as jest.Mocked<DataService>;
 
 		authServiceMock = {
-			getUserData: jest.fn(() => of({ birthDate: '25.12.1991 00:00' })), // Мок метода getUserData
+			getUserData: jest.fn(() => of({ birthDate: '25.12.1991 00:00' })),
 			uid: '123',
-			eventEditAccessCheck$: jest.fn(() =>
-				of({
-					access: true,
-				}),
-			),
+			isAuthenticated: true,
+			checkAccessEdit: jest.fn().mockReturnValue(true),
+			eventEditAccessCheck$: of({ access: true }),
 		} as unknown as jest.Mocked<AuthService>;
 
 		actionServiceMock = {
@@ -69,6 +72,8 @@ describe('EditPointComponent', () => {
 			eventIterationSwitched$: new Subject(),
 			eventIterationsChecked$: new Subject(),
 			eventPointsCheckedAll$: new Subject(),
+			tryActivateOnboarding: jest.fn().mockReturnValue(false),
+			eventOnboardingClosed$: new Subject(),
 		} as unknown as jest.Mocked<ActionService>;
 
 		notifyServiceMock = {
@@ -77,9 +82,9 @@ describe('EditPointComponent', () => {
 		} as unknown as jest.Mocked<NotifyService>;
 
 		await TestBed.configureTestingModule({
-			declarations: [EditPointComponent],
-			imports: [BrowserAnimationsModule, ReactiveFormsModule, DropComponent, DatePanelComponent],
+			imports: [BrowserAnimationsModule, EditPointComponent],
 			providers: [
+				provideRouter([]),
 				{
 					provide: DataService,
 					useValue: dataServiceMock,
@@ -90,7 +95,6 @@ describe('EditPointComponent', () => {
 				},
 				{ provide: ActionService, useValue: actionServiceMock },
 				{ provide: NotifyService, useValue: notifyServiceMock },
-				{ provide: Router, useValue: { navigate: jest.fn() } },
 				{
 					provide: ActivatedRoute,
 					useValue: {
@@ -149,14 +153,14 @@ describe('EditPointComponent', () => {
 		});
 	});
 
-	it('should initialize form with default values', () => {
+	it('should initialize form with values from fetched point', () => {
 		const form = component.form;
 		expect(form).toBeDefined();
-		expect(form.controls['title'].value).toBeNull();
-		expect(form.controls['description'].value).toBeNull();
+		expect(form.controls['title'].value).toBe('Test Point');
+		expect(form.controls['description'].value).toBe('Test Description');
 		expect(form.controls['difference'].value).toBe(component.difference);
 		expect(form.controls['direction'].value).toBe('backward');
-		expect(form.controls['color'].value).toBe('gray');
+		expect(form.controls['color'].value).toBe('blue');
 	});
 
 	it('should fetch point data on init', () => {

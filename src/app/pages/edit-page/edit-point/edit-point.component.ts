@@ -9,8 +9,14 @@ import {
 	HostBinding,
 	AfterViewInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MainItemComponent } from 'src/app/components/main-item/main-item.component';
+import { GenerateIterationsComponent } from 'src/app/components/generate-iterations/generate-iterations.component';
+import { SharedModule } from 'src/app/shared.module';
+import { ClockModule } from 'src/app/components/clock/clock.module';
+import { PointModesComponent } from '../point-modes/point-modes.component';
 import {
 	Subscription,
 	interval,
@@ -63,6 +69,18 @@ enum EditPointSuccessMessage {
 
 @Component({
 	selector: 'app-edit-point',
+	standalone: true,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		RouterModule,
+		SharedModule,
+		DatePanelComponent,
+		MainItemComponent,
+		PointModesComponent,
+		GenerateIterationsComponent,
+		ClockModule,
+	],
 	templateUrl: './edit-point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,
 })

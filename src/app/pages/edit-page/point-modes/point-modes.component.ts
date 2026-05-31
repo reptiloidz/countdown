@@ -11,14 +11,19 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GroupEmoji, LocalEmoji, Point, PointMode } from 'src/app/interfaces';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { DropComponent } from '../../../components/drop/drop.component';
 import { InputComponent } from '../../../components/input/input.component';
 import { debounceTime, interval, Subject, Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-point-modes',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, ButtonComponent, LoaderComponent, DropComponent, InputComponent],
 	templateUrl: './point-modes.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
