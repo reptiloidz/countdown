@@ -11,6 +11,7 @@ import {
 	ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, distinctUntilChanged, tap } from 'rxjs';
 import { PointColors, SortTypeNames } from 'src/app/enums';
@@ -35,6 +36,7 @@ import { CheckEditablePointsPipe } from 'src/app/pipes/check-editable-points.pip
 	standalone: true,
 	imports: [
 		CommonModule,
+		FormsModule,
 		SharedModule,
 		ClockModule,
 		MainItemComponent,
