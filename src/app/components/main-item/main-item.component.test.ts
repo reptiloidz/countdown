@@ -8,6 +8,7 @@ import { LetDirective } from 'src/app/directives/let.directive';
 import { TimersComponent } from '../../timers/timers.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const mockAnimations = () => {
 	Element.prototype.animate = jest.fn().mockImplementation(() => ({
@@ -34,8 +35,12 @@ const mockAuthService = {
 };
 
 const mockActionService = {
-	eventPointsCheckedAll$: new Subject(),
+	eventPointsCheckedAll$: new Subject<boolean>(),
 	eventIntervalSwitched$: new Subject(),
+	eventOnboardingClosed$: new Subject<void>(),
+	tryActivateOnboarding: jest.fn(() => true),
+	deactivateOnboarding: jest.fn(),
+	onboardingClosed: jest.fn(),
 };
 
 const mockNotifyService = {
@@ -45,6 +50,7 @@ const mockNotifyService = {
 describe('MainItemComponent', () => {
 	let component: MainItemComponent;
 	let fixture: ComponentFixture<MainItemComponent>;
+	let mockPoint: Parameters<typeof fixture.componentRef.setInput>[1];
 
 	beforeAll(() => {
 		mockAnimations();
@@ -53,12 +59,21 @@ describe('MainItemComponent', () => {
 			unobserve: jest.fn(),
 			disconnect: jest.fn(),
 		}));
+		(window as any).IntersectionObserver = jest.fn(() => ({
+			observe: jest.fn(),
+			unobserve: jest.fn(),
+			disconnect: jest.fn(),
+		}));
 	});
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
-			declarations: [MainItemComponent, CheckboxComponent, CheckAccessEditPipe, LetDirective, TimersComponent],
+			imports: [
+				BrowserAnimationsModule.withConfig({ disableAnimations: true }),
+				RouterTestingModule,
+				MainItemComponent,
+				TimersComponent,
+			],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
 				{ provide: AuthService, useValue: mockAuthService },
@@ -71,7 +86,7 @@ describe('MainItemComponent', () => {
 
 		fixture = TestBed.createComponent(MainItemComponent);
 		component = fixture.componentInstance;
-		component.point = {
+		mockPoint = {
 			id: '1',
 			dates: [
 				{
@@ -88,6 +103,7 @@ describe('MainItemComponent', () => {
 			public: true,
 			user: 'userId',
 		};
+		fixture.componentRef.setInput('point', mockPoint);
 		fixture.detectChanges();
 	});
 
@@ -116,9 +132,10 @@ describe('MainItemComponent', () => {
 	});
 
 	it('should emit pointCheck on checkPoint', () => {
-		jest.spyOn(component.pointCheck, 'emit');
+		const emitted: unknown[] = [];
+		component.pointCheck.subscribe(value => emitted.push(value));
 		component.checkPoint();
-		expect(component.pointCheck.emit).toHaveBeenCalled();
+		expect(emitted.length).toBe(1);
 	});
 
 	it('should call getUserData on loadUserInfo', () => {
@@ -129,7 +146,7 @@ describe('MainItemComponent', () => {
 	it('should call setDateNow on setDateNow', () => {
 		component.setDateNow();
 		expect(mockNotifyService.confirm).toHaveBeenCalled();
-		expect(mockDataService.setDateNow).toHaveBeenCalledWith(component.point);
+		expect(mockDataService.setDateNow).toHaveBeenCalledWith(mockPoint);
 	});
 
 	it('should correctly calculate isDirectionCorrect', () => {
@@ -153,10 +170,19 @@ describe('MainItemComponent', () => {
 	});
 
 	it('should handle action events for checking all points', () => {
-		const checkboxComponent = { isDisabled: false, isChecked: false };
-		component['pointCheckbox'] = checkboxComponent as CheckboxComponent;
+		const checked = {
+			value: false,
+			set(value: boolean) {
+				this.value = value;
+			},
+		};
+		const checkboxComponent = {
+			isDisabledState: () => false,
+			checked,
+		};
+		component['pointCheckbox'] = checkboxComponent as unknown as CheckboxComponent;
 
 		mockActionService.eventPointsCheckedAll$.next(true);
-		expect(component['pointCheckbox'].isChecked).toBeTruthy();
+		expect(checked.value).toBeTruthy();
 	});
 });

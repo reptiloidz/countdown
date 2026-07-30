@@ -3,7 +3,6 @@ import { CalendarComponent } from './calendar.component';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '@angular/fire/auth';
 import { Iteration, Point } from 'src/app/interfaces';
-import { SwitcherComponent } from '../switcher/switcher.component';
 import { By } from '@angular/platform-browser';
 
 // Mock Data
@@ -52,17 +51,15 @@ describe('CalendarComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [CalendarComponent, SwitcherComponent],
-			imports: [FormsModule],
+			imports: [CalendarComponent, FormsModule],
 			providers: [{ provide: Auth, useValue: mockAuth }],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(CalendarComponent);
 		component = fixture.componentInstance;
 
-		// Set initial inputs
-		component.points = mockDataPoints;
-		component.iterations = mockIterations;
+		fixture.componentRef.setInput('points', mockDataPoints);
+		fixture.componentRef.setInput('iterations', mockIterations);
 
 		fixture.detectChanges();
 	});
@@ -73,9 +70,9 @@ describe('CalendarComponent', () => {
 
 	it('should initialize with the current date', () => {
 		const today = new Date();
-		expect(component.selectedDate.getDate()).toEqual(today.getDate());
-		expect(component.selectedDate.getMonth()).toEqual(today.getMonth());
-		expect(component.selectedDate.getFullYear()).toEqual(today.getFullYear());
+		expect(component.selectedDate().getDate()).toEqual(today.getDate());
+		expect(component.selectedDate().getMonth()).toEqual(today.getMonth());
+		expect(component.selectedDate().getFullYear()).toEqual(today.getFullYear());
 	});
 
 	it('should generate the correct days for the current month', () => {
@@ -112,7 +109,7 @@ describe('CalendarComponent', () => {
 			iterations: [],
 			points: [],
 		});
-		expect(component.selectedDate).toEqual(date);
+		expect(+component.selectedDate()).toEqual(+date);
 	});
 
 	it('should highlight dates with data points', () => {
@@ -175,8 +172,8 @@ describe('CalendarComponent', () => {
 	it('should visibleDate changed to selectedDate', () => {
 		component.visibleDate = new Date(2025, 2, 1);
 		component.switchCalendarToSelected();
-		expect(component.visibleDate.getDate()).toEqual(component.selectedDate.getDate());
-		expect(component.visibleDate.getMonth()).toEqual(component.selectedDate.getMonth());
-		expect(component.visibleDate.getFullYear()).toEqual(component.selectedDate.getFullYear());
+		expect(component.visibleDate.getDate()).toEqual(component.selectedDate().getDate());
+		expect(component.visibleDate.getMonth()).toEqual(component.selectedDate().getMonth());
+		expect(component.visibleDate.getFullYear()).toEqual(component.selectedDate().getFullYear());
 	});
 });

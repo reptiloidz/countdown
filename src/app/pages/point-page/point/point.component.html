@@ -187,6 +187,8 @@
 		<app-timers
 			*ngIf="!dateLoading && !loading; else dateLoader"
 			class="point-page__timers timers"
+			[delayValue]="0"
+			delayRandomValue="3000"
 			[years]="timerYears"
 			[months]="timerMonths"
 			[days]="timerDays"

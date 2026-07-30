@@ -1,7 +1,11 @@
 import { Component, ViewChild, OnInit, OnDestroy, HostBinding, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription, take } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { CheckboxComponent } from 'src/app/components/checkbox/checkbox.component';
+import { GoogleAuthComponent } from 'src/app/components/google-auth/google-auth.component';
 import { PrivacyComponent } from 'src/app/components/privacy/privacy.component';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
 import { ValidationObject, ValidationObjectField } from 'src/app/interfaces';
@@ -10,6 +14,8 @@ import { passwordRepeat } from 'src/app/validators';
 
 @Component({
 	selector: 'app-reg',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, InputComponent, ButtonComponent, CheckboxComponent, GoogleAuthComponent],
 	templateUrl: './reg.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

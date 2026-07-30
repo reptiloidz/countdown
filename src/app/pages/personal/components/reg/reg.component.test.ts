@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegComponent } from './reg.component';
-import { AuthService, NotifyService, PopupService } from 'src/app/services';
+import { AuthService, NotifyService, PopupService, ActionService } from 'src/app/services';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
 import { PrivacyComponent } from 'src/app/components/privacy/privacy.component';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ButtonComponent } from 'src/app/components/button/button.component';
 import { CheckboxComponent } from 'src/app/components/checkbox/checkbox.component';
+import { GoogleAuthComponent } from 'src/app/components/google-auth/google-auth.component';
 
 jest.mock('src/app/services/auth.service');
 jest.mock('src/app/services/notify.service');
@@ -23,15 +23,23 @@ describe('RegComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [RegComponent, InputComponent, ButtonComponent, CheckboxComponent],
-			imports: [ReactiveFormsModule, FormsModule, NgxMaskDirective],
+			imports: [
+				RegComponent,
+				GoogleAuthComponent,
+				ReactiveFormsModule,
+				FormsModule,
+				NgxMaskDirective,
+				ButtonComponent,
+				CheckboxComponent,
+				InputComponent,
+			],
 			providers: [
 				{ provide: AuthService, useValue: { register: jest.fn(), login: jest.fn() } },
 				{ provide: NotifyService, useValue: { add: jest.fn() } },
 				{ provide: PopupService, useValue: { show: jest.fn() } },
+				{ provide: ActionService, useValue: { eventPointsCheckedAll$: new Subject() } },
 				[provideNgxMask()],
 			],
-			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(RegComponent);

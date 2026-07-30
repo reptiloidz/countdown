@@ -9,8 +9,20 @@ import {
 	HostBinding,
 	AfterViewInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MainItemComponent } from 'src/app/components/main-item/main-item.component';
+import { GenerateIterationsComponent } from 'src/app/components/generate-iterations/generate-iterations.component';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { CheckboxComponent } from 'src/app/components/checkbox/checkbox.component';
+import { DatepickerComponent } from 'src/app/components/datepicker/datepicker.component';
+import { InputComponent } from 'src/app/components/input/input.component';
+import { SwitcherComponent } from 'src/app/components/switcher/switcher.component';
+import { SvgComponent } from 'src/app/components/svg/svg.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
+import { ClockComponent } from 'src/app/components/clock/clock.component';
+import { PointModesComponent } from '../point-modes/point-modes.component';
 import {
 	Subscription,
 	interval,
@@ -63,6 +75,25 @@ enum EditPointSuccessMessage {
 
 @Component({
 	selector: 'app-edit-point',
+	standalone: true,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		RouterModule,
+		ButtonComponent,
+		CheckboxComponent,
+		SwitcherComponent,
+		InputComponent,
+		DropComponent,
+		DatepickerComponent,
+		TooltipComponent,
+		SvgComponent,
+		DatePanelComponent,
+		MainItemComponent,
+		PointModesComponent,
+		GenerateIterationsComponent,
+		ClockComponent,
+	],
 	templateUrl: './edit-point.component.html',
 	changeDetection: ChangeDetectionStrategy.Default,
 })

@@ -2,11 +2,11 @@
 	<button
 		app-button
 		class="panel__button"
-		[ngClass]="buttonClass"
-		[attr.title]="buttonTitle"
+		[ngClass]="buttonClass()"
+		[attr.title]="buttonTitle()"
 		mode="ghost"
-		[size]="buttonSize"
-		[icon]="icon"
+		[size]="buttonSize()"
+		[icon]="icon()"
 		(click)="toggleHandler()"
 	></button>
 </ng-template>
@@ -14,11 +14,11 @@
 	<div
 		#panelContentRef
 		*ngIf="bodyTemplate"
-		[@panelContent]="open ? 'open' : 'closed'"
+		[@panelContent]="open() ? 'open' : 'closed'"
 		(@panelContent.done)="panelAnimatedHandler()"
 		class="panel__content"
 		[ngClass]="{
-			'panel__content--hidden': panelAnimated && !open
+			'panel__content--hidden': panelAnimated && !open()
 		}"
 	>
 		<ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>

@@ -7,9 +7,12 @@ import {
 	OnInit,
 	ViewChild,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { User } from '@angular/fire/auth';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { DatepickerComponent } from 'src/app/components/datepicker/datepicker.component';
+import { ProfileLoadingStore } from 'src/app/state/profile-loading.store';
 import { format, parse, subYears } from 'date-fns';
 import {
 	debounce,
@@ -28,24 +31,6 @@ import { Constants } from 'src/app/enums';
 import { generateUserpicName, getErrorMessages, mergeDeep, parseDate, randomHEXColor } from 'src/app/helpers';
 import { ValidationObject } from 'src/app/interfaces';
 import { AuthService, DataService, NotifyService } from 'src/app/services';
-import {
-	setEmailLoading,
-	setPasswordLoading,
-	setProfileLoading,
-	setRemoveLoading,
-	setUnlinkLoading,
-	setUserpicLoading,
-} from 'src/app/store/actions/loading.action';
-import { AppState } from 'src/app/store/reducers';
-import {
-	selectEmailLoading,
-	selectPasswordLoading,
-	selectProfileLoading,
-	selectRemoveLoading,
-	selectUnlinkLoading,
-	selectUserpicLoading,
-} from 'src/app/store/selectors/loading.selector';
-
 const DEFAULT_PASSWORD_VALIDATION: ValidationObject = {
 	password: {
 		required: {
@@ -73,6 +58,8 @@ const DEFAULT_PASSWORD_VALIDATION: ValidationObject = {
 
 @Component({
 	selector: 'app-profile',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, InputComponent, ButtonComponent, DatepickerComponent],
 	templateUrl: './profile.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -86,7 +73,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		private data: DataService,
 		private notify: NotifyService,
 		private cdr: ChangeDetectorRef,
-		private store: Store<AppState>,
+		readonly profileLoading: ProfileLoadingStore,
 	) {}
 
 	birthDateEventName = 'Я родился';
@@ -159,14 +146,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.auth.currentUser
 				.pipe(
 					tap(data => {
-						this.store.dispatch(setEmailLoading({ emailLoading: false }));
+						this.profileLoading.setEmailLoading(false);
 						this._user = data as User;
 					}),
 					switchMap(() => {
 						return this.auth.eventProfileUpdated$;
 					}),
 					tap(() => {
-						this.store.dispatch(setProfileLoading({ profileLoading: false }));
+						this.profileLoading.setProfileLoading(false);
 						this.formEmail.controls['email'].setValue(this._user?.email);
 						this.formData.controls['name'].setValue(this._user?.displayName);
 						this.name = this._user?.displayName as string;
@@ -187,13 +174,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 						this.cdr.markForCheck();
 					},
 					error: () => {
-						this.store.dispatch(setProfileLoading({ profileLoading: false }));
-						this.store.dispatch(setEmailLoading({ emailLoading: false }));
+						this.profileLoading.setProfileLoading(false);
+						this.profileLoading.setEmailLoading(false);
 						this.cdr.detectChanges();
 					},
 					complete: () => {
-						this.store.dispatch(setProfileLoading({ profileLoading: false }));
-						this.store.dispatch(setEmailLoading({ emailLoading: false }));
+						this.profileLoading.setProfileLoading(false);
+						this.profileLoading.setEmailLoading(false);
 						this.cdr.detectChanges();
 					},
 				}),
@@ -228,16 +215,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.auth.eventEmailUpdated$.pipe(distinctUntilChanged()).subscribe({
 				next: () => {
-					this.store.dispatch(setEmailLoading({ emailLoading: false }));
+					this.profileLoading.setEmailLoading(false);
 					this.auth.verifyEmail(this._user);
 					this.cdr.detectChanges();
 				},
 				error: () => {
-					this.store.dispatch(setEmailLoading({ emailLoading: false }));
+					this.profileLoading.setEmailLoading(false);
 					this.cdr.detectChanges();
 				},
 				complete: () => {
-					this.store.dispatch(setEmailLoading({ emailLoading: false }));
+					this.profileLoading.setEmailLoading(false);
 					this.cdr.detectChanges();
 				},
 			}),
@@ -246,7 +233,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.auth.eventPasswordUpdated$.subscribe({
 				next: passwordError => {
-					this.store.dispatch(setPasswordLoading({ passwordLoading: false }));
+					this.profileLoading.setPasswordLoading(false);
 					if (!passwordError) {
 						this.notify.add({
 							title: `Пароль пользователя ${this._user?.displayName} (${this._user?.email}) обновлён.`,
@@ -263,11 +250,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.cdr.detectChanges();
 				},
 				error: () => {
-					this.store.dispatch(setPasswordLoading({ passwordLoading: false }));
+					this.profileLoading.setPasswordLoading(false);
 					this.cdr.detectChanges();
 				},
 				complete: () => {
-					this.store.dispatch(setPasswordLoading({ passwordLoading: false }));
+					this.profileLoading.setPasswordLoading(false);
 					this.cdr.detectChanges();
 				},
 			}),
@@ -293,7 +280,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			this.formData.controls['name'].valueChanges
 				.pipe(
 					tap(() => {
-						this.store.dispatch(setUserpicLoading({ userpicLoading: !this.isGoogle }));
+						this.profileLoading.setUserpicLoading(!this.isGoogle);
 					}),
 					filter(() => !this.isGoogle),
 				)
@@ -315,15 +302,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 							}) as ValidationObject;
 							this.nameErrorMessages = getErrorMessages(this.nameValidated);
 						}
-						this.store.dispatch(setUserpicLoading({ userpicLoading: false }));
+						this.profileLoading.setUserpicLoading(false);
 						this.cdr.detectChanges();
 					},
 					error: () => {
-						this.store.dispatch(setUserpicLoading({ userpicLoading: false }));
+						this.profileLoading.setUserpicLoading(false);
 						this.cdr.detectChanges();
 					},
 					complete: () => {
-						this.store.dispatch(setUserpicLoading({ userpicLoading: false }));
+						this.profileLoading.setUserpicLoading(false);
 						this.cdr.detectChanges();
 					},
 				}),
@@ -471,36 +458,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
 		return this._birthDatePointId;
 	}
 
-	get userpicLoading$() {
-		return this.store.select(selectUserpicLoading);
-	}
-
-	get profileLoading$() {
-		return this.store.select(selectProfileLoading);
-	}
-
-	get emailLoading$() {
-		return this.store.select(selectEmailLoading);
-	}
-
-	get passwordLoading$() {
-		return this.store.select(selectPasswordLoading);
-	}
-
-	get removeLoading$() {
-		return this.store.select(selectRemoveLoading);
-	}
-
-	get unlinkLoading$() {
-		return this.store.select(selectUnlinkLoading);
-	}
-
 	birthDatePicked(date: Date) {
 		this.birthDatePickerValue = date;
 	}
 
 	updateNameAndPhoto() {
-		this.store.dispatch(setProfileLoading({ profileLoading: true }));
+		this.profileLoading.setProfileLoading(true);
 		this.auth.updateProfile(this._user, {
 			displayName: this.formData.controls['name'].value,
 			photoURL: this.userpic,
@@ -551,7 +514,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 	}
 
 	updatePassword() {
-		this.store.dispatch(setPasswordLoading({ passwordLoading: true }));
+		this.profileLoading.setPasswordLoading(true);
 		this.auth.updatePassword(
 			this._user,
 			this.formPassword.controls['password'].value,
@@ -566,16 +529,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			})
 			.subscribe({
 				next: () => {
-					this.store.dispatch(setRemoveLoading({ removeLoading: true }));
+					this.profileLoading.setRemoveLoading(true);
 					this.auth.removeAccount(this._user, this._birthDatePointId);
 					this.cdr.detectChanges();
 				},
 				error: () => {
-					this.store.dispatch(setRemoveLoading({ removeLoading: false }));
+					this.profileLoading.setRemoveLoading(false);
 					this.cdr.detectChanges();
 				},
 				complete: () => {
-					this.store.dispatch(setRemoveLoading({ removeLoading: false }));
+					this.profileLoading.setRemoveLoading(false);
 					this.cdr.detectChanges();
 				},
 			});
@@ -619,7 +582,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 			})
 			.subscribe({
 				next: () => {
-					this.store.dispatch(setUnlinkLoading({ unlinkLoading: true }));
+					this.profileLoading.setUnlinkLoading(true);
 					this.auth
 						.unlinkGoogle()
 						.then(() => {
@@ -642,11 +605,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 					this.cdr.detectChanges();
 				},
 				error: () => {
-					this.store.dispatch(setUnlinkLoading({ unlinkLoading: false }));
+					this.profileLoading.setUnlinkLoading(false);
 					this.cdr.detectChanges();
 				},
 				complete: () => {
-					this.store.dispatch(setUnlinkLoading({ unlinkLoading: false }));
+					this.profileLoading.setUnlinkLoading(false);
 					this.cdr.detectChanges();
 				},
 			});

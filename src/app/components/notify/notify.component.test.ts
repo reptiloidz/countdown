@@ -38,13 +38,7 @@ describe('NotifyComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [NotifyComponent, InputComponent],
-			imports: [
-				BrowserAnimationsModule.withConfig({ disableAnimations: true }),
-				ReactiveFormsModule,
-				FormsModule,
-				NgxMaskDirective,
-			],
+			imports: [NotifyComponent, BrowserAnimationsModule.withConfig({ disableAnimations: true })],
 			providers: [{ provide: NotifyService, useValue: notifyServiceMock }, provideAnimations(), [provideNgxMask()]],
 			schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 		}).compileComponents();

@@ -1,9 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatepickerComponent } from './datepicker.component';
-import { FormsModule } from '@angular/forms';
-import { DropComponent } from '../drop/drop.component';
-import { ButtonComponent } from '../button/button.component';
-import { SvgComponent } from '../svg/svg.component';
 
 describe('DatepickerComponent', () => {
 	let component: DatepickerComponent;
@@ -11,8 +7,7 @@ describe('DatepickerComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [DatepickerComponent, DropComponent, ButtonComponent, SvgComponent],
-			imports: [FormsModule], // Для поддержки ngModel и других директив
+			imports: [DatepickerComponent],
 		}).compileComponents();
 	});
 
@@ -24,6 +19,18 @@ describe('DatepickerComponent', () => {
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
+	});
+
+	it('should update formatted label when date input is set after init', () => {
+		fixture.componentRef.setInput('isNow', false);
+		fixture.componentRef.setInput('dateOnly', true);
+		fixture.detectChanges();
+		expect(component.dateFormatted).toBe('Выберите дату');
+
+		fixture.componentRef.setInput('date', new Date(1991, 11, 25));
+		fixture.detectChanges();
+
+		expect(component.dateFormatted).toBe('25.12.1991');
 	});
 
 	it('should display the correct date format when date is valid', () => {
@@ -41,7 +48,7 @@ describe('DatepickerComponent', () => {
 
 	it('should disable year if it is before the disabledBefore date', () => {
 		const date = new Date(2020, 0, 1);
-		component.disabledBefore = date;
+		fixture.componentRef.setInput('disabledBefore', date);
 		fixture.detectChanges();
 		const year = component.yearsArray.find(year => year.key === 2019);
 		expect(year?.disabled).toBe(true);

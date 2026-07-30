@@ -8,6 +8,7 @@ import { InputComponent } from '../input/input.component';
 import { DatePointsPopupComponent } from '../date-points-popup/date-points-popup.component';
 import { Point } from 'src/app/interfaces';
 import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { SortService } from 'src/app/services/sort.service';
 
 describe('MainListComponent', () => {
 	let component: MainListComponent;
@@ -27,11 +28,15 @@ describe('MainListComponent', () => {
 		};
 
 		const actionServiceMock = {
-			eventPointsCheckedAll$: new Subject(),
+			eventPointsCheckedAll$: new Subject<boolean>(),
 			pointsFetched: jest.fn(),
 			uncheckAllPoints: jest.fn(),
 			hasEditablePoints: jest.fn(),
 			getCheckedPoints: jest.fn(),
+		};
+
+		const sortServiceMock = {
+			sort: jest.fn().mockImplementation((points: Point[]) => Promise.resolve(points)),
 		};
 
 		const authServiceMock = {
@@ -53,10 +58,11 @@ describe('MainListComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [MainListComponent, InputComponent, DatePointsPopupComponent, FilterPipe],
+			imports: [MainListComponent, DatePointsPopupComponent, FilterPipe],
 			providers: [
 				{ provide: DataService, useValue: dataServiceMock },
 				{ provide: ActionService, useValue: actionServiceMock },
+				{ provide: SortService, useValue: sortServiceMock },
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: PopupService, useValue: popupServiceMock },
 				{ provide: Router, useValue: routerMock },
@@ -122,6 +128,9 @@ describe('MainListComponent', () => {
 		component.ngOnInit();
 		expect(component.points).toEqual(points);
 		expect(actionService.pointsFetched).toHaveBeenCalled();
+		return fixture.whenStable().then(() => {
+			expect(component.sortedPoints).toEqual(points);
+		});
 	});
 
 	it('should handle point removal event', () => {
@@ -190,13 +199,13 @@ describe('MainListComponent', () => {
 	});
 
 	it('should clear filters', () => {
-		component.searchInput = { value: '111' } as any;
+		component.searchInput = { writeValue: jest.fn(), value: () => '111' } as any;
 		component.clearFilters();
 		expect(component.repeatableValue).toBe('all');
 		expect(component.greenwichValue).toBe('all');
 		expect(component.publicValue).toBe('false');
 		expect(component.directionValue).toBe('all');
-		expect(component.searchInput?.value).toBeFalsy();
+		expect(component.searchInput?.writeValue).toHaveBeenCalledWith('');
 		expect(component.colorType).toEqual([]);
 	});
 
@@ -206,9 +215,10 @@ describe('MainListComponent', () => {
 		expect(localStorage.getItem('modesValue')).toBe('list');
 	});
 
-	it('should open date point popup', () => {
+	it('should open date point popup', async () => {
 		const date = { date: new Date(), points: [] };
 		component.openDatePointPopup(date);
+		await fixture.whenStable();
 		expect(popupService.show).toHaveBeenCalled();
 	});
 });

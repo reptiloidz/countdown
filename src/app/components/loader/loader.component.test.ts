@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoaderComponent } from './loader.component';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 describe('LoaderComponent', () => {
@@ -9,7 +8,7 @@ describe('LoaderComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [LoaderComponent, MockSvgComponent],
+			imports: [LoaderComponent],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(LoaderComponent);
@@ -28,23 +27,10 @@ describe('LoaderComponent', () => {
 
 	it('should pass the iconClass input to the svg element', () => {
 		const testClass = { 'custom-class': true };
-		component.iconClass = testClass;
-		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
-		cdr.detectChanges();
+		fixture.componentRef.setInput('iconClass', testClass);
 		fixture.detectChanges();
 
 		const svgElement = fixture.debugElement.query(By.css('svg'));
 		expect(svgElement.attributes['class']).toContain('custom-class');
 	});
 });
-
-@Component({
-	selector: 'app-svg',
-	template: '<svg></svg>',
-})
-class MockSvgComponent {
-	@Input() name!: string;
-	@Input() class!: string;
-	@Input() ariaHidden!: boolean;
-	@Input() ariaLabel!: string;
-}

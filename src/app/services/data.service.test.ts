@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { DataService } from './data.service';
+import { PointsStore } from '../state/points.store';
 import { ActionService, HttpService, NotifyService } from '.';
 import { Point } from '../interfaces';
 import { of, take } from 'rxjs';
@@ -40,6 +41,7 @@ const mockAuth = {
 
 describe('DataService', () => {
 	let service: DataService;
+	let pointsStore: PointsStore;
 	let httpMock: HttpTestingController;
 	let httpService: HttpService;
 	let notifyService: NotifyService;
@@ -58,6 +60,7 @@ describe('DataService', () => {
 		});
 
 		service = TestBed.inject(DataService);
+		pointsStore = TestBed.inject(PointsStore);
 		httpMock = TestBed.inject(HttpTestingController);
 		httpService = TestBed.inject(HttpService);
 		notifyService = TestBed.inject(NotifyService);
@@ -79,6 +82,7 @@ describe('DataService', () => {
 		service.eventFetchAllPoints$.pipe(take(1)).subscribe(points => {
 			expect(points).toEqual(mockPoints);
 		});
+		expect(pointsStore.points()).toEqual(mockPoints);
 	});
 
 	it('should fetch a point by id', () => {

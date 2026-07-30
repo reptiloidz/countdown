@@ -1,8 +1,9 @@
 <ng-container
-	[ngTemplateOutlet]="listRef"
+	*ngIf="listRef() as listTemplate"
+	[ngTemplateOutlet]="listTemplate"
 	[ngTemplateOutletContext]="{
-		pointsList,
-		sortType,
+		pointsList: pointsList(),
+		sortType: sortType(),
 		isSm: false,
 		isPopup: true,
 		ulClass: 'date-points-popup__content points-list'
@@ -10,10 +11,11 @@
 ></ng-container>
 <div
 	class="date-points-popup__footer"
-	*ngIf="pointsList | checkEditablePoints"
+	*ngIf="pointsList() | checkEditablePoints"
 >
 	<ng-container
-		[ngTemplateOutlet]="footerRef"
+		*ngIf="footerRef() as footerTemplate"
+		[ngTemplateOutlet]="footerTemplate"
 		[ngTemplateOutletContext]="{ size: 'md' }"
 	></ng-container>
 </div>

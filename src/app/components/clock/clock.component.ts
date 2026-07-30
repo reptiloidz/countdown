@@ -2,23 +2,26 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	Input,
+	inject,
+	input,
 	OnInit,
 	Renderer2,
 	RendererStyleFlags2,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	selector: 'app-clock',
+	standalone: true,
+	imports: [CommonModule],
 	templateUrl: './clock.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClockComponent implements OnInit {
-	@Input() innerClass = '';
-	constructor(
-		private el: ElementRef,
-		private renderer: Renderer2,
-	) {}
+	innerClass = input('');
+
+	private readonly el = inject(ElementRef);
+	private readonly renderer = inject(Renderer2);
 
 	ngOnInit(): void {
 		const currentDate = new Date();

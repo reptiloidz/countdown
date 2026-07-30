@@ -14,7 +14,7 @@ describe('NoPageComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			declarations: [NoPageComponent],
+			imports: [NoPageComponent],
 			providers: [{ provide: ActionService, useValue: actionServiceMock }],
 		}).compileComponents();
 

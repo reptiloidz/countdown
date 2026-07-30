@@ -31,8 +31,7 @@ describe('PanelComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
-			declarations: [PanelComponent],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), PanelComponent],
 			providers: [provideAnimations()],
 			schemas: [NO_ERRORS_SCHEMA],
 		}).compileComponents();
@@ -47,32 +46,33 @@ describe('PanelComponent', () => {
 	});
 
 	it('should have default values', () => {
-		expect(component.open).toBe(false);
-		expect(component.icon).toBe('chevron-down');
-		expect(component.buttonClass).toBe('');
-		expect(component.buttonTitle).toBeNull();
+		expect(component.open()).toBe(false);
+		expect(component.icon()).toBe('chevron-down');
+		expect(component.buttonClass()).toBe('');
+		expect(component.buttonTitle()).toBeNull();
 		expect(component.hasFirstUpdateHappened).toBe(false);
 		expect(component.panelAnimated).toBe(false);
 	});
 
 	it('should toggle panel visibility', () => {
-		const spy = jest.spyOn(component.panelVisibilitySwitched, 'emit');
+		const emitted: boolean[] = [];
+		component.panelVisibilitySwitched.subscribe(value => emitted.push(value));
 
 		component.toggleHandler();
-		expect(component.open).toBe(true);
-		expect(spy).toHaveBeenCalledWith(true);
+		expect(component.open()).toBe(true);
+		expect(emitted).toEqual([true]);
 
 		component.toggleHandler();
-		expect(component.open).toBe(false);
-		expect(spy).toHaveBeenCalledWith(false);
+		expect(component.open()).toBe(false);
+		expect(emitted).toEqual([true, false]);
 	});
 
 	it('should handle open and close', () => {
 		component.openHandler();
-		expect(component.open).toBe(true);
+		expect(component.open()).toBe(true);
 
 		component.closeHandler();
-		expect(component.open).toBe(false);
+		expect(component.open()).toBe(false);
 	});
 
 	it('should update height', () => {
@@ -104,11 +104,11 @@ describe('PanelComponent', () => {
 	});
 
 	it('should handle panel animation', () => {
-		component.open = false;
+		component.open.set(false);
 		component.panelAnimatedHandler();
 		expect(component.panelAnimated).toBe(true); // !false → true
 
-		component.open = true;
+		component.open.set(true);
 		component.panelAnimatedHandler();
 		expect(component.panelAnimated).toBe(false); // !true → false
 	});

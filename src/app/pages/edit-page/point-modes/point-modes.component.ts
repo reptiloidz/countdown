@@ -2,35 +2,39 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
-	EventEmitter,
-	Input,
+	input,
 	OnDestroy,
 	OnInit,
-	Output,
+	output,
 	TemplateRef,
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GroupEmoji, LocalEmoji, Point, PointMode } from 'src/app/interfaces';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { LoaderComponent } from 'src/app/components/loader/loader.component';
 import { DropComponent } from '../../../components/drop/drop.component';
 import { InputComponent } from '../../../components/input/input.component';
 import { debounceTime, interval, Subject, Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-point-modes',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, ButtonComponent, LoaderComponent, DropComponent, InputComponent],
 	templateUrl: './point-modes.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PointModesComponent implements OnInit, OnDestroy {
-	@Input() form!: FormGroup;
-	@Input() point: Point | undefined;
-	@Input() emojis: GroupEmoji[] = [];
+	form = input.required<FormGroup>();
+	point = input<Point | undefined>();
+	emojis = input<GroupEmoji[]>([]);
 
 	emojisCurrent: GroupEmoji[] = [];
 
-	@Output() pointModeChanged = new EventEmitter<PointMode[]>();
-	@Output() pointModeClosed = new EventEmitter<void>();
+	pointModeChanged = output<PointMode[]>();
+	pointModeClosed = output<void>();
 	@ViewChild('filterRef') filterRef!: InputComponent;
 	@ViewChild('groupContainer', { read: ViewContainerRef })
 	groupContainer!: ViewContainerRef;
@@ -62,7 +66,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	}
 
 	get pointModesForm() {
-		return this.form.get('pointModesForm') as FormGroup;
+		return this.form().get('pointModesForm') as FormGroup;
 	}
 
 	get firstModeTitle() {
@@ -145,10 +149,10 @@ export class PointModesComponent implements OnInit, OnDestroy {
 	applyFilter(control: string, drop: DropComponent) {
 		this.emojisCurrent = [];
 		this.groupContainer?.clear();
-		this.filterEmojiValue = this.filterRef.value.toString().toLowerCase().trim();
+		this.filterEmojiValue = this.filterRef.value?.toString().toLowerCase().trim() ?? '';
 
 		requestAnimationFrame(() => {
-			this.emojis.forEach(group => {
+			this.emojis().forEach(group => {
 				this.emojisCurrent.push({
 					title: group.title,
 					list: group.list.filter(emoji => this.filterEmoji(emoji)),
@@ -157,7 +161,7 @@ export class PointModesComponent implements OnInit, OnDestroy {
 
 			let index = 0;
 
-			this.emojisCurrent = this.emojisCurrent || [...this.emojis];
+			this.emojisCurrent = this.emojisCurrent || [...this.emojis()];
 
 			const emojisInterval = interval(10).subscribe({
 				next: () => {

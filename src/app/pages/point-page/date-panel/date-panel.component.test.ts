@@ -4,10 +4,8 @@ import { DataService, ActionService, AuthService, NotifyService } from 'src/app/
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { PanelComponent } from '../panel/panel.component';
 import { Point } from 'src/app/interfaces';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
-import { CheckCopiesPipe } from 'src/app/pipes/check-copies.pipe';
 
 const mockPoint: Point = {
 	id: '1',
@@ -84,6 +82,11 @@ describe('DatePanelComponent', () => {
 			eventHasEditablePoints$: new Subject(),
 			eventUpdatedPoint$: new BehaviorSubject(mockPoint),
 			eventIntervalSwitched$: new Subject(),
+			eventIterationSwitched$: new Subject(),
+			eventIterationsChecked$: new Subject(),
+			eventPointsCheckedAll$: new Subject(),
+			tryActivateOnboarding: jest.fn().mockReturnValue(false),
+			eventOnboardingClosed$: new Subject(),
 			hasEditablePoints: jest.fn(),
 			checkAllPoints: jest.fn(),
 			uncheckAllPoints: jest.fn(),
@@ -103,8 +106,7 @@ describe('DatePanelComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
-			declarations: [DatePanelComponent, PanelComponent, CheckCopiesPipe],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), DatePanelComponent],
 			providers: [
 				{ provide: DataService, useValue: mockDataService },
 				{ provide: ActionService, useValue: mockActionService },
@@ -141,14 +143,14 @@ describe('DatePanelComponent', () => {
 	});
 
 	it('should update access when a point is provided', () => {
-		component.point = { id: 1, dates: [], repeatable: true } as any;
+		fixture.componentRef.setInput('point', mockPoint);
 		component.ngOnInit();
-		expect(mockAuthService.checkAccessEdit).toHaveBeenCalledWith(component.point);
+		expect(mockAuthService.checkAccessEdit).toHaveBeenCalled();
 		expect(component.hasAccess).toBe(true);
 	});
 
 	it('should handle iterations removal', () => {
-		component.point = { id: 1, dates: [{ date: '2023-01-01' }, { date: '2023-01-02' }] } as any;
+		component.point.set({ id: 1, dates: [{ date: '2023-01-01' }, { date: '2023-01-02' }] } as any);
 		jest.spyOn(mockNotifyService, 'confirm').mockReturnValue(of(true));
 		jest.spyOn(mockDataService, 'editPoint').mockImplementation(() => {});
 

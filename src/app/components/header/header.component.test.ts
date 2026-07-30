@@ -25,9 +25,18 @@ describe('HeaderComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [HeaderComponent, BoardComponent],
+			imports: [HeaderComponent, BoardComponent],
 			providers: [
-				{ provide: Router, useValue: { events: new Subject<Event>(), url: '/home', navigate: jest.fn() } },
+				{
+					provide: Router,
+					useValue: {
+						events: new Subject<Event>(),
+						url: '/home',
+						navigate: jest.fn(),
+						createUrlTree: jest.fn(),
+						serializeUrl: jest.fn().mockReturnValue('/'),
+					},
+				},
 				{ provide: ActivatedRoute, useValue: { queryParams: of({}) } },
 				{
 					provide: AuthService,

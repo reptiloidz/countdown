@@ -6,7 +6,7 @@
 			(datePicked)="rangeStartDatePicked($event)"
 			horizontal="left"
 			[date]="rangeStartDate"
-			[dateOnly]="point?.dateOnly"
+			[dateOnly]="point()?.dateOnly"
 			[disabledAfter]="!isRepeatsAmountSet ? rangeEndDate : undefined"
 		></app-datepicker>
 
@@ -33,7 +33,7 @@
 				horizontal="left"
 				[date]="rangeEndDate"
 				[disabledBefore]="rangeStartDate"
-				[dateOnly]="point?.dateOnly"
+				[dateOnly]="point()?.dateOnly"
 			></app-datepicker>
 		</ng-container>
 		<app-switcher
@@ -76,7 +76,7 @@
 			mode="ghost-positive"
 			icon="arrow-right"
 			iconPosition="right"
-			[disabled]="loading || iterationsForm.invalid"
+			[disabled]="loading() || iterationsForm.invalid"
 			(click)="genRepeats()"
 		>Генерировать</button>
 	</div>

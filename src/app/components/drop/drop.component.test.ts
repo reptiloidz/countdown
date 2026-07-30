@@ -3,8 +3,17 @@ import { DropComponent } from './drop.component';
 import { NotifyService } from 'src/app/services';
 import { Renderer2, ChangeDetectorRef, ElementRef, Component, ViewChild, TemplateRef } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ButtonComponent } from '../button/button.component';
-import { SvgComponent } from '../svg/svg.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+const mockAnimations = () => {
+	Element.prototype.animate = jest.fn().mockImplementation(() => ({
+		finished: Promise.resolve(),
+		addEventListener: jest.fn(),
+		removeEventListener: jest.fn(),
+		play: jest.fn(),
+		cancel: jest.fn(),
+	}));
+};
 
 @Component({
 	selector: 'mock-custom-template',
@@ -21,6 +30,7 @@ describe('DropComponent', () => {
 	let mockElementRef: Partial<ElementRef>;
 
 	beforeEach(async () => {
+		mockAnimations();
 		jest.useFakeTimers(); // Используем фейковые таймеры
 		mockNotifyService = {
 			notificationsOpened: false,
@@ -42,12 +52,14 @@ describe('DropComponent', () => {
 		});
 
 		await TestBed.configureTestingModule({
-			declarations: [DropComponent, ButtonComponent, SvgComponent, MockCustomTemplateComponent],
+			imports: [DropComponent],
+			declarations: [MockCustomTemplateComponent],
 			providers: [
 				{ provide: NotifyService, useValue: mockNotifyService },
 				{ provide: ElementRef, useValue: mockElementRef },
 				Renderer2,
 				ChangeDetectorRef,
+				provideAnimations(),
 			],
 		}).compileComponents();
 
@@ -99,13 +111,13 @@ describe('DropComponent', () => {
 	it('should emit "dropChanged" when changeHandler is called', () => {
 		const dropChangedSpy = jest.spyOn(component.dropChanged, 'emit');
 		component.changeHandler('new-value');
-		expect(component.value).toBe('new-value');
+		expect(component.value()).toBe('new-value');
 		expect(dropChangedSpy).toHaveBeenCalledWith('new-value');
 	});
 
 	it('should render default trigger button if no template is provided', () => {
 		component.triggerTemplate = undefined;
-		component.buttonLabel = 'Test Button';
+		fixture.componentRef.setInput('buttonLabel', 'Test Button');
 		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
 		cdr.detectChanges();
 		fixture.detectChanges();
@@ -132,7 +144,7 @@ describe('DropComponent', () => {
 	});
 
 	it('should apply correct classes for vertical positioning', () => {
-		component.vertical = 'top';
+		fixture.componentRef.setInput('vertical', 'top');
 		component.openHandler();
 		jest.runAllTimers();
 		fixture.detectChanges();
@@ -173,7 +185,7 @@ describe('DropComponent', () => {
 
 	it('should update value when writeValue is called', () => {
 		component.writeValue('test-value');
-		expect(component.value).toBe('test-value');
+		expect(component.value()).toBe('test-value');
 	});
 
 	it('should register onChange callback', () => {

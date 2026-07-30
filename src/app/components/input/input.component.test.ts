@@ -1,9 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideNgxMask } from 'ngx-mask';
 import { InputComponent } from './input.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 describe('InputComponent', () => {
 	let component: InputComponent;
@@ -11,10 +9,8 @@ describe('InputComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [InputComponent],
-			schemas: [NO_ERRORS_SCHEMA],
-			imports: [FormsModule, NgxMaskDirective],
-			providers: [[provideNgxMask()]],
+			imports: [InputComponent],
+			providers: [provideNgxMask()],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(InputComponent);
@@ -26,31 +22,56 @@ describe('InputComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should bind value to input', () => {
-		// Устанавливаем значение
+	it('should bind value input', () => {
 		component.value = 'test value';
-
-		// Обновляем отображение
 		fixture.detectChanges();
 
-		// Находим input и обновляем его привязку через ngModel
-		const input = fixture.debugElement.query(By.css('input')).nativeElement;
-
-		// Триггерим изменения, чтобы убедиться в синхронизации
-		fixture.whenStable().then(() => {
-			expect(input.value).toBe('test value');
-		});
+		expect(component.value).toBe('test value');
 	});
 
-	it('should call onInput when input value changes', () => {
-		const input = fixture.debugElement.query(By.css('input'));
-		const spy = jest.spyOn(component, 'onInput');
+	it('should set value via writeValue (CVA)', () => {
+		component.writeValue('cva value');
+		fixture.detectChanges();
 
-		input.nativeElement.value = 'new value';
-		input.triggerEventHandler('input', { target: input.nativeElement });
+		expect(component.value).toBe('cva value');
+	});
 
-		expect(spy).toHaveBeenCalled();
+	it('should display masked numeric value when value is set after render', fakeAsync(() => {
+		const maskFixture = TestBed.createComponent(InputComponent);
+		const maskComponent = maskFixture.componentInstance;
+		maskComponent.mask = '0*';
+		maskFixture.detectChanges();
+		maskComponent.value = '2026';
+		maskFixture.detectChanges();
+		tick();
+
+		const input = maskFixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+		expect(maskComponent.value).toBe('2026');
+		expect(input.value).toBe('2026');
+	}));
+
+	it('should display negative number with mask 0* and allowNegativeNumbers', () => {
+		component.mask = '0*';
+		component.allowNegativeNumbers = true;
+		fixture.detectChanges();
+
+		component.writeValue(-328);
+		fixture.detectChanges();
+
+		const input = fixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+		expect(input.getAttribute('mask')).toBeNull();
+		expect(component.value).toBe('-328');
+		expect(input.value).toBe('-328');
+	});
+
+	it('should propagate DOM input to value and valueChange', () => {
+		const spy = jest.fn();
+		component.valueChange.subscribe(spy);
+
+		component.onInput({ target: { value: 'new value' } } as unknown as Event);
+
 		expect(component.value).toBe('new value');
+		expect(spy).toHaveBeenCalledWith('new value');
 	});
 
 	it('should emit focus event on input focus', () => {
@@ -72,7 +93,9 @@ describe('InputComponent', () => {
 	});
 
 	it('should reset value when resetValue is called', () => {
-		component.clearButtonValue = 'reset value';
+		fixture.componentRef.setInput('clearButtonValue', 'reset value');
+		component.value = 'old value';
+		fixture.detectChanges();
 		const spy = jest.spyOn(component.reset, 'emit');
 
 		component.resetValue();
@@ -82,30 +105,30 @@ describe('InputComponent', () => {
 	});
 
 	it('should toggle password visibility', () => {
-		component.type = 'password';
+		component.type.set('password');
 
 		component.showPassword();
-		expect(component.type).toBe('text');
+		expect(component.type()).toBe('text');
 
 		component.showPassword();
-		expect(component.type).toBe('password');
+		expect(component.type()).toBe('password');
 	});
 
 	it('should apply correct CSS classes based on invalid input', () => {
-		component.invalid = true;
+		fixture.componentRef.setInput('invalid', true);
 		fixture.detectChanges();
 
 		const hostElement = fixture.debugElement;
 		expect(hostElement.nativeElement.className).toContain('control--error');
 
-		component.invalid = false;
+		fixture.componentRef.setInput('invalid', false);
 		fixture.detectChanges();
 
 		expect(hostElement.nativeElement.className).not.toContain('control--error');
 	});
 
 	it('should render a textarea if textarea input is true', () => {
-		component.textarea = true;
+		fixture.componentRef.setInput('textarea', true);
 		fixture.detectChanges();
 
 		const textarea = fixture.debugElement.query(By.css('textarea'));
@@ -113,7 +136,7 @@ describe('InputComponent', () => {
 	});
 
 	it('should not render clear button if clearButton input is true and value is empty', () => {
-		component.clearButton = true;
+		fixture.componentRef.setInput('clearButton', true);
 		fixture.detectChanges();
 
 		const button = fixture.debugElement.query(By.css('button[mode="negative"]'));
@@ -121,7 +144,7 @@ describe('InputComponent', () => {
 	});
 
 	it('should render clear button if clearButton input is true and value is not empty', () => {
-		component.clearButton = true;
+		fixture.componentRef.setInput('clearButton', true);
 		component.value = 'test';
 		fixture.detectChanges();
 
@@ -130,7 +153,7 @@ describe('InputComponent', () => {
 	});
 
 	it('should render password toggle button if showPasswordButton is true', () => {
-		component.showPasswordButton = true;
+		fixture.componentRef.setInput('showPasswordButton', true);
 		fixture.detectChanges();
 
 		const button = fixture.debugElement.query(By.css('button[mode="positive"]'));

@@ -1,14 +1,19 @@
 import { ChangeDetectionStrategy, Component, HostBinding, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { InputComponent } from 'src/app/components/input/input.component';
+import { ButtonComponent } from 'src/app/components/button/button.component';
+import { GoogleAuthComponent } from 'src/app/components/google-auth/google-auth.component';
 import { getErrorMessages, hasFieldErrors, mergeDeep } from 'src/app/helpers';
 import { ValidationObject, ValidationObjectField } from 'src/app/interfaces';
 import { AuthService, NotifyService } from 'src/app/services';
 
 @Component({
 	selector: 'app-auth',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, InputComponent, ButtonComponent, GoogleAuthComponent],
 	templateUrl: './auth.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

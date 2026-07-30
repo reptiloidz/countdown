@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, input, OnInit } from '@angular/core';
 import { SwitcherItem } from 'src/app/interfaces';
+import { SwitcherComponent } from '../switcher/switcher.component';
 
 @Component({
 	selector: 'app-settings',
+	standalone: true,
+	imports: [SwitcherComponent],
 	templateUrl: './settings.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -44,10 +47,10 @@ export class SettingsComponent implements OnInit {
 	themeValueDefault = 'default';
 	soundValueDefault = 'short';
 
-	@Input() isPopup = false;
+	isPopup = input(false);
 
 	@HostBinding('class') get componentClass(): string {
-		return this.isPopup ? 'settings' : '';
+		return this.isPopup() ? 'settings' : '';
 	}
 
 	ngOnInit(): void {

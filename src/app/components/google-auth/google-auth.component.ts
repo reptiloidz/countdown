@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
 import { AuthService, NotifyService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
+import { ButtonComponent } from '../button/button.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 
 @Component({
 	selector: 'app-google-auth',
+	standalone: true,
+	imports: [ButtonComponent, CheckboxComponent],
 	templateUrl: './google-auth.component.html',
 })
 export class GoogleAuthComponent {

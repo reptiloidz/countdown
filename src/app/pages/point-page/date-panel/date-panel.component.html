@@ -11,12 +11,12 @@
 			*ngIf="this.dates?.length"
 			(dateSelected)="dateSelected($event)"
 			(modeSelected)="modeSelected($event)"
-			[iterations]="point?.dates"
+			[iterations]="point()?.dates ?? []"
 			class="calendar"
-			[selectedDate]="selectedIterationDate"
-			[visibleDate]="selectedIterationDate"
-			[point]="point"
-			[staticMode]="urlMode"
+			[selectedDate]="selectedIterationDate()"
+			[visibleDate]="selectedIterationDate()"
+			[point]="point()"
+			[staticMode]="urlMode()"
 			(created)="calendarCreated()"
 			daysPerWeek="14"
 			[weekendDays]="[5, 6, 12, 13]"
@@ -59,7 +59,7 @@
 		</app-calendar>
 	</ng-template>
 
-	<ng-container *ngIf="this.dates?.length && this.point?.repeatable">
+	<ng-container *ngIf="this.dates?.length && this.point()?.repeatable">
 		<ng-template #extraButton>
 			<label
 				app-checkbox
@@ -121,7 +121,7 @@
 					[ngClass]="{
 						'tabs--scrollable': iterationsListScrollable,
 						'tabs--expanded': showIterationsInfo,
-						'tabs--edit': isEditing
+						'tabs--edit': isEditing()
 					}"
 				>
 					<cdk-virtual-scroll-viewport
@@ -150,11 +150,11 @@
 								</ng-container>
 							</ng-container>
 							<li
-								*ngIf="isEditing"
+								*ngIf="isEditing()"
 								class="tabs__item tabs__item--add"
 								[ngClass]="[
 									itemClass(),
-									isIterationAdded ? 'tabs__item--active' : ''
+									isIterationAdded() ? 'tabs__item--active' : ''
 								]"
 							>
 								<button
@@ -182,7 +182,7 @@
 						title="Перейти к&nbsp;концу списка итераций"
 					></button>
 					<button
-						*ngIf="hasAccess && !loading && !dateLoading && isDatesLengthPlural"
+						*ngIf="hasAccess && !loading() && !dateLoading() && isDatesLengthPlural"
 						class="tabs__remove-all"
 						app-button
 						size="sm"
@@ -232,12 +232,12 @@
 		[class]="itemClass()"
 		[ngClass]="{
 			'tabs__item': true,
-			'tabs__item--active': (type === 'date' && i == currentIterationIndex) && !isIterationAdded,
-			'tabs__item--day': ((type === 'date' && i >= firstIterationIndex)) && (i < selectedIterationsNumber + firstIterationIndex) && !isIterationAdded,
+			'tabs__item--active': (type === 'date' && i == currentIterationIndex) && !isIterationAdded(),
+			'tabs__item--day': ((type === 'date' && i >= firstIterationIndex)) && (i < selectedIterationsNumber + firstIterationIndex) && !isIterationAdded(),
 			'tabs__item--after': time === 'future',
 			'tabs__item--home': type === 'home',
-			'tabs__item--copy': type === 'date' && i | checkCopies : point,
-			'tabs__item--copy-other': type === 'date' && i | checkCopies : point : true,
+			'tabs__item--copy': type === 'date' && i | checkCopies : point(),
+			'tabs__item--copy-other': type === 'date' && i | checkCopies : point() : true,
 		}"
 	>
 		<ng-container *ngIf="type === 'date'">
@@ -297,7 +297,7 @@
 				<ng-container *ngIf="type === 'date'">
 					<p class="tabs__remain">{{ (time === 'past' ? 'Прошло: ' : 'Осталось: ') + (date.date |
 						timeRemainText :
-						point?.greenwich) }}
+						point()?.greenwich) }}
 					</p>
 					<div class="tabs__date">
 						<svg
@@ -308,7 +308,7 @@
 							ariaHidden="false"
 							class="tabs__item-icon"
 						></svg>
-						{{ date.date | timeRemain : !!point?.dateOnly : point?.greenwich }}
+						{{ date.date | timeRemain : !!point()?.dateOnly : point()?.greenwich }}
 					</div>
 				</ng-container>
 				<p

@@ -3,30 +3,36 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	computed,
 	ContentChild,
 	ElementRef,
 	HostBinding,
-	Input,
+	input,
+	model,
 	OnDestroy,
 	OnInit,
+	output,
+	Renderer2,
+	RendererStyleFlags2,
 	TemplateRef,
 	ViewChild,
-	forwardRef,
-	Renderer2,
 	ViewContainerRef,
-	RendererStyleFlags2,
-	Output,
-	EventEmitter,
+	forwardRef,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { debounceTime, fromEvent, merge, Subscription } from 'rxjs';
 import { getKeyByValue } from 'src/app/helpers';
 import { SelectArray } from 'src/app/interfaces';
 import { NotifyService } from 'src/app/services';
 import { ButtonSize, DropHorizontal, DropVertical, NgClassType } from 'src/app/types';
+import { ButtonComponent } from '../button/button.component';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: 'app-drop',
+	standalone: true,
+	imports: [CommonModule, ButtonComponent, SvgComponent],
 	templateUrl: './drop.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
@@ -67,31 +73,33 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	@ViewChild('selectListRef', { read: ElementRef })
 	selectListRef!: ElementRef;
 
-	@Input() open = false;
-	@Input() vertical: DropVertical = 'auto';
-	@Input() horizontal: DropHorizontal = 'right';
-	@Input() icon: string = 'chevron-down';
-	@Input() buttonSize!: ButtonSize;
-	@Input() buttonClass: NgClassType = '';
-	@Input() buttonTitle: string | null = null;
-	@Input() buttonLabel: string | null = null;
-	@Input() dropBodyClass: string | string[] = '';
-	@Input() select = false;
-	@Input() dropList!: SelectArray[];
-	@Input() formControlName!: string;
-	@Input() name!: string;
-	@Input() value: string | number = '';
-	@Input() focusoutClose = false;
-	@Input() showFooter = true;
-	@Input() navClass: NgClassType = 'drop__nav state';
-	@Input() innerClass: NgClassType = '';
-	@Input() listButtonTextClass = '';
-	@Input() buttonTextClass: string[] = [];
-	@Input() disabled = false;
+	open = false;
+	vertical = input<DropVertical>('auto');
+	horizontal = input<DropHorizontal>('right');
+	icon = input('chevron-down');
+	buttonSize = input<ButtonSize>();
+	buttonClass = input<NgClassType>('');
+	buttonTitle = input<string | null>(null);
+	buttonLabel = input<string | null>(null);
+	dropBodyClass = input<string | string[]>('');
+	select = input(false);
+	dropList = input<SelectArray[]>();
+	formControlName = input<string>();
+	name = input<string>();
+	readonly value = model<string | number>('');
+	focusoutClose = input(false);
+	showFooter = input(true);
+	navClass = input<NgClassType>('drop__nav state');
+	innerClass = input<NgClassType>('');
+	listButtonTextClass = input('');
+	buttonTextClass = input<string[]>([]);
+	disabled = input(false);
 
-	@Output() dropChanged = new EventEmitter<string | number>();
-	@Output() dropClosed = new EventEmitter();
-	@Output() dropOpened = new EventEmitter();
+	dropChanged = output<string | number>();
+	dropClosed = output();
+	dropOpened = output();
+
+	readonly isListDrop = computed(() => this.select() || (this.dropList()?.length ?? 0) > 0);
 
 	private triggerOffsetTop = 0;
 	private triggerOffsetLeft = 0;
@@ -106,6 +114,8 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	private lastTopState = false;
 	private documentClickListener: (() => void) | null = null;
 	private subscriptions = new Subscription();
+	private pendingFrameId: number | null = null;
+	private destroyed = false;
 	private triggerElement!: HTMLElement;
 
 	constructor(
@@ -123,7 +133,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				.subscribe({
 					next: () => {
 						if (this.open) {
-							requestAnimationFrame(() => {
+							this.scheduleFrame(() => {
 								this.setHeightParams();
 								this.setDropMaxH(this.lastTopState);
 							});
@@ -134,12 +144,32 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	ngOnDestroy(): void {
+		this.destroyed = true;
+		this.cancelPendingFrame();
 		this.removeDocumentClickListener();
 		this.subscriptions.unsubscribe();
 	}
 
+	private cancelPendingFrame() {
+		if (this.pendingFrameId !== null) {
+			cancelAnimationFrame(this.pendingFrameId);
+			this.pendingFrameId = null;
+		}
+	}
+
+	private scheduleFrame(callback: () => void) {
+		this.cancelPendingFrame();
+		this.pendingFrameId = requestAnimationFrame(() => {
+			this.pendingFrameId = null;
+			if (this.destroyed) {
+				return;
+			}
+			callback();
+		});
+	}
+
 	get keyOfValue() {
-		return getKeyByValue(this.dropList, this.value);
+		return getKeyByValue(this.dropList() ?? [], this.value());
 	}
 
 	trackBy(index: number, item: SelectArray): string | number {
@@ -168,14 +198,17 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 		this.setHeightParams();
 		this.triggerWidth = this.triggerElement && parseInt(getComputedStyle(this.triggerElement).width);
 
-		requestAnimationFrame(() => {
+		this.scheduleFrame(() => {
+			if (!this.open) {
+				return;
+			}
+
 			this.dropHeight = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().height;
 			this.dropWidth = this.elementRef.nativeElement.querySelector('.drop__body')?.getBoundingClientRect().width;
 
-			// Позиционирование по вертикали
 			if (
-				this.vertical === 'top' ||
-				(this.vertical === 'auto' &&
+				this.vertical() === 'top' ||
+				(this.vertical() === 'auto' &&
 					this.dropHeight > this.bottomSpace - this.triggerHeight &&
 					this.bottomSpace - this.triggerHeight < this.triggerOffsetTop)
 			) {
@@ -188,12 +221,11 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 				this.setDropMaxH();
 			}
 
-			// Позиционирование по горизонтали
 			if (
 				(this.dropWidth > this.rightSpace - this.triggerWidth &&
 					this.rightSpace - this.triggerWidth < this.triggerOffsetLeft &&
-					this.horizontal === 'right') ||
-				this.horizontal === 'left'
+					this.horizontal() === 'right') ||
+				this.horizontal() === 'left'
 			) {
 				this.renderer.addClass(this.elementRef.nativeElement, 'drop--left');
 			} else {
@@ -209,18 +241,22 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	closeHandler() {
+		if (!this.open) {
+			return;
+		}
+
 		this.open = false;
 		this.removeDocumentClickListener();
 		this.cdr.markForCheck();
+		this.dropClosed.emit();
 
-		requestAnimationFrame(() => {
+		this.scheduleFrame(() => {
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--top');
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--bottom');
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--left');
 			this.renderer.removeClass(this.elementRef.nativeElement, 'drop--right');
 
 			this.renderer.setStyle(this.elementRef.nativeElement, '--drop-max-h', null, RendererStyleFlags2.DashCase);
-			this.dropClosed.emit();
 		});
 	}
 
@@ -258,7 +294,7 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	}
 
 	changeHandler(value: string | number) {
-		this.value = value;
+		this.value.set(value);
 		this.onChange(value);
 		this.onTouched();
 		this.closeHandler();
@@ -269,13 +305,16 @@ export class DropComponent implements OnInit, OnDestroy, ControlValueAccessor {
 	onTouched: () => void = () => {};
 
 	writeValue(value: string): void {
-		this.value = value;
+		this.value.set(value);
 	}
-	registerOnChange(fn: any): void {
+
+	registerOnChange(fn: (value: string | number) => void): void {
 		this.onChange = fn;
 	}
-	registerOnTouched(fn: any): void {
+
+	registerOnTouched(fn: () => void): void {
 		this.onTouched = fn;
 	}
-	setDisabledState?(isDisabled: boolean): void {}
+
+	setDisabledState?(_isDisabled: boolean): void {}
 }

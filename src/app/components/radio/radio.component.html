@@ -1,21 +1,21 @@
 <label
-	*ngFor="let item of items; index as i; trackBy: trackBy;"
+	*ngFor="let item of items(); index as i; trackBy: trackBy;"
 	class="radio"
-	[ngClass]="radioClass"
+	[ngClass]="radioClass()"
 	[attr.title]="item?.text || null"
 	[for]="id + i"
 >
 	<span
 		class="radio__box"
 		[ngClass]="{
-			'radio__box--sm': dotSize === 'sm'
+			'radio__box--sm': dotSize() === 'sm'
 		}"
 	></span>
 	<span class="radio__label">{{ item.text }}</span>
 	<input
 		type="radio"
 		class="radio__input"
-		[checked]="item?.value === value || null"
+		[checked]="item?.value === value() || null"
 		[disabled]="item.disabled"
 		[value]="item?.value"
 		(change)="onRadioChange($event)"

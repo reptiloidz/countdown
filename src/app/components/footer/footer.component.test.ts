@@ -57,6 +57,7 @@ describe('FooterComponent', () => {
 			eventEditAccessCheck$: new BehaviorSubject({ pointId: null, access: true }),
 		} as unknown as jest.Mocked<AuthService>;
 
+		let activeOnboardingId: string | null = null;
 		actionServiceMock = {
 			eventPointsChecked$: new Subject(),
 			eventHasEditablePoints$: new Subject(),
@@ -67,6 +68,18 @@ describe('FooterComponent', () => {
 			uncheckAllPoints: jest.fn(),
 			pointUpdated: jest.fn().mockReturnValue(mockPoint),
 			onboardingClosed: jest.fn().mockReturnValue(''),
+			tryActivateOnboarding: jest.fn((id: string) => {
+				if (activeOnboardingId !== null && activeOnboardingId !== id) {
+					return false;
+				}
+				activeOnboardingId = id;
+				return true;
+			}),
+			deactivateOnboarding: jest.fn((id: string) => {
+				if (activeOnboardingId === id) {
+					activeOnboardingId = null;
+				}
+			}),
 		} as unknown as jest.Mocked<ActionService>;
 
 		notifyServiceMock = {
@@ -81,12 +94,14 @@ describe('FooterComponent', () => {
 		} as unknown as jest.Mocked<HttpService>;
 
 		await TestBed.configureTestingModule({
-			declarations: [FooterComponent, TooltipComponent],
+			imports: [FooterComponent, TooltipComponent],
 			providers: [
 				{
 					provide: Router,
 					useValue: {
 						navigate: jest.fn(),
+						createUrlTree: jest.fn(),
+						serializeUrl: jest.fn().mockReturnValue('/'),
 						events: new Subject(),
 						lastSuccessfulNavigation: {
 							finalUrl: {

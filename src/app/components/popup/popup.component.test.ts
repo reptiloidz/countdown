@@ -25,8 +25,8 @@ describe('PopupComponent', () => {
 		};
 
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
-			declarations: [PopupComponent, MockHostComponent],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), PopupComponent],
+			declarations: [MockHostComponent],
 			providers: [{ provide: PopupService, useValue: popupServiceMock }, ChangeDetectorRef],
 		}).compileComponents();
 

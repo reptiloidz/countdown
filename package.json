@@ -35,10 +35,6 @@
 		"@angular/platform-browser": "^18.2.13",
 		"@angular/platform-browser-dynamic": "^18.2.13",
 		"@angular/router": "^18.2.13",
-		"@ngrx/effects": "^18.1.1",
-		"@ngrx/router-store": "^18.1.1",
-		"@ngrx/store": "^18.1.1",
-		"@ngrx/store-devtools": "^18.1.1",
 		"date-fns": "^3.0.1",
 		"emojibase": "^15.3.1",
 		"ng-qrcode": "^18.0.0",
@@ -84,5 +80,9 @@
 		"svgo": "3.0.0",
 		"ts-node": "^10.9.2",
 		"typescript": "5.4.5"
+	},
+	"packageManager": "yarn@4.6.0+sha512.5383cc12567a95f1d668fbe762dfe0075c595b4bfff433be478dbbe24e05251a8e8c3eb992a986667c1d53b6c3a9c85b8398c35a960587fbd9fa3a0915406728",
+	"resolutions": {
+		"@sass-fairy/exception": "1.1.1"
 	}
 }

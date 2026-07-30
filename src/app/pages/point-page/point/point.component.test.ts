@@ -1,11 +1,9 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { PointComponent } from './point.component';
-import { DataService, AuthService, ActionService, NotifyService } from 'src/app/services';
+import { DataService, AuthService, ActionService, NotifyService, PopupService } from 'src/app/services';
 import { ActivatedRoute, UrlSegment } from '@angular/router';
 import { of } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { DatePanelComponent } from '../date-panel/date-panel.component';
-import { PanelComponent } from '../../../pages/point-page/panel/panel.component';
 import { TimersComponent } from '../../../timers/timers.component';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -51,6 +49,11 @@ describe('PointComponent', () => {
 			unobserve: jest.fn(),
 			disconnect: jest.fn(),
 		}));
+		(global as any).IntersectionObserver = jest.fn(() => ({
+			observe: jest.fn(),
+			unobserve: jest.fn(),
+			disconnect: jest.fn(),
+		}));
 	});
 
 	beforeEach(async () => {
@@ -61,17 +64,26 @@ describe('PointComponent', () => {
 		mockAuthService = { isAuthenticated: true, getUserData: jest.fn().mockReturnValue(of(undefined)) };
 		mockActionService = {
 			eventIntervalSwitched$: of(),
-			pointUpdated: jest.fn(),
 			eventUpdatedPoint$: of(),
+			eventIterationSwitched$: of(),
+			eventIterationsChecked$: of(),
+			eventPointsCheckedAll$: of(),
+			tryActivateOnboarding: jest.fn().mockReturnValue(false),
+			pointUpdated: jest.fn(),
 		};
 		mockNotifyService = { add: jest.fn() };
-		mockRoute = { url: of(mockUrl), queryParams: of({}), params: of({ id: '123' }) };
+		mockRoute = {
+			url: of(mockUrl),
+			queryParams: of({}),
+			params: of({ id: '123' }),
+			pathFromRoot: [{ url: of([]) }, { url: of(mockUrl) }] as ActivatedRoute[],
+		};
 		mockTitleService = { setTitle: jest.fn() };
 
 		await TestBed.configureTestingModule({
-			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true })],
-			declarations: [PointComponent, DatePanelComponent, PanelComponent, TimersComponent],
+			imports: [BrowserAnimationsModule.withConfig({ disableAnimations: true }), PointComponent, TimersComponent],
 			providers: [
+				{ provide: PopupService, useValue: { show: jest.fn() } },
 				{ provide: DataService, useValue: mockDataService },
 				{ provide: AuthService, useValue: mockAuthService },
 				{ provide: ActionService, useValue: mockActionService },

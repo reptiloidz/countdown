@@ -5,6 +5,7 @@ import { SortTypes } from '../types';
 
 @Pipe({
 	name: 'sortPoints',
+	standalone: true,
 })
 export class SortPointsPipe implements PipeTransform {
 	constructor(private sort: SortService) {}

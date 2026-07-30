@@ -1,11 +1,11 @@
 <app-drop
 	class="drop--nested datepicker"
-	[ngClass]="dropClass"
-	[vertical]="vertical"
-	[horizontal]="horizontal"
+	[ngClass]="dropClass()"
+	[vertical]="vertical()"
+	[horizontal]="horizontal()"
 	[buttonLabel]="dateFormatted"
 	icon="calendar-clock"
-	[navClass]="'drop__nav datepicker__trigger state' + (dateOnly ? ' datepicker__trigger--sm' : '')"
+	[navClass]="'drop__nav datepicker__trigger state' + (dateOnly() ? ' datepicker__trigger--sm' : '')"
 >
 	<ng-template #bodyTemplate>
 		<form class="datepicker__form">
@@ -35,7 +35,7 @@
 					(autocompleteChanged)="monthSwitched($event)"
 				></app-autocomplete>
 
-				<ng-container *ngIf="!dateOnly">
+				<ng-container *ngIf="!dateOnly()">
 					<app-autocomplete
 						class="datepicker__nav-item datepicker__nav-item--sm"
 						placeholder=""
@@ -72,8 +72,8 @@
 				[selectedDate]="defaultDate"
 				[activeMode]="'month'"
 				[rowsNumber]="6"
-				[disabledBefore]="disabledBefore"
-				[disabledAfter]="disabledAfter"
+				[disabledBefore]="disabledBefore()"
+				[disabledAfter]="disabledAfter()"
 				[scrollMoveOff]="true"
 			></app-calendar>
 		</form>

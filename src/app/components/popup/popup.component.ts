@@ -5,15 +5,21 @@ import {
 	Component,
 	HostBinding,
 	HostListener,
+	inject,
 	OnInit,
+	Type,
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PopupService } from 'src/app/services';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
 	selector: 'app-popup',
+	standalone: true,
+	imports: [CommonModule, ButtonComponent],
 	templateUrl: './popup.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [
@@ -48,6 +54,9 @@ import { PopupService } from 'src/app/services';
 	],
 })
 export class PopupComponent implements OnInit {
+	private readonly cdr = inject(ChangeDetectorRef);
+	private readonly popupService = inject(PopupService);
+
 	@ViewChild('popupContent', {
 		read: ViewContainerRef,
 	})
@@ -57,11 +66,6 @@ export class PopupComponent implements OnInit {
 	title = '';
 	isVisible = false;
 	private subscriptions = new Subscription();
-
-	constructor(
-		private cdr: ChangeDetectorRef,
-		private popupService: PopupService,
-	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -81,7 +85,7 @@ export class PopupComponent implements OnInit {
 		);
 	}
 
-	show(title: string, component: any, inputs?: Record<string, any>) {
+	show(title: string, component: Type<unknown>, inputs?: Record<string, unknown>) {
 		this.isVisible = true;
 		this.title = title;
 		this.cdr.detectChanges();
@@ -90,10 +94,11 @@ export class PopupComponent implements OnInit {
 
 		if (inputs) {
 			for (const [key, value] of Object.entries(inputs)) {
-				(componentRef.instance as any)[key] = value;
+				componentRef.setInput(key, value);
 			}
 		}
 
+		componentRef.changeDetectorRef.detectChanges();
 		this.cdr.markForCheck();
 	}
 

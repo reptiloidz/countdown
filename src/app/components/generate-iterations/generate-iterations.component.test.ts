@@ -22,16 +22,18 @@ describe('GenerateIterationsComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [
+			imports: [
 				GenerateIterationsComponent,
-				DatepickerComponent,
+				FormsModule,
+				ReactiveFormsModule,
+				NgxMaskDirective,
 				SwitcherComponent,
-				DropComponent,
-				InputComponent,
 				RadioComponent,
 				ButtonComponent,
+				DatepickerComponent,
+				DropComponent,
+				InputComponent,
 			],
-			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective],
 			schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 			providers: [
 				FormBuilder,
@@ -47,16 +49,19 @@ describe('GenerateIterationsComponent', () => {
 
 		fixture = TestBed.createComponent(GenerateIterationsComponent);
 		component = fixture.componentInstance;
-		component.form = new FormBuilder().group({
-			iterationsForm: new FormBuilder().group({
-				repeatsMode: ['setRepeatsAmount'],
-				rangeAmount: [2],
-				rangePeriod: [1],
-				periodicity: ['perMinutes'],
-				monthOptions: ['dayOfMonth'],
+		fixture.componentRef.setInput(
+			'form',
+			new FormBuilder().group({
+				iterationsForm: new FormBuilder().group({
+					repeatsMode: ['setRepeatsAmount'],
+					rangeAmount: [2],
+					rangePeriod: [1],
+					periodicity: ['perMinutes'],
+					monthOptions: ['dayOfMonth'],
+				}),
+				greenwich: [false],
 			}),
-			greenwich: [false],
-		});
+		);
 		fixture.detectChanges();
 	});
 

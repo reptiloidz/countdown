@@ -1,16 +1,19 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NgClassType } from 'src/app/types';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: 'app-loader',
+	standalone: true,
+	imports: [CommonModule, SvgComponent],
 	templateUrl: './loader.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoaderComponent {
 	@HostBinding('class') get componentClass(): string | null {
-		const baseClass = 'loader';
-		return [baseClass].filter(_ => _).join(' ');
+		return 'loader';
 	}
 
-	@Input() iconClass: NgClassType;
+	iconClass = input<NgClassType>();
 }

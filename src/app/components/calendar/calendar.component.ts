@@ -3,15 +3,20 @@ import {
 	ChangeDetectorRef,
 	Component,
 	ContentChild,
+	effect,
 	ElementRef,
-	EventEmitter,
 	HostListener,
-	Input,
+	inject,
+	input,
+	model,
 	OnDestroy,
 	OnInit,
-	Output,
+	output,
+	signal,
 	TemplateRef,
+	untracked,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
 	addDays,
 	addHours,
@@ -46,9 +51,14 @@ import { filterIterations, filterPoints, findIterations } from 'src/app/helpers'
 import { CalendarDate, Iteration, Point, SwitcherItem } from 'src/app/interfaces';
 import { ActionService, DataService } from 'src/app/services';
 import { CalendarMode } from 'src/app/types';
+import { ButtonComponent } from '../button/button.component';
+import { SwitcherComponent } from '../switcher/switcher.component';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: 'app-calendar',
+	standalone: true,
+	imports: [CommonModule, ButtonComponent, SwitcherComponent, SvgComponent],
 	templateUrl: './calendar.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,40 +67,42 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	private lastDateOfCurrentMonth!: Date;
 	private firstMonday!: Date;
 	private isCalendarInited = false;
-	private _visibleDate = this.nowDate;
+	private readonly _visibleDate = signal(new Date());
 
 	private subscriptions = new Subscription();
 
-	@Input() activeMode: CalendarMode = (localStorage.getItem('calendarMode') as CalendarMode) || 'month';
-	@Input() points?: Point[] = [];
-	@Input() iterations?: Iteration[] = [];
-	@Input() selectedDate = this.nowDate;
-	@Input() point?: Point;
-	@Input() hideCurrentPeriod = false;
-	@Input() hideModeSwitch = false;
-	@Input() daysPerWeek: number | string = 7;
-	@Input() weekendDays = [5, 6];
-	@Input() rowsNumber!: number;
-	@Input() disabledBefore: Date | undefined;
-	@Input() disabledAfter: Date | undefined;
-	@Input() staticMode = false;
-	@Input() staticCellMode = false;
-	@Input() iterationsChecked: boolean[] = [];
-	@Input() scrollMoveOff = false;
+	activeMode = model<CalendarMode>((localStorage.getItem('calendarMode') as CalendarMode) || 'month');
+	points = input<Point[]>([]);
+	iterations = input<Iteration[]>([]);
+	selectedDate = model(new Date());
+	point = input<Point | undefined>();
+	hideCurrentPeriod = input(false);
+	hideModeSwitch = input(false);
+	daysPerWeek = input<number | string>(7);
+	weekendDays = input([5, 6]);
+	rowsNumber = input<number | undefined>();
+	disabledBefore = input<Date | undefined>();
+	disabledAfter = input<Date | undefined>();
+	staticMode = input(false);
+	staticCellMode = input(false);
+	iterationsChecked = input<boolean[]>([]);
+	scrollMoveOff = input(false);
+	visibleDateInput = input<Date | undefined>(undefined, { alias: 'visibleDate' });
 
 	/**
 	 * При получении значения всегда обновляем календарь, если она обновилась
 	 * и записываем новую дату в _visibleDate именно при генерации
 	 */
-	@Input() get visibleDate(): Date {
-		return this._visibleDate;
+	get visibleDate(): Date {
+		return this._visibleDate();
 	}
+
 	set visibleDate(value: Date) {
-		this.isCalendarInited &&
-			+this._visibleDate !== +value &&
+		if (this.isCalendarInited && +this._visibleDate() !== +value) {
 			this.generateCalendar({
 				date: value,
 			});
+		}
 	}
 
 	calendarArray: CalendarDate[][] = [];
@@ -106,7 +118,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		const target = event.target as HTMLElement;
 		if (
 			Math.abs(event.deltaY) <= Math.abs(event.deltaX) ||
-			this.scrollMoveOff ||
+			this.scrollMoveOff() ||
 			(target.closest('app-drop') && Array(...target.closest('app-drop')!.classList).includes('calendar__nav--drop'))
 		)
 			return;
@@ -140,30 +152,60 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		event.preventDefault();
 	}
 
-	@Output() dateSelected = new EventEmitter<{
+	dateSelected = output<{
 		date: Date;
 		mode: CalendarMode;
 		data: Point[] | Iteration[];
 	}>();
-	@Output() created = new EventEmitter();
-	@Output() modeSelected = new EventEmitter<CalendarMode>();
-	@Output() visibleDateSelected = new EventEmitter<Date>();
+	created = output();
+	modeSelected = output<CalendarMode>();
+	visibleDateSelected = output<Date>();
 
 	@ContentChild('navTemplate') navTemplate: TemplateRef<unknown> | undefined;
 
-	constructor(
-		private cdr: ChangeDetectorRef,
-		private data: DataService,
-		private action: ActionService,
-		private el: ElementRef,
-	) {}
+	private readonly cdr = inject(ChangeDetectorRef);
+	private readonly data = inject(DataService);
+	private readonly action = inject(ActionService);
+	private readonly el = inject(ElementRef);
+
+	constructor() {
+		effect(
+			() => {
+				const value = this.visibleDateInput();
+				if (value === undefined || !this.isCalendarInited) {
+					return;
+				}
+
+				const normalizedVisible = +this.getStartOfDate(value);
+				const currentVisible = untracked(() => +this._visibleDate());
+
+				if (currentVisible !== normalizedVisible) {
+					this.generateCalendar({
+						date: value,
+					});
+				}
+			},
+			{ allowSignalWrites: true },
+		);
+	}
+
+	private getMatchDate(matchMode: 'visible' | 'selected' | 'now'): Date {
+		switch (matchMode) {
+			case 'visible':
+				return this._visibleDate();
+			case 'selected':
+				return this.selectedDate();
+			case 'now':
+				return this.nowDate;
+		}
+	}
 
 	ngOnInit() {
 		this.subscriptions.add(
 			this.action.eventIntervalSwitched$
 				.pipe(
 					filter(() => {
-						switch (this.activeMode) {
+						switch (this.activeMode()) {
 							case 'year':
 								return !isSameMonth(this.nowDate, new Date());
 							case 'day':
@@ -236,9 +278,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		 * родитель уведомляется, флаг об инициализации ставится в true
 		 * (чтобы только после этой генерации срабатывала генерация из сеттера visibleDate())
 		 */
-		this.modeSelected.emit(this.activeMode);
+		this.modeSelected.emit(this.activeMode());
 		this.generateCalendar({
-			date: this.selectedDate,
+			date: this.selectedDate(),
 		});
 		this.created.emit();
 		this.isCalendarInited = true;
@@ -260,7 +302,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	get visiblePeriod() {
 		let dateFormat = '';
-		switch (this.activeMode) {
+		switch (this.activeMode()) {
 			case 'year':
 				dateFormat = "yyyy 'г.'";
 				break;
@@ -281,7 +323,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	get weekDaysArray() {
 		let result: string[] = [];
-		for (let i = 0; i < +this.daysPerWeek; i++) {
+		for (let i = 0; i < +this.daysPerWeek(); i++) {
 			result.push(this.daysOfWeek[i % 7]);
 		}
 		return result;
@@ -293,7 +335,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	getItemDate(date: Date) {
 		let result = '';
-		switch (this.activeMode) {
+		switch (this.activeMode()) {
 			case 'day':
 				result = format(date, 'k');
 				break;
@@ -323,7 +365,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		points: Point[];
 		iterations: Iteration[];
 	}) {
-		if (this.staticMode || (this.staticCellMode && !points.length && !iterations.length)) return;
+		if (this.staticMode() || (this.staticCellMode() && !points.length && !iterations.length)) return;
 
 		let data: Point[] | Iteration[] = [];
 		if (points.length) {
@@ -331,7 +373,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		} else if (iterations.length) {
 			data = iterations;
 		}
-		this.selectedDate = date;
+		this.selectedDate.set(date);
 		this.dateSelected.emit({ date, mode: activeMode, data });
 		// Делаем отложенное срабатывание перерисовки календаря,
 		// чтобы кнопка-триггер не исчезла раньше времени и дроп не закрылся
@@ -346,7 +388,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	getStartOfDate(date: Date) {
 		let startOfDate: Date;
 
-		switch (this.activeMode) {
+		switch (this.activeMode()) {
 			case 'year':
 				startOfDate = startOfMonth(date);
 				break;
@@ -366,7 +408,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 	generateCalendar({
 		date,
-		mode = this.activeMode,
+		mode = this.activeMode(),
 		selectDate = false,
 		force = false,
 	}: {
@@ -382,35 +424,35 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		 * чтобы не делать лишних перегенераций календаря
 		 */
 		if (
-			mode === this.activeMode &&
-			this._visibleDate === date &&
-			((this.selectedDate === date && selectDate) || !selectDate) &&
+			mode === this.activeMode() &&
+			+this._visibleDate() === +date &&
+			((+this.selectedDate() === +date && selectDate) || !selectDate) &&
 			this.calendarArray.length &&
 			!force
 		)
 			return;
 
 		if (selectDate) {
-			this.selectedDate = date;
+			this.selectedDate.set(date);
 		}
 
-		this.activeMode = mode;
+		this.activeMode.set(mode);
 
 		/**
 		 * Записываем _visibleDate напрямую, чтобы не вызывать лишних действий через геттер
 		 */
-		this._visibleDate = this.getStartOfDate(date);
+		this._visibleDate.set(this.getStartOfDate(date));
 
 		this.visibleDateSelected.emit(this.visibleDate);
 		this.lastDateOfCurrentMonth = lastDayOfMonth(date);
 		this.firstMonday = isMonday(startOfMonth(date)) ? startOfMonth(date) : previousMonday(startOfMonth(date));
 
 		let rows = 1;
-		let cols = +this.daysPerWeek;
+		let cols = +this.daysPerWeek();
 		let rowNumber = 0;
 
-		if (this.rowsNumber) {
-			rows = this.rowsNumber;
+		if (this.rowsNumber()) {
+			rows = this.rowsNumber()!;
 		} else {
 			switch (mode) {
 				case 'year':
@@ -440,7 +482,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 				if (!previousDate) {
 					let thisDate = this.firstMonday;
 
-					switch (this.activeMode) {
+					switch (this.activeMode()) {
 						case 'year':
 							thisDate = startOfYear(this.visibleDate);
 							break;
@@ -462,25 +504,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
 						disabledDate: this.isDateDisabled(thisDate),
-						weekendDate: this.weekendDays.includes(i) && this.activeMode === 'month',
-						otherMonthDate: !isSameMonth(thisDate, this.visibleDate) && this.activeMode === 'month',
+						weekendDate: this.weekendDays().includes(i) && this.activeMode() === 'month',
+						otherMonthDate: !isSameMonth(thisDate, this.visibleDate) && this.activeMode() === 'month',
 						points: filterPoints({
 							date: thisDate,
-							points: this.points || [],
-							activeMode: this.activeMode,
+							points: this.points() || [],
+							activeMode: this.activeMode(),
 						}),
 						iterations: filterIterations({
 							date: thisDate,
-							iterations: this.iterations || [],
-							activeMode: this.activeMode,
-							greenwich: this.point?.greenwich || false,
+							iterations: this.iterations() || [],
+							activeMode: this.activeMode(),
+							greenwich: this.point()?.greenwich || false,
 						}),
 						itemsChecked: this.filterChecked(thisDate),
 					});
 				} else {
 					let thisDate = addDays(previousDate, 1);
 
-					switch (this.activeMode) {
+					switch (this.activeMode()) {
 						case 'year':
 							thisDate = addMonths(previousDate, 1);
 							break;
@@ -495,8 +537,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 					}
 
 					if (
-						(mode === 'month' && !this.rowsNumber && +thisDate === +this.lastDateOfCurrentMonth) ||
-						((this.rowsNumber || mode === 'year' || mode === 'day' || mode === 'hour') && rowNumber === rows - 1)
+						(mode === 'month' && !this.rowsNumber() && +thisDate === +this.lastDateOfCurrentMonth) ||
+						((this.rowsNumber() || mode === 'year' || mode === 'day' || mode === 'hour') && rowNumber === rows - 1)
 					) {
 						loopFinished = true;
 					}
@@ -508,25 +550,25 @@ export class CalendarComponent implements OnInit, OnDestroy {
 						selectedDate: this.isDateMatch(thisDate, 'selected'),
 						nowDate: this.isDateMatch(thisDate, 'now'),
 						disabledDate: this.isDateDisabled(thisDate),
-						weekendDate: this.weekendDays.includes(i) && this.activeMode === 'month',
-						otherMonthDate: !isSameMonth(thisDate, this.visibleDate) && this.activeMode === 'month',
+						weekendDate: this.weekendDays().includes(i) && this.activeMode() === 'month',
+						otherMonthDate: !isSameMonth(thisDate, this.visibleDate) && this.activeMode() === 'month',
 						points: filterPoints({
 							date: thisDate,
-							points: this.points || [],
-							activeMode: this.activeMode,
+							points: this.points() || [],
+							activeMode: this.activeMode(),
 						}),
 						iterations: filterIterations({
 							date: thisDate,
-							iterations: this.iterations || [],
-							activeMode: this.activeMode,
-							greenwich: this.point?.greenwich || false,
+							iterations: this.iterations() || [],
+							activeMode: this.activeMode(),
+							greenwich: this.point()?.greenwich || false,
 						}),
 						itemsChecked: this.filterChecked(thisDate),
 					});
 				}
 			}
 
-			if (mode === 'year' || mode === 'day' || mode === 'hour' || this.rowsNumber) {
+			if (mode === 'year' || mode === 'day' || mode === 'hour' || this.rowsNumber()) {
 				rowNumber++;
 			}
 
@@ -536,26 +578,26 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	filterChecked(date: Date) {
-		if (this.iterations?.length) {
-			return this.iterations.filter(
-				(iteration, index) =>
+		if (this.iterations()?.length) {
+			return this.iterations().filter(
+				(iteration: Iteration, index: number) =>
 					findIterations({
 						iteration,
 						date,
-						activeMode: this.activeMode,
-						greenwich: !!this.point?.greenwich,
-					}) && this.iterationsChecked[index],
+						activeMode: this.activeMode(),
+						greenwich: !!this.point()?.greenwich,
+					}) && this.iterationsChecked()[index],
 			).length;
-		} else if (this.points?.length) {
-			return this.points.filter(item => {
+		} else if (this.points()?.length) {
+			return this.points().filter((item: Point) => {
 				return (
 					item.id &&
 					this.action.checkedPoints.includes(item.id) &&
-					item.dates.some(iteration =>
+					item.dates.some((iteration: Iteration) =>
 						findIterations({
 							iteration,
 							date,
-							activeMode: this.activeMode,
+							activeMode: this.activeMode(),
 							greenwich: item.greenwich,
 						}),
 					)
@@ -567,32 +609,33 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	}
 
 	isDateMatch(date: Date, matchMode: 'visible' | 'selected' | 'now') {
-		switch (this.activeMode) {
+		const matchDate = this.getMatchDate(matchMode);
+		switch (this.activeMode()) {
 			case 'year':
-				return +date === +startOfMonth(this[`${matchMode}Date`]);
+				return +date === +startOfMonth(matchDate);
 			case 'day':
-				return +date === +startOfHour(this[`${matchMode}Date`]);
+				return +date === +startOfHour(matchDate);
 			case 'hour':
-				return +date === +startOfMinute(this[`${matchMode}Date`]);
+				return +date === +startOfMinute(matchDate);
 			default:
-				return +date === +startOfDay(this[`${matchMode}Date`]);
+				return +date === +startOfDay(matchDate);
 		}
 	}
 
 	isDateDisabled(date: Date) {
 		return (
-			(this.disabledAfter && isAfter(date, this.getStartOfDate(this.disabledAfter))) ||
-			(this.disabledBefore && isBefore(date, this.getStartOfDate(this.disabledBefore)))
+			(this.disabledAfter() && isAfter(date, this.getStartOfDate(this.disabledAfter()!))) ||
+			(this.disabledBefore() && isBefore(date, this.getStartOfDate(this.disabledBefore()!)))
 		);
 	}
 
 	switchCalendarMode(mode: string) {
 		this.generateCalendar({
-			date: this.selectedDate,
+			date: this.selectedDate(),
 			mode: mode as CalendarMode,
 		});
 		localStorage.setItem('calendarMode', mode);
-		this.modeSelected.emit(this.activeMode);
+		this.modeSelected.emit(this.activeMode());
 	}
 
 	switchCalendarToNow() {
@@ -605,7 +648,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 	switchCalendarToSelected() {
 		this.blinkCalendar();
 		this.generateCalendar({
-			date: this.selectedDate,
+			date: this.selectedDate(),
 		});
 	}
 
@@ -651,7 +694,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 		}, this.THROTTLE_MS);
 
 		this.generateCalendar({
-			date: result[this.activeMode][forward ? 'forward' : 'backward'],
+			date: result[this.activeMode()][forward ? 'forward' : 'backward'],
 		});
 		this.cdr.markForCheck();
 	}

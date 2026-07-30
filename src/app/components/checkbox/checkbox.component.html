@@ -1,8 +1,8 @@
 <span
-	*ngIf="!icon else iconTemplate;"
+	*ngIf="!icon() else iconTemplate;"
 	class="checkbox__box"
 	[ngClass]="{
-		'checkbox__box--sm': iconSize === 'sm'
+		'checkbox__box--sm': iconSize() === 'sm'
 	}"
 >
 	<svg
@@ -15,8 +15,8 @@
 <input
 	type="checkbox"
 	class="checkbox__input"
-	[checked]="isChecked"
-	[disabled]="isDisabled"
+	[checked]="checked()"
+	[disabled]="isDisabledState()"
 	(change)="onCheckboxChange($event)"
 	[attr.name]="name"
 	[attr.id]="id"
@@ -26,12 +26,12 @@
 	<span
 		class="checkbox__box"
 		[ngClass]="{
-			'checkbox__box--sm': iconSize === 'sm'
+			'checkbox__box--sm': iconSize() === 'sm'
 		}"
 	>
 		<svg
 			app-svg
-			[name]="icon"
+			[name]="icon()"
 			class="checkbox__icon"
 		></svg>
 	</span>

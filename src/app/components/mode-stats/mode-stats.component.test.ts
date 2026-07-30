@@ -34,7 +34,7 @@ describe('ModeStatsComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ModeStatsComponent],
+			imports: [ModeStatsComponent],
 			schemas: [NO_ERRORS_SCHEMA],
 		})
 			.overrideComponent(ModeStatsComponent, {
@@ -46,7 +46,7 @@ describe('ModeStatsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ModeStatsComponent);
 		component = fixture.componentInstance;
-		component.point = mockPoint;
+		fixture.componentRef.setInput('point', mockPoint);
 		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
 		const mockElement = document.createElement('div');
 		mockElement.innerHTML = `

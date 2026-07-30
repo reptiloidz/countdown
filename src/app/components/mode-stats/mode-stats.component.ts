@@ -3,26 +3,34 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	HostBinding,
-	Input,
+	input,
 	OnInit,
 	signal,
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { differenceInMinutes, Duration, endOfYear, formatDuration, startOfDay, startOfYear, subYears } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { minutesInDay, minutesInHour, minutesInMonth, minutesInYear } from 'date-fns/constants';
 import { parseDate, sortDates } from 'src/app/helpers';
 import { Iteration, Point, SwitcherItem } from 'src/app/interfaces';
 import { DifferenceMode } from 'src/app/types';
+import { DatepickerComponent } from '../datepicker/datepicker.component';
+import { SwitcherComponent } from '../switcher/switcher.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
+import { SvgComponent } from '../svg/svg.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 
 @Component({
 	selector: 'app-mode-stats',
+	standalone: true,
+	imports: [CommonModule, DatepickerComponent, SwitcherComponent, TooltipComponent, SvgComponent, CheckboxComponent],
 	templateUrl: './mode-stats.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModeStatsComponent implements OnInit, AfterViewInit {
-	@Input() point!: Point;
+	point = input.required<Point>();
 	@HostBinding('class') class = 'mode-stats';
 	@ViewChild('formatsRef', { read: ViewContainerRef })
 	formatsRef: ViewContainerRef | undefined;
@@ -110,11 +118,16 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 			disabled: false,
 		},
 	];
-	activeFormat = localStorage.getItem('statFormat') ?? (this.dateOnly ? 'days' : 'minutes');
-	formatNames: DifferenceMode[] = this.activeFormat.split('_') as DifferenceMode[];
+	activeFormat = localStorage.getItem('statFormat') ?? 'minutes';
+	formatNames: DifferenceMode[] = (localStorage.getItem('statFormat')?.split('_') ?? ['minutes']) as DifferenceMode[];
 
 	ngOnInit(): void {
-		this.dates.set(sortDates(this.point).dates);
+		if (!localStorage.getItem('statFormat')) {
+			this.activeFormat = this.dateOnly ? 'days' : 'minutes';
+			this.formatNames = this.activeFormat.split('_') as DifferenceMode[];
+		}
+
+		this.dates.set(sortDates(this.point()).dates);
 
 		this.firstIterationDate.set(parseDate(this.dates()[0].date));
 		this.lastIterationDate.set(parseDate(this.dates()[this.dates().length - 1].date));
@@ -136,7 +149,7 @@ export class ModeStatsComponent implements OnInit, AfterViewInit {
 	}
 
 	get dateOnly() {
-		return this.point?.dateOnly;
+		return this.point()?.dateOnly;
 	}
 
 	reset() {

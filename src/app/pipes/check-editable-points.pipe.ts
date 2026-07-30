@@ -1,14 +1,15 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { Point } from '../interfaces';
 import { AuthService } from '../services';
 
 @Pipe({
 	name: 'checkEditablePoints',
+	standalone: true,
 })
 export class CheckEditablePointsPipe implements PipeTransform {
-	constructor(private auth: AuthService) {}
+	private readonly auth = inject(AuthService);
 
 	transform(points: Point[]): boolean {
-		return points.some((point) => this.auth.checkAccessEdit(point));
+		return points.some(point => this.auth.checkAccessEdit(point));
 	}
 }

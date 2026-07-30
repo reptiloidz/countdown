@@ -1,50 +1,51 @@
 <input
 	#inputRef
-	*ngIf="!textarea else textareaTemplate;"
-	[attr.type]="type"
-	[attr.inputmode]="inputmode"
-	[placeholder]="placeholder"
-	[autocomplete]="autocomplete"
-	[autofocus]="autofocus"
+	*ngIf="!textarea() else textareaTemplate;"
+	[attr.type]="type()"
+	[attr.inputmode]="inputmode()"
+	[placeholder]="placeholder()"
+	[autocomplete]="autocomplete()"
+	[autofocus]="autofocus()"
 	class="control__input"
-	[(ngModel)]="value"
-	[disabled]="isDisabled"
+	[ngModel]="value"
+	(ngModelChange)="onNgModelChange($event)"
 	(input)="onInput($event)"
-	[attr.name]="formControlName || name || null"
-	[mask]="mask"
+	[disabled]="isDisabledState()"
+	[attr.name]="formControlName() || name() || null"
+	[mask]="allowNegativeNumbers ? null : maskForTemplate"
 	[suffix]="suffix"
 	[prefix]="prefix"
 	[patterns]="patterns"
 	[validation]="validation"
-	[allowNegativeNumbers]="allowNegativeNumbers || null"
-	[attr.maxlength]="maxlength || null"
-	[attr.min]="min || null"
-	[attr.max]="max || null"
+	[allowNegativeNumbers]="allowNegativeNumbers"
+	[attr.maxlength]="maxlength() || null"
+	[attr.min]="min() || null"
+	[attr.max]="max() || null"
 	(focus)="focusHandler($event)"
 	(blur)="blurHandler($event)"
 	(keydown)="keydownHandler($event)"
 >
 <div
-	*ngIf="icon || (clearButton && value.toString().length) || showPasswordButton"
+	*ngIf="icon() || (clearButton() && valueStr.length) || showPasswordButton()"
 	class="control__addon"
 >
 	<svg
 		app-svg
-		*ngIf="(icon && !clearButton) || (icon && !value.toString().length)"
-		[name]="icon"
+		*ngIf="(icon() && !clearButton()) || (icon() && !valueStr.length)"
+		[name]="icon()"
 		class="control__icon"
 	></svg>
 	<button
 		app-button
-		*ngIf="clearButton && value.toString().length"
+		*ngIf="clearButton() && valueStr.length"
 		mode="negative"
 		icon="cross"
-		[attr.title]="clearButtonTitle || null"
+		[attr.title]="clearButtonTitle() || null"
 		(click)="resetValue()"
 	></button>
 	<button
 		app-button
-		*ngIf="showPasswordButton"
+		*ngIf="showPasswordButton()"
 		mode="positive"
 		[icon]="showPasswordIcon"
 		[attr.title]="showPasswordTitle || null"
@@ -53,11 +54,11 @@
 </div>
 <ng-template #textareaTemplate>
 	<textarea
-		[placeholder]="placeholder"
+		[placeholder]="placeholder()"
 		class="control__textarea"
-		[disabled]="isDisabled"
+		[disabled]="isDisabledState()"
 		(input)="onInput($event)"
-		[attr.name]="formControlName || null"
-		[rows]="textareaRows"
-	>{{ value || '' }}</textarea>
+		[attr.name]="formControlName() || null"
+		[rows]="textareaRows()"
+	>{{ valueStr }}</textarea>
 </ng-template>

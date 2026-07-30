@@ -40,9 +40,7 @@ import { goOnline, objectVal, query, ref, set, update } from '@angular/fire/data
 import { NotifyService, HttpService } from '.';
 import { generateUserpicName, randomHEXColor } from '../helpers';
 import { millisecondsInDay } from 'date-fns/constants';
-import { Store } from '@ngrx/store';
-import { AppState } from '../store/reducers';
-import { setEmailLoading } from '../store/actions/loading.action';
+import { ProfileLoadingStore } from '../state/profile-loading.store';
 
 @Injectable({
 	providedIn: 'root',
@@ -54,7 +52,7 @@ export class AuthService implements OnDestroy {
 		private router: Router,
 		private authFB: Auth,
 		private notify: NotifyService,
-		private store: Store<AppState>,
+		private profileLoading: ProfileLoadingStore,
 	) {
 		this.subscriptions.add(
 			authState(this.authFB).subscribe({
@@ -365,7 +363,7 @@ export class AuthService implements OnDestroy {
 	}
 
 	emailUpdateStarted() {
-		this.store.dispatch(setEmailLoading({ emailLoading: true }));
+		this.profileLoading.setEmailLoading(true);
 	}
 
 	updatePassword(user: User, password: string, newPassword: string) {

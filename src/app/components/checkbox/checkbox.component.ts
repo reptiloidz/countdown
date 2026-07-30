@@ -2,18 +2,25 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	computed,
 	HostBinding,
-	Input,
+	input,
+	model,
 	OnDestroy,
 	OnInit,
+	signal,
 	forwardRef,
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ActionService } from 'src/app/services';
+import { SvgComponent } from '../svg/svg.component';
 
 @Component({
 	selector: '[app-checkbox]',
+	standalone: true,
+	imports: [CommonModule, ReactiveFormsModule, SvgComponent],
 	templateUrl: './checkbox.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
@@ -26,23 +33,21 @@ import { ActionService } from 'src/app/services';
 })
 export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestroy {
 	@HostBinding('class') get controlClass() {
-		return ['checkbox state', this.mode !== 'text' && 'checkbox--' + this.mode].filter(_ => _).join(' ');
+		const mode = this.mode();
+		return ['checkbox state', mode !== 'text' && 'checkbox--' + mode].filter(_ => _).join(' ');
 	}
-	@Input() formControlName!: string;
-	@Input() control!: FormControl;
-	@Input() iconSize: 'sm' | 'md' = 'md';
-	@Input() mode: 'text' | 'icon' | 'custom' | 'privacy' = 'text';
-	@Input() isChecked = false;
-	@Input() isDisabled = false;
-	@Input() icon!: string;
 
-	private _name: string | null = null;
-	@Input() get name() {
-		return this._name ?? this.formControlName;
-	}
-	set name(value: string | null) {
-		this._name = value ?? this.formControlName;
-	}
+	formControlName = input<string>();
+	control = input<FormControl>();
+	iconSize = input<'sm' | 'md'>('md');
+	mode = input<'text' | 'icon' | 'custom' | 'privacy'>('text');
+	isDisabled = input(false);
+	icon = input<string>();
+	nameOverride = input<string | null>(null, { alias: 'name' });
+
+	readonly checked = model(false, { alias: 'isChecked' });
+	private disabledFromCva = signal<boolean | null>(null);
+	readonly isDisabledState = computed(() => this.disabledFromCva() ?? this.isDisabled());
 
 	private subscriptions = new Subscription();
 
@@ -54,6 +59,10 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 		private cdr: ChangeDetectorRef,
 		private action: ActionService,
 	) {}
+
+	get name() {
+		return this.nameOverride() ?? this.formControlName();
+	}
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -73,22 +82,27 @@ export class CheckboxComponent implements ControlValueAccessor, OnInit, OnDestro
 	onTouched: () => void = () => {};
 
 	writeValue(isChecked: boolean): void {
-		this.isChecked = isChecked;
+		this.checked.set(isChecked);
+		this.cdr.markForCheck();
 	}
+
 	registerOnChange(fn: (value: boolean) => void): void {
 		this.onChange = fn;
 	}
-	registerOnTouched(fn: any): void {
+
+	registerOnTouched(fn: () => void): void {
 		this.onTouched = fn;
 	}
+
 	setDisabledState?(isDisabled: boolean): void {
-		this.isDisabled = isDisabled;
+		this.disabledFromCva.set(isDisabled);
+		this.cdr.markForCheck();
 	}
 
 	onCheckboxChange(event: Event): void {
-		const input = event.target as HTMLInputElement;
-		this.isChecked = input.checked;
-		this.onChange(this.isChecked);
+		const inputEl = event.target as HTMLInputElement;
+		this.checked.set(inputEl.checked);
+		this.onChange(this.checked());
 		this.onTouched();
 	}
 }

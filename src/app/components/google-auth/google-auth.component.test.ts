@@ -3,6 +3,8 @@ import { GoogleAuthComponent } from './google-auth.component';
 import { AuthService, NotifyService, PopupService } from 'src/app/services';
 import { PrivacyComponent } from '../privacy/privacy.component';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { Subject } from 'rxjs';
+import { ActionService } from 'src/app/services';
 
 describe('GoogleAuthComponent', () => {
 	let component: GoogleAuthComponent;
@@ -26,11 +28,12 @@ describe('GoogleAuthComponent', () => {
 		} as any;
 
 		await TestBed.configureTestingModule({
-			declarations: [GoogleAuthComponent, CheckboxComponent],
+			imports: [GoogleAuthComponent, CheckboxComponent],
 			providers: [
 				{ provide: AuthService, useValue: authServiceMock },
 				{ provide: NotifyService, useValue: notifyServiceMock },
 				{ provide: PopupService, useValue: popupServiceMock },
+				{ provide: ActionService, useValue: { eventPointsCheckedAll$: new Subject() } },
 			],
 		}).compileComponents();
 

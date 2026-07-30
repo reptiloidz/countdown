@@ -26,7 +26,7 @@
 				(click)="switchCalendarToNow()"
 			></button>
 			<button
-				*ngIf="!staticMode"
+				*ngIf="!staticMode()"
 				app-button
 				icon="clock"
 				mode="ghost"
@@ -36,15 +36,15 @@
 		</div>
 		<span
 			class="calendar__status"
-			*ngIf="!hideCurrentPeriod"
+			*ngIf="!hideCurrentPeriod()"
 		>{{ visiblePeriod }}</span>
 	</div>
 
 	<app-switcher
-		*ngIf="!hideModeSwitch"
+		*ngIf="!hideModeSwitch()"
 		class="calendar__switcher"
 		[items]="calendarModes"
-		[value]="activeMode"
+		[value]="activeMode()"
 		(valueSwitched)="switchCalendarMode($event)"
 	></app-switcher>
 </div>
@@ -52,14 +52,14 @@
 <div class="calendar__table-wrapper">
 	<table
 		class="calendar__table"
-		[ngClass]="['calendar__table--' + activeMode]"
+		[ngClass]="['calendar__table--' + activeMode()]"
 	>
-		<thead *ngIf="activeMode === 'month'">
+		<thead *ngIf="activeMode() === 'month'">
 			<tr class="calendar__row">
 				<th
 					class="calendar__head"
 					[ngClass]="{
-						'calendar__head--weekend': weekendDays.includes(i)
+						'calendar__head--weekend': weekendDays().includes(i)
 					}"
 					*ngFor="let day of weekDaysArray; index as i; trackBy: trackBy"
 				>{{ day }}</th>
@@ -82,15 +82,15 @@
 							'calendar__button--now': item.nowDate,
 							'calendar__button--weekend': item.weekendDate,
 							'calendar__button--other': item.otherMonthDate,
-							'calendar__button--readonly': staticMode || (staticCellMode && !item.points.length && !item.iterations.length),
+							'calendar__button--readonly': staticMode() || (staticCellMode() && !item.points.length && !item.iterations.length),
 							'calendar__button--checked': item.itemsChecked,
-							'state': !(staticMode || (staticCellMode && !item.points.length && !item.iterations.length))
+							'state': !(staticMode() || (staticCellMode() && !item.points.length && !item.iterations.length))
 						}"
-						[tabIndex]="staticMode ? -1 : 0"
+						[tabIndex]="staticMode() ? -1 : 0"
 						[disabled]="item.disabledDate"
 						(click)="dateClicked({
 							date: item.date,
-							activeMode,
+							activeMode: activeMode(),
 							points: item.points,
 							iterations: item.iterations
 						})"
@@ -98,7 +98,7 @@
 					>
 						<ng-container *ngIf="item.points.length || item.iterations.length">
 							<span
-								*ngIf="point?.repeatable || item.points.length else mark;"
+								*ngIf="point()?.repeatable || item.points.length else mark;"
 								class="calendar__counter"
 							>{{ item.points.length || item.iterations.length }}</span>
 							<ng-template #mark>
@@ -115,7 +115,7 @@
 						<ng-container
 							*ngIf="navTemplate"
 							[ngTemplateOutlet]="navTemplate"
-							[ngTemplateOutletContext]="{ date: item, mode: this.activeMode, point: this.point }"
+							[ngTemplateOutletContext]="{ date: item, mode: activeMode(), point: point() }"
 						></ng-container>
 					</div>
 				</td>

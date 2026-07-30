@@ -5,6 +5,7 @@ import { ru } from 'date-fns/locale';
 
 @Pipe({
 	name: 'timeRemainText',
+	standalone: true,
 })
 export class TimeRemainTextPipe implements PipeTransform {
 	transform(time: string, greenwich?: boolean): string {
@@ -15,7 +16,7 @@ export class TimeRemainTextPipe implements PipeTransform {
 			}),
 			{
 				locale: ru,
-			}
+			},
 		);
 	}
 }

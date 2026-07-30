@@ -9,19 +9,18 @@ describe('SwitcherComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [SwitcherComponent],
-			imports: [FormsModule, ReactiveFormsModule],
+			imports: [SwitcherComponent, FormsModule, ReactiveFormsModule],
 		}).compileComponents();
 	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SwitcherComponent);
 		component = fixture.componentInstance;
-		component.items = [
+		fixture.componentRef.setInput('items', [
 			{ value: 'one', text: 'One' },
 			{ value: 'two', text: 'Two' },
-		];
-		component.value = 'one';
+		]);
+		component.writeValue('one');
 		fixture.detectChanges();
 	});
 
@@ -38,20 +37,20 @@ describe('SwitcherComponent', () => {
 		const input = fixture.debugElement.query(By.css('input[value="two"]'));
 		input.nativeElement.click();
 		fixture.detectChanges();
-		expect(component.value).toBe('two');
+		expect(component.value()).toBe('two');
 	});
 
 	it('should emit valueSwitched event on selection', () => {
-		jest.spyOn(component.valueSwitched, 'emit');
+		const emitSpy = jest.spyOn(component.valueSwitched, 'emit');
 		const input = fixture.debugElement.query(By.css('input[value="two"]'));
 		input.nativeElement.click();
 		fixture.detectChanges();
-		expect(component.valueSwitched.emit).toHaveBeenCalledWith('two');
+		expect(emitSpy).toHaveBeenCalledWith('two');
 	});
 
 	it('should display correct class based on mode and size', () => {
-		component.mode = 'ghost';
-		component.size = 'sm';
+		fixture.componentRef.setInput('mode', 'ghost');
+		fixture.componentRef.setInput('size', 'sm');
 		fixture.detectChanges();
 		expect(fixture.debugElement.classes['switcher--ghost']).toBeTruthy();
 		expect(fixture.debugElement.classes['switcher--sm']).toBeTruthy();

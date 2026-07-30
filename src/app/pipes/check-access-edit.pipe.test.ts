@@ -1,3 +1,4 @@
+import { TestBed } from '@angular/core/testing';
 import { CheckAccessEditPipe } from './check-access-edit.pipe';
 import { AuthService } from '../services';
 import { Point } from '../interfaces';
@@ -10,7 +11,10 @@ describe('CheckAccessEditPipe', () => {
 		authService = {
 			checkAccessEdit: jest.fn(),
 		} as unknown as AuthService;
-		pipe = new CheckAccessEditPipe(authService);
+		TestBed.configureTestingModule({
+			providers: [CheckAccessEditPipe, { provide: AuthService, useValue: authService }],
+		});
+		pipe = TestBed.inject(CheckAccessEditPipe);
 	});
 
 	it('should create an instance', () => {

@@ -1,10 +1,9 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ActionService, NotifyService } from './services';
-import { Router, RouterModule } from '@angular/router';
+import { provideRouter, Router, RouterOutlet } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { NotifyComponent } from './components/notify/notify.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Constants } from './enums';
 
@@ -19,9 +18,9 @@ describe('AppComponent', () => {
 			events: new Subject(),
 		} as unknown as jest.Mocked<Router>;
 		await TestBed.configureTestingModule({
-			imports: [RouterModule.forRoot([])],
-			declarations: [AppComponent, NotifyComponent],
+			imports: [AppComponent],
 			providers: [
+				provideRouter([]),
 				{ provide: ActionService, useValue: { intervalSwitched: jest.fn() } },
 				{
 					provide: NotifyService,
@@ -30,7 +29,11 @@ describe('AppComponent', () => {
 				{ provide: Router, useValue: mockRouter },
 			],
 			schemas: [NO_ERRORS_SCHEMA],
-		}).compileComponents();
+		})
+			.overrideComponent(AppComponent, {
+				set: { imports: [RouterOutlet] },
+			})
+			.compileComponents();
 
 		fixture = TestBed.createComponent(AppComponent);
 		component = fixture.componentInstance;

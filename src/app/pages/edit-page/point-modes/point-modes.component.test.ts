@@ -1,24 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PointModesComponent } from './point-modes.component';
-import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, ElementRef, NO_ERRORS_SCHEMA, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropComponent } from '../../../components/drop/drop.component';
 import { InputComponent } from '../../../components/input/input.component';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { NotifyService } from 'src/app/services';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
-const dropMock = new DropComponent(
-	new ElementRef(document.createElement('div')),
-	{
-		...jest.fn(),
-		listen: jest.fn(),
-		createElement: jest.fn(),
-		setStyle: jest.fn(),
-	} as unknown as Renderer2,
-	{ detectChanges: jest.fn(), markForCheck: jest.fn() } as unknown as ChangeDetectorRef,
-	new NotifyService(),
-);
+const dropMock = {
+	openHandler: jest.fn(),
+	closeHandler: jest.fn(),
+} as unknown as DropComponent;
 
 describe('PointModesComponent', () => {
 	let component: PointModesComponent;
@@ -26,22 +17,24 @@ describe('PointModesComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [PointModesComponent, DropComponent, InputComponent],
-			imports: [FormsModule, ReactiveFormsModule, NgxMaskDirective],
+			imports: [PointModesComponent, FormsModule, ReactiveFormsModule, NgxMaskDirective],
 			providers: [ChangeDetectorRef, [provideNgxMask()]],
 			schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(PointModesComponent);
 		component = fixture.componentInstance;
-		component.form = new FormGroup({
-			pointModesForm: new FormGroup({
-				firstModeTitle: new FormControl(''),
-				secondModeTitle: new FormControl(''),
-				firstModeEmoji: new FormControl(''),
-				secondModeEmoji: new FormControl(''),
+		fixture.componentRef.setInput(
+			'form',
+			new FormGroup({
+				pointModesForm: new FormGroup({
+					firstModeTitle: new FormControl(''),
+					secondModeTitle: new FormControl(''),
+					firstModeEmoji: new FormControl(''),
+					secondModeEmoji: new FormControl(''),
+				}),
 			}),
-		});
+		);
 		fixture.detectChanges();
 	});
 
@@ -50,7 +43,7 @@ describe('PointModesComponent', () => {
 	});
 
 	it('should have default values', () => {
-		expect(component.emojis).toEqual([]);
+		expect(component.emojis()).toEqual([]);
 		expect(component.emojisCurrent).toEqual([]);
 		expect(component.filterEmojiValue).toBe('');
 		expect(component.loading).toBe(false);
@@ -86,9 +79,10 @@ describe('PointModesComponent', () => {
 
 	it('should apply filter', () => {
 		jest.useFakeTimers();
-		component.filterRef = new InputComponent(TestBed.inject(ChangeDetectorRef), TestBed.inject(DeviceDetectorService));
+		const inputFixture = TestBed.createComponent(InputComponent);
+		component.filterRef = inputFixture.componentInstance;
 		component.filterRef.value = 'label1';
-		component.emojis = [
+		fixture.componentRef.setInput('emojis', [
 			{
 				title: 'group1',
 				list: [
@@ -102,7 +96,7 @@ describe('PointModesComponent', () => {
 					},
 				],
 			},
-		];
+		]);
 
 		component.applyFilter('firstModeEmoji', dropMock);
 		jest.advanceTimersByTime(50);

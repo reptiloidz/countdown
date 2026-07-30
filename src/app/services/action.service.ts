@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Point } from '../interfaces';
+import { UiStore } from '../state/ui.store';
 
 @Injectable({
 	providedIn: 'root',
@@ -10,13 +11,14 @@ export class ActionService {
 	private _eventPointsCheckedSubject = new Subject<boolean>();
 	private _eventIterationSwitchedSubject = new Subject<Date>();
 	private _eventFetchedPointsSubject = new Subject<void>();
-	private _eventUpdatedPointSubject = new BehaviorSubject<Point | undefined>(undefined);
+	private _eventUpdatedPointSubject = new Subject<Point | undefined>();
 	private _eventHasEditablePointsSubject = new Subject<boolean>();
 	private _eventIntervalSwitchedSubject = new Subject<void>();
 	private _eventAutocompleteOpenedSubject = new Subject<void>();
 	private _eventShortLinkCheckedSubject = new Subject<void>();
 	private _eventOnboardingClosedSubject = new Subject<void>();
 	private _eventIterationsCheckedSubject = new Subject<void>();
+
 	eventPointsCheckedAll$ = this._eventPointsCheckedAllSubject.asObservable();
 	eventPointsChecked$ = this._eventPointsCheckedSubject.asObservable();
 	eventIterationSwitched$ = this._eventIterationSwitchedSubject.asObservable();
@@ -29,19 +31,46 @@ export class ActionService {
 	eventOnboardingClosed$ = this._eventOnboardingClosedSubject.asObservable();
 	eventIterationsChecked$ = this._eventIterationsCheckedSubject.asObservable();
 
-	pointsChecked: string[] = [];
+	/** Только один onboarding-тултип может быть активен одновременно */
+	private activeOnboardingId: string | null = null;
 
-	get checkedPoints() {
-		return this.pointsChecked;
+	constructor(private uiStore: UiStore) {}
+
+	tryActivateOnboarding(id: string): boolean {
+		if (this.activeOnboardingId !== null && this.activeOnboardingId !== id) {
+			return false;
+		}
+		this.activeOnboardingId = id;
+		return true;
+	}
+
+	deactivateOnboarding(id: string): void {
+		if (this.activeOnboardingId === id) {
+			this.activeOnboardingId = null;
+		}
+	}
+
+	get checkedPoints(): string[] {
+		return this.uiStore.pointsChecked();
+	}
+
+	get pointsChecked(): string[] {
+		return this.uiStore.pointsChecked();
+	}
+
+	set pointsChecked(ids: string[]) {
+		this.uiStore.setPointsChecked(ids);
 	}
 
 	getCheckedPoints(el: Element) {
 		if (el?.children) {
-			this.pointsChecked = Array.from(el?.children)
-				.filter((item: any) => item?.querySelector('input')?.checked)
-				.map((item: any) => item.getAttribute('data-id'));
+			const ids = Array.from(el.children)
+				.filter((item: Element) => (item as HTMLElement).querySelector('input')?.checked)
+				.map(item => item.getAttribute('data-id'))
+				.filter((id): id is string => !!id);
+			this.uiStore.setPointsChecked(ids);
 		}
-		this._eventPointsCheckedSubject.next(!!this.pointsChecked.length);
+		this._eventPointsCheckedSubject.next(this.uiStore.hasPointsChecked());
 	}
 
 	checkAllPoints() {
@@ -59,10 +88,12 @@ export class ActionService {
 	}
 
 	pointUpdated(point: Point | undefined) {
+		this.uiStore.setUpdatedPoint(point);
 		this._eventUpdatedPointSubject.next(point);
 	}
 
 	hasEditablePoints(has: boolean) {
+		this.uiStore.setHasEditablePoints(has);
 		this._eventHasEditablePointsSubject.next(has);
 	}
 

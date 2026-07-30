@@ -8,7 +8,7 @@
 		>
 		<div
 			class="root__loading-marker"
-			*ngIf="(userpicLoading$ || profileLoading$ || emailLoading$ || passwordLoading$ || removeLoading$ || unlinkLoading$) | async"
+			*ngIf="profileLoading.anyLoading()"
 		></div>
 
 		<div class="profile__footer profile__footer--aside">
@@ -108,7 +108,7 @@
 				<button
 					app-button
 					type="submit"
-					[attr.disabled]="(userpicLoading$ | async) || formData.invalid || null"
+					[attr.disabled]="profileLoading.userpicLoading() || formData.invalid || null"
 					class="form__submit profile__submit"
 					mode="ghost-positive"
 					iconPosition="right"

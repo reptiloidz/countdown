@@ -1,28 +1,28 @@
 <app-drop
-	[dropList]="autocompleteListFiltered"
+	[dropList]="autocompleteListFiltered()"
 	(dropChanged)="changeHandler($event)"
 	(dropClosed)="closeHandler()"
-	[value]="value"
+	[value]="value()"
 	[focusoutClose]="true"
 	navClass="drop__nav"
 >
 	<ng-template #triggerTemplate>
 		<app-input
 			class="control--autocomplete"
-			[placeholder]="placeholder"
+			[placeholder]="placeholder()"
 			name="autocomplete"
-			[inputmode]="inputmode"
-			[(ngModel)]="visibleValue"
-			(ngModelChange)="filter($event)"
+			[inputmode]="inputmode()"
+			[value]="visibleValue()"
+			(valueChange)="onVisibleValueChange($event)"
 			(focus)="openHandler()"
 			(keydown)="keydown($event)"
 			autocomplete="off"
-			[mask]="mask"
-			[suffix]="suffix"
-			[prefix]="prefix"
-			[patterns]="patterns"
-			[attr.data-suffix]="dataSuffix"
-			[autofocus]="autofocus"
+			[mask]="mask()"
+			[suffix]="suffix()"
+			[prefix]="prefix()"
+			[patterns]="patterns()"
+			[attr.data-suffix]="dataSuffix()"
+			[autofocus]="autofocus()"
 		></app-input>
 	</ng-template>
 </app-drop>

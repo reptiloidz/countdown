@@ -1,32 +1,31 @@
 <div
-	*appLet="point | checkAccessEdit as hasAccessEdit"
 	class="point color"
 	[ngClass]="[
-		hasAccessEdit ? 'point--available' : '',
-		isEdit ? 'point--edit' : '',
-		point.color ? 'color--' + point.color : '',
-		isLine ? 'point--line color--horizontal' : '',
-		isSm ? 'point--sm' : '',
-		isPopup ? 'point--popup' : '',
+		userCanEdit ? 'point--available' : '',
+		isEdit() ? 'point--edit' : '',
+		point().color ? 'color--' + point().color : '',
+		isLine() ? 'point--line color--horizontal' : '',
+		isSm() ? 'point--sm' : '',
+		isPopup() ? 'point--popup' : '',
 	]"
 >
 	<a
-		routerLink="/point/{{ point.id }}"
-		[attr.title]="isSm ? point.title : null"
+		routerLink="/point/{{ point().id }}"
+		[attr.title]="isSm() ? point().title : null"
 		class="point__main state"
 	>
 		<h2 class="point__title">
 			<span
 				class="point__title-text"
-				[title]="point.title"
-			>{{ point.title }}</span>
+				[title]="point().title"
+			>{{ point().title }}</span>
 		</h2>
 		<p
-			*ngIf="point.description && !isSm"
+			*ngIf="point().description && !isSm()"
 			class="point__description"
-			[title]="point.description"
-		>{{ point.description }}</p>
-		<p class="point__description">{{ remainCalculated ? closestIterationRemain : 'Расчёт оставшегося времени' }}</p>
+			[title]="point().description"
+		>{{ point().description }}</p>
+		<p class="point__description">{{ remainCalculated() ? closestIterationRemain : 'Расчёт оставшегося времени' }}</p>
 		<p
 			*ngIf="closestIterationMode"
 			class="point__description"
@@ -35,7 +34,7 @@
 
 	<div class="point__timers-wrapper">
 		<app-timers
-			*ngIf="!isSm && !isPopup"
+			*ngIf="!isSm() && !isPopup()"
 			class="point__timers timers timers--sm timers--left"
 			size="sm"
 			[years]="timerYears"
@@ -44,13 +43,14 @@
 			[hours]="timerHours"
 			[mins]="timerMins"
 			[secs]="timerSecs"
-			[showSec]="showSec"
+			[showSec]="showSec()"
 			yearsLabel="Год"
 			monthsLabel="Мес"
 			daysLabel="Ден"
 			hoursLabel="Час"
 			minsLabel="Мин"
 			secsLabel="Сек"
+			[delayValue]="0"
 			delayRandomValue="3000"
 			[title]="
 				(timerYears || '00') + '/'
@@ -62,41 +62,41 @@
 			"
 		></app-timers>
 		<ng-container
-			*ngIf="!isSm && !isPopup"
+			*ngIf="!isSm() && !isPopup()"
 			[ngTemplateOutlet]="rotating"
 		></ng-container>
 	</div>
 
 	<div
-		*ngIf="isAuth && !isEdit"
+		*ngIf="isAuth && !isEdit()"
 		class="point__nav"
 	>
 		<div class="point__nav-section">
 			<button
 				app-button
 				mode="negative"
-				[attr.disabled]="(!hasAccessEdit || loading) || null"
+				[attr.disabled]="(!userCanEdit || loading) || null"
 				[loading]="loading"
 				icon="trash"
 				title="Удалить событие"
-				(click)="delete(point.id)"
+				(click)="delete(point().id)"
 			></button>
 			<ng-container
 				*ngIf="checkboxTemplate; else defaultCheckbox"
 				[ngTemplateOutlet]="checkboxTemplate"
-				[ngTemplateOutletContext]="{disabled:!hasAccessEdit}"
+				[ngTemplateOutletContext]="{disabled:!userCanEdit}"
 			></ng-container>
 			<ng-template #defaultCheckbox>
 				<label
 					#pointCheckbox
-					[isDisabled]="!hasAccessEdit || loading"
+					[isDisabled]="!userCanEdit || loading"
 					app-checkbox
 					(change)="checkPoint()"
 				></label>
 			</ng-template>
 		</div>
 		<div
-			*ngIf="hasAccessEdit"
+			*ngIf="userCanEdit"
 			class="point__nav-section"
 		>
 			<a
@@ -104,14 +104,14 @@
 				size="sm"
 				icon="pencil"
 				mode="secondary"
-				routerLink="/{{isEdit ? 'point' : 'edit'}}/{{point.id}}"
+				routerLink="/{{isEdit() ? 'point' : 'edit'}}/{{point().id}}"
 				title="Редактировать"
 			></a>
 			<div
 				app-tooltip
-				[disabled]="isSm"
+				[disabled]="isSm()"
 				vertical="top"
-				[text]="point.repeatable ? 'Добавить итерацию с&nbsp;текущим временем' : 'Поменять время на&nbsp;текущее'"
+				[text]="point().repeatable ? 'Добавить итерацию с&nbsp;текущим временем' : 'Поменять время на&nbsp;текущее'"
 			>
 				<button
 					app-button
@@ -124,30 +124,30 @@
 			</div>
 		</div>
 		<ng-container
-			*ngIf="isPopup"
+			*ngIf="isPopup()"
 			[ngTemplateOutlet]="rotating"
 		></ng-container>
 	</div>
 
 	<div
-		*ngIf="!isEdit"
+		*ngIf="!isEdit()"
 		class="point__markers-wrapper"
 	>
 		<div class="point__markers">
 			<ng-container
-				*ngIf="isSm"
+				*ngIf="isSm()"
 				[ngTemplateOutlet]="rotating"
 			></ng-container>
 			<div
 				class="marker"
 				[ngClass]="{
-					'marker--inactive': !point.greenwich
+					'marker--inactive': !point().greenwich
 				}"
 			>
 				<svg
 					app-svg
 					name="globe"
-					[attr.aria-label]="point.greenwich ? 'Глобальное' : 'Местное'"
+					[attr.aria-label]="point().greenwich ? 'Глобальное' : 'Местное'"
 					ariaHidden="false"
 					class="marker__inner"
 				></svg>
@@ -155,28 +155,28 @@
 			<div
 				class="marker"
 				[ngClass]="{
-					'marker--inactive': !point.repeatable
+					'marker--inactive': !point().repeatable
 				}"
 			>
 				<svg
 					app-svg
 					name="refresh"
 					ariaHidden="false"
-					[attr.aria-label]="point.repeatable ? 'Многократное' : 'Однократное'"
+					[attr.aria-label]="point().repeatable ? 'Многократное' : 'Однократное'"
 					class="marker__inner"
 				></svg>
 			</div>
 			<div
 				class="marker"
 				[ngClass]="{
-					'marker--inactive': !point.public
+					'marker--inactive': !point().public
 				}"
 			>
 				<svg
 					app-svg
 					name="users"
 					ariaHidden="false"
-					[attr.aria-label]="point.public ? 'Публичное' : 'Приватное'"
+					[attr.aria-label]="point().public ? 'Публичное' : 'Приватное'"
 					class="marker__inner"
 				></svg>
 			</div>
@@ -185,16 +185,16 @@
 			*ngIf="isAuth && hasEmailVerified"
 			class="point__author"
 		>
-			<ng-container *ngIf="!isSm">
-				<ng-container *ngIf="point.userInfo?.displayName || point.userInfo?.photoURL else btnAuthor">
+			<ng-container *ngIf="!isSm()">
+				<ng-container *ngIf="point().userInfo?.displayName || point().userInfo?.photoURL else btnAuthor">
 					<img
-						*ngIf="point.userInfo?.photoURL"
+						*ngIf="point().userInfo?.photoURL"
 						class="userpic userpic--sm"
-						[src]="point.userInfo?.photoURL"
-						[alt]="point.userInfo?.displayName"
+						[src]="point().userInfo?.photoURL"
+						[alt]="point().userInfo?.displayName"
 						aria-hidden="true"
 					>
-					<span class="point__author-text">{{ point.userInfo?.displayName }}</span>
+					<span class="point__author-text">{{ point().userInfo?.displayName }}</span>
 				</ng-container>
 			</ng-container>
 			<ng-template #btnAuthor>
@@ -206,7 +206,7 @@
 						'point__author-button--text': !authorLoading
 					}"
 					[disabled]="authorLoading"
-					(click)="loadUserInfo(point.user)"
+					(click)="loadUserInfo(point().user)"
 					[loading]="authorLoading"
 				>{{ authorLoading ? '' : 'Чьё?'}}</button>
 			</ng-template>
@@ -216,13 +216,13 @@
 	<ng-template #rotating>
 		<svg
 			app-svg
-			[name]="point.direction === 'forward' ? 'rotate-right' : 'rotate-left'"
+			[name]="point().direction === 'forward' ? 'rotate-right' : 'rotate-left'"
 			[attr.aria-label]="directionTitle"
 			class="direction-icon point__direction"
 			ariaHidden="false"
 			[ngClass]="[
 						isDirectionCorrect ? 'direction-icon--correct' : '',
-						point.direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward',
+						point().direction === 'forward' ? 'direction-icon--forward' : 'direction-icon--backward',
 					]"
 		></svg>
 	</ng-template>

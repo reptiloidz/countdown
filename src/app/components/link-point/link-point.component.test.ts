@@ -2,8 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LinkPointComponent } from './link-point.component';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-
 jest.mock('@angular/router');
 
 describe('LinkPointComponent', () => {
@@ -12,23 +10,24 @@ describe('LinkPointComponent', () => {
 	let routerMock: Router;
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			declarations: [LinkPointComponent],
-			imports: [],
-			providers: [{ provide: Router, useValue: routerMock }],
-			schemas: [NO_ERRORS_SCHEMA],
-		}).compileComponents();
 		routerMock = {
 			navigate: jest.fn(),
+			createUrlTree: jest.fn(),
+			serializeUrl: jest.fn().mockReturnValue('/'),
 		} as unknown as Router;
+
+		await TestBed.configureTestingModule({
+			imports: [LinkPointComponent],
+			providers: [{ provide: Router, useValue: routerMock }],
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(LinkPointComponent);
 		component = fixture.componentInstance;
 	});
 
 	it('should render link with pointName and correct routerLink', () => {
-		component.pointId = '123';
-		component.pointName = 'Test Point';
+		fixture.componentRef.setInput('pointId', '123');
+		fixture.componentRef.setInput('pointName', 'Test Point');
 		fixture.detectChanges();
 
 		const linkDebugEl = fixture.debugElement.query(By.css('.notify-list__link'));

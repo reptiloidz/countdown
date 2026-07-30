@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CheckboxComponent } from './checkbox.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { SvgComponent } from '../svg/svg.component';
-import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { ActionService } from 'src/app/services';
+import { Subject } from 'rxjs';
 
 describe('CheckboxComponent', () => {
 	let component: CheckboxComponent;
@@ -11,9 +12,8 @@ describe('CheckboxComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [CheckboxComponent, SvgComponent],
-			imports: [FormsModule, ReactiveFormsModule],
-			schemas: [NO_ERRORS_SCHEMA],
+			imports: [CheckboxComponent, FormsModule, ReactiveFormsModule],
+			providers: [{ provide: ActionService, useValue: { eventPointsCheckedAll$: new Subject() } }],
 		}).compileComponents();
 
 		fixture = TestBed.createComponent(CheckboxComponent);
@@ -25,19 +25,19 @@ describe('CheckboxComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should toggle isChecked when checkbox is clicked', () => {
-		component.isChecked = false;
+	it('should toggle checked when checkbox is clicked', () => {
+		component.checked.set(false);
 		fixture.detectChanges();
 
 		const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
 		checkbox.click();
 		fixture.detectChanges();
 
-		expect(component.isChecked).toBe(true);
+		expect(component.checked()).toBe(true);
 	});
 
 	it('should apply the correct class based on mode', () => {
-		component.mode = 'icon';
+		fixture.componentRef.setInput('mode', 'icon');
 		fixture.detectChanges();
 
 		const span = fixture.debugElement.nativeElement;
@@ -45,9 +45,7 @@ describe('CheckboxComponent', () => {
 	});
 
 	it('should disable the checkbox when isDisabled is true', () => {
-		component.isDisabled = true;
-		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
-		cdr.detectChanges();
+		fixture.componentRef.setInput('isDisabled', true);
 		fixture.detectChanges();
 
 		const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
@@ -71,9 +69,7 @@ describe('CheckboxComponent', () => {
 	});
 
 	it('should bind the name attribute to the input element', () => {
-		component.name = 'test-checkbox';
-		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
-		cdr.detectChanges();
+		fixture.componentRef.setInput('name', 'test-checkbox');
 		fixture.detectChanges();
 
 		const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
@@ -81,36 +77,32 @@ describe('CheckboxComponent', () => {
 	});
 
 	it('should render the icon when mode is icon and icon is provided', () => {
-		component.mode = 'icon';
-		component.icon = 'check';
+		fixture.componentRef.setInput('mode', 'icon');
+		fixture.componentRef.setInput('icon', 'check');
 		fixture.detectChanges();
 
 		const svg = fixture.debugElement.query(By.css('svg')).nativeElement;
 		expect(svg.getAttribute('ng-reflect-name')).toBe('check');
 	});
 
-	it('should update isChecked when writeValue is called', () => {
+	it('should update checked when writeValue is called', () => {
 		component.writeValue(true);
-		expect(component.isChecked).toBe(true);
+		expect(component.checked()).toBe(true);
 
 		component.writeValue(false);
-		expect(component.isChecked).toBe(false);
+		expect(component.checked()).toBe(false);
 	});
 
-	it('should update isDisabled when setDisabledState is called', () => {
-		if (component.setDisabledState) {
-			component.setDisabledState(true);
-			expect(component.isDisabled).toBe(true);
+	it('should update disabled state when setDisabledState is called', () => {
+		component.setDisabledState?.(true);
+		expect(component.isDisabledState()).toBe(true);
 
-			component.setDisabledState(false);
-			expect(component.isDisabled).toBe(false);
-		}
+		component.setDisabledState?.(false);
+		expect(component.isDisabledState()).toBe(false);
 	});
 
 	it('should apply the correct size class to the checkbox box', () => {
-		component.iconSize = 'sm';
-		const cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
-		cdr.detectChanges();
+		fixture.componentRef.setInput('iconSize', 'sm');
 		fixture.detectChanges();
 
 		const checkboxBox = fixture.debugElement.query(By.css('.checkbox__box')).nativeElement;
