@@ -4,8 +4,8 @@
 	"scripts": {
 		"ng": "ng",
 		"generate-env": "ts-node scripts/generate-env.ts",
-		"start": "ts-node scripts/generate-env.ts && yarn run svg && ng serve -o --host 0.0.0.0",
-		"svg": "node scripts/sprite.js && yarn run svgo",
+		"start": "ts-node scripts/generate-env.ts && npm run svg && ng serve -o --host 0.0.0.0",
+		"svg": "node scripts/sprite.js && npm run svgo",
 		"svgo": "svgo src/assets/sprite.svg --config scripts/svgo.config.cjs --pretty",
 		"start-mock": "ng serve -o --host 0.0.0.0 --configuration mock",
 		"build": "ng build --configuration production",
