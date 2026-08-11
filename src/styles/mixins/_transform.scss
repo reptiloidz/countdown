@@ -2,9 +2,8 @@
 // TRANSFORM
 // ===============================================
 
-@use 'sass:meta';
-@use '@sass-fairy/string';
-@use '@sass-fairy/list';
+@use 'sass:list';
+@use 'sass:string';
 
 /*
 	Параметры (transform-свойства через запятую) распарсятся и сохранятся в отдельные переменные,
@@ -17,16 +16,31 @@
 */
 
 @mixin transform($transform...) {
-	transform: list.map($transform-props-list, meta.get-function('_wrap-transform-in-var'), $separator: space);
+	transform: _transform-var-list();
 
 	@each $transform-item in $transform {
-		/* stylelint-disable-next-line prettier/prettier */
-		$transform-name: list.slice(string.split(to-lower-case(string.trim(#{$transform-item})), '('), $start-at: 1, $end-at: 1);
+		$transform-string: to-lower-case(#{$transform-item});
+		$paren-index: string.index($transform-string, '(');
+		$transform-name: if(
+			$paren-index,
+			string.slice($transform-string, 1, $paren-index - 1),
+			$transform-string
+		);
 		--transform-#{$transform-name}: #{$transform-item};
 	}
 }
 
-@function _wrap-transform-in-var($item, $index, $list) {
+@function _transform-var-list() {
+	$result: ();
+
+	@each $item in $transform-props-list {
+		$result: list.append($result, _wrap-transform-in-var($item), $separator: space);
+	}
+
+	@return $result;
+}
+
+@function _wrap-transform-in-var($item) {
 	// Не ошибка, дефолтное значение должно быть просто пустым
 	/* stylelint-disable-next-line prettier/prettier */
 	@return var(--transform-#{$item},);

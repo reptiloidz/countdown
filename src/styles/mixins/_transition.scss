@@ -2,9 +2,8 @@
 // TRANSITIONS
 // ===============================================
 
+@use 'sass:list';
 @use 'sass:meta';
-@use '@sass-fairy/string';
-@use '@sass-fairy/list';
 
 /*
 	Используется в 4 вариантах:
@@ -21,31 +20,39 @@
 
 @mixin transition($transition...) {
 	// Если параметры указаны
-	@if (length($transition) != 0) {
+	@if list.length($transition) != 0 {
 		// Первым параметром указано true — генерируем переменные, transition не перезапишет старые значения
-		@if (type-of(nth($transition, 1)) == bool) {
+		@if meta.type-of(list.nth($transition, 1)) == bool {
+			transition: _transition-var-list();
+
 			$transition-values: ();
 
-			transition: list.map($transition-props-list, meta.get-function('_wrap-transition-in-var'), $separator: comma);
-
-			@if length($transition) == 1 {
+			@if list.length($transition) == 1 {
 				// Остальные параметры не были переданы, используем дефолтное значение таким же образом
-				$transition-values: list.prepend($transition-values, $transition-base);
+				$transition-values: list.append($transition-values, $transition-base);
 			} @else {
-				$transition-args: list.slice($transition, $start-at: 2);
-				/* stylelint-disable-next-line prettier/prettier */
-				$transition-values: string.split(str-slice(string.replace(list.to-string($transition-args), '), (', '/'), 2, -2), '/');
+				@for $i from 2 through list.length($transition) {
+					$transition-values: list.append($transition-values, list.nth($transition, $i));
+				}
 			}
 
 			@each $transition-item in $transition-values {
-				$transition-list: string.split(#{string.trim(#{$transition-item})}, ' ');
-				$transition-name: #{list.slice($transition-list, $start-at: 1, $end-at: 1)};
-				$transition-value: #{list.slice($transition-list, $start-at: 2)};
+				$transition-name: list.nth($transition-item, 1);
+				$transition-value: ();
+
+				@for $i from 2 through list.length($transition-item) {
+					$transition-value: list.append(
+						$transition-value,
+						list.nth($transition-item, $i),
+						$separator: space
+					);
+				}
+
 				--transition-#{$transition-name}: #{$transition-value};
 			}
 		} @else {
 			// Просто записываем параметры в свойство transition
-			@if length($transition) > 1 {
+			@if list.length($transition) > 1 {
 				@each $value in $transition {
 					@if $value == null or $value == none {
 						@warn "The keyword 'none' or 'null' must be used as a single argument.";
@@ -53,7 +60,7 @@
 				}
 			}
 
-			@if nth($transition, 1) != null {
+			@if list.nth($transition, 1) != null {
 				transition: $transition;
 			}
 		}
@@ -70,6 +77,16 @@
 	}
 }
 
-@function _wrap-transition-in-var($item, $index, $list) {
+@function _transition-var-list() {
+	$result: ();
+
+	@each $item in $transition-props-list {
+		$result: list.append($result, _wrap-transition-in-var($item), $separator: comma);
+	}
+
+	@return $result;
+}
+
+@function _wrap-transition-in-var($item) {
 	@return #{$item} var(--transition-#{$item}, 0s);
 }
